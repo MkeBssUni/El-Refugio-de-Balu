@@ -1,0 +1,19 @@
+/*
+Banda, ps hice este archivo pq no sé como modificar el CDN de bootstrap, pero si sabes como hacerlo, hazlo pofabo :))
+*/
+.baloo {
+    font-family: 'Baloo';
+    color: #fff;
+}
+.balooTitle {
+    font-family: 'Baloo';
+    color: #138A95;
+    font-size: 2rem;
+}
+.baloo:hover {
+    color: #FFBC58;
+}
+
+.activeNavBarLink {
+    color: #FFBC58 !important;
+}
