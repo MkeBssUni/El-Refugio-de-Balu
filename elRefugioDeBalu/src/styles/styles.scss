@@ -1,0 +1,7 @@
+$theme-colors: (
+  "warning":    #FFBC58,
+  "dark": #00737E
+);
+
+// Then import Bootstrap and BootstrapVue SCSS files (order is important)
+@import 'node_modules/bootstrap/scss/bootstrap.scss';
