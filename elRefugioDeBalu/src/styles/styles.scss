@@ -1,6 +1,19 @@
 $theme-colors: (
-  "warning":    #FFBC58,
-  "dark": #00737E
+  "light": #FFFFFF,
+  "dark": #000000,
+  "success": #53A93D,
+  "danger": #A93D3D,
+  "purple": #AD5CB5,
+  "orange": #FFBC58,
+  "dark-orange": #FF9900,
+  "secondary-orange": #EE7240,
+  "dark-secondary-orange": #E84E0F,
+  "blue": #5EBFC5,
+  "dark-blue": #118A95,
+  "secondary-blue": #4DB8C0,
+  "dark-secondary-blue": #00737E,
+  "gray": #F2F2F2,
+  "dark-gray": #E6E6E6
 );
 
 // Then import Bootstrap and BootstrapVue SCSS files (order is important)
