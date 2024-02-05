@@ -1,6 +1,8 @@
 <template>
   <div class="">
-    <b-button @click="showAlert" variant="dark-secondary-orange">Button</b-button>
+    <b-button @click="showAlert" variant="dark-secondary-orange"> 
+      <i class="material-icons">pets</i>Guardar
+    </b-button>
   </div>
 </template>
 
