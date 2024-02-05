@@ -13,8 +13,42 @@ $theme-colors: (
   "secondary-blue": #4DB8C0,
   "dark-secondary-blue": #00737E,
   "gray": #F2F2F2,
-  "dark-gray": #E6E6E6
+  "dark-gray": #E6E6E6,
+  "gender-male": #2F73FE,
+  "gender-female": #F93A8C
 );
+
+.badge-success {
+  background-color: #53A93D !important;
+  color: #FFFFFF !important;
+  font-size: small !important;
+  font-weight: bold !important;
+  border-radius: 120px !important;
+}
+
+.badge-danger {
+  background-color: #A93D3D !important;
+  color: #FFFFFF !important;
+  font-size: small !important;
+  font-weight: bold !important;
+  border-radius: 120px !important;
+}
+
+.badge-warning {
+  background-color: #FFBC58 !important;
+  color: #FFFFFF !important;
+  font-size: small !important;
+  font-weight: bold !important;
+  border-radius: 120px !important;
+}
+
+.badge-secondary {
+  background-color: #E6E6E6 !important;
+  color: #FFFFFF !important;
+  font-size: small !important;
+  font-weight: bold !important;
+  border-radius: 120px !important;
+}
 
 // Then import Bootstrap and BootstrapVue SCSS files (order is important)
 @import 'node_modules/bootstrap/scss/bootstrap.scss';

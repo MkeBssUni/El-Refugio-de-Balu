@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import './styles/styles.scss'
+import './styles/styles.css'
 
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue)

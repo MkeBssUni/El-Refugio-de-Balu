@@ -25,6 +25,11 @@ const routes = [
         path: "/pets",
         name: "pets",
         component: () => import("../modules/pets/adapters/views/PetCatalog.vue"),
+      },
+      {
+        path: "/pet-list",
+        name: "pet-list",
+        component: () => import("../modules/pets/adapters/views/PetList.vue"),
       }
     ],
   },
