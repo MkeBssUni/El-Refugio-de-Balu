@@ -9,6 +9,7 @@
                                 <b-container>
                                     <b-row>
                                         <b-col cols="6" style="display: flex; align-items: center;">
+                                            <h1>pets</h1>
                                         </b-col>
                                         <b-col cols="6">
                                         </b-col>
