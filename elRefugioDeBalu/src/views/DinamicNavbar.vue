@@ -43,7 +43,7 @@ export default {
                     <b-row class="justify-content-end mx-5">
                         <b-col cols="12">
                             <b-nav-item>
-                                <p class="text-white" style="font-weight: bold;">Crear cuenta</p>
+                                <p style="font-size: x-large;" class="text-white">Crear cuenta</p>
                             </b-nav-item>
                         </b-col>
                     </b-row>
@@ -51,7 +51,7 @@ export default {
                     <b-row class="justify-content-end mx-5">
                         <b-col cols="12">
                             <b-nav-item>
-                                <p class="text-white" style="font-weight: bold;">Iniciar Sesión</p>
+                                <p style="font-size: x-large;" class="text-white">Iniciar Sesión</p>
                             </b-nav-item>
                         </b-col>
                     </b-row>
@@ -70,7 +70,7 @@ export default {
                     <b-row class="justify-content-end mx-5">
                         <b-col cols="12">
                             <b-nav-item>
-                                <p class="text-white" @click="cerrarSesion" style="font-weight: bold;">Cerrar sesión</p>
+                                <p style="font-size: x-large;" class="text-white" @click="cerrarSesion">Cerrar sesión</p>
                             </b-nav-item>
                         </b-col>
                     </b-row>
