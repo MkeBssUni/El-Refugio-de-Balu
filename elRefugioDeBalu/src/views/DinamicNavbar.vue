@@ -70,7 +70,7 @@ export default {
                     <b-row class="justify-content-end mx-5">
                         <b-col cols="12">
                             <b-nav-item>
-                                <p style="font-size: x-large;" class="text-white" @click="cerrarSesion">Cerrar sesión</p>
+                                <p class="text-white" @click="cerrarSesion" style="font-weight: bold;">Cerrar sesión</p>
                             </b-nav-item>
                         </b-col>
                     </b-row>
