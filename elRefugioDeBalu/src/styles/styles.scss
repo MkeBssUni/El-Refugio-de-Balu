@@ -80,3 +80,23 @@ $theme-colors: (
 
 // Then import Bootstrap and BootstrapVue SCSS files (order is important)
 @import 'node_modules/bootstrap/scss/bootstrap.scss';
+
+.header-homePage{
+  background-color: map-get($theme-colors, "dark-orange");
+  border-radius: 25px 0 0 25px;
+}
+
+.header-homePageBlue{
+  background-color: map-get($theme-colors, "blue");
+  border-radius: 0 25px 25px 0;
+}
+
+.title-headerPage{
+  color: #FFFFFF;
+}
+
+.info-homepage{
+  background-color: map-get($theme-colors, "blue" );
+  border-radius: 25px;
+  border: #A93D3D;
+}
