@@ -1,15 +1,19 @@
 <template>
   <div class="">
-    <b-button @click="showAlert" variant="dark-secondary-orange"> 
-      <i class="material-icons">pets</i>Guardar
-    </b-button>
+   <Encabezado color="#E84E0F" imagenUrl="../../assets/mascotas.png" titulo="Lista de Adopciones" />
+   <p>Contenido</p>
   </div>
 </template>
 
 <script>
 import Swal from 'sweetalert2';
+import Encabezado from '../../../../views/components/Encabezado.vue';
 
 export default {
+  name: "AdoptioRequest",
+  components:{
+    Encabezado
+  },
   methods: {
     showAlert() {
       Swal.fire({
