@@ -40,18 +40,17 @@ export default {
                         height="50">
                 </b-navbar-brand>
                 <b-navbar-nav class="text-right text-white">
-                    <b-row class="justify-content-end mx-5">
+                    <b-row class="justify-content-start mx-3 py-2 text-center">
                         <b-col cols="12">
                             <b-nav-item>
-                                <p style="font-size: x-large;" class="text-white">Crear cuenta</p>
+                                <p style="font-size: x-large;" class="text-white text-center">Crear cuenta</p>
                             </b-nav-item>
                         </b-col>
                     </b-row>
-
-                    <b-row class="justify-content-end mx-5">
+                    <b-row class="justify-content-start mx-3 py-2 text-center">
                         <b-col cols="12">
-                            <b-nav-item>
-                                <p style="font-size: x-large;" class="text-white">Iniciar Sesión</p>
+                            <b-nav-item to="/login" >
+                                <p style="font-size: x-large;" class="text-white text-center">Iniciar Sesión</p>
                             </b-nav-item>
                         </b-col>
                     </b-row>
@@ -66,18 +65,15 @@ export default {
                         height="50">
                 </b-navbar-brand>
                 <b-navbar-nav class="text-right text-white">
-
-                    <b-row class="justify-content-end mx-5">
+                    <b-row class="justify-content-start mx-3 py-2 text-center">
                         <b-col cols="12">
                             <b-nav-item>
-                                <p style="font-size: x-large;" class="text-white" @click="cerrarSesion">Cerrar sesión</p>
+                                <p style="font-size: x-large;" class="text-white text-center" @click="cerrarSesion">Cerrar sesión</p>
                             </b-nav-item>
                         </b-col>
                     </b-row>
                 </b-navbar-nav>
             </b-navbar>
         </div>
-
-
     </div>
 </template>
