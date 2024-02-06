@@ -78,25 +78,95 @@ $theme-colors: (
   }
 }
 
-// Then import Bootstrap and BootstrapVue SCSS files (order is important)
-@import 'node_modules/bootstrap/scss/bootstrap.scss';
 
-.header-homePage{
+
+.header-homePage {
   background-color: map-get($theme-colors, "dark-orange");
   border-radius: 25px 0 0 25px;
 }
 
-.header-homePageBlue{
+.header-homePageBlue {
   background-color: map-get($theme-colors, "blue");
   border-radius: 0 25px 25px 0;
 }
 
-.title-headerPage{
+.title-headerPage {
   color: #FFFFFF;
 }
 
-.info-homepage{
-  background-color: map-get($theme-colors, "blue" );
+.info-homepage {
+  background-color: map-get($theme-colors, "blue");
   border-radius: 25px;
-  border: #A93D3D;
 }
+
+.gallery {
+  display: flex;
+  gap: 1rem;
+  max-width: 80rem;
+}
+
+.carrusel {
+  position: relative;
+  left: 0px;
+  width: 6rem;
+  border-radius: 1.2rem;
+  height: 20rem;
+  overflow: hidden;
+  transition: 0.4s ease-in-out;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
+  flex: 0.25;
+}
+
+.carrusel img {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.carrusel:hover {
+  flex: 2;
+  font-weight: bold;
+  border-radius: 1rem;
+}
+
+.carrusel figcaption {
+  position: absolute;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  height: 8rem;
+  width: 100%;
+  transform: translateY(40%) translateX(-50%);
+  opacity: 0;
+}
+
+.carrusel h3 {
+  color:map-get($theme-colors,"dark-secondary-blue" ) !important;
+  font-size: 1.1rem;
+  opacity: 0;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.1rem;
+  
+}
+
+.carrusel p {
+  opacity: 0;
+  font-size: 0.8rem;
+  transition: all 0.4s ease;
+}
+
+.carrusel:hover figcaption {
+  background-color: orange !important;
+  filter: alpha(opacity=20);
+  opacity: 0.75;
+  
+}
+
+.carrusel:hover h2 {
+  color: map-get($theme-colors, "dark-secondary-blue" ) !important;
+
+  margin: 5rem;
+}
+
+// Then import Bootstrap and BootstrapVue SCSS files (order is important)
+@import 'node_modules/bootstrap/scss/bootstrap.scss';

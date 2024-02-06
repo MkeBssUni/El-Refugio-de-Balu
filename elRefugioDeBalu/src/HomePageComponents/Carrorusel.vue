@@ -1,38 +1,26 @@
 <template>
-    <b-container fluid>
-        <b-row>
-            <b-col cols="12" class="text-center mt-5 position-relative">
-                <b-row class="border">
-                    <b-col class="header-homePage ms-5  shadow">
-                        <h1 class="title-headerPage mt-2 pe-0 text-end">
-                            Adopta amor,
-                        </h1>
-                    </b-col>
-                    <b-col class="header-homePageBlue me-5  shadow">
-                        <h1 class="title-headerPage mt-2 ps-0 text-start">
-                            adopta vida
-                        </h1>
-                    </b-col>
-                </b-row>
-                <b-row class="border">
-                    <b-carousel id="carousel-fade" style="text-shadow: 0px 0px 2px #000" fade indicators img-width="1024"
-                        img-height="480">
-                        <b-carousel-slide caption="First Slide"
-                            img-src="https://picsum.photos/1024/480/?image=10"></b-carousel-slide>
-                        <b-carousel-slide caption="Second Slide"
-                            img-src="https://picsum.photos/1024/480/?image=12"></b-carousel-slide>
-                        <b-carousel-slide caption="Third Slide"
-                            img-src="https://picsum.photos/1024/480/?image=22"></b-carousel-slide>
-                    </b-carousel>
-                </b-row>
-            </b-col>
-        </b-row>
-    </b-container>
+    <div class="gallery mt-3">
+        <figure class="carrusel">
+            <img src="../assets/imgs/Galery1.png" alt="Lakeview Elegance preview">
+            <figcaption class="carrusel">
+                <h2 class="carrusel mt-4">Vista Paradiso</h2>
+            </figcaption>
+        </figure>
+        <figure class="carrusel">
+            <img src="../assets/imgs/Galery2.png" alt="Skyline Oasis preview">
+        </figure>
+        <figure class="carrusel">
+            <img src="../assets/imgs/Galery.png" alt="Vista Paradiso preview">
+        </figure>
+        <figure class="carrusel">
+            <img src="../assets/imgs/Galery4.png" alt="Villa Verde preview">
+        </figure>
+    </div>
 </template>
 
 <script>
 export default {
-
+    name: "Carousel",
 }
 </script>
 
