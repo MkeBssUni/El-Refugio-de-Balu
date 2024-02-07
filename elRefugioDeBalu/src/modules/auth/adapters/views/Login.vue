@@ -55,9 +55,9 @@ export default {
 </script>
 <template>
     <b-container fluid class="bg-blue">
-        <b-row>
+        <b-row align-v="center">
             <!-- Formulario inicio de sesión -->
-            <b-col cols="4">
+            <b-col cols="5" class="px-5">
                 <b-card class="shadow bg-orange">
                     <img src="../../../../assets/imgs/logo blanco.png" class="img-fluid d-block mx-auto"
                         alt="Responsive image" width="30%">
@@ -95,14 +95,20 @@ export default {
                 </b-card>
             </b-col>
             <!-- Image -->
-            <b-col>
+            <b-col cols="7" class="text-center">
                 <!-- la imagen debe estar pegada del lado izquierdo y no debe exceder el alto de la pantalla -->
                 <b-img
-                        src="https://img.freepik.com/foto-gratis/ai-generado-perro-labrador-retriever_23-2150686788.jpg?w=740&t=st=1707087667~exp=1707088267~hmac=fef11794c20b1e6d8d9dea1a348eb8e50c293ef7c414c3bb0ec333617e044beb"
-                        fluid left
-
-                        ></b-img>
+                    src="https://img.freepik.com/foto-gratis/ai-generado-perro-labrador-retriever_23-2150686788.jpg?w=740&t=st=1707087667~exp=1707088267~hmac=fef11794c20b1e6d8d9dea1a348eb8e50c293ef7c414c3bb0ec333617e044beb"
+                    fluid left rounded class="img"></b-img>
             </b-col>
         </b-row>
     </b-container>
 </template>
+
+<style scoped>
+.img {
+    height: 90vh;
+    width: 100%;
+    object-fit: cover;
+}
+</style>

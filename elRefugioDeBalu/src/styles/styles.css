@@ -1,9 +1,32 @@
 @font-face {
     font-family: "Baloo";
     src: url("../assets/Baloo-Regular.ttf") format("truetype");
-  }
-  
+}
 
-  body{
+
+body {
     font-family: "Baloo", sans-serif;
-  }
+}
+
+.position-right {
+    position: absolute;
+    right: 0;
+}
+
+.custom-scroll-style {
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: darkgray lightgray;
+}
+
+.custom-scroll-style::-webkit-scrollbar {
+    width: 10px;
+}
+
+.custom-scroll-style::-webkit-scrollbar-thumb {
+    background-color: darkgray;
+}
+
+.custom-scroll-style::-webkit-scrollbar-track {
+    background-color: lightgray;
+}
