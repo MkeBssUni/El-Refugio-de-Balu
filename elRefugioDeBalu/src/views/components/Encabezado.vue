@@ -69,7 +69,7 @@ export default {
 }
 
 .tamImg {
-  width: 100%;
+  max-width: 100%;
   height: auto;
   display: block; /* Elimina el espacio adicional en la parte inferior de la imagen */
   margin: 0 auto; /* Centra la imagen horizontalmente */
