@@ -1,7 +1,7 @@
 <template>
   <div class="">
    <Encabezado color="#E84E0F" :imagenUrl="require('@/assets/imgs/mascotas.png')" titulo="Lista de Adopciones en espera" />
-   <p>Contenido</p>
+   <p>Contenido o tabla</p>
   </div>
 </template>
 
