@@ -1,5 +1,5 @@
 <template>
-    <footer class="bg-orange text-light py-4">
+    <footer class="bg-orange text-light py-4 mt-5">
         <div class="container">
             <div class="row">
                 <div class="col-12 col-md-3">
@@ -8,7 +8,6 @@
                 <div class="col-12 col-md-4 mt-3">
                     <h3 class="mb-4">
                         Páginas principales
-                        <b-icon icon="house-fill" font-scale="1" class="me-2"></b-icon>
                     </h3>
                     <ul class="list-unstyled">
                         <li><router-link to="/">Inicio</router-link></li>
@@ -20,12 +19,17 @@
                 <div class="col-12 col-md-4 mt-3">
                     <h3 class="mb-4">
                         Información de contacto
-                        <b-icon icon="phone-fill" font-scale="1" class="me-2"></b-icon>
                     </h3>
                     <ul class="list-unstyled">
-                        <li><a href="https://www.facebook.com/paginadefacebook">Facebook: Página DeFacebok</a></li>
-                        <li><a href="https://www.instagram.com/perfildelg">Instagram: PerfilDelg</a></li>
-                        <li><a href="mailto:uncorreo@gmail.com">Correo electrónico: uncorreo@gmail.com</a></li>
+                        <li><a href="https://www.facebook.com/paginadefacebook">
+                            <b-icon icon="facebook" font-scale="1" class="me-2"></b-icon>
+                            Facebook: Página DeFacebok</a></li>
+                        <li><a href="https://www.instagram.com/perfildelg">
+                            <b-icon icon="instagram" font-scale="1" class="me-2"></b-icon>
+                            Instagram: PerfilDelg</a></li>
+                        <li><a href="mailto:uncorreo@gmail.com">
+                            <b-icon icon="envelope" font-scale="1" class="me-2"></b-icon>
+                            Correo electrónico: uncorreo@gmail.com</a></li>
                     </ul>
                 </div>
             </div>
