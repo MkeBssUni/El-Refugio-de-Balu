@@ -24,9 +24,7 @@
                 </b-row>
                 <b-row class="mt-3 ps-3 pe-3">
                     <b-col class="ms-5">
-                        <b-card overlay img-src="https://picsum.photos/900/250/?image=3" img-alt="Card Image"
-                            text-variant="white" title="Image Overlay" sub-title="Subtitle">
-                        </b-card>
+                        <Banner/>
                     </b-col>
                     <b-col class="me-5 ps-4">
                         <b-carousel id="carousel-1" v-model="slide" :interval="4000" controls indicators
@@ -80,9 +78,11 @@
 
 <script>
 import CarouselGalery from '../HomePageComponents/Carrorusel.vue'
+import Banner from '../HomePageComponents/Banner.vue'
 export default {
     components: {
-        CarouselGalery
+        CarouselGalery,
+        Banner
     }
 }
 </script>
