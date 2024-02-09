@@ -55,24 +55,28 @@ export default {
                         </b-col>
                     </b-row>
                     <b-row class="justify-content-start mx-3 py-2 text-center">
-                        <b-col cols="12">
-                            <b-button v-b-toggle.sidebar-1 variant="outline-light" class="me-2">
-                                <b-icon icon="list" font-scale="1.5"></b-icon>
-                            </b-button>
-                        </b-col>
+                        <div v-if="role === ''">
+                            <b-col cols="12">
+                                <b-button v-b-toggle.sidebar-1 variant="outline-light" class="me-2">
+                                    <b-icon icon="list" font-scale="1.5"></b-icon>
+                                </b-button>
+                            </b-col>
+                        </div>
                     </b-row>
                 </b-navbar-nav>
             </b-navbar>
-            <!-- sidebar -->
+            <!-- sidebar para usuario sin rol-->
             <div v-if="role == ''">
-                <b-sidebar id="sidebar-1" title="Bienvenido" shadow visible width="300px" backdrop>
+                <b-sidebar id="sidebar-1" title="Bienvenido" shadow visible width="300px" backdrop text-variant="dark-secondary-blue">
                     <b-nav vertical class="mt-2 px-3 py-3 text-center">
-                        <b-button variant="outline" :to="'/rentar-espacio'" class="mt-5 button btn-outline-dark-secondary-orange">
+                        <b-button variant="outline" :to="'/rentar-espacio'"
+                            class="mt-3 button btn-outline-dark-secondary-orange">
                             <i class="material-icons">favorite</i>
                             Adoptar
                         </b-button>
 
-                        <b-button variant="outline" :to="'/rentar-espacio'" class="mt-5 button btn-outline-dark-secondary-orange">
+                        <b-button variant="outline" :to="'/rentar-espacio'"
+                            class="mt-3 button btn-outline-dark-secondary-orange">
                             <i class="material-icons">handshake</i>
                             Dar en adopción
                         </b-button>
@@ -93,7 +97,29 @@ export default {
                 </b-navbar-brand>
                 <b-navbar-nav class="text-right text-white">
                     <b-row class="justify-content-start mx-3 py-2 text-center">
-                        <b-col cols="12">
+                        <b-col cols="3">
+
+                            <!-- BOTONES PARA LOS DIFERENTES SIDEBAR -->
+                            <div v-if="role === 'ADOPTANTE'">
+                                <b-button v-b-toggle.sidebar-2 variant="outline-light" class="me-2">
+                                    <b-icon icon="list" font-scale="1.5"></b-icon>
+                                </b-button>
+                            </div>
+
+                            <div v-if="role === 'MODERADOR'">
+                                <b-button v-b-toggle.sidebar-3 variant="outline-light" class="me-2">
+                                    <b-icon icon="list" font-scale="1.5"></b-icon>
+                                </b-button>
+                            </div>
+                            
+                            <div v-if="role === 'ADMINISTRADOR'">
+                                <b-button v-b-toggle.sidebar-4 variant="outline-light" class="me-2">
+                                    <b-icon icon="list" font-scale="1.5"></b-icon>
+                                </b-button>
+                            </div>
+
+                        </b-col>
+                        <b-col cols="9">
                             <b-nav-item>
                                 <p style="font-size: x-large;" class="text-white text-center" @click="cerrarSesion">Cerrar
                                     sesión</p>
@@ -102,6 +128,97 @@ export default {
                     </b-row>
                 </b-navbar-nav>
             </b-navbar>
+
+            <!-- sidebar para usuario ADOPTANTE -->
+            <div v-if="role == 'ADOPTANTE'">
+                <b-sidebar id="sidebar-2" title="Bienvenido" shadow visible width="300px" backdrop text-variant="dark-secondary-blue">
+                    <b-nav vertical class="mt-2 px-3 py-3 text-center">
+                        <b-button variant="outline" :to="'/rentar-espacio'"
+                            class="mt-3 button btn-outline-dark-secondary-orange">
+                            <i class="material-icons">favorite</i>
+                            Adoptar
+                        </b-button>
+
+                        <b-button variant="outline" :to="'/rentar-espacio'"
+                            class="mt-3 button btn-outline-dark-secondary-orange">
+                            <i class="material-icons">handshake</i>
+                            Dar en adopción
+                        </b-button>
+
+                        <b-button variant="outline" :to="'/rentar-espacio'"
+                            class="mt-3 button btn-outline-dark-secondary-orange">
+                            <i class="material-icons">handshake</i>
+                            Mis solicitudes
+                        </b-button>
+                    </b-nav>
+                    <div class="mt-5">
+                        <img src="../../assets//imgs/gatoxperro.png" width="300" alt="gatoxperro" fluid
+                            style="position: absolute; bottom: 0;">
+                    </div>
+                </b-sidebar>
+            </div>
+            <!-- SIDEBAR MODERADOR -->
+            <div v-if="role == 'MODERADOR'">
+                <b-sidebar id="sidebar-3" title="Bienvenido" shadow visible width="300px" backdrop text-variant="dark-secondary-blue">
+                    <b-nav vertical class="mt-2 px-3 py-3 text-center">
+                        <b-button variant="outline" :to="'/rentar-espacio'"
+                            class="mt-3 button btn-outline-dark-secondary-orange">
+                            <i class="material-icons">pets</i>
+                            Animales
+                        </b-button>
+
+                        <b-button variant="outline" :to="'/rentar-espacio'"
+                            class="mt-3 button btn-outline-dark-secondary-orange">
+                            <i class="material-icons">dashboard</i>
+                            Categorías
+                        </b-button>
+
+                        <b-button variant="outline" :to="'/rentar-espacio'"
+                            class="mt-3 button btn-outline-dark-secondary-orange">
+                            <i class="material-icons">assignment</i>
+                            Solicitudes de adopción
+                        </b-button>
+                    </b-nav>
+                    <div class="mt-5">
+                        <img src="../../assets//imgs/gatoxperro.png" width="300" alt="gatoxperro" fluid
+                            style="position: absolute; bottom: 0;">
+                    </div>
+                </b-sidebar>
+            </div>
+            <!-- SIDEBAR ADMINISTRADOR -->
+            <div v-if="role == 'ADMINISTRADOR'">
+                <b-sidebar id="sidebar-4" title="Bienvenido" shadow visible width="300px" backdrop text-variant="dark-secondary-blue">
+                    <b-nav vertical class="mt-2 px-3 py-3 text-center">
+                        <b-button variant="outline" :to="'/rentar-espacio'"
+                            class="mt-3 button btn-outline-dark-secondary-orange">
+                            <i class="material-icons">pets</i>
+                            Animales
+                        </b-button>
+
+                        <b-button variant="outline" :to="'/rentar-espacio'"
+                            class="mt-3 button btn-outline-dark-secondary-orange">
+                            <i class="material-icons">dashboard</i>
+                            Categorías
+                        </b-button>
+
+                        <b-button variant="outline" :to="'/rentar-espacio'"
+                            class="mt-3 button btn-outline-dark-secondary-orange">
+                            <i class="material-icons">assignment</i>
+                            Solicitudes de adopción
+                        </b-button>
+                        
+                        <b-button variant="outline" :to="'/rentar-espacio'"
+                            class="mt-3 button btn-outline-dark-secondary-orange">
+                            <i class="material-icons">person</i>
+                            Usuarios
+                        </b-button>
+                    </b-nav>
+                    <div class="mt-5">
+                        <img src="../../assets//imgs/gatoxperro.png" width="300" alt="gatoxperro" fluid
+                            style="position: absolute; bottom: 0;">
+                    </div>
+                </b-sidebar>
+            </div>
         </div>
     </div>
 </template>
