@@ -24,6 +24,7 @@
                 <h3 class="textGalery">Adopta, no compres: una decisión que salva vidas</h3>
             </figcaption>
         </figure>
+        
     </div>
 </template>
 

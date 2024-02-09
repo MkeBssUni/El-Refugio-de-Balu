@@ -185,7 +185,7 @@ $theme-colors: (
     position: relative;
     left: 0px;
     width: 120rem;
-    border-radius: 1.2rem;
+    border-radius:0.2rem;
     height: 20rem;
     overflow: hidden;
     transition: 0.4s ease-in-out;
@@ -241,15 +241,12 @@ $theme-colors: (
   .gallery {
     display: flex;
     flex-direction: column;
-    /* Apila los elementos verticalmente */
     justify-content: center;
     align-items: center;
-    /* Centra los elementos horizontalmente */
     gap: 1rem;
     max-width: 81rem;
     overflow-y: auto;
-    /* Habilita el desplazamiento vertical */
-    height: 200px;
+    
   }
 
   .carrusel {
@@ -305,4 +302,13 @@ $theme-colors: (
     margin-bottom: 0.5rem;
     letter-spacing: 0.1rem;
   }
+}
+
+.info_Banner{
+  font-size: 2.1rem;
+  right: 0;
+  background-color: map-get($theme-colors,"dark-secondary-blue" );
+}
+#Banner{
+  height: 80rem;
 }
