@@ -1,32 +1,32 @@
 <template>
-    <b-container fluid>
+    <b-container fluid class="border">
         <b-row>
             <b-col cols="12" class="mt-5">
-                <b-row class="px-5">
-                    <b-col class="header-homePage ms-5 shadow">
+                <b-row class="justify-content-center border">
+                    <b-col class="header-homePage shadow" cols="5">
                         <h1 class="title-headerPage mt-2 pe-0 text-end">
                             Adopta amor,
                         </h1>
                     </b-col>
-                    <b-col class="header-homePageBlue me-5  shadow">
+                    <b-col class="header-homePageBlue shadow" cols="5">
                         <h1 class="title-headerPage mt-2 ps-0 text-start">
                             adopta vida
                         </h1>
                     </b-col>
                 </b-row>
-                <b-row class="px-4 mt-2 text-center">
+                <b-row class="px-4 mt-2 justify-content-center">
                     <b-col class="mx-5">
                         <b-container>
-                            <CarouselGalery />
+                            <CarouselGalery class="border" />
                         </b-container>
 
                     </b-col>
                 </b-row>
-                <b-row class="mt-3 ps-3 pe-3">
-                    <b-col class="ms-5">
-                        <Banner/>
+                <b-row class="mt-3 justify-content-center">
+                    <b-col class="" cols="11">
+                         <Banner/>
                     </b-col>
-                    <b-col class="me-5 ps-4">
+                    <b-col cols="11">
                         <b-carousel id="carousel-1" v-model="slide" :interval="4000" controls indicators
                             background="#ababab" img-width="1024" img-height="480" style="text-shadow: 1px 1px 2px #333;"
                             @sliding-start="onSlideStart" @sliding-end="onSlideEnd">
@@ -63,8 +63,8 @@
                         </b-carousel>
                     </b-col>
                 </b-row>
-                <b-row class="mt-3 mb-4 mx-5 px-3">
-                    <b-col class="info-homepage">
+                <b-row class=" my-3 justify-content-center mx-3">
+                    <b-col class="info-homepage" cols="12">
                         <div class="title-headerPage mt-5 mb-3 text-center">
                             <h4>Tu compañero ideal está esperando: descubre los amigos que tenemos para ti.</h4>
                             <b-button>Vamos a conocerlos</b-button>
@@ -73,6 +73,7 @@
                 </b-row>
             </b-col>
         </b-row>
+
     </b-container>
 </template>
 
