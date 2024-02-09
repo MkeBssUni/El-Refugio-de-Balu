@@ -1,5 +1,5 @@
 <template>
-    <div class="gallery mt-3">
+    <div class="gallery mt-3 border">
         <figure class="carrusel">
             <img src="../assets/imgs/Galery1.png" alt="Lakeview Elegance preview">
             <figcaption class="carrusel py-4 text-center">
