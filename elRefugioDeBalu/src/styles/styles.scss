@@ -76,7 +76,7 @@ $theme-colors: (
   border-radius: 25px;
 }
 
-.gallery {
+/* .gallery {
   display: flex;
   gap: 1rem;
   max-width: 80rem;
@@ -85,7 +85,7 @@ $theme-colors: (
 .carrusel {
   position: relative;
   left: 0px;
-  width: 6rem;
+  width: 120rem;
   border-radius: 1.2rem;
   height: 20rem;
   overflow: hidden;
@@ -98,22 +98,21 @@ $theme-colors: (
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  object-fit: cover;
 }
 
 .carrusel:hover {
   flex: 2;
   font-weight: bold;
-  border-radius: 1rem;
+  border-radius: 1.2rem;
 }
 
 .carrusel figcaption {
   position: absolute;
   text-align: center;
-  top: 50%;
-  left: 50%;
   height: 8rem;
   width: 100%;
-  transform: translateY(40%) translateX(-50%);
+  bottom: 0; 
   opacity: 0;
 }
 
@@ -125,23 +124,18 @@ $theme-colors: (
 .carrusel:hover figcaption {
   background-color: orange !important;
   opacity: 0.75;
+  border-radius: 0.8rem;
 }
 
-.carrusel:hover h2 {
-  color: map-get($theme-colors, "dark-secondary-blue") !important;
-
-  margin: 5rem;
-}
 
 .carrusel figcaption h2.carrusel {
   color: map-get($theme-colors, "dark-secondary-blue") !important;
   font-size: 1.1rem;
   opacity: 1;
-  /* Change opacity to make the content visible */
   margin-bottom: 0.5rem;
   letter-spacing: 0.1rem;
 }
-
+ */
 // Then import Bootstrap and BootstrapVue SCSS files (order is important)
 @import 'node_modules/bootstrap/scss/bootstrap.scss';
 
@@ -152,4 +146,107 @@ $theme-colors: (
   border-radius: 1.2rem;
   overflow: hidden;
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Estilos para pantallas más grandes */
+@media (min-width: 768px) {
+  .gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    max-width: 80rem;
+  }
+
+  .carrusel {
+    position: relative;
+    left: 0px;
+    width: 120rem;
+    border-radius: 1.2rem;
+    height: 20rem;
+    overflow: hidden;
+    transition: 0.4s ease-in-out;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
+    flex: 0.25;
+  }
+
+  .carrusel img {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    object-fit: cover;
+  }
+
+  .carrusel:hover {
+    flex: 2;
+    font-weight: bold;
+    border-radius: 1rem;
+  }
+
+  .carrusel figcaption {
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    height: 8rem;
+    width: 100%;
+    transform: translateY(40%) translateX(-50%);
+    opacity: 0;
+  }
+
+  .textGalery {
+    color: map-get($theme-colors, "dark-secondary-blue") !important;
+    opacity: 2;
+  }
+
+  .carrusel:hover figcaption {
+    background-color: orange !important;
+    opacity: 0.75;
+  }
+
+  .carrusel figcaption h2.carrusel {
+    color: map-get($theme-colors, "dark-secondary-blue") !important;
+    font-size: 1.1rem;
+    opacity: 1;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.1rem;
+  }
+}
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 767px) {
+  .gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    max-width: 100%; /* Ajuste el ancho máximo para ocupar todo el ancho de la pantalla */
+  }
+
+  .carrusel {
+    width: 100%; /* Cambiar el ancho a 100% */
+    height: auto; /* Cambiar la altura a auto */
+    flex: 1; /* Hacer que los elementos ocupen todo el ancho disponible */
+    border-radius: 0; /* Quitar el radio de borde */
+    margin-bottom: 1rem; /* Agregar un margen inferior */
+  }
+
+  .carrusel:hover {
+    flex: 1; /* Mantener el mismo tamaño en el hover */
+    font-weight: normal; /* Restaurar el peso de la fuente */
+    border-radius: 0; /* Quitar el radio de borde en el hover */
+  }
+
+  .carrusel figcaption {
+    position: static; /* Cambiar la posición a estática */
+    height: auto; /* Cambiar la altura a auto */
+    transform: none; /* Quitar la transformación */
+    opacity: 1; /* Establecer la opacidad en 1 */
+    background-color: transparent; /* Quitar el color de fondo */
+    padding: 0.5rem; /* Agregar un relleno */
+  }
+
+  .textGalery {
+    font-size: 0.9rem; /* Reducir el tamaño de la fuente */
+  }
 }
