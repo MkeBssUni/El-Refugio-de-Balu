@@ -17,7 +17,7 @@
                 <b-row class="px-4 mt-2 justify-content-center">
                     <b-col class="mx-5">
                         <b-container>
-                            <CarouselGalery class="border" />
+                            <CarouselGalery/>
                         </b-container>
 
                     </b-col>
