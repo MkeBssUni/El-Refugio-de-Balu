@@ -23,10 +23,10 @@
                     </b-col>
                 </b-row>
                 <b-row class="mt-3 justify-content-center">
-                    <b-col class="" cols="11">
+                    <b-col class="" cols="11" sm="11" md="5" lg="5" xl="5">
                          <Banner/>
                     </b-col>
-                    <b-col cols="11">
+                    <b-col cols="11" sm="11" md="5" lg="5" xl="5">
                         <b-carousel id="carousel-1" v-model="slide" :interval="4000" controls indicators
                             background="#ababab" img-width="1024" img-height="480" style="text-shadow: 1px 1px 2px #333;"
                             @sliding-start="onSlideStart" @sliding-end="onSlideEnd">
