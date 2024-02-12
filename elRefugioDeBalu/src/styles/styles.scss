@@ -162,7 +162,7 @@ $theme-colors: (
     position: relative;
     left: 0px;
     width: 120rem;
-    border-radius:0.2rem;
+    border-radius: 0.2rem;
     height: 20rem;
     overflow: hidden;
     transition: 0.4s ease-in-out;
@@ -223,7 +223,7 @@ $theme-colors: (
     gap: 1rem;
     max-width: 81rem;
     overflow-y: auto;
-    
+
   }
 
   .carrusel {
@@ -281,11 +281,27 @@ $theme-colors: (
   }
 }
 
-.info_Banner{
-  font-size: 2.1rem;
-  right: 0;
-  background-color: map-get($theme-colors,"dark-secondary-blue" );
+.info_Banner {
+  font-size: 1.6rem;
+  background-color: map-get($theme-colors, "secondary-blue") !important;
+  opacity: 0.8;
+  width: 50%;
+  height: 100%;
+  margin: 0; /* Elimina el margen */
 }
-#Banner{
-  height: 80rem;
+
+.letter_Banner{
+  color: #fff !important;
+  opacity: 1;
+  
+}
+
+.card-img-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 0 !important;
+  border-radius: var(--bs-card-inner-border-radius);
 }

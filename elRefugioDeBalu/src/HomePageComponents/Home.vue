@@ -23,7 +23,7 @@
                     </b-col>
                 </b-row>
                 <b-row class="mt-3 justify-content-center">
-                    <b-col class="" cols="11" sm="11" md="5" lg="5" xl="5">
+                    <b-col cols="11" sm="11" md="5" lg="5" xl="5">
                          <Banner/>
                     </b-col>
                     <b-col cols="11" sm="11" md="5" lg="5" xl="5">
