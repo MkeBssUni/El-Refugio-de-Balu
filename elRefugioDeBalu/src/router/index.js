@@ -40,6 +40,11 @@ const routes = [
         path: "/pet-list",
         name: "pet-list",
         component: () => import("../modules/pets/adapters/views/PetList.vue"),
+      },
+      {
+        path: "/UsersList",
+        name: "UsersList",
+        component: () => import("../modules/users/components/UsersList.vue"),
       }
       {
         path: "/animalCategories",
