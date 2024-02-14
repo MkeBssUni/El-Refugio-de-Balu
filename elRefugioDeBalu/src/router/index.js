@@ -46,6 +46,11 @@ const routes = [
         name: "UsersList",
         component: () => import("../modules/users/components/UsersList.vue"),
       }
+      {
+        path: "/animalCategories",
+        name: "animals",
+        component: () => import("../modules/pets/adapters/views/PetList.vue"),
+      }
     ],
   },
 ];
