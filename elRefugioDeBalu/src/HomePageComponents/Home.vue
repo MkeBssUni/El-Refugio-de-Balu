@@ -17,48 +17,33 @@
                 <b-row class="px-4 mt-2 justify-content-center">
                     <b-col class="mx-5">
                         <b-container>
-                            <CarouselGalery/>
+                            <CarouselGalery />
                         </b-container>
 
                     </b-col>
                 </b-row>
-                <b-row class="mt-3 justify-content-center">
-                    <b-col cols="11" sm="11" md="5" lg="5" xl="5">
-                         <Banner/>
+                <b-row class="mt-3 px-5">
+                    <b-col class="" cols="11" sm="11" md="5" lg="5" xl="5">
+                        <Banner />
                     </b-col>
                     <b-col cols="11" sm="11" md="5" lg="5" xl="5">
-                        <b-carousel id="carousel-1" v-model="slide" :interval="4000" controls indicators
-                            background="#ababab" img-width="1024" img-height="480" style="text-shadow: 1px 1px 2px #333;"
-                            @sliding-start="onSlideStart" @sliding-end="onSlideEnd">
-                            <!-- Text slides with image -->
-                            <b-carousel-slide caption="First slide"
-                                text="Nulla vitae elit libero, a pharetra augue mollis interdum."
-                                img-src="https://picsum.photos/1024/480/?image=52"></b-carousel-slide>
+                        <b-carousel id="carousel-1" v-model="slide" :interval="4000" controls indicators>
 
-                            <!-- Slides with custom text -->
-                            <b-carousel-slide img-src="https://picsum.photos/1024/480/?image=54">
-                                <h1>Hello world!</h1>
-                            </b-carousel-slide>
 
-                            <!-- Slides with image only -->
-                            <b-carousel-slide img-src="https://picsum.photos/1024/480/?image=58"></b-carousel-slide>
-
-                            <!-- Slides with img slot -->
-                            <!-- Note the classes .d-block and .img-fluid to prevent browser default image alignment -->
-                            <b-carousel-slide>
-                                <template #img>
-                                    <img class="d-block img-fluid w-100" width="1024" height="480"
-                                        src="https://picsum.photos/1024/480/?image=55" alt="image slot">
-                                </template>
-                            </b-carousel-slide>
-
-                            <!-- Slide with blank fluid image to maintain slide aspect ratio -->
-                            <b-carousel-slide caption="Blank Image" img-blank img-alt="Blank image">
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eros felis,
-                                    tincidunt
-                                    a tincidunt eget, convallis vel est. Ut pellentesque ut lacus vel interdum.
-                                </p>
+                            <b-carousel-slide class="friends" img-blank>
+                                <div class="friends border pt-3">
+                                    <b-row class="border mt-5">
+                                        <b-col class="pt-5" cols="112" sm="12" md="5" lg="5" xl="5">
+                                            <b-img class="mt-5" v-bind="mainProps" fluid src="https://picsum.photos/250/250/?image=54"
+                                                rounded alt="Rounded image"></b-img>
+                                        </b-col>
+                                        <b-col cols="12" sm="12 " md="5" lg="5" xl="5">
+                                            <b-row>
+                                    
+                                            </b-row>
+                                        </b-col>
+                                    </b-row>
+                                </div>
                             </b-carousel-slide>
                         </b-carousel>
                     </b-col>
@@ -67,7 +52,7 @@
                     <b-col class="info-homepage" cols="12">
                         <div class="title-headerPage mt-5 mb-3 text-center">
                             <h4>Tu compañero ideal está esperando: descubre los amigos que tenemos para ti.</h4>
-                            <b-button>Vamos a conocerlos</b-button>
+                            <b-button class="home">Vamos a conocerlos</b-button>
                         </div>
                     </b-col>
                 </b-row>
