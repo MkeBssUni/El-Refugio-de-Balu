@@ -305,3 +305,20 @@ $theme-colors: (
   padding: 0 !important;
   border-radius: var(--bs-card-inner-border-radius);
 }
+
+
+.home{
+  background-color: map-get($theme-colors ,"dark-orange"  );
+  color: #FFFFFF;
+}
+
+.friends{
+  background-color: map-get($theme-colors ,"dark-orange"  );
+  color: #fff;
+}
+
+.carousel-item{
+  background-color: map-get($theme-colors ,"dark-orange"  ) !important;
+  color: #fff;
+  
+}
