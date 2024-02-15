@@ -72,7 +72,7 @@ export default {
                             <span>Crear cuenta</span>
                             <b-icon icon="person-plus" font-scale="1" class="ms-2"></b-icon>
                         </a>
-                        <hr class="mx-3 my-0">
+                        <hr class="my-0">
                         <a href="#" class="item d-flex justify-content-between p-3">
                             <span>Iniciar sesión</span>
                             <b-icon icon="box-arrow-in-right" font-scale="1" class="ms-2"></b-icon>
@@ -299,6 +299,7 @@ export default {
     border-radius: 6px;
     background-color: #ffffff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 100;
 }
 .item {
     display: block;
