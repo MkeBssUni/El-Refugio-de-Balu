@@ -3,7 +3,8 @@
         <b-row align-h="end" class="px-4">
             <b-col cols="12" md="2" class="pt-3">
                 <b-input-group class="mt-3">
-                    <b-form-select :options="categories" v-model="categoryFilter" class="form-select"></b-form-select>
+                    <b-form-select :options="categories" v-model="categoryFilter" class="form-select">
+                    </b-form-select>
                 </b-input-group>
             </b-col>
             <b-col cols="12" md="2" class="pt-0 pt-md-3">
@@ -21,9 +22,12 @@
                     <b-form-select :options="status" v-model="statusFilter" class="form-select"></b-form-select>
                 </b-input-group>
             </b-col>
-            <b-col cols="12" md="2" class="pt-0 pt-md-3">
+            <b-col cols="12" md="3" class="pt-0 pt-md-3">
                 <b-input-group class="mt-3">
                     <b-form-input type="text" placeholder="Buscar..." v-model="search"></b-form-input>
+                    <b-input-group-append is-text>
+                        <b-icon icon="search" style="height: 1.55rem" variant="dark"></b-icon>
+                    </b-input-group-append>
                 </b-input-group>
             </b-col>
         </b-row>
@@ -34,29 +38,39 @@
                     class="text-center custom-scroll-style">
                     <template #cell(sex)="data">
                         <b-icon v-if="data.value === 'Macho'" icon="gender-male" variant="gender-male"
-                            font-scale="1.2"></b-icon>
+                            font-scale="1.4"></b-icon>
                         <b-icon v-else-if="data.value === 'Hembra'" icon="gender-female" variant="gender-female"
-                            font-scale="1.2"></b-icon>
+                            font-scale="1.4"></b-icon>
                         <b-icon v-else icon="" class="text-dark-gray" font-scale="1"></b-icon>
                     </template>
                     <template #cell(status)="data">
                         <b-badge :variant="getBadgeVariant(data.value)">{{ data.value }}</b-badge>
                     </template>
                     <template #cell(actions)>
-                        <b-button pill size="sm" variant="outline-dark-blue" class="px-2 d-none d-md-inline-block">
-                            Ver detalles
-                            <b-icon icon="info-circle" font-scale="1"></b-icon>
-                        </b-button>
-                        <b-button pill size="sm" variant="outline-dark-blue" class="px-2 d-md-none">
-                            <b-icon icon="info-circle" font-scale="1"></b-icon>
-                        </b-button>
+                        <div class="d-none d-md-inline-block">
+                            <b-button pill size="sm" variant="outline-dark-blue" class="px-3 d-flex align-items-center">
+                                <span>Ver detalles</span>
+                                <b-icon icon="info-circle" font-scale="1" class="ms-1"></b-icon>
+                            </b-button>
+                        </div>
+                        <div class="d-inline-block d-md-none">
+                            <b-button pill size="sm" variant="outline-dark-blue" class="px-2 d-flex align-items-center">
+                                <b-icon icon="info-circle" font-scale="1"></b-icon>
+                            </b-button>
+                        </div>
                     </template>
                 </b-table>
             </b-col>
         </b-row>
         <b-row class="pt-4">
             <b-col cols="12">
-                <b-pagination v-model="currentPage" :total-rows="filteredPets.length" :per-page="perPage" align="center" />
+                <b-pagination pills v-model="currentPage" :total-rows="filteredPets.length" :per-page="perPage"
+                    align="center">
+                    <template #first-text><span class="text-dark">&lt;&lt;</span></template>
+                    <template #prev-text><span class="text-dark">&lt;</span></template>
+                    <template #next-text><span class="text-dark">&gt;</span></template>
+                    <template #last-text><span class="text-dark">&gt;&gt;</span></template>
+                </b-pagination>
             </b-col>
         </b-row>
     </b-container>
@@ -74,24 +88,24 @@ export default {
             perPage: 5,
             currentPage: 1,
             genders: [
-                { value: '', text: 'Filtrar por sexo' },
+                { value: '', text: 'Cualquier sexo' },
                 { value: 'Macho', text: 'Macho' },
                 { value: 'Hembra', text: 'Hembra' }
             ],
             sizes: [
-                { value: '', text: 'Filtrar por tamaño' },
+                { value: '', text: 'Todos los tamaños' },
                 { value: 'Pequeño', text: 'Pequeño' },
                 { value: 'Mediano', text: 'Mediano' },
                 { value: 'Grande', text: 'Grande' }
             ],
             status: [
-                { value: '', text: 'Filtrar por estado' },
+                { value: '', text: 'Todos los estados' },
                 { value: 'Aceptada', text: 'Aceptada' },
                 { value: 'Rechazada', text: 'Rechazada' },
                 { value: 'Pendiente', text: 'Pendiente' }
             ],
             categories: [
-                { value: '', text: 'Filtrar por especie' },
+                { value: '', text: 'Todas las especies' },
                 { value: 'Perro', text: 'Perro' },
                 { value: 'Gato', text: 'Gato' }
             ],
@@ -120,7 +134,6 @@ export default {
     },
     computed: {
         filteredPets() {
-            // Filtrar las mascotas según los valores seleccionados en los filtros
             return this.pets.filter(pet => {
                 const categoryMatch = this.categoryFilter ? pet.category === this.categoryFilter : true;
                 const sizeMatch = this.sizeFilter ? pet.size === this.sizeFilter : true;
