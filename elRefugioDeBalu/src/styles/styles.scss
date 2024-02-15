@@ -345,3 +345,21 @@ $theme-colors: (
   color: #fff;
   
 }
+
+.AnimalFriends{
+  background-color: map-get($theme-colors , "dark-orange" );
+  color:#fff;
+  border-radius: 15px;
+}
+.icon-white{
+color: #fff;
+}
+
+.animalCategories{
+  background-color: map-get($theme-colors , "orange" );
+  border-radius: 21px;
+}
+
+.cardsAnimals{
+  padding: 5px;
+}
