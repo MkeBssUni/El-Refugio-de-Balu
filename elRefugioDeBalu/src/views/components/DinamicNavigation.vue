@@ -42,7 +42,10 @@ export default {
 </script>
 
 <template>
-    <div>
+    <div v-if="role !== ''">
+
+    </div>
+    <div v-else>
         <b-navbar class="bg-blue d-flex align-items-center justify-content-between">
             <b-navbar-nav class="ms-4">
                 <b-navbar-brand>
@@ -87,36 +90,41 @@ export default {
             </b-navbar-nav>
         </b-navbar>
 
-        <b-sidebar id="sidebar-1" title="Bienvenido" shadow visible width="300px" backdrop
-            text-variant="dark-secondary-blue">
-            <b-nav vertical class="mt-2 px-3 py-3 text-center">
-                <b-button variant="outline" :to="'/rentar-espacio'" class="mt-3 button btn-outline-dark-secondary-orange">
-                    <i class="material-icons">pets</i>
-                    Animales
-                </b-button>
-
-                <b-button variant="outline" :to="'/rentar-espacio'" class="mt-3 button btn-outline-dark-secondary-orange">
-                    <i class="material-icons">dashboard</i>
-                    Categorías
-                </b-button>
-
-                <b-button variant="outline" :to="'/rentar-espacio'" class="mt-3 button btn-outline-dark-secondary-orange">
-                    <i class="material-icons">assignment</i>
-                    Solicitudes de adopción
-                </b-button>
-
-                <b-button variant="outline" :to="'/rentar-espacio'" class="mt-3 button btn-outline-dark-secondary-orange">
-                    <i class="material-icons">person</i>
-                    Usuarios
-                </b-button>
-            </b-nav>
-            <div class="mt-5">
-                <img src="../../assets//imgs/gatoxperro.png" width="300" alt="gatoxperro" fluid
-                    style="position: absolute; bottom: 0;">
-            </div>
+        <b-sidebar id="sidebar-1" width="300px" backdrop shadow visible no-header>
+            <template #default="{ hide }">
+                <div class="my-3 d-flex align-items-center justify-content-between">
+                    <span class="ms-3 text-dark-secondary-blue" style="font-size: 1.4rem;">¡Bienvenido/a!</span>
+                    <b-button class="closeButton me-3" @click="hide">
+                        <b-icon icon="x" font-scale="1.8" class="text-dark"></b-icon>
+                    </b-button>
+                </div>
+                <hr class="my-0">
+                <b-nav vertical class="my-2 px-3 text-center">
+                    <b-button variant="outline-dark-secondary-orange" :to="'/'"
+                        class="mt-3 d-flex align-items-center justify-content-center">
+                        Ver mascotas
+                        <i class="material-icons ms-2" style="font-size: larger;">pets</i>
+                    </b-button>
+                    <b-button variant="outline-dark-secondary-orange" :to="'/'"
+                        class="mt-3 d-flex align-items-center justify-content-center">
+                        Antes de adoptar
+                        <i class="material-icons ms-2" style="font-size: larger;">info</i>
+                    </b-button>
+                    <b-button variant="outline-dark-secondary-orange" :to="'/'"
+                        class="mt-3 d-flex align-items-center justify-content-center">
+                        Preguntas frecuentes (FAQ)
+                        <i class="material-icons ms-2" style="font-size: larger;">quiz</i>
+                    </b-button>
+                </b-nav>
+                <div class="mt-5">
+                    <img src="../../assets//imgs/gatoxperro.png" width="300" alt="gatoxperro" fluid
+                        style="position: absolute; bottom: 0;">
+                </div>
+            </template>
         </b-sidebar>
+    </div>
 
-        <!-- <div v-if="role === ''">
+    <!-- <div v-if="role === ''">
             <b-navbar class="bg-blue justify-content-between">
                 
                 <b-navbar-nav class="text-right text-white">
@@ -136,13 +144,13 @@ export default {
             <div v-if="role == ''">
                 <b-sidebar id="sidebar-1" title="Bienvenido" shadow visible width="300px" backdrop text-variant="dark-secondary-blue">
                     <b-nav vertical class="mt-2 px-3 py-3 text-center">
-                        <b-button variant="outline" :to="'/rentar-espacio'"
+                        <b-button variant="outline" :to="'/'"
                             class="mt-3 button btn-outline-dark-secondary-orange">
                             <i class="material-icons">favorite</i>
                             Adoptar
                         </b-button>
 
-                        <b-button variant="outline" :to="'/rentar-espacio'"
+                        <b-button variant="outline" :to="'/'"
                             class="mt-3 button btn-outline-dark-secondary-orange">
                             <i class="material-icons">handshake</i>
                             Dar en adopción
@@ -200,19 +208,19 @@ export default {
             <div v-if="role == 'ADOPTANTE'">
                 <b-sidebar id="sidebar-2" title="Bienvenido" shadow visible width="300px" backdrop text-variant="dark-secondary-blue">
                     <b-nav vertical class="mt-2 px-3 py-3 text-center">
-                        <b-button variant="outline" :to="'/rentar-espacio'"
+                        <b-button variant="outline" :to="'/'"
                             class="mt-3 button btn-outline-dark-secondary-orange">
                             <i class="material-icons">favorite</i>
                             Adoptar
                         </b-button>
 
-                        <b-button variant="outline" :to="'/rentar-espacio'"
+                        <b-button variant="outline" :to="'/'"
                             class="mt-3 button btn-outline-dark-secondary-orange">
                             <i class="material-icons">handshake</i>
                             Dar en adopción
                         </b-button>
 
-                        <b-button variant="outline" :to="'/rentar-espacio'"
+                        <b-button variant="outline" :to="'/'"
                             class="mt-3 button btn-outline-dark-secondary-orange">
                             <i class="material-icons">handshake</i>
                             Mis solicitudes
@@ -228,19 +236,19 @@ export default {
             <div v-if="role == 'MODERADOR'">
                 <b-sidebar id="sidebar-3" title="Bienvenido" shadow visible width="300px" backdrop text-variant="dark-secondary-blue">
                     <b-nav vertical class="mt-2 px-3 py-3 text-center">
-                        <b-button variant="outline" :to="'/rentar-espacio'"
+                        <b-button variant="outline" :to="'/'"
                             class="mt-3 button btn-outline-dark-secondary-orange">
                             <i class="material-icons">pets</i>
                             Animales
                         </b-button>
 
-                        <b-button variant="outline" :to="'/rentar-espacio'"
+                        <b-button variant="outline" :to="'/'"
                             class="mt-3 button btn-outline-dark-secondary-orange">
                             <i class="material-icons">dashboard</i>
                             Categorías
                         </b-button>
 
-                        <b-button variant="outline" :to="'/rentar-espacio'"
+                        <b-button variant="outline" :to="'/'"
                             class="mt-3 button btn-outline-dark-secondary-orange">
                             <i class="material-icons">assignment</i>
                             Solicitudes de adopción
@@ -256,25 +264,25 @@ export default {
             <div v-if="role == 'ADMINISTRADOR'">
                 <b-sidebar id="sidebar-4" title="Bienvenido" shadow visible width="300px" backdrop text-variant="dark-secondary-blue">
                     <b-nav vertical class="mt-2 px-3 py-3 text-center">
-                        <b-button variant="outline" :to="'/rentar-espacio'"
+                        <b-button variant="outline" :to="'/'"
                             class="mt-3 button btn-outline-dark-secondary-orange">
                             <i class="material-icons">pets</i>
                             Animales
                         </b-button>
 
-                        <b-button variant="outline" :to="'/rentar-espacio'"
+                        <b-button variant="outline" :to="'/'"
                             class="mt-3 button btn-outline-dark-secondary-orange">
                             <i class="material-icons">dashboard</i>
                             Categorías
                         </b-button>
 
-                        <b-button variant="outline" :to="'/rentar-espacio'"
+                        <b-button variant="outline" :to="'/'"
                             class="mt-3 button btn-outline-dark-secondary-orange">
                             <i class="material-icons">assignment</i>
                             Solicitudes de adopción
                         </b-button>
                         
-                        <b-button variant="outline" :to="'/rentar-espacio'"
+                        <b-button variant="outline" :to="'/'"
                             class="mt-3 button btn-outline-dark-secondary-orange">
                             <i class="material-icons">person</i>
                             Usuarios
@@ -287,28 +295,39 @@ export default {
                 </b-sidebar>
             </div>
         </div> -->
-    </div>
 </template>
 
 <style scoped>
 .menu {
     position: absolute;
     top: 70%;
-    left: 43%;   
+    left: 43%;
     min-width: 40%;
     border-radius: 6px;
     background-color: #ffffff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     z-index: 100;
 }
+
 .item {
     display: block;
     text-decoration: none;
     color: #000000;
     font-size: 1rem;
 }
+
 .item:hover {
     color: #686868;
+    background-color: #F2F2F2;
+}
+
+.closeButton {
+    padding: 0;    
+    background-color: transparent;
+    border: none;
+
+}
+.closeButton:hover {
     background-color: #F2F2F2;
 }
 </style>

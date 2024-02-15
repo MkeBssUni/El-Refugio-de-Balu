@@ -5,11 +5,10 @@ export default {
   name: 'App',
   data() {
     return {
-
-      /* role: ''
-      role: 'ADOPTANTE'
-      role: 'MODERADOR' */
-      role: 'ADMINISTRADOR'
+       role: ''
+      /* role: 'ADOPTANTE' */
+      /* role: 'MODERADOR' */
+      /* role: 'ADMINISTRADOR' */
     }
   }
 }
