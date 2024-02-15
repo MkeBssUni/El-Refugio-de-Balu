@@ -167,7 +167,7 @@ export default {
                             Animales
                         </b-button>
 
-                        <b-button variant="outline" :to="'/rentar-espacio'"
+                        <b-button variant="outline" :to="'/animalCategories'"
                             class="mt-3 button btn-outline-dark-secondary-orange">
                             <i class="material-icons">dashboard</i>
                             Categorías
@@ -195,7 +195,7 @@ export default {
                             Animales
                         </b-button>
 
-                        <b-button variant="outline" :to="'/rentar-espacio'"
+                        <b-button variant="outline" :to="'/animalCategories'"
                             class="mt-3 button btn-outline-dark-secondary-orange">
                             <i class="material-icons">dashboard</i>
                             Categorías

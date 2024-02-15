@@ -45,11 +45,11 @@ const routes = [
         path: "/UsersList",
         name: "UsersList",
         component: () => import("../modules/users/components/UsersList.vue"),
-      }
+      },
       {
         path: "/animalCategories",
         name: "animals",
-        component: () => import("../modules/pets/adapters/views/PetList.vue"),
+        component: () => import("../modules/animals/adapters/views/AnimalCategories.vue"),
       }
     ],
   },
