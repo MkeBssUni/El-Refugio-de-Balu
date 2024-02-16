@@ -5,8 +5,7 @@ export default {
   name: 'App',
   data() {
     return {
-       role: ''
-      /* role: 'ADOPTANTE' */
+      /* role: 'USUARIO' */
       /* role: 'MODERADOR' */
       /* role: 'ADMINISTRADOR' */
     }
