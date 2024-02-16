@@ -5,11 +5,9 @@ export default {
   name: 'App',
   data() {
     return {
-
-      /* role: ''
-      role: 'ADOPTANTE'
-      role: 'MODERADOR' */
-      role: 'ADMINISTRADOR'
+      /* role: 'USUARIO' */
+      /* role: 'MODERADOR' */
+      /* role: 'ADMINISTRADOR' */
     }
   }
 }
@@ -19,11 +17,12 @@ export default {
 <template>
   <div id="app">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-
     <header>
       <dinamic-navigation :role="role"/>
     </header>
-    <router-view/>
+    <main>
+      <router-view />
+    </main>
   </div>
 </template>
 
