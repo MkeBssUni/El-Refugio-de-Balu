@@ -190,12 +190,14 @@ export default {
     z-index: 100;
 }
 
+
 .item-1,
 .item-2 {
     text-decoration: none;
     color: #000000;
     font-size: 1rem;
 }
+
 
 .item-1:hover {
     color: #686868;
@@ -204,12 +206,14 @@ export default {
     border-top-left-radius: 6px;
 }
 
+
 .item-2:hover {
     color: #686868;
     background-color: #F2F2F2;
     border-bottom-right-radius: 6px;
     border-bottom-left-radius: 6px;
 }
+
 
 .closeButton {
     padding: 0;
