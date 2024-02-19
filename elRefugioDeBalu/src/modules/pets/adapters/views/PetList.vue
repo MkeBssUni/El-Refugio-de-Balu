@@ -1,7 +1,8 @@
 <template>
     <b-container fluid>
         <b-row>
-            <Encabezado color="#F2F2F2" :imagenUrl="require('@/assets/imgs/mascotas_pet_list.png')" titulo="Lista de mascotas" />
+            <Encabezado color="#F2F2F2" :imagenUrl="require('@/assets/imgs/mascotas_pet_list.png')"
+                titulo="Lista de mascotas" />
         </b-row>
         <b-row align-h="end" class="px-4">
             <b-col cols="12" md="2" class="pt-3">
@@ -69,10 +70,6 @@
             <b-col cols="12">
                 <b-pagination pills v-model="currentPage" :total-rows="filteredPets.length" :per-page="perPage"
                     align="center">
-                    <template #first-text><span class="text-dark">&lt;&lt;</span></template>
-                    <template #prev-text><span class="text-dark">&lt;</span></template>
-                    <template #next-text><span class="text-dark">&gt;</span></template>
-                    <template #last-text><span class="text-dark">&gt;&gt;</span></template>
                 </b-pagination>
             </b-col>
         </b-row>
