@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import Encabezado from "@/components/Encabezado.vue";
+import Encabezado from "../../../../views/components/Encabezado.vue";
 export default {
     data() {
         return {
