@@ -8,11 +8,10 @@
             <div class="mt-3">
                 <b-row class="justify-content-end">
                     <b-col cols="12" sm="12" md="3" lg="2" xl="2" class="d-flex justify-content-end my-2">
-                        <b-button as="col" cols="12" sm="12" md="1" pill class="py-1 w-100"
-                            variant="outline-danger">
+                        <b-button as="col" cols="12" sm="12" md="1" pill class="py-1 w-100" variant="outline-danger">
                             Registrar <i class="material-icons">add_circle</i>
                         </b-button>
-                        
+
                     </b-col>
                     <b-col cols="12" sm="12" md="4 " lg="3" xl="3" class="my-2">
                         <b-form-select v-model="selected" as="col" cols="12" sm="12" md="2" lg="2" xl="2"
@@ -36,13 +35,15 @@
                                 <b-row>
                                     <b-col class="my-2 mx-2 justify-content-center px-1" cols="12" sm="12" md="12" lg="12"
                                         xl="5">
-                                        <b-button pill class="btn-outline-dark-orange-secondary w-100 px-0">Modificar <i
-                                                class="material-icons">pets </i> </b-button>
+                                        <b-button pill class="btn-outline-dark-orange-secondary w-100 px-0" style="font-size: 0.8rem;">Modificar <i
+                                                class="material-icons" style="font-size: 0.8rem;">border_color</i> </b-button>
                                     </b-col>
-                                    <b-col class="my-2 mx-2 justify-content-center px-1" cols="12" sm="12" md="12" lg="12"
+                                    <b-col class="my-2 mx-2 justify-content-center px-0" cols="12" sm="12" md="12" lg="12"
                                         xl="5">
-                                        <b-button pill class="btn-outline-dark-orange w-100 px-0">Habilitar <i
-                                                class="material-icons">border_color</i></b-button>
+                                        <b-button v-if="animal.status" pill variant="outline-success" class="w-100 px-0" v-b-tooltip.hover title="Esta categoria es visible para los usuarios" style="font-size: 0.8rem;">Habilitada <i
+                                                class="material-icons" style="font-size: 0.8rem;">done</i></b-button>
+                                        <b-button v-else pill variant="outline-danger" style="font-size: 0.8rem;" class="w-100 px-0" v-b-tooltip.hover title="Esta categoria no es visible para los usuarios">Deshabilitada <i
+                                                class="material-icons" style="font-size: 0.8rem;">close</i></b-button>
                                     </b-col>
                                 </b-row>
                             </b-card-body>
@@ -70,22 +71,22 @@ export default {
     data() {
         return {
             AnimalsList: [
-                { id: 1, name: "tortugas", estado: "Activo", imaen: tortugas },
-                { id: 2, name: "tortugas", estado: "Activo", imaen: tortugas },
-                { id: 3, name: "tortugas", estado: "Activo", imaen: tortugas },
-                { id: 4, name: "tortugas", estado: "Activo", imaen: tortugas },
-                { id: 5, name: "tortugas", estado: "Activo", imaen: tortugas },
-                { id: 6, name: "tortugas", estado: "Activo", imaen: tortugas },
-                { id: 7, name: "tortugas", estado: "Activo", imaen: tortugas },
-                { id: 8, name: "tortugas", estado: "Activo", imaen: tortugas },
-                { id: 9, name: "tortuga", estado: "Activo", imaen: tortugas },
-                { id: 10, name: "tortuga", estado: "Activo", imaen: tortugas },
-                { id: 11, name: "tortuga", estado: "Activo", imaen: tortugas },
-                { id: 12, name: "tortuga", estado: "Activo", imaen: tortugas },
-                { id: 13, name: "tortuga", estado: "Activo", imaen: tortugas },
-                { id: 14, name: "tortuga", estado: "Activo", imaen: tortugas },
-                { id: 15, name: "tortuga", estado: "Activo", imaen: tortugas },
-                { id: 16, name: "tortuga", estado: "Activo", imaen: tortugas },
+                { id: 1, name: "tortugas", estado: "Activo", imaen: tortugas, "status": true },
+                { id: 2, name: "tortugas", estado: "Activo", imaen: tortugas, "status": true },
+                { id: 3, name: "tortugas", estado: "Activo", imaen: tortugas, "status": false },
+                { id: 4, name: "tortugas", estado: "Activo", imaen: tortugas, "status": false },
+                { id: 5, name: "tortugas", estado: "Activo", imaen: tortugas, "status": false },
+                { id: 6, name: "tortugas", estado: "Activo", imaen: tortugas, "status": true },
+                { id: 7, name: "tortugas", estado: "Activo", imaen: tortugas, "status": true },
+                { id: 8, name: "tortugas", estado: "Activo", imaen: tortugas, "status": true },
+                { id: 9, name: "tortuga", estado: "Activo", imaen: tortugas, "status": false },
+                { id: 10, name: "tortuga", estado: "Activo", imaen: tortugas, "status": false },
+                { id: 11, name: "tortuga", estado: "Activo", imaen: tortugas, "status": true },
+                { id: 12, name: "tortuga", estado: "Activo", imaen: tortugas, "status": true },
+                { id: 13, name: "tortuga", estado: "Activo", imaen: tortugas, "status": true },
+                { id: 14, name: "tortuga", estado: "Activo", imaen: tortugas, "status": false },
+                { id: 15, name: "tortuga", estado: "Activo", imaen: tortugas, "status": false },
+                { id: 16, name: "tortuga", estado: "Activo", imaen: tortugas, "status": true },
             ],
             search: null,
             options: [
