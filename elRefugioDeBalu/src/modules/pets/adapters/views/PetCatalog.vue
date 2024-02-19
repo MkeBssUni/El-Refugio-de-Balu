@@ -2,18 +2,15 @@
     <b-container fluid>
         <b-row>
             <b-col cols="12" class="p-4">
-                <b-card bg-variant="orange" class="d-none d-lg-block px-3">
+                <b-card bg-variant="orange" class="px-3">
                     <b-row>
-                        <b-col cols="3" class="d-flex align-items-center">
+                        <b-col cols="3" class="d-none d-lg-flex align-items-center">
                             <div>
                                 <h2 class="text-dark-secondary-blue">¡ADOPTA CON NOSOTROS!</h2>
                                 <span style="font-size: 1.4rem;">Encuentra al nuevo intregrante de tu familia</span>
                             </div>
                         </b-col>
-                        <b-col cols="3" class="d-flex justify-content-end justify-content-xl-start">
-                            <img src="@/assets/imgs/gatito_buscador.png" height="119%" />
-                        </b-col>
-                        <b-col cols="6" class="d-flex align-items-center">
+                        <b-col cols="12" md="8" lg="6" class="d-flex align-items-center my-3">
                             <b-form>
                                 <span>Quiero adoptar un...</span>
                                 <b-row>
@@ -46,6 +43,9 @@
                                     </b-col>
                                 </b-row>
                             </b-form>
+                        </b-col>
+                        <b-col cols="4" lg="3" class="d-none d-md-flex justify-content-end">
+                            <img src="@/assets/imgs/gatito_buscador.png" height="119%" />
                         </b-col>
                     </b-row>
                 </b-card>
