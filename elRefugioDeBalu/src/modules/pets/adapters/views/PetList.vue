@@ -1,5 +1,8 @@
 <template>
     <b-container fluid>
+        <b-row>
+            <Encabezado color="#F2F2F2" :imagenUrl="require('@/assets/imgs/mascotas_pet_list.png')" titulo="Lista de mascotas" />
+        </b-row>
         <b-row align-h="end" class="px-4">
             <b-col cols="12" md="2" class="pt-3">
                 <b-input-group class="mt-3">
@@ -77,6 +80,7 @@
 </template>
 
 <script>
+import Encabezado from "../../../../views/components/Encabezado.vue";
 export default {
     data() {
         return {
@@ -153,7 +157,10 @@ export default {
                 default: return 'secondary';
             }
         },
-    }
+    },
+    components: {
+        Encabezado
+    },
 }
 </script>
 
