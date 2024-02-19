@@ -141,7 +141,7 @@ export default {
                         Gestión de categorías
                         <i class="material-icons ms-2" style="font-size: larger;">dashboard</i>
                     </b-button>
-                    <b-button variant="outline-dark-secondary-orange" :to="'/pet-list'"
+                    <b-button variant="outline-dark-secondary-orange" :to="'/petList'"
                         class="mt-3 d-flex align-items-center justify-content-center">
                         Gestión de animales
                         <i class="material-icons ms-2" style="font-size: larger;">pets</i>

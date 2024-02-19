@@ -7,7 +7,7 @@ export default {
     return {
       /* role: 'USUARIO' */
       /* role: 'MODERADOR' */
-      /* role: 'ADMINISTRADOR' */
+      role: 'ADMINISTRADOR'
     }
   }
 }
