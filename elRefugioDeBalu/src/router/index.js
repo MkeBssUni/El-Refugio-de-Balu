@@ -19,7 +19,7 @@ const routes = [
       {
         path: "/home",
         name: "home",
-        component: () => import("../views/Home.vue"),
+        component: () => import("../HomePageComponents/Home.vue"),
       },
       {
         path: "/pets",
@@ -45,6 +45,11 @@ const routes = [
         path: "/UsersList",
         name: "UsersList",
         component: () => import("../modules/users/components/UsersList.vue"),
+      },
+      {
+        path: "/animalCategories",
+        name: "animals",
+        component: () => import("../modules/animals/adapters/views/AnimalCategories.vue"),
       }
     ],
   },
