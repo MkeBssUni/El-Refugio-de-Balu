@@ -64,6 +64,7 @@
       <b-row class="pt-4">
         <b-col cols="12">
           <b-pagination
+          pills
             v-model="currentPage"
             :total-rows="filteredadoptions.length"
             :per-page="perPage"
