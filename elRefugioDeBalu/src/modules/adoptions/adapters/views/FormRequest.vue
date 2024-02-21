@@ -3,10 +3,10 @@
     <h1 class="mx-3 my-2">Solicitud de adopción</h1>
     <b-container>
       <b-row>
-        <b-col cols="10">
-          <div class="">
-            <div class="card mx-5 form">
-              <h4 style="margin-left: 2rem; display: inline-block">
+        <b-col cols="10" sm="10">
+          <div class="container-fluid">
+            <div class="card  form">
+              <h4 style="margin-left: 2rem" >
                 <i
                   class="material-icons ms-2"
                   style="font-size: larger; vertical-align: middle"
@@ -16,10 +16,10 @@
               </h4>
             </div>
             <b-card-group deck>
-              <b-card class="boxform mx-5" img-alt="Card image">
+              <b-card class="boxform " img-alt="Card image">
                 <b-container>
                   <b-row>
-                    <b-col>
+                    <b-col cols="4"  sm="12" lg="4" md="6" xl="4">
                       <b-form-group
                         id="input-group-2"
                         label="Nombre completo:"
@@ -28,7 +28,7 @@
                         <b-form-input id="input-2" required></b-form-input>
                       </b-form-group>
                     </b-col>
-                    <b-col>
+                    <b-col  cols="2"  sm="12" lg="2" md="6" xl="2">
                       <b-form-group
                         id="input-group-2"
                         label="Edad:"
@@ -37,7 +37,7 @@
                         <b-form-input id="input-2" required></b-form-input>
                       </b-form-group>
                     </b-col>
-                    <b-col>
+                    <b-col cols="3"  sm="12" lg="3" md="6" xl="3">
                       <b-form-group
                         id="input-group-2"
                         label="Teléfono de Casa:"
@@ -46,7 +46,7 @@
                         <b-form-input id="input-2" required></b-form-input>
                       </b-form-group>
                     </b-col>
-                    <b-col>
+                    <b-col cols="3"  sm="12" lg="3" md="6" xl="3">
                       <b-form-group
                         id="input-group-2"
                         label="Teléfono de Celular:"
@@ -57,7 +57,7 @@
                     </b-col>
                   </b-row>
                   <b-row class="my-2">
-                    <b-col>
+                    <b-col cols="6"  sm="12" lg="6" md="6" xl="6">
                       <b-form-group
                         id="input-group-2"
                         label="Correo Electrónico:"
@@ -66,7 +66,7 @@
                         <b-form-input id="input-2" required></b-form-input>
                       </b-form-group>
                     </b-col>
-                    <b-col>
+                    <b-col cols="6"  sm="12" lg="6" md="6" xl="6">
                       <b-form-group
                         id="input-group-2"
                         label="¿Con quién vives?:"
@@ -80,8 +80,8 @@
               </b-card>
             </b-card-group>
           </div>
-          <div class="my-4">
-            <div class="card mx-5 form-second">
+          <div class="container-fluid my-2">
+            <div class="card form-second">
               <h4 style="margin-left: 2rem; display: inline-block">
                 <i
                   class="material-icons ms-2"
@@ -92,10 +92,10 @@
               </h4>
             </div>
             <b-card-group deck>
-              <b-card class="boxform-second mx-5" img-alt="Card image">
+              <b-card class="boxform-second " img-alt="Card image">
                 <b-container>
                   <b-row>
-                    <b-col>
+                    <b-col  cols="6" sm="12" lg="6" md="6">
                       <b-form-group
                         id="input-group-2"
                         label="¿Tienes o has tenido otros animales de compañia?:"
@@ -104,7 +104,7 @@
                         <b-form-input id="input-2" required></b-form-input>
                       </b-form-group>
                     </b-col>
-                    <b-col>
+                    <b-col  cols="6" sm="12" lg="6" md="6">
                       <b-form-group
                         id="input-group-2"
                         label="¿Las personas con quien vives están de acuerdo en adoptar?:"
@@ -115,7 +115,7 @@
                     </b-col>
                   </b-row>
                   <b-row class="my-2">
-                    <b-col>
+                    <b-col cols="6" sm="12" lg="6" md="6">
                       <b-form-group
                         id="input-group-2"
                         label="¿En que parte de la casa lo planeas tener?:"
@@ -124,7 +124,7 @@
                         <b-form-input id="input-2" required></b-form-input>
                       </b-form-group>
                     </b-col>
-                    <b-col>
+                    <b-col  cols="6" sm="12" lg="6" md="6">
                       <b-form-group
                         id="input-group-2"
                         label="Comentarios adicionales:"
@@ -139,7 +139,7 @@
             </b-card-group>
           </div>
         </b-col>
-        <b-col cols="2" class="image-column"><img src="../../../../assets/imgs/gatoGrisCut.png" class="tam"/> </b-col>
+        <b-col cols="2" sm="2" lg="2" md="2" class="image-column"><img src="../../../../assets/imgs/gatoGrisCut.png" class="tam"/> </b-col>
       </b-row>
     </b-container>
   </div>
@@ -156,7 +156,7 @@ export default {};
 }
 
 .form {
-  width: 35%;
+  width: 50%;
   background-color: #ff9900;
   box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
     rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
@@ -169,7 +169,7 @@ export default {};
 }
 
 .form-second {
-  width: 35%;
+  width: 50%;
   background-color: #e84e0f;
   box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
     rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
@@ -182,16 +182,17 @@ export default {};
 }
 
 .tam {
-  width: 197%;
+  width: 150%;
 }
 .image-column {
   position: relative;
+  right:  8%;
 }
 
 .image-column img {
   position: absolute;
   bottom: 0;
-  right:  0.05;
+
 }
 
 .logo {
