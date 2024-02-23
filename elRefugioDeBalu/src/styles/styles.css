@@ -1,3 +1,24 @@
+:root {
+    --light: #FFFFFF;
+    --dark: #000000;
+    --success: #53A93D;
+    --danger: #A93D3D;
+    --purple: #AD5CB5;
+    --orange: #FFBC58;
+    --dark-orange: #FF9900;
+    --secondary-orange: #EE7240;
+    --dark-secondary-orange: #E84E0F;
+    --blue: #5EBFC5;
+    --dark-blue: #118A95;
+    --secondary-blue: #4DB8C0;
+    --dark-secondary-blue: #00737E;
+    --gray: #F2F2F2;
+    --dark-gray: #E6E6E6;
+    --dark-gray-input: #686868;
+    --gender-male: #2F73FE;
+    --gender-female: #F93A8C;
+  }  
+
 @font-face {
     font-family: "Baloo";
     src: url("../assets/Baloo-Regular.ttf") format("truetype");
@@ -30,3 +51,166 @@ body {
 .custom-scroll-style::-webkit-scrollbar-track {
     background-color: lightgray;
 }
+
+.header-homePage {
+    background-color: var(--dark-orange);
+    border-radius: 8px 0 0 8px;
+}
+
+.header-homePageBlue {
+    background-color: var(--blue);
+    border-radius: 0 8px 8px 0;
+}
+
+.title-headerPage {
+    color: #FFFFFF;
+}
+
+.info-homepage {
+    background-color: var(--blue);
+    border-radius: 8px;
+}
+
+.gallery {
+    display: flex;
+    max-width: 81rem;
+}
+
+.carrusel {
+    position: relative;
+    left: 0px;
+    width: 108rem;
+    border-radius: 8px;
+    height: 20rem;
+    overflow: hidden;
+    transition: 0.4s ease-in-out;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
+    flex: 0.25;
+}
+
+.carrusel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.carrusel:hover {
+    flex: 2;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+.carrusel figcaption {
+    position: absolute;
+    text-align: center;
+    height: 8rem;
+    width: 100%;
+    bottom: 0;
+    opacity: 0;
+}
+
+.textGalery {
+    color: var(--dark-secondary-blue) !important;
+    opacity: 2;
+}
+
+.carrusel:hover figcaption {
+    background-color: orange !important;
+    opacity: 0.75;
+    border-radius: 9px;
+}
+
+.carrusel figcaption h2.carrusel {
+    color: var(--dark-secondary-blue) !important;
+    font-size: 1.1rem;
+    opacity: 1;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.1rem;
+}
+
+.Banner {
+    position: relative;
+    left: 0px;
+    height: 35rem;
+    border-radius: 0.8px;
+    overflow: hidden;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
+  }
+  
+  .info_Banner {
+    font-size: 1.6rem;
+    background-color: var(--secondary-blue) !important;
+    opacity: 0.8;
+    width: 50%;
+    height: 100%;
+    margin: 0; /* Elimina el margen */
+  }
+  
+  .letter_Banner{
+    color: #fff !important;
+    opacity: 1;
+  }
+  
+  .card-img-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 0 !important;
+    border-radius: var(--bs-card-inner-border-radius);
+  }
+  
+  .home{
+    background-color: var(--dark-orange);
+    color: #FFFFFF;
+  }
+  
+  .friends{
+    background-color: var(--dark-orange);
+    color: #fff;
+  }
+  
+  .carousel-item{
+    background-color: var(--dark-orange) !important;
+    color: #fff;
+  }
+  
+  .AnimalFriends{
+    background-color: var(--dark-orange);
+    color:#fff;
+    border-radius: 15px;
+  }
+  
+  .icon-white{
+    color: #fff;
+  }
+  
+  .animalCategories{
+    background-color: var(--orange);
+    border-radius: 21px;
+  }
+  
+  .cardsAnimals{
+    padding: 5px;
+  }
+  
+  .card-body-animals{
+    background-color: #D9D9D9 !important;
+    border-radius: 25px;
+  }
+  
+  .card-img-top{
+    border-radius: 25px !important;
+  }
+
+  .pb-7 {
+    padding-bottom: 5rem !important;
+  }
+  
+  .imageFriends{
+    max-width: 12rem;
+    max-height: 65rem;
+    object-fit: cover;
+    border-radius: 8px;
+  }
