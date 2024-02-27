@@ -30,7 +30,7 @@
                     <b-col class="mt-3" cols="12" sm="12" md="4 " lg="3" xl="3"
                         v-for="(animal, index) in paginatedAnimalsList" :key="index">
                         <b-card :title="animal.name" :img-src=animal.imaen img-alt="Image" img-top tag="article"
-                            style="max-width: 20rem;" class="mb-2">
+                            style="max-width: 20rem; border-top-left-radius: 2rem; border-top-right-radius: 2rem; border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem; " class="mb-2">
                             <b-card-body class="py-0 justify-content-center card-body-animals">
                                 <b-row>
                                     <b-col class="my-2 mx-2 justify-content-center px-1" cols="12" sm="12" md="12" lg="12"
@@ -51,7 +51,7 @@
                     </b-col>
                 </b-row>
                 <div class="mt-3 d-flex justify-content-center">
-                    <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage"></b-pagination>
+                    <b-pagination pills v-model="currentPage" :total-rows="rows" :per-page="perPage"></b-pagination>
                 </div>
             </div>
         </b-container>
