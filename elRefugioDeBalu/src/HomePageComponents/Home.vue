@@ -116,18 +116,21 @@
                 </div>
             </b-col>
         </b-row>
-
-
+        <b-row>
+            <footer-balu-vue />
+        </b-row>
     </b-container>
 </template>
 
 <script>
 import CarouselGalery from '../HomePageComponents/Carrorusel.vue'
 import Banner from '../HomePageComponents/Banner.vue'
+import FooterBaluVue from '../views/FooterBalu.vue'
 export default {
     components: {
         CarouselGalery,
-        Banner
+        Banner,
+        FooterBaluVue
     }
 }
 </script>
