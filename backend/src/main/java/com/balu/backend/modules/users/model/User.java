@@ -1,5 +1,6 @@
 package com.balu.backend.modules.users.model;
 
+import com.balu.backend.modules.adresses.model.Address;
 import com.balu.backend.modules.people.model.Person;
 import com.balu.backend.modules.roles.model.Role;
 import jakarta.persistence.*;
@@ -43,4 +44,7 @@ public class User {
     private Role role;
     @OneToOne(mappedBy = "user")
     private Person person;
+    @OneToOne(mappedBy = "user")
+    private Address address;
+
 }
