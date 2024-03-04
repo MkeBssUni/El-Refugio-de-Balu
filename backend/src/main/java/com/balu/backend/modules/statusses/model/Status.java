@@ -19,4 +19,8 @@ public class Status {
     @Column(columnDefinition = "VARCHAR(40)", nullable = false, unique = true)
     @Enumerated(EnumType.STRING)
     private Statusses name;
+
+    public Status(Statusses name) {
+        this.name = name;
+    }
 }
