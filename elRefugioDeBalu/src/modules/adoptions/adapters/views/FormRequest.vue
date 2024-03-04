@@ -4,149 +4,32 @@
     <b-container>
       <b-row>
         <b-col cols="10" sm="10">
-          <div class="container-fluid">
-            <div class="card  form">
-              <h4 style="margin-left: 2rem" >
-                <i
-                  class="material-icons ms-2"
-                  style="font-size: larger; vertical-align: middle"
-                  >pets</i
-                >
-                Datos personales
-              </h4>
-            </div>
-            <b-card-group deck>
-              <b-card class="boxform " img-alt="Card image">
-                <b-container>
-                  <b-row>
-                    <b-col cols="4"  sm="12" lg="4" md="6" xl="4">
-                      <b-form-group
-                        id="input-group-2"
-                        label="Nombre completo:"
-                        label-for="input-2"
-                      >
-                        <b-form-input id="input-2" required></b-form-input>
-                      </b-form-group>
-                    </b-col>
-                    <b-col  cols="2"  sm="12" lg="2" md="6" xl="2">
-                      <b-form-group
-                        id="input-group-2"
-                        label="Edad:"
-                        label-for="input-2"
-                      >
-                        <b-form-input id="input-2" required></b-form-input>
-                      </b-form-group>
-                    </b-col>
-                    <b-col cols="3"  sm="12" lg="3" md="6" xl="3">
-                      <b-form-group
-                        id="input-group-2"
-                        label="Teléfono de Casa:"
-                        label-for="input-2"
-                      >
-                        <b-form-input id="input-2" required></b-form-input>
-                      </b-form-group>
-                    </b-col>
-                    <b-col cols="3"  sm="12" lg="3" md="6" xl="3">
-                      <b-form-group
-                        id="input-group-2"
-                        label="Teléfono de Celular:"
-                        label-for="input-2"
-                      >
-                        <b-form-input id="input-2" required></b-form-input>
-                      </b-form-group>
-                    </b-col>
-                  </b-row>
-                  <b-row class="my-2">
-                    <b-col cols="6"  sm="12" lg="6" md="6" xl="6">
-                      <b-form-group
-                        id="input-group-2"
-                        label="Correo Electrónico:"
-                        label-for="input-2"
-                      >
-                        <b-form-input id="input-2" required></b-form-input>
-                      </b-form-group>
-                    </b-col>
-                    <b-col cols="6"  sm="12" lg="6" md="6" xl="6">
-                      <b-form-group
-                        id="input-group-2"
-                        label="¿Con quién vives?:"
-                        label-for="input-2"
-                      >
-                        <b-form-input id="input-2" required></b-form-input>
-                      </b-form-group>
-                    </b-col>
-                  </b-row>
-                </b-container>
-              </b-card>
-            </b-card-group>
-          </div>
-          <div class="container-fluid my-2">
-            <div class="card form-second">
-              <h4 style="margin-left: 2rem; display: inline-block">
-                <i
-                  class="material-icons ms-2"
-                  style="font-size: larger; vertical-align: middle"
-                  >pets</i
-                >
-                Motivos de adopción
-              </h4>
-            </div>
-            <b-card-group deck>
-              <b-card class="boxform-second " img-alt="Card image">
-                <b-container>
-                  <b-row>
-                    <b-col  cols="6" sm="12" lg="6" md="6">
-                      <b-form-group
-                        id="input-group-2"
-                        label="¿Tienes o has tenido otros animales de compañia?:"
-                        label-for="input-2"
-                      >
-                        <b-form-input id="input-2" required></b-form-input>
-                      </b-form-group>
-                    </b-col>
-                    <b-col  cols="6" sm="12" lg="6" md="6">
-                      <b-form-group
-                        id="input-group-2"
-                        label="¿Las personas con quien vives están de acuerdo en adoptar?:"
-                        label-for="input-2"
-                      >
-                        <b-form-input id="input-2" required></b-form-input>
-                      </b-form-group>
-                    </b-col>
-                  </b-row>
-                  <b-row class="my-2">
-                    <b-col cols="6" sm="12" lg="6" md="6">
-                      <b-form-group
-                        id="input-group-2"
-                        label="¿En que parte de la casa lo planeas tener?:"
-                        label-for="input-2"
-                      >
-                        <b-form-input id="input-2" required></b-form-input>
-                      </b-form-group>
-                    </b-col>
-                    <b-col  cols="6" sm="12" lg="6" md="6">
-                      <b-form-group
-                        id="input-group-2"
-                        label="Comentarios adicionales:"
-                        label-for="input-2"
-                      >
-                        <b-form-input id="input-2" required></b-form-input>
-                      </b-form-group>
-                    </b-col>
-                  </b-row>
-                </b-container>
-              </b-card>
-            </b-card-group>
-          </div>
+          <form-style color="amarillo" contenido="Aqui los inputs" titulo="Datos personales" :inputs="datosPersonalesInputs" />
         </b-col>
-        <b-col cols="2" sm="2" lg="2" md="2" class="image-column"><img src="../../../../assets/imgs/gatoGrisCut.png" class="tam"/> </b-col>
       </b-row>
     </b-container>
   </div>
 </template>
 
 <script>
-export default {};
+import FormStyle from '../../../../views/components/FormStyle.vue';
+export default {
+  name:"FormRequest",
+  components: {
+    FormStyle
+  },
+  data() {
+    return {
+      datosPersonalesInputs: [
+        { label: "Nombre", value: "" },
+        { label: "Correo electrónico", value: "" },
+        // Añade más objetos para más inputs según sea necesario
+      ],
+      
+    }
+  },
+
+};
 </script>
 
 <style>
