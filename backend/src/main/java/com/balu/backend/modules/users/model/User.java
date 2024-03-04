@@ -36,7 +36,7 @@ public class User {
     private LocalDateTime blockedAt;
     @Column(insertable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    private LocalDateTime createdAt;
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
