@@ -1,5 +1,6 @@
 package com.balu.backend.modules.users.model;
 
+import com.balu.backend.modules.people.model.Person;
 import com.balu.backend.modules.roles.model.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -40,4 +41,6 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
+    @OneToOne(mappedBy = "user")
+    private Person person;
 }
