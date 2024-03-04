@@ -24,16 +24,16 @@ public class User {
     private String email;
     @Column(columnDefinition = "text", nullable = false)
     private String password;
-    private Long attempts;
+    private int attempts;
 
     @Column(columnDefinition = "TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date last_access;
+    private Date lastAccess;
     @Column(columnDefinition = "BOOL default false")
     private boolean blocked;
     @Column(columnDefinition = "TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime blocked_at;
+    private LocalDateTime blockedAt;
     @Column(insertable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
