@@ -1,2 +1,7 @@
-package com.balu.backend.modules.roles.model;public class Roles {
+package com.balu.backend.modules.roles.model;
+
+public enum Roles {
+    GENERAL,
+    ADMINISTRADOR,
+    MODERADOR,
 }
