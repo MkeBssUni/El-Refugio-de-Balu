@@ -30,11 +30,6 @@ const routes = [
         path: "/requestAdoption",
         name: "requestAdoption",
         component: () => import("../modules/adoptions/adapters/views/AdoptionRequest.vue"),
-      },,
-      {
-        path: "/formAdoption",
-        name: "formAdoption",
-        component: () => import("../modules/adoptions/adapters/views/FormRequest.vue"),
       },
       {
         path: "/login",
