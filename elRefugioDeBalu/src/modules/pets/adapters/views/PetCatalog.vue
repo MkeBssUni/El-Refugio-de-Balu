@@ -59,9 +59,10 @@
                 <b-card :key="pet.id" :img-src="pet.img" class="pet-card" no-body>
                     <b-row class="transparent absolute-position">
                         <b-col cols="12" class="d-flex justify-content-end">
-                            <b-button variant="dark-gray" class="pt-2 px-2 m-2 heart-icon-button" pill>
-                                <b-icon :icon="pet.favorite ? 'heart-fill' : 'heart'"
-                                    :class="pet.favorite ? 'text-danger' : ''" font-scale="2"></b-icon>
+                            <b-button variant="dark-gray" class="pt-2 px-2 m-2" pill @mouseover="hoverIn(pet.id)"
+                                @mouseleave="hoverOut(pet.id)">
+                                <b-icon :icon="getIcon(pet)" :class="{ 'text-danger': shouldHighlight(pet) }"
+                                    font-scale="2"></b-icon>
                             </b-button>
                         </b-col>
                     </b-row>
@@ -84,6 +85,7 @@
 export default {
     data() {
         return {
+            hoverStates: {},
             category: null,
             size: null,
             age: null,
@@ -120,6 +122,22 @@ export default {
                 { id: 3, name: 'Coco', category: 'gato', size: 'grande', age: 'joven', sex: 'macho', state: 'Morelos', city: 'Cuernavaca', favorite: true, img: 'https://hips.hearstapps.com/hmg-prod/images/gettyimages-999148130-6553e6d45a7b8.jpg?crop=1xw:0.84375xh;center,top&resize=1200:*' },
                 { id: 4, name: 'Bolis', category: 'gato', size: 'pequeno', age: 'cachorro', sex: 'hembra', state: 'Morelos', city: 'Cuernavaca', favorite: false, img: 'https://t2.ea.ltmcdn.com/es/posts/9/6/0/3_munchkin_23069_2_600.jpg' }
             ]
+        }
+    },
+    methods: {
+        hoverIn(id) {
+            this.$set(this.hoverStates, id, true);
+        },
+        hoverOut(id) {
+            this.$set(this.hoverStates, id, false);
+        },
+        getIcon(pet) {
+            if (this.hoverStates[pet.id]) return pet.favorite ? 'heart' : 'heart-fill';
+            return pet.favorite ? 'heart-fill' : 'heart';
+        },
+        shouldHighlight(pet) {
+            if (this.hoverStates[pet.id]) return !pet.favorite;
+            return pet.favorite;
         }
     }
 }
