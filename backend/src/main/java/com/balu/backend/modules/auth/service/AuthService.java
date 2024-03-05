@@ -3,6 +3,7 @@ package com.balu.backend.modules.auth.service;
 import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.modules.auth.dto.SignedDto;
 import com.balu.backend.modules.auth.dto.UserSignInDto;
+import com.balu.backend.modules.hash.service.HashService;
 import com.balu.backend.modules.users.model.User;
 import com.balu.backend.modules.users.service.UserService;
 import com.balu.backend.security.jwt.JwtProvider;
@@ -24,6 +25,7 @@ import java.util.Optional;
 public class AuthService {
     private final UserService userService;
     private final JwtProvider jwtProvider;
+    private final HashService hashService;
     private final String prefix = "Bearer";
     private final AuthenticationManager authenticationManager;
 
@@ -37,12 +39,13 @@ public class AuthService {
             Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userSignInDto.getUsername(), userSignInDto.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(auth);
             String token = jwtProvider.generateToken(auth);
-            SignedDto signedDto = new SignedDto(token, prefix,user.getId(),user.getRole());
-            signedDto.setUserId(user.getId());
+
+            SignedDto signedDto = new SignedDto(token, prefix,hashService.encrypt(user.getId()),user.getRole());
+
+            signedDto.setUserId(hashService.encrypt(user.getId()));
 
             return new ResponseEntity<>(new ResponseApi<>(signedDto, HttpStatus.OK, false, "ok"), HttpStatus.OK);
         }catch (Exception e){
-            System.out.println("este es el error que se esta generando: "+e);
             String message = "CredentialsMismatch";
             return new ResponseEntity<>(new ResponseApi<>(null, HttpStatus.UNAUTHORIZED, true, message), HttpStatus.BAD_REQUEST);
         }

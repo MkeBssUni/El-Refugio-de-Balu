@@ -11,7 +11,7 @@ import lombok.Setter;
 public class SignedDto {
     private String token;
     private String tokenType;
-    private Long userId;
+    private String userId;
     private Role role;
 
 }
