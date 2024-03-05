@@ -23,14 +23,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(columnDefinition = "text", nullable = false)
-    private String email;
+    private String username;
     @Column(columnDefinition = "text", nullable = false)
     private String password;
     private int attempts;
 
     @Column(columnDefinition = "TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date lastAccess;
+    private LocalDateTime lastAccess;
     @Column(columnDefinition = "BOOL default false")
     private boolean blocked;
     @Column(columnDefinition = "TIMESTAMP")
@@ -47,4 +47,9 @@ public class User {
     @OneToOne(mappedBy = "user")
     private Address address;
 
+    public User(String username, String password, Role role1) {
+        this.username = username;
+        this.password = password;
+        this.role = role1;
+    }
 }
