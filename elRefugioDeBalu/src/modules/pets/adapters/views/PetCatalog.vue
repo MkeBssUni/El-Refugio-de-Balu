@@ -1,24 +1,27 @@
 <template>
     <b-container fluid>
-        <b-row class="px-5 mt-5 mb-5">
+        <b-row class="px-5 my-5">
             <b-col cols="12">
                 <b-card bg-variant="orange" class="px-3">
                     <b-row>
-                        <b-col cols="3" class="d-none d-lg-flex align-items-center">
+                        <b-col cols="3" class="d-none d-xl-flex align-items-center text-start">
                             <div>
                                 <h2 class="text-dark-secondary-blue">¡ADOPTA CON NOSOTROS!</h2>
-                                <span style="font-size: 1.4rem;">Encuentra al nuevo intregrante de tu familia</span>
+                                <span style="font-size: 1.3rem;">Encuentra al nuevo intregrante de tu
+                                    familia</span>
                             </div>
                         </b-col>
-                        <b-col cols="12" md="8" lg="6" class="d-flex align-items-center my-3">
+                        <b-col cols="12" md="7" lg="8" xl="6" class="d-flex align-items-center my-2">
                             <b-form>
-                                <span>Quiero adoptar un...</span>
                                 <b-row>
-                                    <b-col cols="6" class="mt-3">
+                                    <b-col cols="12">
+                                        <span>Filtrar búsqueda por...</span>
+                                    </b-col>
+                                    <b-col cols="6" class="mt-2">
                                         <b-form-select v-model="category" :options="categories"
                                             class="form-select"></b-form-select>
                                     </b-col>
-                                    <b-col cols="6" class="mt-3">
+                                    <b-col cols="6" class="mt-2">
                                         <b-form-select v-model="size" :options="sizes"
                                             class="form-select"></b-form-select>
                                     </b-col>
@@ -30,6 +33,12 @@
                                         <b-form-select v-model="sex" :options="sexes"
                                             class="form-select"></b-form-select>
                                     </b-col>
+                                    <b-col cols="12" class="mt-3">
+                                        <b-form-select v-model="state" :options="states"
+                                            class="form-select"></b-form-select>
+                                    </b-col>
+                                </b-row>
+                                <b-row>
                                     <b-col cols="6" class="mt-3">
                                         <b-button variant="outline-danger"
                                             class="w-100 d-flex align-items-center justify-content-between">
@@ -47,7 +56,7 @@
                                 </b-row>
                             </b-form>
                         </b-col>
-                        <b-col cols="4" lg="3" class="d-none d-md-flex justify-content-end">
+                        <b-col cols="5" lg="4" xl="3" class="d-none d-md-flex justify-content-center">
                             <img src="@/assets/imgs/gatito_buscador.png" height="119%" />
                         </b-col>
                     </b-row>
@@ -55,13 +64,14 @@
             </b-col>
         </b-row>
         <b-row class="px-5 mb-5">
-            <b-col v-for="pet in pets" :key="pet.id" cols="12" sm="6" md="4" xl="3" class="mt-3">
+            <b-col v-for="pet in pets" :key="pet.id" cols="12" sm="6" md="4" lg="3" class="mt-3">
                 <b-card :key="pet.id" :img-src="pet.img" class="pet-card" no-body>
                     <b-row class="transparent absolute-position">
                         <b-col cols="12" class="d-flex justify-content-end">
-                            <b-button variant="dark-gray" class="pt-2 px-2 m-2" pill @mouseover="hoverIn(pet.id)"
-                                @mouseleave="hoverOut(pet.id)">
-                                <b-icon :icon="getIcon(pet)" :class="{ 'text-danger': shouldHighlight(pet) }"
+                            <b-button variant="dark-gray" class="m-2 py-2 d-flex align-items-center" pill
+                                @mouseover="hoverIn(pet.id)" @mouseleave="hoverOut(pet.id)">
+                                <b-icon :icon="getIcon(pet)"
+                                    :class="{ 'text-danger': shouldHighlight(pet), 'mt-1': true }"
                                     font-scale="2"></b-icon>
                             </b-button>
                         </b-col>
@@ -90,6 +100,14 @@ export default {
             size: null,
             age: null,
             sex: null,
+            state: null,
+            states: [
+                { value: null, text: 'Todas las ubicaciones' },
+                { value: 'CDMX', text: 'CDMX' },
+                { value: 'Jalisco', text: 'Jalisco' },
+                { value: 'Nuevo León', text: 'Nuevo León' },
+                { value: 'Morelos', text: 'Morelos' }
+            ],
             categories: [
                 { value: null, text: 'Todas las especies' },
                 { value: 'perro', text: 'Perro' },
@@ -157,5 +175,7 @@ export default {
 .pet-card img {
     height: 200px;
     object-fit: cover;
+    border-bottom-left-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
 }
 </style>
