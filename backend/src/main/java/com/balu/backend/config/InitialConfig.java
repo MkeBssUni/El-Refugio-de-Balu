@@ -7,9 +7,11 @@ import com.balu.backend.modules.statusses.model.IStatusRepository;
 import com.balu.backend.modules.statusses.model.Status;
 import com.balu.backend.modules.statusses.model.Statusses;
 import com.balu.backend.modules.users.model.IUserRepository;
+import com.balu.backend.modules.users.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
@@ -21,6 +23,7 @@ public class InitialConfig implements CommandLineRunner {
     private final IUserRepository iUserRepository;
     private final IStatusRepository iStatusRepository;
     private final IRoleRepository iRoleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional(rollbackFor = {SQLException.class,Exception.class})
@@ -34,6 +37,8 @@ public class InitialConfig implements CommandLineRunner {
         getOrSaveRoles(Roles.GENERAL);
         getOrSaveRoles(Roles.ADMINISTRADOR);
         getOrSaveRoles(Roles.MODERADOR);
+
+        getOrSaveUser("baluchis@mail.com", "baluchis", Roles.ADMINISTRADOR);
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
@@ -46,6 +51,16 @@ public class InitialConfig implements CommandLineRunner {
     public void getOrSaveRoles (Roles name){
         Optional<Role> optionalRole = iRoleRepository.findByName(name);
         optionalRole.orElseGet(() -> iRoleRepository.saveAndFlush(new Role(name)));
+    }
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
+    public void getOrSaveUser (String username, String password, Roles role){
+        Optional<Role> optionalRole = iRoleRepository.findByName(role);
+        Optional<User> optionalUser = iUserRepository.findByUsername(username);
+        if(optionalUser.isEmpty()){
+            optionalRole.ifPresent(role1 -> {
+                iUserRepository.saveAndFlush(new User(username, passwordEncoder.encode(password), role1));
+            });
+        }
     }
 }
 
