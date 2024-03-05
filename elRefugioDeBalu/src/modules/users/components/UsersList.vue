@@ -3,7 +3,7 @@
     <Encabezado
       color="#00737e"
       :imagenUrl="require('@/assets/imgs/perroblanco.png')"
-      titulo="Lista de usuarios"
+      titulo="Lista de moderadores"
     />
     <b-container fluid>
       <b-row class="justify-content-center px-4">
@@ -30,7 +30,11 @@
           </b-input-group>
         </b-col>
         <b-col cols="12" md="4" class="pt-0 pt-md-3">
-          <b-button variant="outline-success" class="mt-3 d-flex align-items-center justify-content-center">
+          <b-button
+            variant="outline-success"
+            class="mt-3 d-flex align-items-center justify-content-center"
+            @click="navigateToAddUserForm"
+          >
             <b-icon icon="person-plus-fill" font-scale="1"></b-icon> Agregar
           </b-button>
         </b-col>
@@ -53,7 +57,6 @@
             class="text-center custom-scroll-style"
           >
             <template #cell(actions)="data">
-              <!-- Agregar el evento @click para mostrar la alerta -->
               <b-button
                 @click="showDeleteConfirmation(data.item)"
                 pill
@@ -61,10 +64,7 @@
                 variant="outline-danger"
                 class="px-2"
               >
-              <i
-                  class="material-icons "
-                  style="font-size: larger; vertical-align: middle"
-                  >personremove</i>
+              <b-icon icon="pencil-fill"></b-icon>
               </b-button>
             </template>
 
@@ -81,7 +81,8 @@
       </b-row>
       <b-row class="pt-4">
         <b-col cols="12">
-          <b-pagination pills
+          <b-pagination
+            pills
             v-model="currentPage"
             :total-rows="filteredUsers.length"
             :per-page="perPage"
@@ -94,7 +95,7 @@
 </template>
 
 <script>
-import Swal from 'sweetalert2'; 
+import Swal from "sweetalert2";
 
 import Encabezado from "../../../views/components/Encabezado.vue";
 export default {
@@ -121,7 +122,7 @@ export default {
           phoneNumber: "7773778161",
           status: "Activo",
         },
-         {
+        {
           name: "Anna christina",
           lastName: "Bustos",
           middleName: ".",
@@ -183,12 +184,14 @@ export default {
   },
   methods: {
     editUser(user) {},
-    deleteUser(user) {
+    deleteUser(user) {},
+    navigateToAddUserForm() {
+      this.$router.push({ name: "UsersForm" });
     },
     showDeleteConfirmation(user) {
       Swal.fire({
         title: "¿Estás seguro?",
-        text: "¿Estás seguro que desea modificar el status de este usuario?",
+        text: "¿Estás seguro que desea modificar el status de este moderador?",
         icon: "warning",
         iconColor: "#FF0000",
         showCancelButton: true,
@@ -197,7 +200,7 @@ export default {
         cancelButtonText: "Cancelar",
       }).then((result) => {
         if (result.isConfirmed) {
-          this.deleteUser(user); 
+          this.deleteUser(user);
         }
       });
     },
