@@ -26,7 +26,8 @@ public class HashService {
         return new SecretKeySpec(keyBytes, "AES");
     }
 
-    public String encrypt(String plaintext) throws Exception {
+    public String encrypt(Object data) throws Exception {
+        String plaintext = convertToString(data);
         SecretKey key = generateSecretKeyFromString();
         Cipher cipher = Cipher.getInstance(ALGORITHM);
         IvParameterSpec ivParams = new IvParameterSpec(IV);
@@ -41,5 +42,15 @@ public class HashService {
         cipher.init(Cipher.DECRYPT_MODE, key, ivParams);
         byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedText));
         return new String(decryptedBytes, StandardCharsets.UTF_8);
+    }
+
+    private String convertToString(Object data) {
+        if (data instanceof Number) {
+            return String.valueOf(data);
+        } else if (data instanceof String) {
+            return (String) data;
+        } else {
+            throw new IllegalArgumentException("Tipo de dato no soportado");
+        }
     }
 }
