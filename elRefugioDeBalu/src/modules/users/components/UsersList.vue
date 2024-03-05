@@ -53,24 +53,18 @@
             class="text-center custom-scroll-style"
           >
             <template #cell(actions)="data">
+              <!-- Agregar el evento @click para mostrar la alerta -->
               <b-button
-                @click="deleteUser(data.item)"
-                pill
-                size="sm"
-                variant="outline-warning"
-                class="px-2"
-                style="margin-right: 5px"
-              >
-                <b-icon icon="pencil-fill" font-scale="1"></b-icon>
-              </b-button>
-              <b-button
-                @click="deleteUser(data.item)"
+                @click="showDeleteConfirmation(data.item)"
                 pill
                 size="sm"
                 variant="outline-danger"
                 class="px-2"
               >
-                <b-icon icon="trash-fill" font-scale="1"></b-icon>
+              <i
+                  class="material-icons "
+                  style="font-size: larger; vertical-align: middle"
+                  >personremove</i>
               </b-button>
             </template>
 
@@ -78,7 +72,7 @@
               <b-badge v-if="data.value === 'Activo'" variant="success">
                 {{ data.value }}
               </b-badge>
-              <b-badge v-else-if="data.value === 'Inactivo'" variant="warning">
+              <b-badge v-else-if="data.value === 'Inactivo'" variant="danger">
                 {{ data.value }}
               </b-badge>
             </template>
@@ -100,6 +94,8 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'; 
+
 import Encabezado from "../../../views/components/Encabezado.vue";
 export default {
   data() {
@@ -125,15 +121,7 @@ export default {
           phoneNumber: "7773778161",
           status: "Activo",
         },
-        {
-          name: "Andrea Elizabeth",
-          lastName: "Díaz",
-          middleName: "Zagal",
-          email: "andy@gmail.com",
-          phoneNumber: "7777809883",
-          status: "Inactivo",
-        },
-        {
+         {
           name: "Anna christina",
           lastName: "Bustos",
           middleName: ".",
@@ -155,14 +143,6 @@ export default {
           middleName: "Perez",
           email: "Marianne@gmail.com",
           phoneNumber: "7774567890",
-          status: "Activo",
-        },
-        {
-          name: "Ivan Alejandro ",
-          lastName: "Moreno",
-          middleName: "Ayala",
-          email: "Lobo@gmail.com",
-          phoneNumber: "7773779674",
           status: "Activo",
         },
       ],
@@ -203,7 +183,24 @@ export default {
   },
   methods: {
     editUser(user) {},
-    deleteUser(user) {},
+    deleteUser(user) {
+    },
+    showDeleteConfirmation(user) {
+      Swal.fire({
+        title: "¿Estás seguro?",
+        text: "¿Estás seguro que desea modificar el status de este usuario?",
+        icon: "warning",
+        iconColor: "#FF0000",
+        showCancelButton: true,
+        showConfirmButton: true,
+        confirmButtonText: "Modificar",
+        cancelButtonText: "Cancelar",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.deleteUser(user); 
+        }
+      });
+    },
   },
   components: {
     Encabezado,
