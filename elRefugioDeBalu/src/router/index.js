@@ -55,6 +55,11 @@ const routes = [
         path: "/animalCategories",
         name: "animals",
         component: () => import("../modules/animals/adapters/views/AnimalCategories.vue"),
+      },
+      {
+        path: "/UsersForm",
+        name: "UsersForm",
+        component: () => import("../modules/users/components/UsersForm.vue"),
       }
     ],
   },
