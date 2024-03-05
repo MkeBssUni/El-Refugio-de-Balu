@@ -3,8 +3,64 @@
     <h1 class="mx-3 my-2">Solicitud de adopción</h1>
     <b-container>
       <b-row>
-        <b-col cols="10" sm="10">
-          <form-style color="amarillo" contenido="Aqui los inputs" titulo="Datos personales" :inputs="datosPersonalesInputs" />
+        <b-col cols="12" sm="12">
+          <!-- inicio de plantilla -->
+          <div class="container-fluid">
+            <div class="card encabezadoColorform">
+              <h4 style="margin-left: 2rem">
+                <i
+                  class="material-icons ms-2"
+                  style="font-size: larger; vertical-align: middle"
+                  >pets</i
+                >
+                Datos personales
+              </h4>
+            </div>
+            <b-card-group deck>
+              <b-card class="contentform" img-alt="Card image">
+                <b-container>
+                  <!-- Aqui es donde va el formulario -->
+                  <!-- ingresar el contenido aqui -->
+                  <!-- desde aqui pueden manipular a su manera el formulario -->
+                  <!-- incio de ejemplo -->
+                  <b-row>
+                    <b-col>
+                      <b-form-group
+                        id="input-group-1"
+                        label="ejemplo:"
+                        label-for="input-1"
+                        description="We'll never share your email with anyone else."
+                      >
+                        <b-form-input
+                          id="input-1"
+                          type="email"
+                          placeholder="Enter email"
+                          required
+                        ></b-form-input>
+                      </b-form-group>
+                    </b-col>
+                    <b-col>
+                      <b-form-group
+                        id="input-group-1"
+                        label="ejemplo:"
+                        label-for="input-1"
+                        description="We'll never share your email with anyone else."
+                      >
+                        <b-form-input
+                          id="input-1"
+                          type="email"
+                          placeholder="Enter email"
+                          required
+                        ></b-form-input>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+                  <!-- fin ejemplo -->
+                </b-container>
+              </b-card>
+            </b-card-group>
+          </div>
+          <!-- fin de plantilla -->
         </b-col>
       </b-row>
     </b-container>
@@ -12,73 +68,26 @@
 </template>
 
 <script>
-import FormStyle from '../../../../views/components/FormStyle.vue';
 export default {
-  name:"FormRequest",
-  components: {
-    FormStyle
-  },
+  name: "FormRequest",
+  components: {},
   data() {
-    return {
-      datosPersonalesInputs: [
-        { label: "Nombre", value: "" },
-        { label: "Correo electrónico", value: "" },
-        // Añade más objetos para más inputs según sea necesario
-      ],
-      
-    }
+    return {};
   },
-
 };
 </script>
 
 <style>
-.fondo-solicitud {
-  background-color: #5ebfc5;
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
-}
-
-.form {
+.encabezadoColorform {
   width: 50%;
-  background-color: #ff9900;
+  background-color: #ffb23f;
   box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
     rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
 }
 
-.boxform {
-  background-color: #ffbc58;
+.contentform {
+  background-color: #ffc876;
   box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
     rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
-}
-
-.form-second {
-  width: 50%;
-  background-color: #e84e0f;
-  box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
-    rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
-}
-
-.boxform-second {
-  background-color: #ee7240;
-  box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
-    rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
-}
-
-.tam {
-  width: 150%;
-}
-.image-column {
-  position: relative;
-  right:  8%;
-}
-
-.image-column img {
-  position: absolute;
-  bottom: 0;
-
-}
-
-.logo {
-  width: 50%;
 }
 </style>
