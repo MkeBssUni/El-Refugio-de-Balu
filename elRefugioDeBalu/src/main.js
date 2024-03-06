@@ -5,7 +5,9 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
-
+//Axios
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 
 // Import Bootstrap and BootstrapVue CSS files (order is important)
 import 'bootstrap/dist/css/bootstrap.css'
@@ -18,6 +20,8 @@ Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
 Vue.use(VueSweetalert2);
+//Axios
+Vue.use(VueAxios, axios)
 
 new Vue({
   router,
