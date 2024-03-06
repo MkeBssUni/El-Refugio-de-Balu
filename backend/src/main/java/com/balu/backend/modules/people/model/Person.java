@@ -31,4 +31,12 @@ public class Person {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    public void savePublicRegister(PublicRegisterDto dto,User user){
+        this.name = dto.getName();
+        this.lastName = dto.getLastname();
+        this.surName = dto.getSurname();
+        this.phoneNumber = dto.getPhoneNumber();
+        this.user = user;
+    }
 }

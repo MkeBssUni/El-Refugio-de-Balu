@@ -3,6 +3,8 @@ package com.balu.backend.modules.users.model;
 import com.balu.backend.modules.adresses.model.Address;
 import com.balu.backend.modules.people.model.Person;
 import com.balu.backend.modules.roles.model.Role;
+import com.balu.backend.modules.roles.model.Roles;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -43,13 +45,38 @@ public class User {
     @JoinColumn(name = "role_id")
     private Role role;
     @OneToOne(mappedBy = "user")
+    @JsonIgnore
     private Person person;
     @OneToOne(mappedBy = "user")
+    @JsonIgnore
     private Address address;
 
     public User(String username, String password, Role role1) {
         this.username = username;
         this.password = password;
         this.role = role1;
+    }
+    public void savePublicRegister(String username, String password, Role role){
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.blocked = true;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", attempts=" + attempts +
+                ", lastAccess=" + lastAccess +
+                ", blocked=" + blocked +
+                ", blockedAt=" + blockedAt +
+                ", createdAt=" + createdAt +
+                ", role=" + role +
+                ", person=" + person +
+                ", address=" + address +
+                '}';
     }
 }
