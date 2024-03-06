@@ -32,10 +32,8 @@ public class AuthService {
     public ResponseEntity<ResponseApi<SignedDto>> signIn(UserSignInDto userSignInDto){
         try {
             Optional<User> userOptional = userService.loadUserByUsername(userSignInDto.getUsername());
-            if (userOptional.isEmpty())
-                return new ResponseEntity<>(new ResponseApi<>(null, HttpStatus.NOT_FOUND, true, "NotFound"), HttpStatus.BAD_REQUEST);
+            if(userOptional.isEmpty()) return new ResponseEntity<>(new ResponseApi<>(HttpStatus.UNAUTHORIZED, true, "Invalid credentials"), HttpStatus.UNAUTHORIZED);
             User user = userOptional.get();
-
             Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userSignInDto.getUsername(), userSignInDto.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(auth);
             String token = jwtProvider.generateToken(auth);
@@ -46,8 +44,11 @@ public class AuthService {
 
             return new ResponseEntity<>(new ResponseApi<>(signedDto, HttpStatus.OK, false, "ok"), HttpStatus.OK);
         }catch (Exception e){
-            String message = "CredentialsMismatch";
-            return new ResponseEntity<>(new ResponseApi<>(null, HttpStatus.UNAUTHORIZED, true, message), HttpStatus.BAD_REQUEST);
+            String message = e.getMessage();
+            if(e.getMessage().contains("NotFound")){
+                message = "Invalid credentials";
+            }
+            return new ResponseEntity<>(new ResponseApi<>(HttpStatus.UNAUTHORIZED, true, message), HttpStatus.BAD_REQUEST);
         }
     }
 }
