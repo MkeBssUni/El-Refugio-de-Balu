@@ -27,6 +27,7 @@
                 <b-row class="border" v-if="saveCategoryForm">
                     <b-col>
                         <saveCategory/>
+                        <h4>HAAAAAAAAAAAAAAAAAAAA</h4>
                     </b-col>
                 </b-row>
             </div>
@@ -119,8 +120,8 @@ export default {
     },
     methods:{
         viewCategoryRegistrationForm(){
-            this.saveCategory=!this.saveCategory
-            console.log("entra aca",this.saveCategory)
+            this.saveCategoryForm = !this.saveCategoryForm;
+            console.log("entra aca",this.saveCategoryForm)
         }
     }
 }
