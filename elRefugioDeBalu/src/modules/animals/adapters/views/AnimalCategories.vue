@@ -8,7 +8,7 @@
             <div class="mt-3">
                 <b-row class="justify-content-end">
                     <b-col cols="12" sm="12" md="3" lg="2" xl="2" class="d-flex justify-content-end my-2">
-                        <b-button as="col" cols="12" sm="12" md="1" pill class="py-1 w-100 d-flex align-items-center justify-content-center" variant="outline-danger">
+                        <b-button as="col" cols="12" sm="12" md="1" pill class="py-1 w-100 d-flex align-items-center justify-content-center" variant="outline-danger" @click="viewCategoryRegistrationForm()">
                             Registrar <i class="material-icons ms-3">add_circle</i>
                         </b-button>
 
@@ -22,6 +22,11 @@
                             <b-form-input as id="searchInput" type="search" placeholder="Buscar..."
                                 class="searchInput rounded-pill" v-model="search"></b-form-input>
                         </b-input-group>
+                    </b-col>
+                </b-row>
+                <b-row class="border" v-if="saveCategoryForm">
+                    <b-col>
+                        <saveCategory/>
                     </b-col>
                 </b-row>
             </div>
@@ -62,11 +67,13 @@
 import Encabezado from '../../../../views/components/Encabezado.vue';
 import gatos from "../../../../assets/imgs/gatoGrisCut.png"
 import tortugas from "../../../../assets/imgs/tortugas1.jpeg"
+import SaveCategory from './SaveCategory.vue';
 
 export default {
     name: "AnimalCategories",
     components: {
         Encabezado,
+        SaveCategory
     },
     data() {
         return {
@@ -97,6 +104,7 @@ export default {
             selected: null,
             currentPage: 1,
             perPage: 8,
+            saveCategoryForm:false
         }
     },
     computed: {
@@ -107,6 +115,12 @@ export default {
             const startIndex = (this.currentPage - 1) * this.perPage;
             const endIndex = startIndex + this.perPage;
             return this.AnimalsList.slice(startIndex, endIndex);
+        }
+    },
+    methods:{
+        viewCategoryRegistrationForm(){
+            this.saveCategory=!this.saveCategory
+            console.log("entra aca",this.saveCategory)
         }
     }
 }
