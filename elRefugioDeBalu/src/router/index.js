@@ -47,6 +47,11 @@ const routes = [
         component: () => import("../modules/pets/adapters/views/PetList.vue"),
       },
       {
+        path: "/petForm",
+        name: "petForm",
+        component: () => import("../modules/pets/adapters/views/RegisterForm.vue"),
+      },
+      {
         path: "/UsersList",
         name: "UsersList",
         component: () => import("../modules/users/components/UsersList.vue"),
