@@ -34,7 +34,7 @@ const routes = [
       {
         path: "/formAdoption",
         name: "formAdoption",
-        component: () => import("../modules/adoptions/adapters/views/FormRequest.vue"),
+        component: () => import("../modules/adoptions/adapters/views/FormAdoption.vue"),
       },
       {
         path: "/login",
