@@ -17,19 +17,19 @@
                                     <b-col cols="12">
                                         <span>Filtrar búsqueda por...</span>
                                     </b-col>
-                                    <b-col cols="6" class="mt-2">
+                                    <b-col cols="12" sm="6" class="mt-2">
                                         <b-form-select v-model="category" :options="categories"
                                             class="form-select"></b-form-select>
                                     </b-col>
-                                    <b-col cols="6" class="mt-2">
+                                    <b-col cols="12" sm="6" class="mt-3 mt-md-2">
                                         <b-form-select v-model="size" :options="sizes"
                                             class="form-select"></b-form-select>
                                     </b-col>
-                                    <b-col cols="6" class="mt-3">
+                                    <b-col cols="12" sm="6" class="mt-3">
                                         <b-form-select v-model="age" :options="ages"
                                             class="form-select"></b-form-select>
                                     </b-col>
-                                    <b-col cols="6" class="mt-3">
+                                    <b-col cols="12" sm="6" class="mt-3">
                                         <b-form-select v-model="sex" :options="sexes"
                                             class="form-select"></b-form-select>
                                     </b-col>
