@@ -1,11 +1,18 @@
 <script>
+import Swal from 'sweetalert2';
+import instance from '../../../../config/axios';
+import { decrypt, encrypt } from '../../../../kernel/hashFunctions';
 export default {
     data() {
         return {
             form: {
-                email: '',
+                username: '',
                 password: '',
                 isValid: false
+            },
+            logInForm: {
+                username: '',
+                password: ''
             },
             errors: {
                 email: '',
@@ -17,46 +24,94 @@ export default {
             },
             arrayRegex: {
                 validUsername: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                //validPassword: /^(?=.*[A-Z]+)(?=.*[._#]+)(?=.*[0-9]+)[a-zA-Z0-9._#]{3,16}$/
             }
         }
     },
     methods: {
-        validateEmail() {
-            let input = document.getElementById('input-email');
-            if (this.form.email === '') {
-                this.errors.email = 'Campo requerido';
-                input.classList.add('is-invalid');
-                this.showErrors.email = true;
-            } else if (!this.arrayRegex.validUsername.test(this.form.email)) {
-                input.classList.add('is-invalid');
-                this.errors.email = 'Campo no válido';
-                this.showErrors.email = true;
+        validateInput(validateInput) {
+            let input;
+            switch (validateInput) {
+                case 'email':
+                    input = document.getElementById('input-email');
+                    if (this.form.username === '') {
+                        this.errors.email = 'Campo requerido';
+                        input.classList.add('is-invalid');
+                        this.showErrors.email = true;
+                    } else if (!this.arrayRegex.validUsername.test(this.form.username)) {
+                        input.classList.add('is-invalid');
+                        this.errors.email = 'Campo no válido';
+                        this.showErrors.email = true;
+                    } else {
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                        this.showErrors.email = false;
+                    }
+                    break;
+                case 'password':
+                    input = document.getElementById('input-password');
+                    if (this.form.password === '') {
+                        this.errors.password = 'Campo requerido';
+                        input.classList.add('is-invalid');
+                        this.showErrors.password = true;
+                    } else {
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                        this.showErrors.password = false;
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            if (this.form.username !== '' && this.form.password !== '' && !this.showErrors.email && !this.showErrors.password) {
+                this.form.isValid = true;
             } else {
-                input.classList.remove('is-invalid');
-                input.classList.add('is-valid');
-                this.showErrors.email = false;
+                this.form.isValid = false;
             }
         },
-        validatePassword() {
-            let input = document.getElementById('input-password');
-            if (this.form.password === '') {
-                this.errors.password = 'Campo requerido';
-                input.classList.add('is-invalid');
-                this.showErrors.password = true;
-            } else {
-                input.classList.remove('is-invalid');
-                input.classList.add('is-valid');
-                this.showErrors.password = false;
+        async login() {
+            this.logInForm.username = await encrypt(this.form.username);
+            this.logInForm.password = await encrypt(this.form.password);
+
+            Swal.fire({
+                title: 'Iniciando sesión',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                willOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            try {
+                const response = await instance.post('/auth/', this.logInForm)
+                console.log("response: ", response.data.data);
+
+                localStorage.setItem('userId', response.data.data.userId);
+                localStorage.setItem('token', await encrypt(response.data.data.token));
+                localStorage.setItem('role', await encrypt(response.data.data.role.name));
+
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Bienvenido!',
+                    text: 'Iniciaste sesión correctamente'
+                });
+
+                // redirigir a la página de mascotas
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Usuario o contraseña incorrectos'
+                });
             }
         }
     }
 }
 </script>
+
 <template>
     <b-container fluid class="bg-blue">
         <b-row align-v="center">
-            <!-- Formulario inicio de sesión -->
             <b-col cols="5" class="px-5">
                 <b-card class="shadow bg-orange">
                     <img src="../../../../assets/imgs/logo blanco.png" class="img-fluid d-block mx-auto"
@@ -64,24 +119,24 @@ export default {
                     <b-form class="px-5">
                         <b-form-group class="my-3 text-white" label="Correo electrónico:" label-for="input-email">
                             <b-form-input class="bg-light shadow text-dark-gray-input" id="input-email"
-                                v-model.trim="form.email" @input="validateEmail" @focus="validateEmail"
+                                v-model.trim="form.username" @input="validateInput('email')"
                                 type="email"></b-form-input>
-                            <b-form-invalid-feedback v-if="showErrors.email">{{ errors.email }}</b-form-invalid-feedback>
+                            <b-form-invalid-feedback v-if="showErrors.email">{{ errors.email
+                                }}</b-form-invalid-feedback>
                         </b-form-group>
 
                         <b-form-group class="my-3 text-white" label="Contraseña:" label-for="input-password">
-                            <!--Pendiente añadir icono de ver contraseña -->
                             <b-form-input id="input-password" class="bg-light shadow text-dark-gray-input"
-                                v-model.trim="form.password" @input="validatePassword" @focus="validatePassword"
+                                v-model.trim="form.password" @input="validateInput('password')"
                                 type="password"></b-form-input>
                             <b-form-invalid-feedback v-if="showErrors.password">{{ errors.password
-                            }}</b-form-invalid-feedback>
+                                }}</b-form-invalid-feedback>
                         </b-form-group>
-                        <!-- centrar el botón -->
                         <b-row class="justify-content-center">
                             <b-col class="d-flex justify-content-center align-items-center mt-3">
-                                <b-button class="bg-dark-secondary-orange text-white mx-5" type="submit">Iniciar
-                                    sesión</b-button>
+                                <!-- comprobar que no se estén mostrando errores -->
+                                <b-button lass="bg-dark-secondary-orange text-white mx-5" @click="login()"
+                                    :disabled="!form.isValid">Iniciar sesión</b-button>
                             </b-col>
                         </b-row>
 
@@ -94,9 +149,7 @@ export default {
                     </b-form>
                 </b-card>
             </b-col>
-            <!-- Image -->
             <b-col cols="7" class="text-center">
-                <!-- la imagen debe estar pegada del lado izquierdo y no debe exceder el alto de la pantalla -->
                 <b-img
                     src="https://img.freepik.com/foto-gratis/ai-generado-perro-labrador-retriever_23-2150686788.jpg?w=740&t=st=1707087667~exp=1707088267~hmac=fef11794c20b1e6d8d9dea1a348eb8e50c293ef7c414c3bb0ec333617e044beb"
                     fluid left rounded class="img"></b-img>
