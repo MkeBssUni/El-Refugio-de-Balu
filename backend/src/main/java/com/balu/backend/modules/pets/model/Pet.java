@@ -1,6 +1,10 @@
 package com.balu.backend.modules.pets.model;
 
 import com.balu.backend.modules.categories.model.Category;
+import com.balu.backend.modules.pets.model.enums.AgeUnits;
+import com.balu.backend.modules.pets.model.enums.Genders;
+import com.balu.backend.modules.pets.model.enums.LifeStages;
+import com.balu.backend.modules.pets.model.enums.WeightUnits;
 import com.balu.backend.modules.statusses.model.Status;
 import com.balu.backend.modules.users.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
