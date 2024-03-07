@@ -84,7 +84,6 @@ export default {
 
             try {
                 const response = await instance.post('/auth/', this.logInForm)
-                console.log("response: ", response.data.data);
 
                 localStorage.setItem('userId', response.data.data.userId);
                 localStorage.setItem('token', await encrypt(response.data.data.token));
@@ -98,11 +97,37 @@ export default {
 
                 // redirigir a la página de mascotas
             } catch (error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Usuario o contraseña incorrectos'
-                });
+                let message = error.response.data.message;
+                switch (message) {
+                    case 'Bad credentials':
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Usuario o contraseña incorrectos'
+                        });
+                        break;
+                    case 'INCORRECT_CREDENTIALS':
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Usuario o contraseña incorrectos'
+                        });
+                        break;
+                    case 'ACCOUNT_BLOCKED_TEMPORARY':
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Tu cuenta se encuentra bloqueda temporalmente'
+                        });
+                        break;
+                    case 'ACCOUNT_JUST_BLOCKED':
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Has alcanzado el límite de intentos, tu cuenta ha sido bloqueada temporalmente, puedes intentarlo nuevamente en 30 minutos'
+                        });
+                        break;
+                }
             }
         }
     }
