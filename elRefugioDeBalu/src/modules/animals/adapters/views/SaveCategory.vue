@@ -1,8 +1,12 @@
 <template>
   <div>
     <div class="card encabezadoColorform">
-      <h4 style="margin-left: 2rem">
-        <i class="material-icons ms-2" style="font-size: larger; vertical-align: middle">pets</i>
+      <h4 class="mt-2" style="margin-left: 2rem">
+        <i
+          class="material-icons ms-2"
+          style="font-size: larger; vertical-align: middle"
+          >pets</i
+        >
         Registro de categoria
       </h4>
     </div>
@@ -11,30 +15,65 @@
         <b-row>
           <b-col>
             <b-form-group label="Categoria">
-              <b-form-input id="input-1" v-model="this.SaveCategoryDto.name" :state="state" trim></b-form-input>
+              <b-form-input
+                id="input-1"
+                v-model="SaveCategoryDto.name"
+                trim
+              ></b-form-input>
             </b-form-group>
           </b-col>
           <b-col>
             <b-form-group label="Imagen">
-              <b-form-file class="form-control" v-model="this.SaveCategoryDto.image" plain
-                @change="ConvertImageToBase64($event)"></b-form-file>
+              <b-form-file
+                class="form-control"
+                v-model="SaveCategoryDto.image"
+                plain
+                @change="ConvertImageToBase64($event)"
+              ></b-form-file>
             </b-form-group>
           </b-col>
         </b-row>
         <b-row>
           <b-col>
             <b-form-group label="Descripción">
-              <b-form-textarea id="input-1" v-model="this.SaveCategoryDto.name" :state="state" trim
-                rows="3"></b-form-textarea>
+              <b-form-textarea
+                id="input-1"
+                v-model="SaveCategoryDto.description"
+                trim
+                rows="4"
+              ></b-form-textarea>
             </b-form-group>
           </b-col>
-          <b-col>
-            <b-img :src="this.SaveCategoryDto.image" fluid thumbnail></b-img>
+          <b-col class="mt-4">
+            <b-img
+              v-if="this.SaveCategoryDto.image"
+              :src="this.SaveCategoryDto.image"
+              class="categoryImage mt-2"
+              fluid
+              thumbnail
+            ></b-img>
           </b-col>
         </b-row>
         <b-row class="mt-3">
-          <b-col class="text-right">
-            <b-button variant="outline-success">Registrar</b-button>
+          <b-col class="text-right"
+            ><b-button
+              variant="outline-success"
+              v-if="ValidationFormCategoryRegister()"
+              disabled
+              >Registrar</b-button
+            >
+            <b-button
+              variant="outline-success"
+              @click="ViewAlertConfirmationRegistrationCategory"
+              v-else
+              >Registrar</b-button
+            >
+            <b-button
+              class="mx-2"
+              variant="outline-danger"
+              @click="$emit('SavedCategory')"
+              >Cancelar</b-button
+            >
           </b-col>
         </b-row>
       </b-card>
@@ -43,6 +82,8 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
+
 export default {
   name: "SaveCategory",
   data() {
@@ -52,30 +93,67 @@ export default {
         description: "",
         image: "",
       },
+      size: false,
     };
   },
   methods: {
     ConvertImageToBase64(event) {
       const maxSize = 2 * 1024 * 1024;
-      const { files } = event.target
+      const { files } = event.target;
       const file = Array.from(files);
       if (file.length > 1) {
         this.size = false;
       }
       if (file[0].size > maxSize) {
-        this.size = false
-        this.file1 = ''
-        this.news.image = ''
+        this.size = false;
+        this.SaveCategoryDto.image = "";
       } else {
         const reader = new FileReader();
         reader.onload = (e) => {
           const base64 = e?.target?.result;
-          this.news.image = base64
+          this.SaveCategoryDto.image = base64;
         };
         reader.readAsDataURL(file[0]);
-        this.size = true
+        this.size = true;
       }
-    }
+    },
+    SaveCategory() {
+      Swal.fire({
+        title: "Acción realizada con exito",
+        icon: "success",
+        confirmButtonColor: "#118A95",
+      });
+      this.$emit("SavedCategory");
+    },
+    ViewAlertConfirmationRegistrationCategory() {
+      Swal.fire({
+        title: "¿Seguro que desea realizar la acción?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#53A93D",
+        cancelButtonColor: "#A93D3D",
+        confirmButtonText: "Aceptar",
+        cancelButtonText: "Cancelar",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.SaveCategory();
+        }
+      });
+    },
+    ValidationFormCategoryRegister() {
+      if (
+        this.SaveCategoryDto.name &&
+        this.SaveCategoryDto.description &&
+        this.SaveCategoryDto.image
+      ) {
+        return false; // Todos los campos están llenos
+      }
+      return true; // Al menos uno de los campos está vacío
+    },
+    ValidateNameCategory() {
+      const expresionRegular = /[<>{}' || \\ \/]/;
+      return !expresionRegular.test(oracion);
+    },
   },
 };
 </script>
