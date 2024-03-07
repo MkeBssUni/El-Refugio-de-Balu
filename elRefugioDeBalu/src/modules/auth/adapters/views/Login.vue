@@ -95,7 +95,7 @@ export default {
                     text: 'Iniciaste sesión correctamente'
                 });
 
-                // redirigir a la página de mascotas
+                this.$router.push('/home');
             } catch (error) {
                 let message = error.response.data.message;
                 switch (message) {
