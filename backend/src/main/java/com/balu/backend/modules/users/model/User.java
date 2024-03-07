@@ -2,6 +2,7 @@ package com.balu.backend.modules.users.model;
 
 import com.balu.backend.modules.adresses.model.Address;
 import com.balu.backend.modules.people.model.Person;
+import com.balu.backend.modules.pets.model.Pet;
 import com.balu.backend.modules.roles.model.Role;
 import com.balu.backend.modules.roles.model.Roles;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -13,6 +14,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -50,6 +52,9 @@ public class User {
     @OneToOne(mappedBy = "user")
     @JsonIgnore
     private Address address;
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Pet> pets;
 
     public User(String username, String password, Role role1) {
         this.username = username;
