@@ -67,4 +67,6 @@ public class Pet {
     @OneToMany(mappedBy = "pet")
     @JsonIgnore
     private List<PetImages> petImages;
+    @OneToOne(mappedBy = "pet")
+    private MedicalRecord medicalRecord;
 }
