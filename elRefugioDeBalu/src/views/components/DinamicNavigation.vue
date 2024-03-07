@@ -1,16 +1,19 @@
 <script>
 import Swal from 'sweetalert2';
+import { decrypt } from '../../kernel/hashFunctions';
 
 export default {
     data() {
         return {
             chevron: 'chevron-down',
             dropdownOpen: false,
+            role: null
         };
     },
-    props: ['role'],
     mounted() {
-        console.log("este es el role: ", this.role)
+        (async () => {
+            await this.getRole();
+        })();
     },
     methods: {
         toggleDropdown() {
@@ -36,6 +39,15 @@ export default {
                     console.log("no cerrar sesion")
                 }
             });
+        },
+        async getRole(){
+            let decryptedRole = localStorage.getItem('role');
+            if(decryptedRole !== null){
+                decryptedRole = await decrypt(decryptedRole)
+                this.role = decryptedRole;
+            }else{
+                this.role = '';
+            }
         }
     }
 }
@@ -101,7 +113,7 @@ export default {
                     </b-button>
                 </div>
                 <hr class="my-0">
-                <b-nav v-if="role === 'USUARIO'" vertical class="my-2 px-3 text-center">
+                <b-nav v-if="role === 'GENERAL'" vertical class="my-2 px-3 text-center">
                     <b-button variant="outline-dark-secondary-orange" :to="'/pets'"
                         class="mt-3 d-flex align-items-center justify-content-center">
                         Ver mascotas
