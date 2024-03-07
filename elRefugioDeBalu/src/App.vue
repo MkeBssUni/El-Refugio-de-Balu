@@ -4,11 +4,7 @@ export default {
   components: { DinamicNavigation },
   name: 'App',
   data() {
-    return {
-      /* role: 'USUARIO' */
-      /* role: 'MODERADOR' */
-      /* role: 'ADMINISTRADOR' */
-    }
+    return {}
   }
 }
 
@@ -18,7 +14,7 @@ export default {
   <div id="app">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <header>
-      <dinamic-navigation :role="role"/>
+      <dinamic-navigation />
     </header>
     <main>
       <router-view />
