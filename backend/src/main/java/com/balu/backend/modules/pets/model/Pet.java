@@ -35,14 +35,14 @@ public class Pet {
     private Double age;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private AgeUnits ageUnits;
+    private AgeUnits ageUnit;
     @Column(nullable = false)
     private String breed;
     @Column(nullable = false)
     private Double weight;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private WeightUnits weightUnits;
+    private WeightUnits weightUnit;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private LifeStages lifeStage;
