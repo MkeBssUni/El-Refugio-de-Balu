@@ -1,5 +1,6 @@
 package com.balu.backend.modules.adresses.model;
 
+import com.balu.backend.modules.homeSpecification.model.HomeSpecification;
 import com.balu.backend.modules.users.model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,4 +31,7 @@ public class Address {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name ="home_specification_id", referencedColumnName = "id")
+    private HomeSpecification homeSpecification;
 }
