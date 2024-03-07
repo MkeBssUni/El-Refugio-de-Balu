@@ -1,5 +1,6 @@
 package com.balu.backend.modules.pets.model;
 
+import com.balu.backend.modules.adoptionRequests.model.AdoptionRequest;
 import com.balu.backend.modules.categories.model.Category;
 import com.balu.backend.modules.pets.model.enums.AgeUnits;
 import com.balu.backend.modules.pets.model.enums.Genders;
@@ -69,4 +70,7 @@ public class Pet {
     private List<PetImages> petImages;
     @OneToOne(mappedBy = "pet")
     private MedicalRecord medicalRecord;
+    @OneToMany(mappedBy = "pet")
+    @JsonIgnore
+    private List<AdoptionRequest> adoptionRequests;
 }
