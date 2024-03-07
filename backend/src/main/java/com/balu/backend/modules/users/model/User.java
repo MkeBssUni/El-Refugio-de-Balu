@@ -1,5 +1,6 @@
 package com.balu.backend.modules.users.model;
 
+import com.balu.backend.modules.adoptionRequests.model.AdoptionRequest;
 import com.balu.backend.modules.adresses.model.Address;
 import com.balu.backend.modules.people.model.Person;
 import com.balu.backend.modules.pets.model.Pet;
@@ -55,6 +56,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Pet> pets;
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<AdoptionRequest> adoptionRequests;
 
     public User(String username, String password, Role role1) {
         this.username = username;
