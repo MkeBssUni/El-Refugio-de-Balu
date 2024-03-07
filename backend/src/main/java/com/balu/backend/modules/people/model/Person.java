@@ -23,6 +23,7 @@ public class Person {
     @Column(nullable = false)
     private String lastName;
     private String surName;
+    @Column(nullable = false)
     private String phoneNumber;
     private String secondaryPhoneNumber;
     private String secondaryEmail;

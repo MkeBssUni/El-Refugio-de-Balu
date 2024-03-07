@@ -2,6 +2,7 @@ package com.balu.backend.modules.people.service;
 
 import com.balu.backend.kernel.ErrorMessages;
 import com.balu.backend.kernel.ResponseApi;
+import com.balu.backend.kernel.Validations;
 import com.balu.backend.modules.people.model.IPersonRepository;
 import com.balu.backend.modules.people.model.Person;
 import com.balu.backend.modules.people.model.PublicRegisterDto;
@@ -27,9 +28,19 @@ public class PersonService {
     private final IUserRepository iUserRepository;
     private final IRoleRepository iRoleRepository;
     private final PasswordEncoder encoder;
+    private final Validations validations = new Validations();
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseApi<Person> publicRegister(PublicRegisterDto dto){
+        if(dto.getUsername() == null || dto.getLastname() == null || dto.getName() == null || dto.getPhoneNumber() == null || dto.getPassword() == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
+        if(validations.isNotBlankString(dto.getUsername()) && validations.isNotBlankString(dto.getPassword()) && validations.isNotBlankString((dto.getName())) && validations.isNotBlankString(dto.getLastname()) && validations.isNotBlankString(dto.getPhoneNumber())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidEmail(dto.getUsername())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidPassword(dto.getPassword())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidName(dto.getName())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidName(dto.getLastname())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidName(dto.getSurname())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidPhoneNumber(dto.getPhoneNumber())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+
         Optional<User> existentUser = iUserRepository.findByUsername(dto.getUsername());
         if(existentUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.DUPLICATE_RECORD.name());
 
@@ -39,7 +50,6 @@ public class PersonService {
         if(role.isEmpty()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.ROLE_NOT_FOUND.name());
         user.savePublicRegister(dto.getUsername(),encoder.encode(dto.getPassword()),role.get());
         user = iUserRepository.saveAndFlush(user);
-        System.out.println("user: "+user.toString());
         person.savePublicRegister(dto,user);
         return new ResponseApi<>(iPersonRepository.saveAndFlush(person), HttpStatus.CREATED, false,"OK");
     }

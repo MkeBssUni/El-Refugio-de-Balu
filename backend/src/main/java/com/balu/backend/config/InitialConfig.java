@@ -1,5 +1,6 @@
 package com.balu.backend.config;
 
+import com.balu.backend.modules.hash.service.HashService;
 import com.balu.backend.modules.roles.model.IRoleRepository;
 import com.balu.backend.modules.roles.model.Role;
 import com.balu.backend.modules.roles.model.Roles;
@@ -24,6 +25,7 @@ public class InitialConfig implements CommandLineRunner {
     private final IStatusRepository iStatusRepository;
     private final IRoleRepository iRoleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final HashService hashService;
 
     @Override
     @Transactional(rollbackFor = {SQLException.class,Exception.class})
@@ -53,12 +55,14 @@ public class InitialConfig implements CommandLineRunner {
         optionalRole.orElseGet(() -> iRoleRepository.saveAndFlush(new Role(name)));
     }
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public void getOrSaveUser (String username, String password, Roles role){
+    public void getOrSaveUser (String username, String password, Roles role) throws Exception {
+        username = hashService.encrypt(username);
         Optional<Role> optionalRole = iRoleRepository.findByName(role);
         Optional<User> optionalUser = iUserRepository.findByUsername(username);
         if(optionalUser.isEmpty()){
+            String finalUsername = username;
             optionalRole.ifPresent(role1 -> {
-                iUserRepository.saveAndFlush(new User(username, passwordEncoder.encode(password), role1));
+                iUserRepository.saveAndFlush(new User(finalUsername, passwordEncoder.encode(password), role1));
             });
         }
     }
