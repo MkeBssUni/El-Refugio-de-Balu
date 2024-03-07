@@ -1,4 +1,4 @@
-package com.balu.backend.modules.pets.model;
+package com.balu.backend.modules.pets.model.enums;
 
 public enum WeightUnits {
     KILOGRAMOS, GRAMOS
