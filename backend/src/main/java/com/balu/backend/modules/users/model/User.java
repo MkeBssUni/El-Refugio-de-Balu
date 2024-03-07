@@ -2,6 +2,7 @@ package com.balu.backend.modules.users.model;
 
 import com.balu.backend.modules.adoptionRequests.model.AdoptionRequest;
 import com.balu.backend.modules.adresses.model.Address;
+import com.balu.backend.modules.favoritePets.model.FavoritePet;
 import com.balu.backend.modules.people.model.Person;
 import com.balu.backend.modules.pets.model.Pet;
 import com.balu.backend.modules.roles.model.Role;
@@ -59,6 +60,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<AdoptionRequest> adoptionRequests;
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<FavoritePet> favoritePets;
 
     public User(String username, String password, Role role1) {
         this.username = username;
