@@ -28,6 +28,7 @@ public class JwtProvider {
     public String generateToken(Authentication auth){
         UserDetails user = (UserDetails) auth.getPrincipal();
         Claims claims = Jwts.claims().setSubject(user.getUsername());
+        claims.put("role", user.getAuthorities());
         Date tokenCreateTime = new Date();
         Date tokenValidity = new Date(tokenCreateTime.getTime() + accessTokenValidity * 1000L);
         return Jwts.builder()
