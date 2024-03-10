@@ -1,11 +1,15 @@
 <template>
     <b-container fluid>
-        <b-row class="px-3 px-sm-4 px-xl-5">
+        <b-row>
+            <Encabezado color="#75DAE0" :imagenUrl="require('@/assets/imgs/mascotas-formulario.png')"
+                titulo="Dar mascota en adopción" />
+        </b-row>
+        <b-row class="px-2 px-sm-4 my-2 my-sm-4">
             <b-form>
-                <b-col cols="12" class="px-lg-5 my-5">
+                <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
                     <b-row>
                         <b-col cols="10" md="8" lg="6">
-                            <b-card bg-variant="card-header-orange" class="py-2" no-body>
+                            <b-card bg-variant="card-header-orange" class="py-2 card-shadow" no-body>
                                 <div class="d-flex align-items-center ms-3 ms-md-4">
                                     <i class="material-icons me-2" style="font-size: 1.5rem">pets</i>
                                     <h4 class="mb-0 mt-1">Información general</h4>
@@ -180,7 +184,7 @@
                         </b-col>
                     </b-row>
                 </b-col>
-                <b-col cols="12" class="px-lg-5 my-5">
+                <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
                     <b-row>
                         <b-col cols="10" md="8" lg="6">
                             <b-card bg-variant="card-header-blue" class="py-2 card-shadow" no-body>
@@ -240,8 +244,7 @@
                                     </b-row>
                                     <b-row>
                                         <b-col cols="12" md="6" class="mt-3">
-                                            <b-form-group
-                                                label="Escribe las enfermedades de la mascota (si aplica):"
+                                            <b-form-group label="Escribe las enfermedades de la mascota (si aplica):"
                                                 label-for="diseases">
                                                 <b-form-input id="diseases" v-model.trim="tempDisease"
                                                     placeholder="Enfermedad o padecimiento..."
@@ -287,7 +290,7 @@
                         </b-col>
                     </b-row>
                 </b-col>
-                <b-col cols="12" class="px-lg-5 my-5">
+                <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
                     <b-row>
                         <b-col cols="10" md="8" lg="6">
                             <b-card bg-variant="card-header-secondary-orange" class="py-2 card-shadow" no-body>
@@ -300,7 +303,7 @@
                     </b-row>
                     <b-row>
                         <b-col cols="12">
-                            <b-card bg-variant="card-content-orange" class="card-shadow">
+                            <b-card bg-variant="card-content-secondary-orange" class="card-shadow">
                                 <b-card-body>
                                     <b-row>
                                         <b-col cols="12" md="6">
@@ -323,8 +326,7 @@
                                             </b-form-group>
                                         </b-col>
                                         <b-col cols="12" md="6" class="mt-3 mt-md-0">
-                                            <b-form-group
-                                                label="Indique los hábitos y cuidados de su mascota:"
+                                            <b-form-group label="Indique los hábitos y cuidados de su mascota:"
                                                 label-for="care">
                                                 <b-form-input id="care" v-model.trim="tempCare"
                                                     placeholder="Hábitos y cuidados especiales..."
@@ -352,6 +354,18 @@
                             </b-card>
                         </b-col>
                     </b-row>
+                </b-col>
+                <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5 d-flex justify-content-end">
+                    <b-button variant="outline-danger"
+                        class="form-btn me-3 d-flex align-items-center justify-content-between">
+                        <span class="me-2">Cancelar</span>
+                        <b-icon icon="trash" font-scale="1.3"></b-icon>
+                    </b-button>
+                    <b-button type="submit" variant="outline-dark-secondary-blue"
+                        class="form-btn d-flex align-items-center justify-content-between">
+                        <span class="me-2">Publicar</span>
+                        <b-icon icon="arrow-up-right-circle" font-scale="1.3"></b-icon>
+                    </b-button>
                 </b-col>
             </b-form>
         </b-row>
@@ -572,27 +586,35 @@ export default {
     border-bottom-right-radius: 10px;
 }
 
-@media (min-width: 576px) { 
-  .custom-row-width {
-    width: 80%;
-    margin-right: auto; 
-    margin-left: auto;  
-  }
-}   
+@media (min-width: 576px) {
+    .custom-row-width {
+        width: 80%;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .form-btn {
+        width: 40%;
+    }
+}
 
 @media (min-width: 768px) {
-  .custom-row-width {
-    width: 60%;
-    margin-right: auto; 
-    margin-left: auto;
-  }
+    .custom-row-width {
+        width: 60%;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .form-btn {
+        width: 30%;
+    }
 }
 
 @media (min-width: 992px) {
-  .custom-row-width {
-    width: 100%;
-    margin-right: auto; 
-    margin-left: auto;
-  }
+    .custom-row-width {
+        width: 100%;
+        margin-right: auto;
+        margin-left: auto;
+    }
 }
 </style>
