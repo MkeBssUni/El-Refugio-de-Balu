@@ -201,7 +201,7 @@
                                                 Selecciona las opciones que apliquen a la mascota:
                                             </label>
                                         </b-col>
-                                        <b-col cols="6">
+                                        <b-col cols="12" md="6">
                                             <div class="mb-2 form-check">
                                                 <input id="isVaccinated" type="checkbox" class="form-check-input"
                                                     v-model="form.isVaccinated" value="true" unchecked-value="false">
@@ -210,7 +210,7 @@
                                                 </label>
                                             </div>
                                         </b-col>
-                                        <b-col cols="6">
+                                        <b-col cols="12" md="6">
                                             <div class="mb-2 form-check">
                                                 <input id="isDewormed" type="checkbox" class="form-check-input"
                                                     v-model="form.isDewormed" value="true" unchecked-value="false">
@@ -219,7 +219,7 @@
                                                 </label>
                                             </div>
                                         </b-col>
-                                        <b-col cols="6">
+                                        <b-col cols="12" md="6">
                                             <div class="mb-2 form-check">
                                                 <input id="isSterilised" type="checkbox" class="form-check-input"
                                                     v-model="form.isSterilised" value="true" unchecked-value="false">
@@ -228,7 +228,7 @@
                                                 </label>
                                             </div>
                                         </b-col>
-                                        <b-col cols="6">
+                                        <b-col cols="12" md="6">
                                             <div class="mb-2 form-check">
                                                 <input id="microchip" type="checkbox" class="form-check-input"
                                                     v-model="form.microchip" value="true" unchecked-value="false">
@@ -238,10 +238,10 @@
                                             </div>
                                         </b-col>
                                     </b-row>
-                                    <b-row class="mt-3">
-                                        <b-col cols="6">
+                                    <b-row>
+                                        <b-col cols="12" md="6" class="mt-3">
                                             <b-form-group
-                                                label="Escribe las enfermedades o padecimientos de la mascota (si aplica):"
+                                                label="Escribe las enfermedades de la mascota (si aplica):"
                                                 label-for="diseases">
                                                 <b-form-input id="diseases" v-model.trim="tempDisease"
                                                     placeholder="Enfermedad o padecimiento..."
@@ -257,7 +257,7 @@
                                                 </div>
                                             </b-form-group>
                                         </b-col>
-                                        <b-col cols="6">
+                                        <b-col cols="12" md="6" class="mt-3">
                                             <b-form-group label="Escribe las alergias de la mascota (si aplica):"
                                                 label-for="allergies">
                                                 <b-form-input id="allergies" v-model.trim="tempAllergy"
