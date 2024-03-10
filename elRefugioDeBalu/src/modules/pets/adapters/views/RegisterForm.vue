@@ -1,6 +1,6 @@
 <template>
     <b-container fluid>
-        <b-row class="px-5">
+        <b-row class="px-3 px-sm-4 px-xl-5">
             <b-form>
                 <b-col cols="12" class="px-lg-5 my-5">
                     <b-row>
@@ -18,7 +18,7 @@
                             <b-card bg-variant="card-content-orange" class="card-shadow">
                                 <b-card-body>
                                     <b-row>
-                                        <b-col cols="4" class="px-3">
+                                        <b-col cols="12" lg="5" xl="4" class="px-3">
                                             <b-row>
                                                 <b-col cols="12" class="position-relative">
                                                     <b-img :src="showImg()" class="main-img"
@@ -36,10 +36,9 @@
                                                     </b-button>
                                                 </b-col>
                                             </b-row>
-                                            <b-row class=" my-3">
+                                            <b-row class="my-3 custom-row-width">
                                                 <b-col cols="3" v-for="(image, index) in form.additionalImages"
-                                                    :key="index"
-                                                    class="position-relative d-flex justify-content-center">
+                                                    :key="index" class="position-relative">
                                                     <div class="additional-img-container">
                                                         <b-img :src="getFile(image)" class="additional-img"
                                                             alt="Imagen adicional" fluid rounded center></b-img>
@@ -65,16 +64,16 @@
                                                 </b-col>
                                             </b-row>
                                         </b-col>
-                                        <b-col cols="8" class="d-flex align-items-center">
+                                        <b-col cols="12" lg="7" xl="8" class="d-flex align-items-center">
                                             <b-row>
-                                                <b-col cols="8">
+                                                <b-col cols="12" sm="7" xl="8" class="mt-3 mt-xl-0">
                                                     <b-form-group label="Ingresa el nombre de la mascota:"
                                                         label-for="name">
                                                         <b-form-input id="name" v-model.trim="form.name"
                                                             placeholder="Nombre..."></b-form-input>
                                                     </b-form-group>
                                                 </b-col>
-                                                <b-col cols="4">
+                                                <b-col cols="12" sm="5" xl="4" class="mt-3 mt-xl-0">
                                                     <b-form-group label="Selecciona su especie:" label-for="category">
                                                         <b-form-select id="category" v-model.trim="form.category"
                                                             class="form-select">
@@ -86,16 +85,15 @@
                                                         </b-form-select>
                                                     </b-form-group>
                                                 </b-col>
-                                                <b-col cols="8">
+                                                <b-col cols="12" sm="7" xl="8" class="mt-3">
                                                     <b-form-group label="Ingresa la raza de la mascota:"
-                                                        label-for="breed" class="mt-3">
+                                                        label-for="breed">
                                                         <b-form-input id="breed" v-model.trim="form.breed"
                                                             placeholder="Raza..."></b-form-input>
                                                     </b-form-group>
                                                 </b-col>
-                                                <b-col cols="4">
-                                                    <b-form-group label="Selecciona su tamaño:" label-for="size"
-                                                        class="mt-3">
+                                                <b-col cols="12" sm="5" xl="4" class="mt-3">
+                                                    <b-form-group label="Selecciona su tamaño:" label-for="size">
                                                         <b-form-select id="size" v-model.trim="form.size"
                                                             class="form-select">
                                                             <option value="default" disabled>Tamaño...</option>
@@ -106,31 +104,29 @@
                                                         </b-form-select>
                                                     </b-form-group>
                                                 </b-col>
-                                                <b-col cols="8">
-                                                    <b-row>
-                                                        <b-col cols="8">
-                                                            <b-form-group label="Ingresa la edad de la mascota:"
-                                                                label-for="age" class="mt-3">
+                                                <b-col cols="12" sm="7" xl="8">
+                                                    <b-form-group label="Ingresa la edad de la mascota:" label-for="age"
+                                                        class="mt-3">
+                                                        <b-row>
+                                                            <b-col cols="8" sm="7" xl="8">
                                                                 <b-form-input id="age" v-model.trim="form.age"
                                                                     placeholder="Edad..." type="number"></b-form-input>
-                                                            </b-form-group>
-                                                        </b-col>
-                                                        <b-col cols="4">
-                                                            <b-form-group class="mt-3">
+                                                            </b-col>
+                                                            <b-col cols="4" sm="5" xl="4">
                                                                 <b-form-select v-model="form.ageType"
-                                                                    class="form-select mt-4">
-                                                                    <option value="default" disabled>Unidad...</option>
+                                                                    class="form-select">
+                                                                    <option value="default" disabled>Unidad</option>
                                                                     <option v-for="ageType in ageTypes"
                                                                         :key="ageType.value" :value="ageType.value">
                                                                         {{ ageType.text }}
                                                                     </option>
                                                                 </b-form-select>
-                                                            </b-form-group>
-                                                        </b-col>
-                                                    </b-row>
+                                                            </b-col>
+                                                        </b-row>
+                                                    </b-form-group>
                                                 </b-col>
-                                                <b-col cols="4">
-                                                    <b-form-group label="Selecciona su etapa de vida:" label-for="stage"
+                                                <b-col cols="12" sm="5" xl="4">
+                                                    <b-form-group label="Selecciona su etapa:" label-for="stage"
                                                         class="mt-3">
                                                         <b-form-select id="stage" v-model.trim="form.stage"
                                                             class="form-select">
@@ -142,31 +138,29 @@
                                                         </b-form-select>
                                                     </b-form-group>
                                                 </b-col>
-                                                <b-col cols="8">
-                                                    <b-row>
-                                                        <b-col cols="8">
-                                                            <b-form-group label="Ingresa el peso de la mascota:"
-                                                                label-for="weight" class="mt-3">
+                                                <b-col cols="12" sm="7" xl="8">
+                                                    <b-form-group label="Ingresa el peso de la mascota:"
+                                                        label-for="weight" class="mt-3">
+                                                        <b-row>
+                                                            <b-col cols="8" sm="7" xl="8">
                                                                 <b-form-input id="weight" v-model.trim="form.weight"
                                                                     placeholder="Peso..." type="number"></b-form-input>
-                                                            </b-form-group>
-                                                        </b-col>
-                                                        <b-col cols="4">
-                                                            <b-form-group class="mt-3">
+                                                            </b-col>
+                                                            <b-col cols="4" sm="5" xl="4">
                                                                 <b-form-select v-model="form.weightType"
-                                                                    class="form-select mt-4">
-                                                                    <option value="default" disabled>Unidad...</option>
+                                                                    class="form-select">
+                                                                    <option value="default" disabled>Unidad</option>
                                                                     <option v-for="weightType in weightTypes"
                                                                         :key="weightType.value"
                                                                         :value="weightType.value">
                                                                         {{ weightType.text }}
                                                                     </option>
                                                                 </b-form-select>
-                                                            </b-form-group>
-                                                        </b-col>
-                                                    </b-row>
+                                                            </b-col>
+                                                        </b-row>
+                                                    </b-form-group>
                                                 </b-col>
-                                                <b-col cols="4">
+                                                <b-col cols="12" sm="5" xl="4">
                                                     <b-form-group label="Selecciona su sexo:" label-for="sex"
                                                         class="mt-3">
                                                         <b-form-select id="sex" v-model="form.sex" class="form-select">
@@ -314,7 +308,8 @@
                                                 label-for="characteristics"
                                                 description="Describa de la personalidad y el físico de la mascota">
                                                 <b-form-input id="characteristics" v-model.trim="tempCharacteristic"
-                                                    placeholder="Características..." @keyup.enter="addCharacteristic()"></b-form-input>
+                                                    placeholder="Características..."
+                                                    @keyup.enter="addCharacteristic()"></b-form-input>
                                                 <div class="px-3 pb-2 mx-2 badge-container">
                                                     <b-badge v-for="(characteristic, index) in form.characteristics"
                                                         :key="index"
@@ -332,7 +327,8 @@
                                                 label="Indique cuáles son los hábitos y cuidados de su mascota:"
                                                 label-for="care">
                                                 <b-form-input id="care" v-model.trim="tempCare"
-                                                    placeholder="Hábitos y cuidados especiales..." @keyup.enter="addCare()"></b-form-input>
+                                                    placeholder="Hábitos y cuidados especiales..."
+                                                    @keyup.enter="addCare()"></b-form-input>
                                                 <div class="px-3 pb-2 mx-2 badge-container">
                                                     <b-badge v-for="(care, index) in form.care" :key="index"
                                                         class="me-2 mt-2 d-inline-flex align-items-center justify-content-between"
@@ -574,5 +570,29 @@ export default {
     background-color: #F2F2F2;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
+}
+
+@media (min-width: 576px) { 
+  .custom-row-width {
+    width: 80%;
+    margin-right: auto; 
+    margin-left: auto;  
+  }
+}   
+
+@media (min-width: 768px) {
+  .custom-row-width {
+    width: 60%;
+    margin-right: auto; 
+    margin-left: auto;
+  }
+}
+
+@media (min-width: 992px) {
+  .custom-row-width {
+    width: 100%;
+    margin-right: auto; 
+    margin-left: auto;
+  }
 }
 </style>
