@@ -18,11 +18,10 @@
                             <b-card bg-variant="card-content-orange" class="card-shadow">
                                 <b-card-body>
                                     <b-row>
-                                        <b-col cols="4">
+                                        <b-col cols="4" class="px-3">
                                             <b-row>
                                                 <b-col cols="12" class="position-relative">
                                                     <b-img :src="showImg()" class="main-img"
-                                                        :class="{ 'selected-img-border': form.mainImage }"
                                                         alt="Imagen principal seleccionada" fluid rounded
                                                         center></b-img>
                                                     <input type="file" ref="mainImageSelector" style="display: none"
@@ -37,30 +36,32 @@
                                                     </b-button>
                                                 </b-col>
                                             </b-row>
-                                            <b-row class="px-3 my-3">
-                                                <b-col cols="3">
-                                                    <b-img src="https://cdn-icons-png.flaticon.com/512/1160/1160358.png"
-                                                        alt="Imagen principal" fluid rounded center
-                                                        style="width: 280px; height: auto;">
-                                                    </b-img>
+                                            <b-row class=" my-3">
+                                                <b-col cols="3" v-for="(image, index) in form.additionalImages"
+                                                    :key="index"
+                                                    class="position-relative d-flex justify-content-center">
+                                                    <div class="additional-img-container">
+                                                        <b-img :src="getFile(image)" class="additional-img"
+                                                            alt="Imagen adicional" fluid rounded center></b-img>
+                                                    </div>
+                                                    <b-button @click="removeAdditionalImg(index)"
+                                                        class="btn-remove position-center d-flex align-items-center justify-content-center p-1">
+                                                        <b-icon icon="x" font-scale="2"></b-icon>
+                                                    </b-button>
                                                 </b-col>
-                                                <b-col cols="3">
-                                                    <b-img src="https://cdn-icons-png.flaticon.com/512/1160/1160358.png"
-                                                        alt="Imagen principal" fluid rounded center
-                                                        style="width: 280px; height: auto;">
-                                                    </b-img>
+                                                <b-col cols="3" v-if="form.additionalImages.length < 4"
+                                                    class="d-flex align-items-center justify-content-center">
+                                                    <input type="file" ref="additionalImageSelector"
+                                                        style="display: none" accept="image/jpeg"
+                                                        @change="selectAdditionalImg()">
+                                                    <b-button @click="triggerAdditionalImgSelector()"
+                                                        class="btn-add d-flex align-items-center justify-content-center p-1">
+                                                        <b-icon icon="plus" font-scale="2.5"></b-icon>
+                                                    </b-button>
                                                 </b-col>
-                                                <b-col cols="3">
-                                                    <b-img src="https://cdn-icons-png.flaticon.com/512/1160/1160358.png"
-                                                        alt="Imagen principal" fluid rounded center
-                                                        style="width: 280px; height: auto;">
-                                                    </b-img>
-                                                </b-col>
-                                                <b-col cols="3">
-                                                    <b-img src="https://cdn-icons-png.flaticon.com/512/1160/1160358.png"
-                                                        alt="Imagen principal" fluid rounded center
-                                                        style="width: 280px; height: auto;">
-                                                    </b-img>
+                                                <b-col cols="9" v-if="form.additionalImages.length == 0"
+                                                    class="d-flex align-items-center">
+                                                    <label>Agrega imágenes adicionales</label>
                                                 </b-col>
                                             </b-row>
                                         </b-col>
@@ -345,10 +346,7 @@ export default {
         return {
             form: {
                 mainImage: null,
-                image1: null,
-                image2: null,
-                image3: null,
-                image4: null,
+                additionalImages: [],
                 name: "",
                 category: 0,
                 breed: "",
@@ -401,7 +399,7 @@ export default {
     methods: {
         showImg() {
             if (this.form.mainImage) return URL.createObjectURL(this.form.mainImage);
-            return "https://cdn-icons-png.flaticon.com/512/1160/1160358.png";
+            return "https://t3.ftcdn.net/jpg/07/01/59/38/240_F_701593826_ojYyX0cKXG3OzhoYkbeesqsQtaA6zBbj.jpg";
         },
         triggerMainImgSelector() {
             this.$refs.mainImageSelector.click();
@@ -411,6 +409,21 @@ export default {
         },
         unselectImg() {
             this.form.mainImage = null;
+        },
+        getFile(file) {
+            return URL.createObjectURL(file);
+        },
+        triggerAdditionalImgSelector() {
+            this.$refs.additionalImageSelector.click();
+        },
+        selectAdditionalImg() {
+            const files = this.$refs.additionalImageSelector.files;
+            if (files.length > 0) {
+                this.form.additionalImages.push(files[0]);
+            }
+        },
+        removeAdditionalImg(index) {
+            this.form.additionalImages.splice(index, 1);
         },
     },
     components: {
@@ -429,10 +442,25 @@ export default {
     width: 280px;
     height: 240px;
     object-fit: cover;
+    border: 4px solid black;
 }
 
-.selected-img-border {    
-    border: 4px solid black;
+.additional-img-container {
+    width: 100%;
+    padding-top: 100%;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
+.additional-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
 }
 
 .btn-add {
