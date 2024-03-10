@@ -1,7 +1,7 @@
 <template>
     <b-container fluid>
         <b-row>
-            <Encabezado color="#75DAE0" :imagenUrl="require('@/assets/imgs/mascotas-formulario.png')"
+            <Encabezado color="#118A95" :imagenUrl="require('@/assets/imgs/mascotas-formulario.png')"
                 titulo="Dar mascota en adopción" />
         </b-row>
         <b-row class="px-2 px-sm-4 my-2 my-sm-4">
@@ -309,7 +309,7 @@
                                         <b-col cols="12" md="6">
                                             <b-form-group label="Escribe las características de la mascota:"
                                                 label-for="characteristics"
-                                                description="Describa de la personalidad y el físico de la mascota">
+                                                description="Describe la personalidad y el físico de la mascota con adjetivos calificativos">
                                                 <b-form-input id="characteristics" v-model.trim="tempCharacteristic"
                                                     placeholder="Características..."
                                                     @keyup.enter="addCharacteristic()"></b-form-input>
@@ -326,7 +326,7 @@
                                             </b-form-group>
                                         </b-col>
                                         <b-col cols="12" md="6" class="mt-3 mt-md-0">
-                                            <b-form-group label="Indique los hábitos y cuidados de su mascota:"
+                                            <b-form-group label="Escriba los hábitos y cuidados de su mascota:"
                                                 label-for="care">
                                                 <b-form-input id="care" v-model.trim="tempCare"
                                                     placeholder="Hábitos y cuidados especiales..."
@@ -356,15 +356,15 @@
                     </b-row>
                 </b-col>
                 <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5 d-flex justify-content-end">
-                    <b-button variant="outline-danger"
-                        class="form-btn me-3 d-flex align-items-center justify-content-between">
-                        <span class="me-2">Cancelar</span>
-                        <b-icon icon="trash" font-scale="1.3"></b-icon>
-                    </b-button>
                     <b-button type="submit" variant="outline-dark-secondary-blue"
-                        class="form-btn d-flex align-items-center justify-content-between">
+                        class="form-btn me-3 d-flex align-items-center justify-content-between">
                         <span class="me-2">Publicar</span>
                         <b-icon icon="arrow-up-right-circle" font-scale="1.3"></b-icon>
+                    </b-button>
+                    <b-button variant="outline-danger"
+                        class="form-btn d-flex align-items-center justify-content-between">
+                        <span class="me-2">Cancelar</span>
+                        <b-icon icon="trash" font-scale="1.3"></b-icon>
                     </b-button>
                 </b-col>
             </b-form>
