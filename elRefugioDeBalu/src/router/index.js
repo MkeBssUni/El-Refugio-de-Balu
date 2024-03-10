@@ -88,6 +88,11 @@ const routes = [
         path: "/UsersForm",
         name: "UsersForm",
         component: () => import("../modules/users/components/UsersForm.vue"),
+      },
+      {
+        path: "/SelfRegistration",
+        name: "SelfRegistration",
+        component: () => import("../modules/users/components/SelfRegistration.vue"),
       }
     ],
   },
