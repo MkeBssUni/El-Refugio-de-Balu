@@ -280,9 +280,10 @@
                           ></b-form-input>
                           <b-form-invalid-feedback
                             id="lastPet-live-feedback"
-                            tooltip>
+                            tooltip
+                          >
                             {{ error.lastPet }}
-                            </b-form-invalid-feedback>
+                          </b-form-invalid-feedback>
                         </b-form-group>
                       </b-col>
                       <b-col cols="12" sm="12" md="6" lg="6">
@@ -304,9 +305,10 @@
                           ></b-form-input>
                           <b-form-invalid-feedback
                             id="whatDidYouDoWhenThePetGotSick-live-feedback"
-                            tooltip>
+                            tooltip
+                          >
                             {{ error.whatDidYouDoWhenThePetGotSick }}
-                            </b-form-invalid-feedback>
+                          </b-form-invalid-feedback>
                         </b-form-group>
                       </b-col>
                     </b-row>
@@ -332,9 +334,10 @@
                           ></b-form-input>
                           <b-form-invalid-feedback
                             id="whatKindOfPetsHaveYouHadBefore-live-feedback"
-                            tooltip>
+                            tooltip
+                          >
                             {{ error.whatKindOfPetsHaveYouHadBefore }}
-                            </b-form-invalid-feedback>
+                          </b-form-invalid-feedback>
                         </b-form-group>
                       </b-col>
                       <b-col cols="12" sm="12" md="6" lg="6">
@@ -358,9 +361,10 @@
                           ></b-form-input>
                           <b-form-invalid-feedback
                             id="whatMemoriesDoYouHaveWithYourPet-live-feedback"
-                            tooltip>
+                            tooltip
+                          >
                             {{ error.whatMemoriesDoYouHaveWithYourPet }}
-                            </b-form-invalid-feedback>
+                          </b-form-invalid-feedback>
                         </b-form-group>
                       </b-col>
                     </b-row>
@@ -400,14 +404,15 @@
                             @input="validateAdditionalInfo"
                             :state="validation.additionalInfo"
                             aria-describedby="additionalInfo-live-feedback"
-                            minlegth= "10"
+                            minlegth="10"
                             maxlength="100"
                           ></b-form-textarea>
                           <b-form-invalid-feedback
                             id="additionalInfo-live-feedback"
-                            tooltip>
+                            tooltip
+                          >
                             {{ error.additionalInfo }}
-                            </b-form-invalid-feedback>
+                          </b-form-invalid-feedback>
                         </b-form-group>
                       </b-col>
                     </b-row>
@@ -621,9 +626,7 @@ export default {
         this.validation.whatKindOfPetsHaveYouHadBefore = false;
         this.error.whatKindOfPetsHaveYouHadBefore =
           "Solo se aceptan letras[Aa-Zz] y puntos[.]";
-      } else if (
-        this.adoptionInfo.whatKindOfPetsHaveYouHadBefore.length < 10
-      ) {
+      } else if (this.adoptionInfo.whatKindOfPetsHaveYouHadBefore.length < 10) {
         this.validation.whatKindOfPetsHaveYouHadBefore = false;
         this.error.whatKindOfPetsHaveYouHadBefore =
           "La respuesta debe tener al menos 10 caracteres";
@@ -672,10 +675,12 @@ export default {
         this.error.additionalInfo = "Solo se aceptan letras[Aa-Zz] y puntos[.]";
       } else if (this.adoptionInfo.additionalInfo.length < 10) {
         this.validation.additionalInfo = false;
-        this.error.additionalInfo = "La respuesta debe tener al menos 10 caracteres";
+        this.error.additionalInfo =
+          "La respuesta debe tener al menos 10 caracteres";
       } else if (this.adoptionInfo.additionalInfo.length > 100) {
         this.validation.additionalInfo = false;
-        this.error.additionalInfo = "La respuesta debe tener menos de 100 caracteres";
+        this.error.additionalInfo =
+          "La respuesta debe tener menos de 100 caracteres";
       } else if (this.adoptionInfo.additionalInfo === null) {
         this.validation.additionalInfo = false;
         this.error.additionalInfo = "Este campo es requerido";
@@ -806,11 +811,22 @@ export default {
       reader.readAsDataURL(file);
     },
     makeToast(text) {
-      this.$bvToast.toast(text, {
-        title: "ADVERTENCIA",
-        variant: "warning",
-        solid: true,
-        autoHideDelay: 5000,
+      console.log("makeToast"	, text)
+      const Toast = swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+
+      Toast.fire({
+        icon: "warning",
+        title: `ADVERTENCIA: ${text}`,
       });
     },
   },
