@@ -45,6 +45,11 @@ const routes = [
         component: () => import("../modules/pets/adapters/views/PetCatalog.vue"),
       },
       {
+        path: "/favorites",
+        name: "favorites",
+        component: () => import("../modules/pets/adapters/views/FavoriteCatalog.vue"),
+      },
+      {
         path: "/requestAdoption",
         name: "requestAdoption",
         component: () => import("../modules/adoptions/adapters/views/AdoptionRequest.vue"),
