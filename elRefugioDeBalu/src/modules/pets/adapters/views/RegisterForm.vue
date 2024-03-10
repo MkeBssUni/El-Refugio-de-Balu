@@ -303,7 +303,7 @@
                             <b-card bg-variant="card-content-orange" class="card-shadow">
                                 <b-card-body>
                                     <b-row>
-                                        <b-col cols="6">
+                                        <b-col cols="12" md="6">
                                             <b-form-group label="Escribe las características de la mascota:"
                                                 label-for="characteristics"
                                                 description="Describa de la personalidad y el físico de la mascota">
@@ -322,9 +322,9 @@
                                                 </div>
                                             </b-form-group>
                                         </b-col>
-                                        <b-col cols="6">
+                                        <b-col cols="12" md="6" class="mt-3 mt-md-0">
                                             <b-form-group
-                                                label="Indique cuáles son los hábitos y cuidados de su mascota:"
+                                                label="Indique los hábitos y cuidados de su mascota:"
                                                 label-for="care">
                                                 <b-form-input id="care" v-model.trim="tempCare"
                                                     placeholder="Hábitos y cuidados especiales..."
