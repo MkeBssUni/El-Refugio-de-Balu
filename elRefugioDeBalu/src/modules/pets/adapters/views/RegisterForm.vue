@@ -20,13 +20,24 @@
                                     <b-row>
                                         <b-col cols="4">
                                             <b-row>
-                                                <b-col cols="12">
+                                                <b-col cols="12" class="position-relative">
                                                     <b-img :src="showImg()" class="main-img"
+                                                        :class="{ 'selected-img-border': form.mainImage }"
                                                         alt="Imagen principal seleccionada" fluid rounded
                                                         center></b-img>
+                                                    <input type="file" ref="mainImageSelector" style="display: none"
+                                                        accept="image/jpeg" @change="selectImg()">
+                                                    <b-button v-if="!form.mainImage" @click="triggerMainImgSelector()"
+                                                        class="btn-add position-center d-flex align-items-center justify-content-center p-2">
+                                                        <b-icon icon="plus" font-scale="5"></b-icon>
+                                                    </b-button>
+                                                    <b-button v-else @click="unselectImg()"
+                                                        class="btn-remove position-center d-flex align-items-center justify-content-center p-2">
+                                                        <b-icon icon="x" font-scale="5"></b-icon>
+                                                    </b-button>
                                                 </b-col>
                                             </b-row>
-                                            <b-row class="px-4 my-3">
+                                            <b-row class="px-3 my-3">
                                                 <b-col cols="3">
                                                     <b-img src="https://cdn-icons-png.flaticon.com/512/1160/1160358.png"
                                                         alt="Imagen principal" fluid rounded center
@@ -174,7 +185,7 @@
                         </b-col>
                     </b-row>
                 </b-col>
-                <b-col cols="12" class="px-md-3 px-lg-5 my-5">
+                <b-col cols="12" class="px-lg-5 my-5">
                     <b-row>
                         <b-col cols="10" md="8" lg="6">
                             <b-card bg-variant="card-header-blue" class="py-2 card-shadow" no-body>
@@ -277,7 +288,7 @@
                         </b-col>
                     </b-row>
                 </b-col>
-                <b-col cols="12" class="px-md-3 px-lg-5 my-5">
+                <b-col cols="12" class="px-lg-5 my-5">
                     <b-row>
                         <b-col cols="10" md="8" lg="6">
                             <b-card bg-variant="card-header-secondary-orange" class="py-2 card-shadow" no-body>
@@ -334,7 +345,10 @@ export default {
         return {
             form: {
                 mainImage: null,
-                images: [],
+                image1: null,
+                image2: null,
+                image3: null,
+                image4: null,
                 name: "",
                 category: 0,
                 breed: "",
@@ -385,23 +399,19 @@ export default {
         };
     },
     methods: {
-        triggerFileInput() {
-            this.$refs.fileInput.click();
-        },
         showImg() {
             if (this.form.mainImage) return URL.createObjectURL(this.form.mainImage);
-            return "https://cdn-icons-png.flaticon.com/512/1160/1160358.png"
+            return "https://cdn-icons-png.flaticon.com/512/1160/1160358.png";
         },
-        addImageField() {
-            if (this.form.images.length < 4) {
-                this.form.images.push(null);
-            } else {
-                alert('You can only upload a maximum of 4 additional images.');
-            }
+        triggerMainImgSelector() {
+            this.$refs.mainImageSelector.click();
         },
-        removeImage(index) {
-            this.form.images.splice(index, 1);
-        }
+        selectImg() {
+            this.form.mainImage = this.$refs.mainImageSelector.files[0];
+        },
+        unselectImg() {
+            this.form.mainImage = null;
+        },
     },
     components: {
         Encabezado,
@@ -419,5 +429,50 @@ export default {
     width: 280px;
     height: 240px;
     object-fit: cover;
+}
+
+.selected-img-border {    
+    border: 4px solid black;
+}
+
+.btn-add {
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: rgba(83, 169, 61, 0.6);
+    color: #316E21;
+}
+
+.btn-add:hover {
+    background-color: rgba(83, 169, 61, 1);
+}
+
+.btn-add:active {
+    background-color: #347424;
+    color: #1f4915;
+}
+
+.btn-remove {
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: rgba(169, 61, 61, 0.6);
+    color: #6E2131;
+}
+
+.btn-remove:hover {
+    background-color: rgba(169, 61, 61, 1);
+}
+
+.btn-remove:active {
+    background-color: #742434;
+    color: #49151f;
+}
+
+.position-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 </style>
