@@ -159,7 +159,7 @@
                 <b-col cols="12" class="px-5 my-5">
                     <b-card bg-variant="card-header-blue" class="w-50 py-2 card-shadow" no-body>
                         <div class="d-flex align-items-center ms-4">
-                            <i class="material-icons me-2" style="font-size: 1.5rem">local_hospital</i>
+                            <i class="material-icons me-2" style="font-size: 1.5rem">pets</i>
                             <h4 class="mb-0 mt-1">Información médica de la mascota</h4>
                         </div>
                     </b-card>
@@ -179,7 +179,8 @@
                                                     <input id="isVaccinated" type="checkbox" class="form-check-input"
                                                         v-model="form.isVaccinated" value="true"
                                                         unchecked-value="false">
-                                                    <label class="ms-2 form-check-label checkbox-text" for="isVaccinated">
+                                                    <label class="ms-2 form-check-label checkbox-text"
+                                                        for="isVaccinated">
                                                         Mi mascota cuenta con todas sus vacunas
                                                     </label>
                                                 </div>
@@ -187,8 +188,7 @@
                                             <b-col cols="6">
                                                 <div class="mb-2 form-check">
                                                     <input id="isDewormed" type="checkbox" class="form-check-input"
-                                                        v-model="form.isDewormed" value="true"
-                                                        unchecked-value="false">
+                                                        v-model="form.isDewormed" value="true" unchecked-value="false">
                                                     <label class="ms-2 form-check-label checkbox-text" for="isDewormed">
                                                         Mi mascota se encuentra desparasitada
                                                     </label>
@@ -199,7 +199,8 @@
                                                     <input id="isSterilised" type="checkbox" class="form-check-input"
                                                         v-model="form.isSterilised" value="true"
                                                         unchecked-value="false">
-                                                    <label class="ms-2 form-check-label checkbox-text" for="isSterilised">
+                                                    <label class="ms-2 form-check-label checkbox-text"
+                                                        for="isSterilised">
                                                         Mi mascota se encuentra esterilizada
                                                     </label>
                                                 </div>
@@ -207,8 +208,7 @@
                                             <b-col cols="6">
                                                 <div class="mb-2 form-check">
                                                     <input id="microchip" type="checkbox" class="form-check-input"
-                                                        v-model="form.microchip" value="true"
-                                                        unchecked-value="false">
+                                                        v-model="form.microchip" value="true" unchecked-value="false">
                                                     <label class="ms-2 form-check-label checkbox-text" for="microchip">
                                                         Mi mascota cuenta con microchip
                                                     </label>
@@ -217,24 +217,65 @@
                                         </b-row>
                                         <b-row class="mt-3">
                                             <b-col cols="6">
-                                                <b-form-group label="Escribe las enfermedades o padecimientos de la mascota (si aplica):" label-for="diseases">
+                                                <b-form-group
+                                                    label="Escribe las enfermedades o padecimientos de la mascota (si aplica):"
+                                                    label-for="diseases">
                                                     <b-form-input id="diseases" v-model.trim="form.diseases"
                                                         placeholder="Enfermedad o padecimiento..."></b-form-input>
                                                 </b-form-group>
                                             </b-col>
                                             <b-col cols="6">
-                                                <b-form-group label="Escribe las alergias de la mascota (si aplica):" label-for="allergies">
+                                                <b-form-group label="Escribe las alergias de la mascota (si aplica):"
+                                                    label-for="allergies">
                                                     <b-form-input id="allergies" v-model.trim="form.allergies"
                                                         placeholder="Alergia..."></b-form-input>
                                                 </b-form-group>
                                             </b-col>
                                             <b-col cols="12" class="mt-3">
-                                                <b-form-group label="Escribe comentarios adicionales sobre la salud de la mascota (si aplica):" label-for="comments">
+                                                <b-form-group
+                                                    label="Escribe comentarios adicionales sobre la salud de la mascota (si aplica):"
+                                                    label-for="comments">
                                                     <b-form-textarea id="comments" v-model.trim="form.comments"
                                                         placeholder="Comentarios adicionales..."></b-form-textarea>
                                                 </b-form-group>
                                             </b-col>
                                         </b-row>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                        </b-card-body>
+                    </b-card>
+                </b-col>
+                <b-col cols="12" class="px-5 my-5">
+                    <b-card bg-variant="card-header-secondary-orange" class="w-50 py-2 card-shadow" no-body>
+                        <div class="d-flex align-items-center ms-4">
+                            <i class="material-icons me-2" style="font-size: 1.5rem">pets</i>
+                            <h4 class="mb-0 mt-1">Información adicional de la mascota</h4>
+                        </div>
+                    </b-card>
+                    <b-card bg-variant="card-content-orange" class="card-shadow">
+                        <b-card-body>
+                            <b-row>
+                                <b-col cols="6">
+                                    <b-form-group label="Escribe las características de la mascota:"
+                                        label-for="characteristics" description="Describa de la personalidad y el físico de la mascota">
+                                        <b-form-input id="characteristics" v-model.trim="form.characteristics"
+                                            placeholder="Características..."></b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col cols="6">
+                                    <b-form-group label="Indique cuáles son los hábitos y cuidados de su mascota:"
+                                        label-for="care">
+                                        <b-form-input id="care" v-model.trim="form.care"
+                                            placeholder="Hábitos y cuidados especiales..."></b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col cols="12" class="mt-3">
+                                    <b-form-group
+                                        label="Describe a la mascota y cuenta su historia:"
+                                        label-for="description">
+                                        <b-form-textarea id="description" v-model.trim="form.description"
+                                            placeholder="Descripción e historia..."></b-form-textarea>
                                     </b-form-group>
                                 </b-col>
                             </b-row>
@@ -331,7 +372,7 @@ export default {
 <style scoped>
 .card-shadow {
     box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
-    rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+        rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
 }
 
 .main-img {
