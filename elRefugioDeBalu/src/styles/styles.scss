@@ -61,6 +61,26 @@ $theme-colors: (
   font-weight: 200 !important;
 }
 
+.badge-info-outline {
+  background-color: rgba(255, 255, 255, 0);
+  color: #118A95 !important;
+  border: 2px solid #118A95 !important;
+  font-size: 0.86rem !important;
+  letter-spacing: 1px !important;
+  border-radius: 120px !important;
+  font-weight: 200 !important;
+}
+
+.badge-orange-outline {
+  background-color: rgba(255, 255, 255, 0);
+  color: #E84E0F !important;
+  border: 2px solid #E84E0F !important;
+  font-size: 0.86rem !important;
+  letter-spacing: 1px !important;
+  border-radius: 120px !important;
+  font-weight: 200 !important;
+}
+
 .pagination {
   display: flex;
   justify-content: center;

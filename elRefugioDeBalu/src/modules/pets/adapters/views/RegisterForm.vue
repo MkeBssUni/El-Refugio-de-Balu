@@ -203,84 +203,88 @@
                                 <b-card-body>
                                     <b-row>
                                         <b-col cols="12">
-                                            <b-form-group>
-                                                <b-row>
-                                                    <b-col cols="12">
-                                                        <label class="mb-3">
-                                                            Selecciona las opciones que apliquen a la mascota:
-                                                        </label>
-                                                    </b-col>
-                                                    <b-col cols="6">
-                                                        <div class="mb-2 form-check">
-                                                            <input id="isVaccinated" type="checkbox"
-                                                                class="form-check-input" v-model="form.isVaccinated"
-                                                                value="true" unchecked-value="false">
-                                                            <label class="ms-2 form-check-label checkbox-text"
-                                                                for="isVaccinated">
-                                                                Mi mascota cuenta con todas sus vacunas
-                                                            </label>
-                                                        </div>
-                                                    </b-col>
-                                                    <b-col cols="6">
-                                                        <div class="mb-2 form-check">
-                                                            <input id="isDewormed" type="checkbox"
-                                                                class="form-check-input" v-model="form.isDewormed"
-                                                                value="true" unchecked-value="false">
-                                                            <label class="ms-2 form-check-label checkbox-text"
-                                                                for="isDewormed">
-                                                                Mi mascota se encuentra desparasitada
-                                                            </label>
-                                                        </div>
-                                                    </b-col>
-                                                    <b-col cols="6">
-                                                        <div class="mb-2 form-check">
-                                                            <input id="isSterilised" type="checkbox"
-                                                                class="form-check-input" v-model="form.isSterilised"
-                                                                value="true" unchecked-value="false">
-                                                            <label class="ms-2 form-check-label checkbox-text"
-                                                                for="isSterilised">
-                                                                Mi mascota se encuentra esterilizada
-                                                            </label>
-                                                        </div>
-                                                    </b-col>
-                                                    <b-col cols="6">
-                                                        <div class="mb-2 form-check">
-                                                            <input id="microchip" type="checkbox"
-                                                                class="form-check-input" v-model="form.microchip"
-                                                                value="true" unchecked-value="false">
-                                                            <label class="ms-2 form-check-label checkbox-text"
-                                                                for="microchip">
-                                                                Mi mascota cuenta con microchip
-                                                            </label>
-                                                        </div>
-                                                    </b-col>
-                                                </b-row>
-                                                <b-row class="mt-3">
-                                                    <b-col cols="6">
-                                                        <b-form-group
-                                                            label="Escribe las enfermedades o padecimientos de la mascota (si aplica):"
-                                                            label-for="diseases">
-                                                            <b-form-input id="diseases" v-model.trim="form.diseases"
-                                                                placeholder="Enfermedad o padecimiento..."></b-form-input>
-                                                        </b-form-group>
-                                                    </b-col>
-                                                    <b-col cols="6">
-                                                        <b-form-group
-                                                            label="Escribe las alergias de la mascota (si aplica):"
-                                                            label-for="allergies">
-                                                            <b-form-input id="allergies" v-model.trim="form.allergies"
-                                                                placeholder="Alergia..."></b-form-input>
-                                                        </b-form-group>
-                                                    </b-col>
-                                                    <b-col cols="12" class="mt-3">
-                                                        <b-form-group
-                                                            label="Escribe comentarios adicionales sobre la salud de la mascota (si aplica):"
-                                                            label-for="comments">
-                                                            <b-form-textarea id="comments" v-model.trim="form.comments"
-                                                                placeholder="Comentarios adicionales..."></b-form-textarea>
-                                                        </b-form-group>
-                                                    </b-col>
-                                                </b-row>
+                                            <label class="mb-3">
+                                                Selecciona las opciones que apliquen a la mascota:
+                                            </label>
+                                        </b-col>
+                                        <b-col cols="6">
+                                            <div class="mb-2 form-check">
+                                                <input id="isVaccinated" type="checkbox" class="form-check-input"
+                                                    v-model="form.isVaccinated" value="true" unchecked-value="false">
+                                                <label class="ms-2 form-check-label checkbox-text" for="isVaccinated">
+                                                    Mi mascota cuenta con todas sus vacunas
+                                                </label>
+                                            </div>
+                                        </b-col>
+                                        <b-col cols="6">
+                                            <div class="mb-2 form-check">
+                                                <input id="isDewormed" type="checkbox" class="form-check-input"
+                                                    v-model="form.isDewormed" value="true" unchecked-value="false">
+                                                <label class="ms-2 form-check-label checkbox-text" for="isDewormed">
+                                                    Mi mascota se encuentra desparasitada
+                                                </label>
+                                            </div>
+                                        </b-col>
+                                        <b-col cols="6">
+                                            <div class="mb-2 form-check">
+                                                <input id="isSterilised" type="checkbox" class="form-check-input"
+                                                    v-model="form.isSterilised" value="true" unchecked-value="false">
+                                                <label class="ms-2 form-check-label checkbox-text" for="isSterilised">
+                                                    Mi mascota se encuentra esterilizada
+                                                </label>
+                                            </div>
+                                        </b-col>
+                                        <b-col cols="6">
+                                            <div class="mb-2 form-check">
+                                                <input id="microchip" type="checkbox" class="form-check-input"
+                                                    v-model="form.microchip" value="true" unchecked-value="false">
+                                                <label class="ms-2 form-check-label checkbox-text" for="microchip">
+                                                    Mi mascota cuenta con microchip
+                                                </label>
+                                            </div>
+                                        </b-col>
+                                    </b-row>
+                                    <b-row class="mt-3">
+                                        <b-col cols="6">
+                                            <b-form-group
+                                                label="Escribe las enfermedades o padecimientos de la mascota (si aplica):"
+                                                label-for="diseases">
+                                                <b-form-input id="diseases" v-model.trim="tempDisease"
+                                                    placeholder="Enfermedad o padecimiento..."
+                                                    @keyup.enter="addDisease()"></b-form-input>
+                                                <div class="px-3 pb-2 mx-2 badge-container">
+                                                    <b-badge v-for="(disease, index) in form.diseases" :key="index"
+                                                        class="me-2 mt-2 d-inline-flex align-items-center justify-content-between"
+                                                        variant="info-outline">
+                                                        <span class="me-1">{{ disease }}</span>
+                                                        <b-icon icon="x" @click="removeDisease(index)"
+                                                            font-scale="1.4"></b-icon>
+                                                    </b-badge>
+                                                </div>
+                                            </b-form-group>
+                                        </b-col>
+                                        <b-col cols="6">
+                                            <b-form-group label="Escribe las alergias de la mascota (si aplica):"
+                                                label-for="allergies">
+                                                <b-form-input id="allergies" v-model.trim="tempAllergy"
+                                                    placeholder="Alergia..." @keyup.enter="addAllergy()"></b-form-input>
+                                                <div class="px-3 pb-2 mx-2 badge-container">
+                                                    <b-badge v-for="(allergy, index) in form.allergies" :key="index"
+                                                        class="me-2 mt-2 d-inline-flex align-items-center justify-content-between"
+                                                        variant="info-outline">
+                                                        <span class="me-1">{{ allergy }}</span>
+                                                        <b-icon icon="x" @click="removeAllergy(index)"
+                                                            font-scale="1.4"></b-icon>
+                                                    </b-badge>
+                                                </div>
+                                            </b-form-group>
+                                        </b-col>
+                                        <b-col cols="12" class="mt-3">
+                                            <b-form-group
+                                                label="Escribe comentarios adicionales sobre la salud de la mascota (si aplica):"
+                                                label-for="comments">
+                                                <b-form-textarea id="comments" v-model.trim="form.comments"
+                                                    placeholder="Comentarios adicionales..."></b-form-textarea>
                                             </b-form-group>
                                         </b-col>
                                     </b-row>
@@ -309,16 +313,35 @@
                                             <b-form-group label="Escribe las características de la mascota:"
                                                 label-for="characteristics"
                                                 description="Describa de la personalidad y el físico de la mascota">
-                                                <b-form-input id="characteristics" v-model.trim="form.characteristics"
-                                                    placeholder="Características..."></b-form-input>
+                                                <b-form-input id="characteristics" v-model.trim="tempCharacteristic"
+                                                    placeholder="Características..." @keyup.enter="addCharacteristic()"></b-form-input>
+                                                <div class="px-3 pb-2 mx-2 badge-container">
+                                                    <b-badge v-for="(characteristic, index) in form.characteristics"
+                                                        :key="index"
+                                                        class="me-2 mt-2 d-inline-flex align-items-center justify-content-between"
+                                                        variant="orange-outline">
+                                                        <span class="me-1">{{ characteristic }}</span>
+                                                        <b-icon icon="x" @click="removeCharacteristic(index)"
+                                                            font-scale="1.4"></b-icon>
+                                                    </b-badge>
+                                                </div>
                                             </b-form-group>
                                         </b-col>
                                         <b-col cols="6">
                                             <b-form-group
                                                 label="Indique cuáles son los hábitos y cuidados de su mascota:"
                                                 label-for="care">
-                                                <b-form-input id="care" v-model.trim="form.care"
-                                                    placeholder="Hábitos y cuidados especiales..."></b-form-input>
+                                                <b-form-input id="care" v-model.trim="tempCare"
+                                                    placeholder="Hábitos y cuidados especiales..." @keyup.enter="addCare()"></b-form-input>
+                                                <div class="px-3 pb-2 mx-2 badge-container">
+                                                    <b-badge v-for="(care, index) in form.care" :key="index"
+                                                        class="me-2 mt-2 d-inline-flex align-items-center justify-content-between"
+                                                        variant="orange-outline">
+                                                        <span class="me-1">{{ care }}</span>
+                                                        <b-icon icon="x" @click="removeCare(index)"
+                                                            font-scale="1.4"></b-icon>
+                                                    </b-badge>
+                                                </div>
                                             </b-form-group>
                                         </b-col>
                                         <b-col cols="12" class="mt-3">
@@ -344,6 +367,10 @@ import Encabezado from "../../../../views/components/Encabezado.vue";
 export default {
     data() {
         return {
+            tempDisease: "",
+            tempAllergy: "",
+            tempCharacteristic: "",
+            tempCare: "",
             form: {
                 mainImage: null,
                 additionalImages: [],
@@ -361,9 +388,12 @@ export default {
                 isDewormed: false,
                 isSterilised: false,
                 microchip: false,
-                diseases: "",
-                allergies: "",
+                diseases: [],
+                allergies: [],
                 comments: "",
+                characteristics: [],
+                care: [],
+                description: "",
             },
             categories: [
                 { id: 1, name: "Perro" },
@@ -424,6 +454,42 @@ export default {
         },
         removeAdditionalImg(index) {
             this.form.additionalImages.splice(index, 1);
+        },
+        addDisease() {
+            if (this.tempDisease) {
+                this.form.diseases.push(this.tempDisease);
+                this.tempDisease = '';
+            }
+        },
+        addAllergy() {
+            if (this.tempAllergy) {
+                this.form.allergies.push(this.tempAllergy);
+                this.tempAllergy = '';
+            }
+        },
+        removeDisease(index) {
+            this.form.diseases.splice(index, 1);
+        },
+        removeAllergy(index) {
+            this.form.allergies.splice(index, 1);
+        },
+        addCharacteristic() {
+            if (this.tempCharacteristic) {
+                this.form.characteristics.push(this.tempCharacteristic);
+                this.tempCharacteristic = '';
+            }
+        },
+        addCare() {
+            if (this.tempCare) {
+                this.form.care.push(this.tempCare);
+                this.tempCare = '';
+            }
+        },
+        removeCharacteristic(index) {
+            this.form.characteristics.splice(index, 1);
+        },
+        removeCare(index) {
+            this.form.care.splice(index, 1);
         },
     },
     components: {
@@ -502,5 +568,11 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.badge-container {
+    background-color: #F2F2F2;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 </style>
