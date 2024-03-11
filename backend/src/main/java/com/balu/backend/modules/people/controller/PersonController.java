@@ -2,6 +2,7 @@ package com.balu.backend.modules.people.controller;
 
 import com.balu.backend.kernel.ErrorMessages;
 import com.balu.backend.kernel.ResponseApi;
+import com.balu.backend.kernel.SearchDto;
 import com.balu.backend.modules.people.model.Person;
 import com.balu.backend.modules.people.model.dto.ChangePasswordDto;
 import com.balu.backend.modules.people.model.dto.PersonDto;
@@ -9,6 +10,10 @@ import com.balu.backend.modules.people.model.dto.PublicRegisterDto;
 import com.balu.backend.modules.people.model.dto.SaveAdminOrModDto;
 import com.balu.backend.modules.people.service.PersonService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,5 +61,16 @@ public class PersonController {
         }catch (Exception e){
             return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    @PostMapping("/paged/")
+    public ResponseEntity<ResponseApi<Page<Person>>> getPage(
+            @RequestParam(defaultValue = "0", required = false) int page,
+            @RequestParam(defaultValue = "10", required = false) int size,
+            @RequestParam(defaultValue = "id", required = false) String sort,
+            @RequestParam(defaultValue = "asc", required = false) String direction,
+            @RequestBody SearchDto dto) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort));
+        ResponseApi<Page<Person>> responseApi = personService.getPaged(dto, pageable);
+        return new ResponseEntity<>(responseApi, responseApi.getStatus());
     }
 }

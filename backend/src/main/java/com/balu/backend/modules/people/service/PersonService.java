@@ -2,6 +2,7 @@ package com.balu.backend.modules.people.service;
 
 import com.balu.backend.kernel.ErrorMessages;
 import com.balu.backend.kernel.ResponseApi;
+import com.balu.backend.kernel.SearchDto;
 import com.balu.backend.kernel.Validations;
 import com.balu.backend.modules.hash.service.HashService;
 import com.balu.backend.modules.people.model.*;
@@ -15,6 +16,8 @@ import com.balu.backend.modules.roles.model.Roles;
 import com.balu.backend.modules.users.model.IUserRepository;
 import com.balu.backend.modules.users.model.User;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -121,5 +124,11 @@ public class PersonService {
 
         iUserRepository.saveAndFlush(person.get().getUser());
         return new ResponseApi<>(iPersonRepository.saveAndFlush(person.get()), HttpStatus.OK, false, "OK");
+    }
+    @Transactional(readOnly = true)
+    public ResponseApi<Page<Person>> getPaged(SearchDto dto, Pageable pageable){
+        dto.setSearchValue(dto.getSearchValue().toLowerCase());
+        Page<Person> page = iPersonRepository.findAllPaged(dto.getSearchValue(),dto.getSearchValue(),dto.getSearchValue(),pageable);
+        return new ResponseApi<>(page, HttpStatus.OK, false, "OK");
     }
 }
