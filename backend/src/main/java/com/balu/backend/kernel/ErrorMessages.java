@@ -11,5 +11,7 @@ public enum ErrorMessages {
     ACCOUNT_JUST_BLOCKED,
     INVALID_ROLE,
     UNAUTHORIZED_ACTION,
+    RECORD_NOT_FOUND,
+    INTERNAL_ERROR,
 
 }
