@@ -72,13 +72,7 @@ public class AuthService {
                 return new ResponseEntity<>(new ResponseApi<>(HttpStatus.UNAUTHORIZED, true, ErrorMessages.ACCOUNT_JUST_BLOCKED.name()), HttpStatus.BAD_REQUEST);
             }
 
-            String message = e.getMessage();
-            if(e.getMessage().contains("NotFound")){
-                message = ErrorMessages.INCORRECT_CREDENTIALS.name();
-            }else if(e.getMessage().contains("Input byte array has incorrect ending byte at 24")){
-                message = ErrorMessages.INCORRECT_CREDENTIALS.name();
-            }
-            return new ResponseEntity<>(new ResponseApi<>(HttpStatus.UNAUTHORIZED, true, message), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ResponseApi<>(HttpStatus.UNAUTHORIZED, true, ErrorMessages.INCORRECT_CREDENTIALS.name()), HttpStatus.BAD_REQUEST);
         }
     }
 }
