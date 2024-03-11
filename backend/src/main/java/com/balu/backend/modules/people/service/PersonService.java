@@ -131,4 +131,34 @@ public class PersonService {
         Page<Person> page = iPersonRepository.findAllPaged(dto.getSearchValue(),dto.getSearchValue(),dto.getSearchValue(),pageable);
         return new ResponseApi<>(page, HttpStatus.OK, false, "OK");
     }
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
+    public ResponseApi<String> resetPassword(PersonDto dto) throws Exception {
+        dto.setUsername(hashService.encrypt(dto.getUsername()));
+
+        Optional<User> user = iUserRepository.findByUsername(dto.getUsername());
+        if(user.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
+
+        String alphabet = "abcdefghijklmnopqrstuvwxyz";
+        String specialCharacters = "._#";
+        String newPassword = "";
+        int randomIndex;
+        for (int i = 0; i < 2; i++) {
+            randomIndex = (int) (Math.random() * alphabet.length());
+            newPassword += alphabet.charAt(randomIndex);
+            randomIndex = (int) (Math.random() * alphabet.length());
+            newPassword += randomIndex;
+            newPassword += alphabet.toUpperCase().charAt(randomIndex);
+            randomIndex = (int) (Math.random() * specialCharacters.length());
+            newPassword += specialCharacters.charAt(randomIndex);
+            randomIndex = (int) (Math.random() * 10);
+            newPassword += randomIndex;
+        }
+
+        if(validations.isInvalidPassword(newPassword)) return resetPassword(dto);
+
+        user.get().setPassword(encoder.encode(newPassword));
+        iUserRepository.saveAndFlush(user.get());
+
+        return new ResponseApi<>(hashService.encrypt(newPassword), HttpStatus.OK, false, "OK");
+    }
 }
