@@ -72,10 +72,9 @@ const routes = [
         path: "/adoptionList",
         name: "adoptionList",
         component: () => import("../modules/adoptions/adapters/views/AdoptionList.vue"),
+      },{
         path: "/viewMyAplicationAdoption",
         name: "viewMyAplicationAdoption",
-        path: "/myViewAplication",
-        name: "myViewAplication",
         component: () => import("../modules/adoptions/adapters/views/ViewAplication.vue"),
       },
       {
