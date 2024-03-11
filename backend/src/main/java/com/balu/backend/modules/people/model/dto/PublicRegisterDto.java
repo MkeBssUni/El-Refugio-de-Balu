@@ -1,4 +1,4 @@
-package com.balu.backend.modules.people.model;
+package com.balu.backend.modules.people.model.dto;
 
 import lombok.Getter;
 import lombok.Setter;
