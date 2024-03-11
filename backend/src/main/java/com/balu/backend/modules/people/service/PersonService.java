@@ -4,10 +4,7 @@ import com.balu.backend.kernel.ErrorMessages;
 import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.kernel.Validations;
 import com.balu.backend.modules.hash.service.HashService;
-import com.balu.backend.modules.people.model.IPersonRepository;
-import com.balu.backend.modules.people.model.Person;
-import com.balu.backend.modules.people.model.PublicRegisterDto;
-import com.balu.backend.modules.people.model.SaveAdminOrModDto;
+import com.balu.backend.modules.people.model.*;
 import com.balu.backend.modules.roles.model.IRoleRepository;
 import com.balu.backend.modules.roles.model.Role;
 import com.balu.backend.modules.roles.model.Roles;
@@ -81,5 +78,13 @@ public class PersonService {
         user = iUserRepository.saveAndFlush(user);
         person.saveAdminOrMod(dto,user);
         return new ResponseApi<>(iPersonRepository.saveAndFlush(person), HttpStatus.CREATED, false,"OK");
+    }
+    @Transactional(readOnly = true)
+    public ResponseApi<Person> getDetails(PersonDto dto){
+        //Igual, faltaría meter la lógica de la encriptación
+        if(dto.getPersonId() == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
+        Optional<Person> person = iPersonRepository.findById(dto.getPersonId());
+        return person.map(value -> new ResponseApi<>(value, HttpStatus.OK, false, "OK")).orElseGet(() -> new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name()));
+
     }
 }

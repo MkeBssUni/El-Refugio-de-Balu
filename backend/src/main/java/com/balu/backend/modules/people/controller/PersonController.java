@@ -1,13 +1,15 @@
 package com.balu.backend.modules.people.controller;
 
+import com.balu.backend.kernel.ErrorMessages;
 import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.modules.people.model.Person;
+import com.balu.backend.modules.people.model.PersonDto;
 import com.balu.backend.modules.people.model.PublicRegisterDto;
 import com.balu.backend.modules.people.model.SaveAdminOrModDto;
 import com.balu.backend.modules.people.service.PersonService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,5 +28,14 @@ public class PersonController {
     public ResponseEntity<ResponseApi<Person>> saveAdminOrMod(@RequestBody SaveAdminOrModDto dto) throws Exception {
         ResponseApi<Person> response = personService.saveAdminOrMod(dto);
         return new ResponseEntity<>(response, response.getStatus());
+    }
+    @PostMapping("/details")
+    public ResponseEntity<ResponseApi<Person>> getDetails(@RequestBody PersonDto dto) throws Exception{
+        try {
+            ResponseApi<Person> response = personService.getDetails(dto);
+            return new ResponseEntity<>(response, response.getStatus());
+        }catch (Exception e){
+            return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
