@@ -19,15 +19,7 @@
                 id="input-1"
                 v-model="SaveCategoryDto.name"
                 trim
-                @input="UpdateStateInputCategoryName()"
-                :state="nameValidationState"
               ></b-form-input>
-              <b-form-invalid-feedback
-                v-if="!ValidationSpecialCharactersName()"
-              >
-                El nombre de la categoría contiene caracteres especiales no
-                permitidos (/[<>{}' || \\ \/]/)
-              </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
           <b-col>
@@ -49,15 +41,7 @@
                 v-model="SaveCategoryDto.description"
                 trim
                 rows="4"
-                @input="UpdateStateInputCategoryDescription()"
-                :state="descriptionValidationState"
               ></b-form-textarea>
-              <b-form-invalid-feedback
-                v-if="!ValidationSpecialCharactersDescription()"
-              >
-                La descripción de la categoría contiene caracteres especiales no
-                permitidos (/[<>{}' || \\ \/]/)
-              </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
           <b-col class="mt-4">
@@ -99,7 +83,6 @@
 
 <script>
 import Swal from "sweetalert2";
-import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
 
 export default {
   name: "SaveCategory",
@@ -108,12 +91,9 @@ export default {
       SaveCategoryDto: {
         name: "",
         description: "",
-        image: null,
+        image: "",
       },
       size: false,
-      imageFile: null,
-      nameValidationState: null,
-      descriptionValidationState: null,
     };
   },
   methods: {
@@ -124,9 +104,9 @@ export default {
       if (file.length > 1) {
         this.size = false;
       }
-      if (file.size > maxSize) {
+      if (file[0].size > maxSize) {
         this.size = false;
-        this.SaveCategoryDto.image = null;
+        this.SaveCategoryDto.image = "";
       } else {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -156,64 +136,48 @@ export default {
         cancelButtonText: "Cancelar",
       }).then((result) => {
         if (result.isConfirmed) {
-          Swal.fire({
-            title: "Espera un momento...",
-            text: "Estamos enviando tu solicitud de adopción",
-            imageUrl: gatoWalkingGif,
-            timer: 2000,
-            timerProgressBar: true,
-            imageWidth: 160, // Ancho de la imagen
-            imageHeight: 160, // Altura de la imagen
-            showConfirmButton: false,
-          }).then(() => {
-            this.SaveCategory();
-          });
+          this.SaveCategory();
         }
       });
     },
     ValidationFormCategoryRegister() {
-      return !(
+      if (
         this.SaveCategoryDto.name &&
         this.SaveCategoryDto.description &&
-        this.SaveCategoryDto.image &&
-        this.descriptionValidationState &&
-        this.nameValidationState
-      );
-    },
-    ValidationSpecialCharactersName() {
-      const expresionRegular = /[<>{}' || \\ \/]/;
-      return !expresionRegular.test(this.SaveCategoryDto.name);
-    },
-    UpdateStateInputCategoryName() {
-      if (this.SaveCategoryDto.name.trim() === "") {
-        // Si el campo está vacío, el estado es null
-        this.nameValidationState = null;
-      } else {
-        // Si no está vacío, actualizamos el estado según la validación
-        this.nameValidationState = this.ValidationSpecialCharactersName()
-          ? true
-          : false;
+        this.SaveCategoryDto.image
+      ) {
+        return false; // Todos los campos están llenos
       }
+      return true; // Al menos uno de los campos está vacío
     },
-    ValidationSpecialCharactersName() {
+    ValidateNameCategory( name) {
       const expresionRegular = /[<>{}' || \\ \/]/;
-      return !expresionRegular.test(this.SaveCategoryDto.name);
-    },
-    UpdateStateInputCategoryDescription() {
-      if (this.SaveCategoryDto.description.trim() === "") {
-        // Si el campo está vacío, el estado es null
-        this.descriptionValidationState = null;
-      } else {
-        // Si no está vacío, actualizamos el estado según la validación
-        this.descriptionValidationState =
-          this.ValidationSpecialCharactersDescription() ? true : false;
-      }
-    },
-    ValidationSpecialCharactersDescription() {
-      const expresionRegular = /[<>{}' || \\ \/]/;
-      return !expresionRegular.test(this.SaveCategoryDto.description);
+      return !expresionRegular.test(name);
     },
   },
 };
 </script>
+
+
+<!-- <b-form-group label="Imagen de portada *" laberl-for="inputImage">
+  <b-form-file id="inputImage" browse-text="Elegir"  accept="image/png, image/jpeg, image/jpg"
+      placeholder="Selecciona una imagen" drop-placeholder="Suelta el archivo aquí"
+      v-model="$v.file1.$model"
+      :state="($v.file1 && $v.file1.$dirty) && size  ? (size || $v.file1 && $v.news.image?.required) : null"
+      @change="convertImageToBase64($event)"></b-form-file>
+  <small class="text-danger">
+      Nota: El tamaño máximo soportado es de 2mb
+  </small>
+  <b-form-invalid-feedback v-if="news.image?.length <= 0 && size">
+      Este campo es obligatorio
+  </b-form-invalid-feedback>
+  <b-form-invalid-feedback v-if="!size">
+      La imagen es muy pesada, el tamaño máximo soportado es de 2mb
+  </b-form-invalid-feedback>
+  <b-form-invalid-feedback v-if="!format">
+      El formato de la imagen no es valido
+  </b-form-invalid-feedback>
+  <br>
+</b-form-group> -->
+
 <style></style>
