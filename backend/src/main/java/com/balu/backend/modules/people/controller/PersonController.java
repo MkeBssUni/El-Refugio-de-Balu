@@ -38,4 +38,13 @@ public class PersonController {
             return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PatchMapping("/")
+    public ResponseEntity<ResponseApi<Person>> changeStatus(@RequestBody PersonDto dto) throws Exception{
+        try{
+            ResponseApi<Person> response = personService.changeStatus(dto);
+            return new ResponseEntity<>(response, response.getStatus());
+        }catch (Exception e){
+            return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
