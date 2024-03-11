@@ -1,5 +1,6 @@
 package com.balu.backend.security;
 
+import com.balu.backend.modules.roles.model.Roles;
 import com.balu.backend.security.jwt.JwtAuthenticationFilter;
 import com.balu.backend.security.jwt.JwtEntryPoint;
 import com.balu.backend.security.service.UserDetailsServiceImpl;
@@ -63,6 +64,7 @@ public class MainSecurity {
                 .authorizeHttpRequests(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(WHITE_LIST_URL).permitAll()
+                        .requestMatchers("/api/person/").hasAnyAuthority(Roles.ADMINISTRADOR.name())
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())
