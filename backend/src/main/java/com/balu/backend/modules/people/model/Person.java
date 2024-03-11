@@ -40,4 +40,11 @@ public class Person {
         this.phoneNumber = dto.getPhoneNumber();
         this.user = user;
     }
+    public void saveAdminOrMod(SaveAdminOrModDto dto, User user){
+        this.name = dto.getName();
+        this.lastName = dto.getLastname();
+        this.surName = dto.getSurname();
+        this.phoneNumber = dto.getPhoneNumber();
+        this.user = user;
+    }
 }

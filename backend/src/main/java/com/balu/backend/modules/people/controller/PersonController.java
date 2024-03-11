@@ -3,9 +3,11 @@ package com.balu.backend.modules.people.controller;
 import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.modules.people.model.Person;
 import com.balu.backend.modules.people.model.PublicRegisterDto;
+import com.balu.backend.modules.people.model.SaveAdminOrModDto;
 import com.balu.backend.modules.people.service.PersonService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,8 +18,13 @@ public class PersonController {
     private final PersonService personService;
 
     @PostMapping("/publicRegister")
-    public ResponseEntity<ResponseApi<Person>> publicRegister(@RequestBody PublicRegisterDto dto){
+    public ResponseEntity<ResponseApi<Person>> publicRegister(@RequestBody PublicRegisterDto dto) throws Exception {
         ResponseApi<Person> response = personService.publicRegister(dto);
+        return new ResponseEntity<>(response, response.getStatus());
+    }
+    @PostMapping("/")
+    public ResponseEntity<ResponseApi<Person>> saveAdminOrMod(@RequestBody SaveAdminOrModDto dto) throws Exception {
+        ResponseApi<Person> response = personService.saveAdminOrMod(dto);
         return new ResponseEntity<>(response, response.getStatus());
     }
 }
