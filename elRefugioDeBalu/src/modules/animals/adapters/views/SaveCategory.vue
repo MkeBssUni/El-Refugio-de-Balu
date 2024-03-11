@@ -150,9 +150,9 @@ export default {
       }
       return true; // Al menos uno de los campos está vacío
     },
-    ValidateNameCategory( name) {
+    ValidateNameCategory() {
       const expresionRegular = /[<>{}' || \\ \/]/;
-      return !expresionRegular.test(name);
+      return !expresionRegular.test(oracion);
     },
   },
 };
