@@ -50,14 +50,13 @@ const routes = [
         component: () => import("../modules/pets/adapters/views/FavoriteCatalog.vue"),
       },
       {
-        path: "/requestAdoption",
-        name: "requestAdoption",
-        component: () => import("../modules/adoptions/adapters/views/AdoptionRequest.vue"),
-      },
-      {
         path: "/formAdoption",
         name: "formAdoption",
         component: () => import("../modules/adoptions/adapters/views/FormAdoption.vue"),
+      },{
+        path: "/myAplicationAdoption",
+        name: "myAplicationAdoption",
+        component: () => import("../modules/adoptions/adapters/views/MyAplicationAdoption.vue"),
       },
       {
         path: "/login",
