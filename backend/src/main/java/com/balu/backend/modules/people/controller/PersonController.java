@@ -38,7 +38,7 @@ public class PersonController {
             return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PatchMapping("/")
+    @PatchMapping("/change/status")
     public ResponseEntity<ResponseApi<Person>> changeStatus(@RequestBody PersonDto dto) throws Exception{
         try{
             ResponseApi<Person> response = personService.changeStatus(dto);
