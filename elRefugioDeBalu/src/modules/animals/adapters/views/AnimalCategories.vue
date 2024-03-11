@@ -24,9 +24,10 @@
                         </b-input-group>
                     </b-col>
                 </b-row>
-                <b-row class="mt-2" v-if="saveCategoryForm">
+                <b-row class="border" v-if="saveCategoryForm">
                     <b-col>
                         <saveCategory/>
+                        <h4>HAAAAAAAAAAAAAAAAAAAA</h4>
                     </b-col>
                 </b-row>
             </div>
