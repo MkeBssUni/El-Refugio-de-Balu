@@ -3,9 +3,10 @@ package com.balu.backend.modules.people.controller;
 import com.balu.backend.kernel.ErrorMessages;
 import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.modules.people.model.Person;
-import com.balu.backend.modules.people.model.PersonDto;
-import com.balu.backend.modules.people.model.PublicRegisterDto;
-import com.balu.backend.modules.people.model.SaveAdminOrModDto;
+import com.balu.backend.modules.people.model.dto.ChangePasswordDto;
+import com.balu.backend.modules.people.model.dto.PersonDto;
+import com.balu.backend.modules.people.model.dto.PublicRegisterDto;
+import com.balu.backend.modules.people.model.dto.SaveAdminOrModDto;
 import com.balu.backend.modules.people.service.PersonService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -42,6 +43,15 @@ public class PersonController {
     public ResponseEntity<ResponseApi<Person>> changeStatus(@RequestBody PersonDto dto) throws Exception{
         try{
             ResponseApi<Person> response = personService.changeStatus(dto);
+            return new ResponseEntity<>(response, response.getStatus());
+        }catch (Exception e){
+            return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PatchMapping("/change/password")
+    public ResponseEntity<ResponseApi<Person>> changePassword(@RequestBody ChangePasswordDto dto) throws Exception{
+        try{
+            ResponseApi<Person> response = personService.changePassword(dto);
             return new ResponseEntity<>(response, response.getStatus());
         }catch (Exception e){
             return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);

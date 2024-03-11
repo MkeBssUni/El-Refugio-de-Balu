@@ -5,6 +5,10 @@ import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.kernel.Validations;
 import com.balu.backend.modules.hash.service.HashService;
 import com.balu.backend.modules.people.model.*;
+import com.balu.backend.modules.people.model.dto.ChangePasswordDto;
+import com.balu.backend.modules.people.model.dto.PersonDto;
+import com.balu.backend.modules.people.model.dto.PublicRegisterDto;
+import com.balu.backend.modules.people.model.dto.SaveAdminOrModDto;
 import com.balu.backend.modules.roles.model.IRoleRepository;
 import com.balu.backend.modules.roles.model.Role;
 import com.balu.backend.modules.roles.model.Roles;
@@ -99,6 +103,22 @@ public class PersonService {
         }else{
             person.get().getUser().setBlockedAt(null);
         }
+        iUserRepository.saveAndFlush(person.get().getUser());
+        return new ResponseApi<>(iPersonRepository.saveAndFlush(person.get()), HttpStatus.OK, false, "OK");
+    }
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
+    public ResponseApi<Person> changePassword(ChangePasswordDto dto){
+        Optional<Person> person = iPersonRepository.findById(dto.getPersonId());
+        if(person.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
+
+        if(!encoder.matches(dto.getOldPassword(),person.get().getUser().getPassword())) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidPassword(dto.getNewPassword())) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
+        person.get().getUser().setPassword(encoder.encode(dto.getNewPassword()));
+
+        person.get().getUser().setAttempts(0);
+        person.get().getUser().setBlocked(false);
+        person.get().getUser().setBlockedAt(null);
+
         iUserRepository.saveAndFlush(person.get().getUser());
         return new ResponseApi<>(iPersonRepository.saveAndFlush(person.get()), HttpStatus.OK, false, "OK");
     }

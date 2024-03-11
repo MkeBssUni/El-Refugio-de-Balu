@@ -31,6 +31,7 @@ public class User {
     @Column(columnDefinition = "text", nullable = false)
     private String username;
     @Column(columnDefinition = "text", nullable = false)
+    @JsonIgnore
     private String password;
     private int attempts;
 
