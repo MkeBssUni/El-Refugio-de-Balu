@@ -1,10 +1,15 @@
 package com.balu.backend.modules.statusses.model;
 
+import com.balu.backend.modules.adoptionRequests.model.AdoptionRequest;
+import com.balu.backend.modules.pets.model.Pet;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -19,6 +24,12 @@ public class Status {
     @Column(columnDefinition = "VARCHAR(40)", nullable = false, unique = true)
     @Enumerated(EnumType.STRING)
     private Statusses name;
+    @OneToMany(mappedBy = "status")
+    @JsonIgnore
+    private List<Pet> pets;
+    @OneToMany(mappedBy = "status")
+    @JsonIgnore
+    private List<AdoptionRequest> adoptionRequests;
 
     public Status(Statusses name) {
         this.name = name;

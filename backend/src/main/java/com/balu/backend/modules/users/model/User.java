@@ -1,7 +1,10 @@
 package com.balu.backend.modules.users.model;
 
+import com.balu.backend.modules.adoptionRequests.model.AdoptionRequest;
 import com.balu.backend.modules.adresses.model.Address;
+import com.balu.backend.modules.favoritePets.model.FavoritePet;
 import com.balu.backend.modules.people.model.Person;
+import com.balu.backend.modules.pets.model.Pet;
 import com.balu.backend.modules.roles.model.Role;
 import com.balu.backend.modules.roles.model.Roles;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -13,6 +16,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -27,6 +31,7 @@ public class User {
     @Column(columnDefinition = "text", nullable = false)
     private String username;
     @Column(columnDefinition = "text", nullable = false)
+    @JsonIgnore
     private String password;
     private int attempts;
 
@@ -50,13 +55,22 @@ public class User {
     @OneToOne(mappedBy = "user")
     @JsonIgnore
     private Address address;
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Pet> pets;
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<AdoptionRequest> adoptionRequests;
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<FavoritePet> favoritePets;
 
     public User(String username, String password, Role role1) {
         this.username = username;
         this.password = password;
         this.role = role1;
     }
-    public void savePublicRegister(String username, String password, Role role){
+    public void save(String username, String password, Role role){
         this.username = username;
         this.password = password;
         this.role = role;

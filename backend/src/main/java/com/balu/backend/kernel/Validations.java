@@ -11,7 +11,7 @@ public class Validations {
         return !password.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$");
     }
     public boolean isInvalidName(String name){
-        return !name.matches("^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ' .]+$\n");
+        return !name.matches("^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ' .]+$");
     }
     public boolean isInvalidImage(String logo){
         return !logo.matches("data:image/(png|jpg|jpeg);base64,([a-zA-Z0-9+/=])+");

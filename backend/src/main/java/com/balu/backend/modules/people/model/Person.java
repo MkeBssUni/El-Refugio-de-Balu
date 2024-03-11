@@ -1,6 +1,8 @@
 package com.balu.backend.modules.people.model;
 
 
+import com.balu.backend.modules.people.model.dto.PublicRegisterDto;
+import com.balu.backend.modules.people.model.dto.SaveAdminOrModDto;
 import com.balu.backend.modules.users.model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -33,7 +35,14 @@ public class Person {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    public void savePublicRegister(PublicRegisterDto dto,User user){
+    public void savePublicRegister(PublicRegisterDto dto, User user){
+        this.name = dto.getName();
+        this.lastName = dto.getLastname();
+        this.surName = dto.getSurname();
+        this.phoneNumber = dto.getPhoneNumber();
+        this.user = user;
+    }
+    public void saveAdminOrMod(SaveAdminOrModDto dto, User user){
         this.name = dto.getName();
         this.lastName = dto.getLastname();
         this.surName = dto.getSurname();

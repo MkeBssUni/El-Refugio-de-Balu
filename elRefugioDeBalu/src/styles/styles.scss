@@ -4,6 +4,12 @@ $theme-colors: (
   "success": #53A93D,
   "danger": #A93D3D,
   "purple": #AD5CB5,
+  "card-content-orange": #ffc876,
+  "card-header-orange": #ffb23f,
+  "card-content-secondary-orange": #FE8757,
+  "card-header-secondary-orange": #FB6528,
+  "card-content-blue": #67ccd3,
+  "card-header-blue": #4ca7ac,
   "orange": #FFBC58,
   "dark-orange": #FF9900,
   "secondary-orange": #EE7240,
@@ -51,6 +57,26 @@ $theme-colors: (
   color: #000000 !important;
   font-size: 0.86rem !important;
   letter-spacing: 1px;
+  border-radius: 120px !important;
+  font-weight: 200 !important;
+}
+
+.badge-info-outline {
+  background-color: rgba(255, 255, 255, 0);
+  color: #118A95 !important;
+  border: 2px solid #118A95 !important;
+  font-size: 0.86rem !important;
+  letter-spacing: 1px !important;
+  border-radius: 120px !important;
+  font-weight: 200 !important;
+}
+
+.badge-orange-outline {
+  background-color: rgba(255, 255, 255, 0);
+  color: #E84E0F !important;
+  border: 2px solid #E84E0F !important;
+  font-size: 0.86rem !important;
+  letter-spacing: 1px !important;
   border-radius: 120px !important;
   font-weight: 200 !important;
 }

@@ -3,10 +3,14 @@ package com.balu.backend.security.entities;
 import com.balu.backend.modules.roles.model.Role;
 import com.balu.backend.modules.users.model.User;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
     private final String username;
@@ -14,22 +18,25 @@ public class UserDetailsImpl implements UserDetails {
     private final LocalDateTime lastAccess;
     private final Role role;
     private final boolean blocked;
+    private final GrantedAuthority authority;
 
-    public UserDetailsImpl(String username, String password, LocalDateTime lastAccess, Role role, boolean blocked) {
+    public UserDetailsImpl(String username, String password, LocalDateTime lastAccess, Role role, boolean blocked,  GrantedAuthority authority) {
         this.username = username;
         this.password = password;
         this.lastAccess = lastAccess;
         this.role = role;
         this.blocked = blocked;
+        this.authority = authority;
     }
 
     public static UserDetailsImpl build(User user){
-        return new UserDetailsImpl(user.getUsername(), user.getPassword(), user.getLastAccess(), user.getRole(), user.isBlocked());
+        Set<GrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority(user.getRole().getName().name()));
+        return new UserDetailsImpl(user.getUsername(), user.getPassword(), user.getLastAccess(), user.getRole(), user.isBlocked(), authorities.stream().findFirst().get());
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+    public Collection<? extends GrantedAuthority> getAuthorities(){
+        return Collections.singleton(authority);
     }
 
     @Override

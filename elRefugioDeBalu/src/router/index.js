@@ -9,6 +9,24 @@ const routes = [
     redirect: "/home",
   },
   {
+    path: "/404",
+    name: "404",
+    component: () => import("../views/components/errors/404.vue"),
+  },{
+    path: "/403",
+    name: "403",
+    component: () => import("../views/components/errors/403.vue"),
+  },
+  {
+    path: "/500",
+    name: "500",
+    component: () => import("../views/components/errors/500.vue"),
+  },{
+    path: "/401",
+    name: "401",
+    component: () => import("../views/components/errors/401.vue"),
+  },
+  {
     path: "/",
     component: {
       render(c) {
@@ -27,6 +45,11 @@ const routes = [
         component: () => import("../modules/pets/adapters/views/PetCatalog.vue"),
       },
       {
+        path: "/favorites",
+        name: "favorites",
+        component: () => import("../modules/pets/adapters/views/FavoriteCatalog.vue"),
+      },
+      {
         path: "/requestAdoption",
         name: "requestAdoption",
         component: () => import("../modules/adoptions/adapters/views/AdoptionRequest.vue"),
@@ -34,7 +57,7 @@ const routes = [
       {
         path: "/formAdoption",
         name: "formAdoption",
-        component: () => import("../modules/adoptions/adapters/views/FormRequest.vue"),
+        component: () => import("../modules/adoptions/adapters/views/FormAdoption.vue"),
       },
       {
         path: "/login",
@@ -45,6 +68,11 @@ const routes = [
         path: "/pet-list",
         name: "pet-list",
         component: () => import("../modules/pets/adapters/views/PetList.vue"),
+      },
+      {
+        path: "/petForm",
+        name: "petForm",
+        component: () => import("../modules/pets/adapters/views/RegisterForm.vue"),
       },
       {
         path: "/UsersList",
@@ -60,6 +88,11 @@ const routes = [
         path: "/UsersForm",
         name: "UsersForm",
         component: () => import("../modules/users/components/UsersForm.vue"),
+      },
+      {
+        path: "/SelfRegistration",
+        name: "SelfRegistration",
+        component: () => import("../modules/users/components/SelfRegistration.vue"),
       }
     ],
   },

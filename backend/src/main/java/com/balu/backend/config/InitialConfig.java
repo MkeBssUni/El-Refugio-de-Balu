@@ -41,6 +41,8 @@ public class InitialConfig implements CommandLineRunner {
         getOrSaveRoles(Roles.MODERADOR);
 
         getOrSaveUser("baluchis@mail.com", "baluchis", Roles.ADMINISTRADOR);
+        getOrSaveUser("baluchis_general@mail.com", "baluchis", Roles.GENERAL);
+        getOrSaveUser("baluchis_mod@mail.com", "baluchis", Roles.MODERADOR);
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
