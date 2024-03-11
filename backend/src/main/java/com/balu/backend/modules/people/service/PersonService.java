@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -86,5 +87,19 @@ public class PersonService {
         Optional<Person> person = iPersonRepository.findById(dto.getPersonId());
         return person.map(value -> new ResponseApi<>(value, HttpStatus.OK, false, "OK")).orElseGet(() -> new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name()));
 
+    }
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
+    public ResponseApi<Person> changeStatus(PersonDto dto) throws Exception{
+        Optional<Person> person = iPersonRepository.findById(dto.getPersonId());
+        if(person.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
+
+        person.get().getUser().setBlocked(!(person.get().getUser().isBlocked()));
+        if(person.get().getUser().isBlocked()){
+            person.get().getUser().setBlockedAt(LocalDateTime.now());
+        }else{
+            person.get().getUser().setBlockedAt(null);
+        }
+        iUserRepository.saveAndFlush(person.get().getUser());
+        return new ResponseApi<>(iPersonRepository.saveAndFlush(person.get()), HttpStatus.OK, false, "OK");
     }
 }
