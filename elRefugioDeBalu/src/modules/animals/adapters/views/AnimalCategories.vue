@@ -6,12 +6,12 @@
         </div>
         <b-container fluid>
             <div class="mt-3">
-                <b-row class="justify-content-end">
+
+                <b-row class="justify-content-end" v-if="!saveCategoryForm">
                     <b-col cols="12" sm="12" md="3" lg="2" xl="2" class="d-flex justify-content-end my-2">
-                        <b-button as="col" cols="12" sm="12" md="1" pill class="py-1 w-100 d-flex align-items-center justify-content-center" variant="outline-danger">
+                        <b-button as="col" cols="12" sm="12" md="1" pill class="py-1 w-100 d-flex align-items-center justify-content-center"  variant="outline-danger" @click="viewCategoryRegistrationForm()">
                             Registrar <i class="material-icons ms-3">add_circle</i>
                         </b-button>
-
                     </b-col>
                     <b-col cols="12" sm="12" md="4 " lg="3" xl="3" class="my-2">
                         <b-form-select v-model="selected" as="col" cols="12" sm="12" md="2" lg="2" xl="2"
@@ -24,6 +24,29 @@
                         </b-input-group>
                     </b-col>
                 </b-row>
+                <b-row class="justify-content-end" v-else>
+                    <b-col cols="12" sm="12" md="3" lg="2" xl="2" class="d-flex justify-content-end my-2">
+                         <b-button as="col"  cols="12" sm="12" md="1" pill class="py-1 w-100 d-flex align-items-center justify-content-center" disabled variant="outline-danger">
+                            Registrar <i class="material-icons ms-3">add_circle</i>
+                        </b-button>
+
+                    </b-col>
+                    <b-col cols="12" sm="12" md="4 " lg="3" xl="3" class="my-2">
+                        <b-form-select v-model="selected" as="col" cols="12" sm="12" md="2" lg="2" xl="2"
+                            class="form-control selectCategories rounded-pill" disabled></b-form-select>
+                    </b-col>
+                    <b-col cols="12" sm="12" md="4 " lg="3" xl="3" class="my-2">
+                        <b-input-group>
+                            <b-form-input as id="searchInput" type="search" disabled placeholder="Buscar..."
+                                class="searchInput rounded-pill" v-model="search"></b-form-input>
+                        </b-input-group>
+                    </b-col>
+                </b-row>
+                <b-row class="mt-2" v-if="saveCategoryForm">
+                    <b-col>
+                        <saveCategory @SavedCategory="HideCategoryRegistrationForm()"/>
+                    </b-col>
+                </b-row>
             </div>
             <div class="animalCategories mt-3">
                 <b-row class="mx-3 justify-content-center">
@@ -31,7 +54,7 @@
                         v-for="(animal, index) in paginatedAnimalsList" :key="index">
                         <b-card :title="animal.name" :img-src=animal.imaen img-alt="Image" img-top tag="article"
                             style="max-width: 20rem; border-top-left-radius: 2rem; border-top-right-radius: 2rem; border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem; " class="mb-2">
-                            <b-card-body class="py-0 justify-content-center card-body-animals">
+                            <b-card-body class="py-0 justify-content-center">
                                 <b-row>
                                     <b-col class="my-2 mx-2 justify-content-center px-1" cols="12" sm="12" md="12" lg="12"
                                         xl="5">
@@ -59,14 +82,15 @@
 </template>
 
 <script>
-import Encabezado from '../../../../views/components/Encabezado.vue';
-import gatos from "../../../../assets/imgs/gatoGrisCut.png"
+import Encabezado from '../../../../views/components/Encabezado.vue'
 import tortugas from "../../../../assets/imgs/tortugas1.jpeg"
+import SaveCategory from './SaveCategory.vue';
 
 export default {
     name: "AnimalCategories",
     components: {
         Encabezado,
+        SaveCategory
     },
     data() {
         return {
@@ -97,6 +121,7 @@ export default {
             selected: null,
             currentPage: 1,
             perPage: 8,
+            saveCategoryForm:false
         }
     },
     computed: {
@@ -108,6 +133,20 @@ export default {
             const endIndex = startIndex + this.perPage;
             return this.AnimalsList.slice(startIndex, endIndex);
         }
+    },
+    methods:{
+        viewCategoryRegistrationForm(){
+            this.saveCategoryForm = !this.saveCategoryForm;
+        },
+        GetAllCategories(){
+            //Aqui se hara la peticion al back
+        },
+        HideCategoryRegistrationForm(){
+            this.viewCategoryRegistrationForm()
+            this.GetAllCategories()
+        }
+
+
     }
 }
 </script>
