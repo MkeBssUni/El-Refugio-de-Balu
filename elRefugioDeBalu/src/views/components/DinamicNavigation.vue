@@ -63,7 +63,7 @@ export default {
             </b-navbar-nav>
             <b-navbar-nav class="me-2 d-flex align-items-center">
                 <b-nav-item class="me-2 d-none d-md-inline-block">
-                    <b-button variant="outline-light" class="px-3 d-flex align-items-center">
+                    <b-button to="/selfRegistration" variant="outline-light" class="px-3 d-flex align-items-center">
                         <span v-if="role" style="font-size: 1rem;">Ver perfil</span>
                         <span v-else style="font-size: 1rem;">Crear cuenta</span>
                         <b-icon :icon="role !== '' ? 'person' : 'person-plus'" font-scale="1" class="ms-2"></b-icon>

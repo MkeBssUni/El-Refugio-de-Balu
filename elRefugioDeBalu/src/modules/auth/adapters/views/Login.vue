@@ -159,7 +159,6 @@ export default {
                         </b-form-group>
                         <b-row class="justify-content-center">
                             <b-col class="d-flex justify-content-center align-items-center mt-3">
-                                <!-- comprobar que no se estén mostrando errores -->
                                 <b-button lass="bg-dark-secondary-orange text-white mx-5" @click="login()"
                                     :disabled="!form.isValid">Iniciar sesión</b-button>
                             </b-col>
@@ -167,7 +166,7 @@ export default {
 
                         <b-row class="justify-content-center">
                             <b-col class="d-flex justify-content-center align-items-center mt-3">
-                                <b-link to="/auth/register" class="text-dark-blue text-decoration-none">
+                                <b-link to="/selfRegistration" class="text-dark-blue text-decoration-none">
                                     ¿No tienes cuenta? Regístrate</b-link>
                             </b-col>
                         </b-row>
