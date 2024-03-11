@@ -162,8 +162,3 @@ $theme-colors: (
   --bs-btn-disabled-bg: transparent;
   --bs-btn-disabled-border-color: #118A95;
 }
-
-
-.custom-file-input:lang(en) ~ .custom-file-label::after {
-  content: 'Cargar';
-}
