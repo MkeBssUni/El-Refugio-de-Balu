@@ -2,9 +2,9 @@
     <b-container fluid>
         <b-row>
             <b-col cols="12" class="mt-5 px-5">
-                <b-card class="full-height-card p-4" bg-variant="gray">
+                <b-card class="full-height-card p-4 d-none d-lg-block" bg-variant="gray">
                     <b-row>
-                        <b-col cols="4">
+                        <b-col cols="5" xl="4">
                             <b-row>
                                 <b-col cols="12">
                                     <b-img :src="pet.mainImage" class="img border-img"
@@ -18,22 +18,40 @@
                                     </div>
                                 </b-col>
                             </b-row>
+                            <b-row class="mb-3">
+                                <b-col cols="12" class="mt-5 mb-2">
+                                    <h4>Características</h4>
+                                </b-col>
+                                <b-col cols="12">
+                                    <b-badge v-for="(characteristic, index) in pet.characteristics" :key="index"
+                                        variant="info-outline" class="me-2 mb-2">{{ characteristic }}</b-badge>
+                                </b-col>
+                            </b-row>
+                            <hr class="divider my-0">
+                            <b-row>
+                                <b-col cols="12" class="mt-4 mb-2">
+                                    <h4>Descripción</h4>
+                                    <p class="comment text-dark-gray-input">{{ pet.description }}</p>
+                                </b-col>
+                            </b-row>
                         </b-col>
-                        <b-col cols="8" class="ps-5">
+                        <b-col cols="7" xl="8" class="ps-5">
                             <b-row class="my-3">
-                                <b-col cols="10" class="d-flex align-items-center">
+                                <b-col cols="9" xl="10" class="d-flex align-items-center">
                                     <div>
                                         <h2>{{ pet.name }}</h2>
                                         <h4 class="text-dark-gray-input">{{ pet.city }}, {{ pet.state }}</h4>
                                     </div>
                                 </b-col>
-                                <b-col cols="2">
-                                    <b-icon v-if="pet.sex === 'M'" icon="gender-male" variant="gender-male"
-                                        font-scale="3.6"></b-icon>
-                                    <b-icon v-else icon="gender-female" variant="gender-female"
-                                        font-scale="3.6"></b-icon>
-                                    <b-card-sub-title class="mt-2" v-if="pet.sex === 'M'">Macho</b-card-sub-title>
-                                    <b-card-sub-title class="mt-2" v-else>Hembra</b-card-sub-title>
+                                <b-col cols="3" xl="2" class="d-flex justify-content-end pe-4">
+                                    <div>
+                                        <b-icon v-if="pet.sex === 'M'" icon="gender-male" variant="gender-male"
+                                            font-scale="3.6"></b-icon>
+                                        <b-icon v-else icon="gender-female" variant="gender-female"
+                                            font-scale="3.6"></b-icon>
+                                        <b-card-sub-title class="mt-2" v-if="pet.sex === 'M'">Macho</b-card-sub-title>
+                                        <b-card-sub-title class="mt-2" v-else>Hembra</b-card-sub-title>
+                                    </div>
                                 </b-col>
                             </b-row>
                             <hr class="divider my-0">
@@ -68,52 +86,82 @@
                                 <b-col cols="12">
                                     <h4 class="mb-3">Información médica</h4>
                                 </b-col>
-                                <b-col cols="6" class="d-flex justify-content-between pe-5 mb-0">
-                                    <p>Vacunado</p>
-                                    <b-icon v-if="pet.isVaccinated" icon="check-circle" variant="success"
-                                        font-scale="1.4"></b-icon>
-                                    <b-icon v-else icon="x-circle" variant="danger" font-scale="1.4"></b-icon>
-                                </b-col>
-                                <b-col cols="6" class="d-flex justify-content-between pe-5 mb-0">
-                                    <p>Desparasitado</p>
-                                    <b-icon v-if="pet.isDewormed" icon="check-circle" variant="success"
-                                        font-scale="1.4"></b-icon>
-                                    <b-icon v-else icon="x-circle" variant="danger" font-scale="1.4"></b-icon>
-                                </b-col>
-                                <b-col cols="6" class="d-flex justify-content-between pe-5 mb-0">
-                                    <p>Esterilizado</p>
-                                    <b-icon v-if="pet.isSterilised" icon="check-circle" variant="success"
-                                        font-scale="1.4"></b-icon>
-                                    <b-icon v-else icon="x-circle" variant="danger" font-scale="1.4"></b-icon>
-                                </b-col>
-                                <b-col cols="6" class="d-flex justify-content-between pe-5 mb-0">
-                                    <p>Con microchip</p>
-                                    <b-icon v-if="pet.microchip" icon="check-circle" variant="success"
-                                        font-scale="1.4"></b-icon>
-                                    <b-icon v-else icon="x-circle" variant="danger" font-scale="1.4"></b-icon>
-                                </b-col>
-                                <b-col cols="6">
-                                    <p class="mt-3">Enfermedades:</p>
-                                    <ul v-if="pet.diseases.length > 0">
-                                        <li class="text-dark-gray-input" v-for="(disease, index) in pet.diseases" :key="index">{{ disease }}</li>
-                                    </ul>
-                                    <p v-else class="text-dark-gray-input mt-3 ms-3">Ninguna</p>
-                                </b-col>
-                                <b-col cols="6">
-                                    <p class="mt-3">Alergias:</p>
-                                    <ul v-if="pet.allergies.length > 0">
-                                        <li class="text-dark-gray-input" v-for="(allergy, index) in pet.allergies" :key="index">{{ allergy }}</li>
-                                    </ul>
-                                    <p v-else class="text-dark-gray-input mt-3 ms-3">Ninguna</p>
-                                </b-col>
+                                <b-row>
+                                    <b-col cols="6">
+                                        <div class="d-flex justify-content-between pe-xl-5">
+                                            <p>Vacunado</p>
+                                            <b-icon v-if="pet.isVaccinated" icon="check-circle" variant="success"
+                                                font-scale="1.2" class="me-4 me-xl-5"></b-icon>
+                                            <b-icon v-else icon="x-circle" variant="danger" font-scale="1.2"                                     
+                                            class="me-4 me-xl-5"></b-icon>
+                                        </div>
+                                        <div class="d-flex justify-content-between pe-xl-5">
+                                            <p>Desparasitado</p>
+                                            <b-icon v-if="pet.isDewormed" icon="check-circle" variant="success"
+                                                font-scale="1.2" class="me-4 me-xl-5"></b-icon>
+                                            <b-icon v-else icon="x-circle" variant="danger" font-scale="1.2"
+                                                class="me-4 me-xl-5"></b-icon>
+                                        </div>
+                                        <div class="d-flex justify-content-between pe-xl-5">
+                                            <p>Esterilizado</p>
+                                            <b-icon v-if="pet.isSterilised" icon="check-circle" variant="success"
+                                                font-scale="1.2" class="me-4 me-xl-5"></b-icon>
+                                            <b-icon v-else icon="x-circle" variant="danger" font-scale="1.2"
+                                                class="me-4 me-xl-5"></b-icon>
+                                        </div>
+                                        <div class="d-flex justify-content-between pe-xl-5">
+                                            <p>Con microchip</p>
+                                            <b-icon v-if="pet.microchip" icon="check-circle" variant="success"
+                                                font-scale="1.2" class="me-4 me-xl-5"></b-icon>
+                                            <b-icon v-else icon="x-circle" variant="danger" font-scale="1.2"
+                                                class="me-4 me-xl-5"></b-icon>
+                                        </div>
+                                    </b-col>
+                                    <b-col cols="6">
+                                        <p>Enfermedades:</p>
+                                        <p v-if="pet.diseases.length > 0" class="text-dark-gray-input ms-3">
+                                            {{ pet.diseases.join(', ') }}
+                                        </p>
+                                        <p v-else class="text-dark-gray-input ms-3">Ninguna</p>
+                                        <p class="mt-3">Alergias:</p>
+                                        <p v-if="pet.allergies.length > 0" class="text-dark-gray-input ms-3">
+                                            {{ pet.allergies.join(', ') }}
+                                        </p>
+                                        <p v-else class="text-dark-gray-input ms-3">Ninguna</p>
+                                    </b-col>
+                                </b-row>
                                 <b-col cols="12">
                                     <p class="mt-3">Comentarios adicionales:</p>
                                     <p class="comment text-dark-gray-input">{{ pet.comments }}</p>
                                 </b-col>
                             </b-row>
                             <hr class="divider my-0">
-                            <b-row class="my-3"></b-row>
-                            <hr class="divider my-0">
+                            <b-row class="my-3">
+                                <b-col cols="12">
+                                    <h4>Hábitos y cuidados especiales</h4>
+                                </b-col>
+                                <b-col cols="12">
+                                    <ul>
+                                        <li class="text-dark-gray-input mt-3" v-for="(care, index) in pet.care"
+                                            :key="index">{{ care }}</li>
+                                    </ul>
+                                </b-col>
+                            </b-row>
+                        </b-col>
+                    </b-row>
+                    <hr class="divider my-0">
+                    <b-row class="mt-3">
+                        <b-col cols="12" class="d-flex justify-content-end">
+                            <b-button type="submit" variant="outline-dark-secondary-blue"
+                                class="form-btn me-3 d-flex align-items-center justify-content-between">
+                                <span class="me-2">Solicitar adoptar</span>
+                                <b-icon icon="heart" font-scale="1.3"></b-icon>
+                            </b-button>
+                            <b-button variant="outline-danger"
+                                class="form-btn d-flex align-items-center justify-content-between">
+                                <span class="me-2">Regresar</span>
+                                <b-icon icon="arrow-left-circle" font-scale="1.3"></b-icon>
+                            </b-button>
                         </b-col>
                     </b-row>
                 </b-card>
@@ -148,11 +196,20 @@ export default {
                 isDewormed: false,
                 isSterilised: false,
                 microchip: true,
-                diseases: ['Leucemia Felina', 'Rabia'],
-                /* diseases: [], */
-                allergies: ['Polvo', 'Ácaros'],
-                /* allergies: [], */
+                /* diseases: ['Leucemia Felina', 'Rabia'], */
+                diseases: [],
+                /* allergies: ['Polvo', 'Ácaros'], */
+                allergies: [],
                 comments: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                care: [
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                    "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                    "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                ],
+                characteristics: [
+                    "Travieso", "Limpio", "Cariñoso", "Juguetón", "Mimoso", "Guardián"
+                ],
+                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
             }
         }
     },
@@ -198,11 +255,15 @@ p {
     font-size: 1.2rem;
 }
 
-li {
-    font-size: 1.2rem;
-}
-
 p.comment {
     font-size: 1rem;
+}
+
+li {
+    font-size: 1rem;
+}
+
+.form-btn {
+    width: 20%;
 }
 </style>
