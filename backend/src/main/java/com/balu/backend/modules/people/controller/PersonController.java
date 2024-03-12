@@ -73,4 +73,13 @@ public class PersonController {
         ResponseApi<Page<Person>> responseApi = personService.getPaged(dto, pageable);
         return new ResponseEntity<>(responseApi, responseApi.getStatus());
     }
+    @PatchMapping("/reset/password")
+    public ResponseEntity<ResponseApi<String>> resetPassword(@RequestBody PersonDto dto) throws Exception{
+        try{
+            ResponseApi<String> response = personService.resetPassword(dto);
+            return new ResponseEntity<>(response, response.getStatus());
+        }catch (Exception e){
+            return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

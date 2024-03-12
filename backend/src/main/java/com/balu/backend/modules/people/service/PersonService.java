@@ -42,6 +42,14 @@ public class PersonService {
     public ResponseApi<Person> publicRegister(PublicRegisterDto dto) throws Exception {
         if(dto.getUsername() == null || dto.getLastname() == null || dto.getName() == null || dto.getPhoneNumber() == null || dto.getPassword() == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
         if(validations.isNotBlankString(dto.getUsername()) && validations.isNotBlankString(dto.getPassword()) && validations.isNotBlankString((dto.getName())) && validations.isNotBlankString(dto.getLastname()) && validations.isNotBlankString(dto.getPhoneNumber())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+
+        dto.setName(hashService.decrypt(dto.getName()));
+        dto.setLastname(hashService.decrypt(dto.getLastname()));
+        dto.setSurname(hashService.decrypt(dto.getSurname()));
+        dto.setPassword(hashService.decrypt(dto.getPassword()));
+        dto.setPhoneNumber(hashService.decrypt(dto.getPhoneNumber()));
+        dto.setUsername(hashService.decrypt(dto.getUsername()));
+
         if(validations.isInvalidEmail(dto.getUsername())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
         if(validations.isInvalidPassword(dto.getPassword())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
         if(validations.isInvalidName(dto.getName())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
@@ -50,7 +58,7 @@ public class PersonService {
         if(validations.isInvalidPhoneNumber(dto.getPhoneNumber())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
 
         Optional<User> existentUser = iUserRepository.findByUsername(dto.getUsername());
-        if(existentUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.DUPLICATE_RECORD.name());
+        if(existentUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
 
         Person person = new Person();
         User user = new User();
@@ -58,6 +66,7 @@ public class PersonService {
         if(role.isEmpty()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.ROLE_NOT_FOUND.name());
         user.save(hashService.encrypt(dto.getUsername()),encoder.encode(dto.getPassword()),role.get());
         user = iUserRepository.saveAndFlush(user);
+        dto.setPhoneNumber(hashService.encrypt(dto.getPhoneNumber()));
         person.savePublicRegister(dto,user);
         return new ResponseApi<>(iPersonRepository.saveAndFlush(person), HttpStatus.CREATED, false,"OK");
     }
@@ -130,5 +139,35 @@ public class PersonService {
         dto.setSearchValue(dto.getSearchValue().toLowerCase());
         Page<Person> page = iPersonRepository.findAllPaged(dto.getSearchValue(),dto.getSearchValue(),dto.getSearchValue(),pageable);
         return new ResponseApi<>(page, HttpStatus.OK, false, "OK");
+    }
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
+    public ResponseApi<String> resetPassword(PersonDto dto) throws Exception {
+        dto.setUsername(hashService.encrypt(dto.getUsername()));
+
+        Optional<User> user = iUserRepository.findByUsername(dto.getUsername());
+        if(user.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
+
+        String alphabet = "abcdefghijklmnopqrstuvwxyz";
+        String specialCharacters = "._#";
+        String newPassword = "";
+        int randomIndex;
+        for (int i = 0; i < 2; i++) {
+            randomIndex = (int) (Math.random() * alphabet.length());
+            newPassword += alphabet.charAt(randomIndex);
+            randomIndex = (int) (Math.random() * alphabet.length());
+            newPassword += randomIndex;
+            newPassword += alphabet.toUpperCase().charAt(randomIndex);
+            randomIndex = (int) (Math.random() * specialCharacters.length());
+            newPassword += specialCharacters.charAt(randomIndex);
+            randomIndex = (int) (Math.random() * 10);
+            newPassword += randomIndex;
+        }
+
+        if(validations.isInvalidPassword(newPassword)) return resetPassword(dto);
+
+        user.get().setPassword(encoder.encode(newPassword));
+        iUserRepository.saveAndFlush(user.get());
+
+        return new ResponseApi<>(hashService.encrypt(newPassword), HttpStatus.OK, false, "OK");
     }
 }

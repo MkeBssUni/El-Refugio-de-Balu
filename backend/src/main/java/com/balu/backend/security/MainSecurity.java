@@ -28,6 +28,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class MainSecurity {
     private static final String[] WHITE_LIST_URL ={
             "/api/person/publicRegister",
+            "/api/person/reset/password",
             "/api/auth/",
     };
 
