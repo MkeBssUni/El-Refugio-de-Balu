@@ -9,8 +9,18 @@
     </div>
     <b-container fluid>
       <div class="mt-3">
-        <b-row class="justify-content-end" v-if="!saveCategoryForm">
-          <b-col cols="12" sm="12"  md="3" lg="2" xl="2" class="d-flex justify-content-end my-2">
+        <b-row
+          class="justify-content-end"
+          v-if="saveCategoryForm && updateCategoryForm"
+        >
+          <b-col
+            cols="12"
+            sm="12"
+            md="3"
+            lg="2"
+            xl="2"
+            class="d-flex justify-content-end my-2"
+          >
             <b-button
               as="col"
               cols="12"
@@ -99,12 +109,12 @@
             </b-input-group>
           </b-col>
         </b-row>
-        <b-row class="mt-2" v-if="saveCategoryForm">
+        <b-row class="mt-2" v-if="!saveCategoryForm">
           <b-col>
             <saveCategory @SavedCategory="HideCategoryRegistrationForm()" />
           </b-col>
         </b-row>
-        <b-row class="mt-2" v-if="updateCategoryForm">
+        <b-row class="mt-2" v-if="!updateCategoryForm">
           <b-col>
             <updateCategory
               :categoryToModify="categoryToModify"
@@ -141,14 +151,14 @@
               class="mb-2"
             >
               <b-card-body class="py-0 justify-content-center">
-                <b-row>
+                <b-row v-if="saveCategoryForm && updateCategoryForm">
                   <b-col
                     class="my-2 mx-2 justify-content-center px-1"
                     cols="12"
                     sm="12"
                     md="12"
                     lg="12"
-                    xl="5"
+                    xl="5" 
                   >
                     <b-button
                       pill
@@ -185,6 +195,65 @@
                     >
                     <b-button
                       v-else
+                      pill
+                      variant="outline-danger"
+                      style="font-size: 0.8rem"
+                      class="d-flex align-items-center justify-content-center w-100 px-0"
+                      v-b-tooltip.hover
+                      title="Esta categoria no es visible para los usuarios"
+                      >Deshabilitada
+                      <i class="material-icons ms-2" style="font-size: 1rem"
+                        >close</i
+                      ></b-button
+                    >
+                  </b-col>
+                </b-row>
+                <b-row v-else>
+                  <b-col
+                    class="my-2 mx-2 justify-content-center px-1"
+                    cols="12"
+                    sm="12"
+                    md="12"
+                    lg="12"
+                    xl="5" 
+                  >
+                    <b-button
+                      pill
+                      class="d-flex align-items-center justify-content-center btn-outline-dark-orange-secondary w-100 px-0"
+                      style="font-size: 0.8rem"
+                      disabled
+                    >
+                      Modificar
+                      <i class="material-icons ms-2" style="font-size: 0.8rem"
+                        >border_color</i
+                      >
+                    </b-button>
+                  </b-col>
+                  <b-col
+                    class="my-2 mx-2 justify-content-center px-0"
+                    cols="12"
+                    sm="12"
+                    md="12"
+                    lg="12"
+                    xl="5"
+                  >
+                    <b-button
+                      v-if="animal.status"
+                      disabled
+                      pill
+                      variant="outline-success"
+                      class="d-flex align-items-center justify-content-center w-100 px-0"
+                      v-b-tooltip.hover
+                      title="Esta categoria es visible para los usuarios"
+                      style="font-size: 0.8rem"
+                      >Habilitada
+                      <i class="material-icons ms-2" style="font-size: 1rem"
+                        >done</i
+                      ></b-button
+                    >
+                    <b-button
+                      v-else
+                      disabled
                       pill
                       variant="outline-danger"
                       style="font-size: 0.8rem"
@@ -369,8 +438,8 @@ export default {
       selected: null,
       currentPage: 1,
       perPage: 8,
-      saveCategoryForm: false,
-      updateCategoryForm: false,
+      saveCategoryForm: true,
+      updateCategoryForm: true,
       categoryToModify: null,
     };
   },
