@@ -10,23 +10,28 @@
         <b-row>
           <form @submit="submitAdoptionForm">
             <!-- incio de fotos de casa -->
-            <div class="container-fluid">
-              <div class="card encabezadoColorform">
-                <h4 style="margin-left: 2rem" class="mt-1 mb-0">
-                  <i
-                    class="material-icons ms-2"
-                    style="font-size: larger; vertical-align: middle"
+            <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
+          <b-row>
+            <b-col cols="10" md="8" lg="6">
+              <b-card
+                bg-variant="card-header-orange"
+                class="py-2 card-shadow"
+                no-body
+              >
+                <div class="d-flex align-items-center ms-3 ms-md-4">
+                  <i class="material-icons me-2" style="font-size: 1.5rem"
                     >pets</i
                   >
-                  Lugar de residencia
-                </h4>
-              </div>
-              <b-card-group deck>
-                <b-card
-                  class="contentform d-flex justify-content-center align-items-center"
-                >
-                  <b-container>
-                    <b-row>
+                  <h4 class="mb-0 mt-1">  Lugar de residencia</h4>
+                </div>
+              </b-card>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12">
+              <b-card bg-variant="card-content-orange" class="card-shadow">
+                <b-card-body>
+                  <b-row>
                       <b-col
                         cols="12"
                         sm="12"
@@ -113,25 +118,34 @@
                         />
                       </b-col>
                     </b-row>
-                  </b-container>
-                </b-card>
-              </b-card-group>
-            </div>
+                </b-card-body>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-col>
             <!-- fin de fotos de casa -->
             <!-- incio de motivos de adopcion -->
-            <div class="container-fluid my-3">
-              <div class="card encabezadoColorformMotive">
-                <h4 style="margin-left: 2rem" class="mt-1 mb-0">
-                  <i
-                    class="material-icons ms-2"
-                    style="font-size: larger; vertical-align: middle"
+            <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
+          <b-row>
+            <b-col cols="10" md="8" lg="6">
+              <b-card
+                bg-variant="card-header-secondary-orange"
+                class="py-2 card-shadow"
+                no-body
+              >
+                <div class="d-flex align-items-center ms-3 ms-md-4">
+                  <i class="material-icons me-2" style="font-size: 1.5rem"
                     >pets</i
                   >
-                  Motivos de adopción
-                </h4>
-              </div>
-              <b-card-group deck>
-                <b-card class="contentformMotive d-flex-justify-content">
+                  <h4 class="mb-0 mt-1">Motivos de adopción</h4>
+                </div>
+              </b-card>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12">
+              <b-card bg-variant="card-content-secondary-orange" class="card-shadow">
+                <b-card-body>
                   <b-container>
                     <b-row>
                       <b-col cols="12" sm="12" md="6" lg="6">
@@ -238,27 +252,36 @@
                       </b-col>
                     </b-row>
                   </b-container>
-                </b-card>
-              </b-card-group>
-            </div>
+                </b-card-body>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-col>
+       
             <!-- fin de motivos de adopcion -->
 
             <!-- incio de experiencias previas -->
-            <div class="container-fluid my-3">
-              <div class="card encabezadoColorformExperience">
-                <h4 style="margin-left: 2rem" class="mt-1 mb-0">
-                  <i
-                    class="material-icons ms-2"
-                    style="font-size: larger; vertical-align: middle"
+            <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
+          <b-row>
+            <b-col cols="10" md="8" lg="6">
+              <b-card
+                bg-variant="card-header-blue"
+                class="py-2 card-shadow"
+                no-body
+              >
+                <div class="d-flex align-items-center ms-3 ms-md-4">
+                  <i class="material-icons me-2" style="font-size: 1.5rem"
                     >pets</i
                   >
-                  Experiencias previas
-                </h4>
-              </div>
-              <b-card-group deck>
-                <b-card
-                  class="contentformExperience d-flex justify-content align-items"
-                >
+                  <h4 class="mb-0 mt-1">Experencia Previa</h4>
+                </div>
+              </b-card>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12">
+              <b-card bg-variant="card-content-blue" class="card-shadow">
+                <b-card-body>
                   <b-container>
                     <b-row>
                       <b-col cols="12" sm="12" md="6" lg="6">
@@ -369,25 +392,35 @@
                       </b-col>
                     </b-row>
                   </b-container>
-                </b-card>
-              </b-card-group>
-            </div>
+                </b-card-body>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-col>
             <!-- fin de experiencias previas -->
 
             <!-- incio de info personal -->
-            <div class="container-fluid my-3">
-              <div class="card encabezadoColorform">
-                <h4 style="margin-left: 2rem" class="mt-1 mb-0">
-                  <i
-                    class="material-icons ms-2"
-                    style="font-size: larger; vertical-align: middle"
+            <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
+          <b-row>
+            <b-col cols="10" md="8" lg="6">
+              <b-card
+                bg-variant="card-header-orange"
+                class="py-2 card-shadow"
+                no-body
+              >
+                <div class="d-flex align-items-center ms-3 ms-md-4">
+                  <i class="material-icons me-2" style="font-size: 1.5rem"
                     >pets</i
                   >
-                  Experiencias previas
-                </h4>
-              </div>
-              <b-card-group deck>
-                <b-card class="contentform d-flex justify-content align-items">
+                  <h4 class="mb-0 mt-1">Información Adicional</h4>
+                </div>
+              </b-card>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12">
+              <b-card bg-variant="card-content-orange" class="card-shadow">
+                <b-card-body>
                   <b-container>
                     <b-row>
                       <b-col cols="12" sm="12" md="12" lg="12">
@@ -417,9 +450,12 @@
                       </b-col>
                     </b-row>
                   </b-container>
-                </b-card>
-              </b-card-group>
-            </div>
+                </b-card-body>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-col>
+        
             <!-- fin de info personal -->
             <div class="container-fluid d-flex justify-content-end">
               <b-button
@@ -838,44 +874,6 @@ export default {
   display: flexbox;
   width: 100%;
   background-color: #ffb23f;
-}
-.encabezadoColorform {
-  width: 50%;
-  background-color: #ffb23f;
-  box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
-    rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
-}
-
-.contentform {
-  background-color: #ffc876;
-  box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
-    rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
-}
-
-.encabezadoColorformMotive {
-  width: 50%;
-  background-color: #fb6528;
-  box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
-    rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
-}
-
-.contentformMotive {
-  background-color: #fe8757;
-  box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
-    rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
-}
-
-.encabezadoColorformExperience {
-  width: 50%;
-  background-color: #1da3af;
-  box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
-    rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
-}
-
-.contentformExperience {
-  background-color: #5ebfc5;
-  box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
-    rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
 }
 
 .rounded-button {
