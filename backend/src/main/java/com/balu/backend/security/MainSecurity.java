@@ -30,6 +30,7 @@ public class MainSecurity {
             "/api/person/publicRegister",
             "/api/person/reset/password",
             "/api/auth/",
+            "api/category/list"
     };
 
     private final UserDetailsServiceImpl userDetailsService;
