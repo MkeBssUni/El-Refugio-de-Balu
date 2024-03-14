@@ -2,9 +2,11 @@
     <b-container fluid>
         <b-row>
             <b-col cols="12" class="mt-5 px-5">
-                <b-card class="full-height-card p-4 d-none d-lg-block" bg-variant="gray">
+
+                <!-- md, lg, xl card -->
+                <b-card class="full-height-card p-4 d-none d-md-block" bg-variant="gray">
                     <b-row>
-                        <b-col cols="5" xl="4">
+                        <b-col cols="6" lg="5" xl="4">
                             <b-row>
                                 <b-col cols="12">
                                     <b-img :src="pet.mainImage" class="img border-img"
@@ -34,8 +36,20 @@
                                     <p class="comment text-dark-gray-input">{{ pet.description }}</p>
                                 </b-col>
                             </b-row>
+                            <hr class="divider my-0 d-block d-lg-none">
+                            <b-row class="my-3 d-block d-lg-none">
+                                <b-col cols="12">
+                                    <h4>Hábitos y cuidados especiales</h4>
+                                </b-col>
+                                <b-col cols="12">
+                                    <ul>
+                                        <li class="text-dark-gray-input mt-3" v-for="(care, index) in pet.care"
+                                            :key="index">{{ care }}</li>
+                                    </ul>
+                                </b-col>
+                            </b-row>
                         </b-col>
-                        <b-col cols="7" xl="8" class="ps-5">
+                        <b-col cols="6" lg="7" xl="8" class="ps-3 ps-lg-5">
                             <b-row class="my-3">
                                 <b-col cols="9" xl="10" class="d-flex align-items-center">
                                     <div>
@@ -56,27 +70,27 @@
                             </b-row>
                             <hr class="divider my-0">
                             <b-row class="mt-3 g-0">
-                                <b-col cols="6" class="d-flex">
+                                <b-col cols="12" lg="6" class="d-flex">
                                     <p class="me-2">Especie:</p>
                                     <p class="text-dark-gray-input">{{ pet.category }}</p>
                                 </b-col>
-                                <b-col cols="6" class="d-flex">
+                                <b-col cols="12" lg="6" class="d-flex">
                                     <p class="me-2">Raza:</p>
                                     <p class="text-dark-gray-input">{{ pet.breed }}</p>
                                 </b-col>
-                                <b-col cols="6" class="d-flex">
+                                <b-col cols="12" lg="6" class="d-flex">
                                     <p class="me-2">Tamaño:</p>
                                     <p class="text-dark-gray-input">{{ pet.size }}</p>
                                 </b-col>
-                                <b-col cols="6" class="d-flex">
+                                <b-col cols="12" lg="6" class="d-flex">
                                     <p class="me-2">Etapa:</p>
                                     <p class="text-dark-gray-input">{{ pet.stage }}</p>
                                 </b-col>
-                                <b-col cols="6" class="d-flex">
+                                <b-col cols="12" lg="6" class="d-flex">
                                     <p class="me-2">Edad</p>
                                     <p class="text-dark-gray-input">{{ pet.age }}</p>
                                 </b-col>
-                                <b-col cols="6" class="d-flex">
+                                <b-col cols="12" lg="6" class="d-flex">
                                     <p class="me-2">Peso</p>
                                     <p class="text-dark-gray-input">{{ pet.weight }}</p>
                                 </b-col>
@@ -84,16 +98,16 @@
                             <hr class="divider my-0">
                             <b-row class="mt-3">
                                 <b-col cols="12">
-                                    <h4 class="mb-3">Información médica</h4>
+                                    <h4 class="mb-4">Información médica</h4>
                                 </b-col>
                                 <b-row>
-                                    <b-col cols="6">
+                                    <b-col cols="12" lg="6">
                                         <div class="d-flex justify-content-between pe-xl-5">
                                             <p>Vacunado</p>
                                             <b-icon v-if="pet.isVaccinated" icon="check-circle" variant="success"
                                                 font-scale="1.2" class="me-4 me-xl-5"></b-icon>
-                                            <b-icon v-else icon="x-circle" variant="danger" font-scale="1.2"                                     
-                                            class="me-4 me-xl-5"></b-icon>
+                                            <b-icon v-else icon="x-circle" variant="danger" font-scale="1.2"
+                                                class="me-4 me-xl-5"></b-icon>
                                         </div>
                                         <div class="d-flex justify-content-between pe-xl-5">
                                             <p>Desparasitado</p>
@@ -117,8 +131,8 @@
                                                 class="me-4 me-xl-5"></b-icon>
                                         </div>
                                     </b-col>
-                                    <b-col cols="6">
-                                        <p>Enfermedades:</p>
+                                    <b-col cols="12" lg="6">
+                                        <p class="mt-md-4 mt-lg-0">Enfermedades:</p>
                                         <p v-if="pet.diseases.length > 0" class="text-dark-gray-input ms-3">
                                             {{ pet.diseases.join(', ') }}
                                         </p>
@@ -135,8 +149,8 @@
                                     <p class="comment text-dark-gray-input">{{ pet.comments }}</p>
                                 </b-col>
                             </b-row>
-                            <hr class="divider my-0">
-                            <b-row class="my-3">
+                            <hr class="divider my-0 d-none d-lg-block">
+                            <b-row class="my-3 d-none d-lg-block">
                                 <b-col cols="12">
                                     <h4>Hábitos y cuidados especiales</h4>
                                 </b-col>
@@ -150,21 +164,24 @@
                         </b-col>
                     </b-row>
                     <hr class="divider my-0">
-                    <b-row class="mt-3">
-                        <b-col cols="12" class="d-flex justify-content-end">
+                    <b-row class="mt-4 d-flex justify-content-end">
+                        <b-col cols="4" xl="3">
                             <b-button type="submit" variant="outline-dark-secondary-blue"
-                                class="form-btn me-3 d-flex align-items-center justify-content-between">
+                                class="form-btn me-3 d-flex align-items-center justify-content-between w-100">
                                 <span class="me-2">Solicitar adoptar</span>
                                 <b-icon icon="heart" font-scale="1.3"></b-icon>
                             </b-button>
+                        </b-col>
+                        <b-col cols="4" xl="3">
                             <b-button variant="outline-danger"
-                                class="form-btn d-flex align-items-center justify-content-between">
+                                class="form-btn d-flex align-items-center justify-content-between w-100">
                                 <span class="me-2">Regresar</span>
                                 <b-icon icon="arrow-left-circle" font-scale="1.3"></b-icon>
                             </b-button>
                         </b-col>
                     </b-row>
                 </b-card>
+
             </b-col>
         </b-row>
     </b-container>
@@ -196,8 +213,8 @@ export default {
                 isDewormed: false,
                 isSterilised: false,
                 microchip: true,
-                /* diseases: ['Leucemia Felina', 'Rabia'], */
-                diseases: [],
+                diseases: ['Leucemia Felina', 'Rabia'], 
+                /* diseases: [], */
                 /* allergies: ['Polvo', 'Ácaros'], */
                 allergies: [],
                 comments: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
