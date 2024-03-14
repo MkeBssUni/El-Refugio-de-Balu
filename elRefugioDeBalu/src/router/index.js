@@ -56,6 +56,11 @@ const routes = [
         component: () => import("../modules/pets/adapters/views/FavoriteCatalog.vue"),
       },
       {
+        path: "/myPets",
+        name: "myPets",
+        component: () => import("../modules/pets/adapters/views/MyPetCatalog.vue"),
+      },
+      {
         path: "/formAdoption",
         name: "formAdoption",
         component: () => import("../modules/adoptions/adapters/views/FormAdoption.vue"),
@@ -87,7 +92,7 @@ const routes = [
         path: "/petForm",
         name: "petForm",
         component: () => import("../modules/pets/adapters/views/RegisterForm.vue"),
-      },
+      },      
       {
         path: "/usersList",
         name: "usersList",
