@@ -9,18 +9,8 @@
     </div>
     <b-container fluid>
       <div class="mt-3">
-        <b-row
-          class="justify-content-end"
-          v-if="saveCategoryForm && updateCategoryForm"
-        >
-          <b-col
-            cols="12"
-            sm="12"
-            md="3"
-            lg="2"
-            xl="2"
-            class="d-flex justify-content-end my-2"
-          >
+        <b-row class="justify-content-end"  v-if="saveCategoryForm && updateCategoryForm" >
+          <b-col cols="12" sm="12" md="3"  lg="2" xl="2" class="d-flex justify-content-end my-2">
             <b-button
               as="col"
               cols="12"
@@ -158,7 +148,7 @@
                     sm="12"
                     md="12"
                     lg="12"
-                    xl="5" 
+                    xl="5"
                   >
                     <b-button
                       pill
@@ -187,7 +177,8 @@
                       class="d-flex align-items-center justify-content-center w-100 px-0"
                       v-b-tooltip.hover
                       title="Esta categoria es visible para los usuarios"
-                      style="font-size: 0.8rem"
+                      style="font-size: 0.8rem" 
+                      @click="ViewAlertConfirmationChangeCategoryStatus(animal)"
                       >Habilitada
                       <i class="material-icons ms-2" style="font-size: 1rem"
                         >done</i
@@ -200,7 +191,7 @@
                       style="font-size: 0.8rem"
                       class="d-flex align-items-center justify-content-center w-100 px-0"
                       v-b-tooltip.hover
-                      title="Esta categoria no es visible para los usuarios"
+                      title="Esta categoria no es visible para los usuarios" @click="ViewAlertConfirmationChangeCategoryStatus(animal)"
                       >Deshabilitada
                       <i class="material-icons ms-2" style="font-size: 1rem"
                         >close</i
@@ -215,7 +206,7 @@
                     sm="12"
                     md="12"
                     lg="12"
-                    xl="5" 
+                    xl="5"
                   >
                     <b-button
                       pill
@@ -289,6 +280,8 @@ import Encabezado from "../../../../views/components/Encabezado.vue";
 import tortugas from "../../../../assets/imgs/tortugas1.jpeg";
 import SaveCategory from "./SaveCategory.vue";
 import UpdateCategory from "./UpdateCategory.vue";
+import FishLoading from "../../../../assets/imgs/peces.gif"
+import Swal from "sweetalert2";
 
 export default {
   name: "AnimalCategories",
@@ -472,6 +465,42 @@ export default {
       this.categoryToModify = category;
       this.updateCategoryForm = !this.updateCategoryForm;
     },
+    ViewAlertConfirmationChangeCategoryStatus(category){
+       Swal.fire({
+        title: "¿Seguro que desea realizar la acción?",
+        text:"Se cambiara el estatus de la categoria"+category.name, 
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#53A93D",
+        cancelButtonColor: "#A93D3D",
+        confirmButtonText: "Aceptar",
+        cancelButtonText: "Cancelar",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: "Espera un momento...",
+            text: "Estamos realizando tu modificación",
+            imageUrl: FishLoading,
+            timer: 2000,
+            timerProgressBar: true,
+            imageWidth: 160, // Ancho de la imagen
+            imageHeight: 160, // Altura de la imagen
+            showConfirmButton: false,
+          }).then(() => {
+            this. ChangeCategoryStatus(category);
+          });
+        }
+      });
+    },
+    ChangeCategoryStatus(category){
+      console.log(category,"Cambio de estatus corecto");
+       Swal.fire({
+        title: "Acción realizada con exito",
+        icon: "success",
+        confirmButtonColor: "#118A95",
+      });
+      this.GetAllCategories()
+    }
   },
 };
 </script>
