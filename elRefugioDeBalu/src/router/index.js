@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 Vue.use(VueRouter);
+const DEFAULT_TITLE = "El Refugio de Balu"
 
 const routes = [
   {
@@ -79,8 +80,8 @@ const routes = [
         component: () => import("../modules/pets/adapters/views/RegisterForm.vue"),
       },
       {
-        path: "/UsersList",
-        name: "UsersList",
+        path: "/usersList",
+        name: "usersList",
         component: () => import("../modules/users/components/UsersList.vue"),
       },
       {
@@ -89,8 +90,9 @@ const routes = [
         component: () => import("../modules/animals/adapters/views/AnimalCategories.vue"),
       },
       {
-        path: "/UsersForm",
-        name: "UsersForm",
+        path: "/usersForm",
+        name: "usersForm",
+        meta: { title: 'Registrar usuario'},
         component: () => import("../modules/users/components/UsersForm.vue"),
       },
       {
@@ -103,4 +105,10 @@ const routes = [
 ];
 
 const router = new VueRouter({ routes });
+
+router.afterEach((to,from)=>{
+  Vue.nextTick(()=>{
+    document.title = to.meta.title || DEFAULT_TITLE
+  })
+})
 export default router;

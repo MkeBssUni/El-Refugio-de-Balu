@@ -3,7 +3,7 @@
     <Encabezado
       color="#00737e"
       :imagenUrl="require('@/assets/imgs/perroblanco.png')"
-      titulo="Lista de moderadores"
+      titulo="Lista de Administradores y Moderadores"
     />
     <b-container fluid>
       <b-row class="justify-content-center px-4">
@@ -33,7 +33,7 @@
           <b-button
             variant="outline-success"
             class="mt-3 d-flex align-items-center justify-content-center"
-            @click="navigateToAddUserForm"
+            to='/usersForm'
           >
             <b-icon icon="person-plus-fill" font-scale="1"></b-icon> Agregar
           </b-button>
@@ -185,9 +185,6 @@ export default {
   methods: {
     editUser(user) {},
     deleteUser(user) {},
-    navigateToAddUserForm() {
-      this.$router.push({ name: "UsersForm" });
-    },
     showDeleteConfirmation(user) {
       Swal.fire({
         title: "¿Estás seguro?",
