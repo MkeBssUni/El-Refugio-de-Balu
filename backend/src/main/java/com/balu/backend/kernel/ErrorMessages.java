@@ -13,5 +13,6 @@ public enum ErrorMessages {
     UNAUTHORIZED_ACTION,
     RECORD_NOT_FOUND,
     INTERNAL_ERROR,
+    NO_RECORDS
 
 }
