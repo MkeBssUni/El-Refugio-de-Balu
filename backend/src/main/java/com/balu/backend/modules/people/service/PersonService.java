@@ -72,29 +72,33 @@ public class PersonService {
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseApi<Person> saveAdminOrMod(SaveAdminOrModDto dto) throws Exception {
-        //Validar que el usuario que hace la petición sea un administrador
-        //Falta desencriptar los datos
-        if(dto.getUsername() == null || dto.getLastname() == null || dto.getName() == null || dto.getPhoneNumber() == null || dto.getPassword() == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
-        if(validations.isNotBlankString(dto.getUsername()) && validations.isNotBlankString(dto.getPassword()) && validations.isNotBlankString((dto.getName())) && validations.isNotBlankString(dto.getLastname()) && validations.isNotBlankString(dto.getPhoneNumber())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
-        if(validations.isInvalidEmail(dto.getUsername())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
-        if(validations.isInvalidPassword(dto.getPassword())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
-        if(validations.isInvalidName(dto.getName())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
-        if(validations.isInvalidName(dto.getLastname())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
-        if(validations.isInvalidName(dto.getSurname())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
-        if(validations.isInvalidPhoneNumber(dto.getPhoneNumber())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+    public ResponseApi<String> saveAdminOrMod(SaveAdminOrModDto dto) throws Exception {
+        if(dto.getUsername() == null || dto.getLastname() == null || dto.getName() == null || dto.getPhoneNumber() == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
+        if(validations.isNotBlankString(dto.getUsername()) && validations.isNotBlankString((dto.getName())) && validations.isNotBlankString(dto.getLastname()) && validations.isNotBlankString(dto.getPhoneNumber())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidEmail(hashService.decrypt(dto.getUsername()))) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidName(hashService.decrypt(dto.getName()))) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidName(hashService.decrypt(dto.getLastname()))) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidName(hashService.decrypt(dto.getSurname()))) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidPhoneNumber(hashService.decrypt(dto.getPhoneNumber()))) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
 
         Optional<User> existentUser = iUserRepository.findByUsername(dto.getUsername());
         if(existentUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.DUPLICATE_RECORD.name());
-        Optional<Role> role = iRoleRepository.findById(dto.getRole().getId());
+
+        dto.setName(hashService.decrypt(dto.getName()));
+        dto.setLastname(hashService.decrypt(dto.getLastname()));
+        dto.setRoleId(Long.parseLong(hashService.decrypt(dto.getRoleString())));
+
+        Optional<Role> role = iRoleRepository.findById(dto.getRoleId());
         if(role.isEmpty()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.ROLE_NOT_FOUND.name());
 
         Person person = new Person();
         User user = new User();
-        user.save(hashService.encrypt(dto.getUsername()), encoder.encode(dto.getPassword()),role.get());
+        String password = generateRandomPassword();
+        user.save(hashService.encrypt(dto.getUsername()), encoder.encode(password),role.get());
         user = iUserRepository.saveAndFlush(user);
         person.saveAdminOrMod(dto,user);
-        return new ResponseApi<>(iPersonRepository.saveAndFlush(person), HttpStatus.CREATED, false,"OK");
+        iPersonRepository.saveAndFlush(person);
+        return new ResponseApi<>(hashService.encrypt(password), HttpStatus.CREATED, false,"OK");
     }
     @Transactional(readOnly = true)
     public ResponseApi<Person> getDetails(PersonDto dto){
@@ -147,6 +151,13 @@ public class PersonService {
         Optional<User> user = iUserRepository.findByUsername(dto.getUsername());
         if(user.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
 
+        String newPassword = generateRandomPassword();
+        user.get().setPassword(encoder.encode(newPassword));
+        iUserRepository.saveAndFlush(user.get());
+
+        return new ResponseApi<>(hashService.encrypt(newPassword), HttpStatus.OK, false, "OK");
+    }
+    private String generateRandomPassword(){
         String alphabet = "abcdefghijklmnopqrstuvwxyz";
         String specialCharacters = "._#";
         String newPassword = "";
@@ -162,12 +173,8 @@ public class PersonService {
             randomIndex = (int) (Math.random() * 10);
             newPassword += randomIndex;
         }
-
-        if(validations.isInvalidPassword(newPassword)) return resetPassword(dto);
-
-        user.get().setPassword(encoder.encode(newPassword));
-        iUserRepository.saveAndFlush(user.get());
-
-        return new ResponseApi<>(hashService.encrypt(newPassword), HttpStatus.OK, false, "OK");
+        if(validations.isInvalidPassword(newPassword)) return generateRandomPassword();
+        System.out.println("esta es la password: "+newPassword);
+        return newPassword;
     }
 }

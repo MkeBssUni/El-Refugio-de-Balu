@@ -31,8 +31,8 @@ public class PersonController {
         return new ResponseEntity<>(response, response.getStatus());
     }
     @PostMapping("/")
-    public ResponseEntity<ResponseApi<Person>> saveAdminOrMod(@RequestBody SaveAdminOrModDto dto) throws Exception {
-        ResponseApi<Person> response = personService.saveAdminOrMod(dto);
+    public ResponseEntity<ResponseApi<String>> saveAdminOrMod(@RequestBody SaveAdminOrModDto dto) throws Exception {
+        ResponseApi<String> response = personService.saveAdminOrMod(dto);
         return new ResponseEntity<>(response, response.getStatus());
     }
     @PostMapping("/details")
