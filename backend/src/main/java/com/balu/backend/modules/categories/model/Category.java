@@ -28,6 +28,7 @@ public class Category {
     @Column(insertable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
+    private Boolean status;
     @OneToMany(mappedBy = "category")
     @JsonIgnore
     private List<Pet> pets;
