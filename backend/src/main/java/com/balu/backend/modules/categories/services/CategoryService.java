@@ -3,8 +3,8 @@ package com.balu.backend.modules.categories.services;
 import com.balu.backend.kernel.ErrorMessages;
 import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.kernel.Validations;
-import com.balu.backend.modules.categories.model.Category;
 import com.balu.backend.modules.categories.model.ICategoryRepository;
+import com.balu.backend.modules.categories.model.dto.GetCategoryListDto;
 import com.balu.backend.modules.hash.service.HashService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,8 +23,8 @@ public class CategoryService {
     private final Validations validations = new Validations();
 
     @Transactional(readOnly = true)
-    public ResponseApi<List<Category>> getListCategories(){
-        List<Category> category = iCategoryRepository.findAll();
+    public ResponseApi<List<GetCategoryListDto>> getListCategories(){
+        List<GetCategoryListDto> category = iCategoryRepository.getListCategories();
         if(category.isEmpty())
             return new ResponseApi<>(
                     HttpStatus.OK,
