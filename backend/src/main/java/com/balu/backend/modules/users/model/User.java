@@ -6,7 +6,6 @@ import com.balu.backend.modules.favoritePets.model.FavoritePet;
 import com.balu.backend.modules.people.model.Person;
 import com.balu.backend.modules.pets.model.Pet;
 import com.balu.backend.modules.roles.model.Role;
-import com.balu.backend.modules.roles.model.Roles;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,7 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Entity

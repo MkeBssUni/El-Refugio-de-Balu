@@ -3,11 +3,12 @@ package com.balu.backend.modules.hash.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
+import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -26,7 +27,7 @@ public class HashService {
         return new SecretKeySpec(keyBytes, "AES");
     }
 
-    public String encrypt(Object data) throws Exception {
+    public String encrypt(Object data) throws IllegalArgumentException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         String plaintext = convertToString(data);
         SecretKey key = generateSecretKeyFromString();
         Cipher cipher = Cipher.getInstance(ALGORITHM);
@@ -35,7 +36,7 @@ public class HashService {
         byte[] encryptedBytes = cipher.doFinal(plaintext.getBytes(StandardCharsets.UTF_8));
         return Base64.getEncoder().encodeToString(encryptedBytes);
     }
-    public String decrypt(String encryptedText) throws Exception {
+    public String decrypt(String encryptedText) throws IllegalArgumentException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeyException {
         SecretKey key = generateSecretKeyFromString();
         Cipher cipher = Cipher.getInstance(ALGORITHM);
         IvParameterSpec ivParams = new IvParameterSpec(IV);

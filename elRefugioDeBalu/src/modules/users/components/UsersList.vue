@@ -45,9 +45,9 @@
                 {{ data.item.blocked ? "Bloqueado" : "Activo" }}
               </b-badge>
             </template>
-            <template #cell(role_name)="data">
-              <b-badge :variant="data.item.role_name === 'ADMINISTRADOR' ? 'warning' : 'info'">
-                {{ data.item.role_name === 'ADMINISTRADOR' ? "Administrador" : "Moderador" }}
+            <template #cell(role)="data">
+              <b-badge :variant="data.item.role === 'ADMINISTRADOR' ? 'warning' : 'info'">
+                {{ data.item.role === 'ADMINISTRADOR' ? "Administrador" : "Moderador" }}
               </b-badge>
             </template>
           </b-table>
@@ -87,7 +87,7 @@ export default {
         { key: "username", label: "Correo Electrónico" },
         { key: "phone", label: "Numero de teléfono" },
         { key: "blocked", label: "Estado" },
-        { key: "role_name", label: "Rol" },
+        { key: "role", label: "Rol" },
         { key: "actions", label: "Acciones" },
       ],
       users: [

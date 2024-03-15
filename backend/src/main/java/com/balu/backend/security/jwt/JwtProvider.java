@@ -23,8 +23,7 @@ public class JwtProvider {
     private String secret_key;
     @Value("${jwt.expiration}")
     private long accessTokenValidity;
-    private final String TOKEN_HEADER = "Authorization";
-    private final String TOKEN_PREFIX = "Bearer ";
+
     public String generateToken(Authentication auth){
         UserDetails user = (UserDetails) auth.getPrincipal();
         Claims claims = Jwts.claims().setSubject(user.getUsername());
@@ -70,9 +69,10 @@ public class JwtProvider {
     }
 
     public String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(TOKEN_HEADER);
-        if (bearerToken != null && bearerToken.startsWith(TOKEN_PREFIX)) {
-            return bearerToken.replace(TOKEN_PREFIX,"");
+        String bearerToken = request.getHeader("Authorization");
+        String tokenPrefix = "Bearer ";
+        if (bearerToken != null && bearerToken.startsWith(tokenPrefix)) {
+            return bearerToken.replace(tokenPrefix,"");
         }
         return null;
     }

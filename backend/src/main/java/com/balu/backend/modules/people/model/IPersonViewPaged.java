@@ -6,5 +6,5 @@ public interface IPersonViewPaged {
     String getPhone();
     String getUsername();
     boolean getBlocked();
-    String getRole_name();
+    String getRole();
 }
