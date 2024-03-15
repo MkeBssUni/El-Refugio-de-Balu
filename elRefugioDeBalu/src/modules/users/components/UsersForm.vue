@@ -148,13 +148,8 @@ export default {
       this.encryptedForm.username = await encrypt(this.formData.username)
       this.encryptedForm.roleString = await encrypt(this.formData.role.id)
 
-      const token = await decrypt(localStorage.getItem('token'))
       try {
-        const response = await instance.post('/person/', this.encryptedForm, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        })
+        const response = await instance.post('/person/', this.encryptedForm)
         const password = await decrypt(response.data.data)
         Swal.fire({
           icon: 'success',
