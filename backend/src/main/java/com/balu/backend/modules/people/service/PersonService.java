@@ -87,6 +87,7 @@ public class PersonService {
         dto.setName(hashService.decrypt(dto.getName()));
         dto.setLastname(hashService.decrypt(dto.getLastname()));
         dto.setRoleId(Long.parseLong(hashService.decrypt(dto.getRoleString())));
+        dto.setSurname(hashService.decrypt(dto.getSurname()));
 
         Optional<Role> role = iRoleRepository.findById(dto.getRoleId());
         if(role.isEmpty()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.ROLE_NOT_FOUND.name());
@@ -94,7 +95,7 @@ public class PersonService {
         Person person = new Person();
         User user = new User();
         String password = generateRandomPassword();
-        user.save(hashService.encrypt(dto.getUsername()), encoder.encode(password),role.get());
+        user.save(dto.getUsername(), encoder.encode(password),role.get());
         user = iUserRepository.saveAndFlush(user);
         person.saveAdminOrMod(dto,user);
         iPersonRepository.saveAndFlush(person);
@@ -139,9 +140,9 @@ public class PersonService {
         return new ResponseApi<>(iPersonRepository.saveAndFlush(person.get()), HttpStatus.OK, false, "OK");
     }
     @Transactional(readOnly = true)
-    public ResponseApi<Page<Person>> getPaged(SearchDto dto, Pageable pageable){
+    public ResponseApi<Page<IPersonViewPaged>> getPaged(SearchDto dto, Pageable pageable){
         dto.setSearchValue(dto.getSearchValue().toLowerCase());
-        Page<Person> page = iPersonRepository.findAllPaged(dto.getSearchValue(),dto.getSearchValue(),dto.getSearchValue(),pageable);
+        Page<IPersonViewPaged> page = iPersonRepository.findAllPaged(dto.getSearchValue(),dto.getSearchValue(),dto.getSearchValue(),pageable);
         return new ResponseApi<>(page, HttpStatus.OK, false, "OK");
     }
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
