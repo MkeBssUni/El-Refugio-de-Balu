@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @Transactional
@@ -161,21 +162,20 @@ public class PersonService {
     private String generateRandomPassword(){
         String alphabet = "abcdefghijklmnopqrstuvwxyz";
         String specialCharacters = "._#";
-        String newPassword = "";
+        StringBuilder newPassword = new StringBuilder();
         int randomIndex;
         for (int i = 0; i < 2; i++) {
             randomIndex = (int) (Math.random() * alphabet.length());
-            newPassword += alphabet.charAt(randomIndex);
+            newPassword.append(alphabet.charAt(randomIndex));
             randomIndex = (int) (Math.random() * alphabet.length());
-            newPassword += randomIndex;
-            newPassword += alphabet.toUpperCase().charAt(randomIndex);
+            newPassword.append(randomIndex);
+            newPassword.append(alphabet.toUpperCase().charAt(randomIndex));
             randomIndex = (int) (Math.random() * specialCharacters.length());
-            newPassword += specialCharacters.charAt(randomIndex);
+            newPassword.append(specialCharacters.charAt(randomIndex));
             randomIndex = (int) (Math.random() * 10);
-            newPassword += randomIndex;
+            newPassword.append(randomIndex);
         }
-        if(validations.isInvalidPassword(newPassword)) return generateRandomPassword();
-        System.out.println("esta es la password: "+newPassword);
-        return newPassword;
+        if(validations.isInvalidPassword(newPassword.toString())) return generateRandomPassword();
+        return newPassword.toString();
     }
 }
