@@ -73,7 +73,7 @@
                       </b-row>
                     </b-row>
                     <div class="button-container">
-                      <b-button @click="submitForm" :disabled="!(showErrors.name && showErrors.lastname && showErrors.surname && showErrors.phoneNumber && showErrors.username && showErrors.role)"
+                      <b-button @click="submitForm" :disabled="(showErrors.name && showErrors.lastname && showErrors.surname && showErrors.phoneNumber && showErrors.username)"
                       variant="outline-success">Registrar</b-button>
                       <b-button type="button" variant="outline-danger" @click="cancelForm">Regresar</b-button>
                     </div>
