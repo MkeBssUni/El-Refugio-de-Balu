@@ -34,8 +34,8 @@
             <template #cell(actions)="data">
               <div class="d-flex justify-content-center">
                 <b-button :variant="data.item.blocked ? 'outline-success' : 'outline-danger'"
-                  class="d-flex align-items-center">
-                  <b-icon :icon="data.item.blocked ? 'arrow-up-square' : 'arrow-down-square'"></b-icon>
+                  class="d-flex align-items-center" @click="showChangeStatusConfirmation(data.item)">
+                  <b-icon :icon="data.item.blocked ? 'unlock-fill' : 'lock-fill'"></b-icon>
                 </b-button>
               </div>
             </template>
@@ -99,6 +99,7 @@ export default {
           blocked: false,
         }
       ],
+      personId: null,
       pageResponse: {},
       options: [1, 5, 10, 20, 50]
     };
@@ -107,21 +108,55 @@ export default {
     this.getUsersPaged();
   },
   methods: {
-    editUser(user) { },
-    deleteUser(user) { },
-    showDeleteConfirmation(user) {
+    async sendChangeStatusRequest() {
+      try {
+        Swal.fire({
+          title: "Cargando...",
+          text: "Estamos procesando tu solicitud, espera un momento",
+          imageUrl: gatoWalkingGif,
+          imageWidth: 160,
+          imageHeight: 160,
+          showConfirmButton: false,
+        })
+        await instance.patch('/person/change/status',{personId: this.personId})
+        Swal.fire({
+          title: "Éxito",
+          text: "El estado del usuario ha sido modificado",
+          icon: "success",
+          iconColor: "#00FF00",
+          timer: 2000,
+          timerProgressBar: true,
+        }).then(() => {
+          this.getUsersPaged();  
+        });
+      } catch (error) {
+        Swal.fire({
+          title: "Error",
+          text: "Ocurrió un error al cambiar el estado del usuario",
+          icon: "error",
+          iconColor: "#FF0000",
+          showConfirmButton: true,
+        });
+      }
+
+    },
+    showChangeStatusConfirmation(person) {
+      this.personId = person.id;
       Swal.fire({
         title: "¿Estás seguro?",
-        text: "¿Estás seguro que desea modificar el status de este moderador?",
+        text: person.blocked
+          ? "Estás a punto de bloquear a este usuario"
+          : "Estás a punto de desbloquear a este usuario",
         icon: "warning",
-        iconColor: "#FF0000",
         showCancelButton: true,
         showConfirmButton: true,
-        confirmButtonText: "Modificar",
+        confirmButtonText: person.blocked
+          ? "Bloquear"
+          : "Desbloquear",
         cancelButtonText: "Cancelar",
       }).then((result) => {
         if (result.isConfirmed) {
-          this.deleteUser(user);
+          this.sendChangeStatusRequest();
         }
       });
     },
@@ -135,16 +170,10 @@ export default {
           imageHeight: 160,
           showConfirmButton: false,
         })
-        const token = await decrypt(localStorage.getItem('token'))
         const response = await instance.post(`/person/paged/?page=${this.page - 1}&?size=${this.size}`
           , {
             searchValue: this.searchValue,
-          }, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-        console.log("se vuellve a cargar este bisne")
+          })
         this.users = response.data.data.content
         this.pageResponse = response.data.data
 
