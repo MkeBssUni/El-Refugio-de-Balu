@@ -22,7 +22,7 @@
                         </b-input-group>
                     </b-col>
                     <b-col cols="12" sm="6" md="12" lg="3" class="d-flex justify-content-center mt-3 mt-lg-0">
-                        <b-button variant="outline-dark-blue w-100"
+                        <b-button variant="outline-success w-100"
                             class="d-flex align-items-center justify-content-between">
                             <span class="mr-2">Agregar</span>
                             <b-icon icon="plus-circle" class="ms-2"></b-icon>
