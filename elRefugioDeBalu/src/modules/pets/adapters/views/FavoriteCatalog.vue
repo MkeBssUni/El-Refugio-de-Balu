@@ -1,8 +1,8 @@
 <template>
-    <b-container fluid>
-        <b-row class="px-5 mt-5 d-flex align-items-center">
+    <b-container fluid class="px-5">
+        <b-row class="mt-5 d-flex align-items-center">
             <b-col cols="12" sm="7" md="6" class="d-flex align-items-center">
-                <span class="title">Mis mascotas favoritas</span>
+                <span class="custom-h1">Mis mascotas favoritas</span>
             </b-col>
             <b-col cols="12" sm="5" md="6" class="mt-3 mt-sm-0">
                 <b-input-group>
@@ -15,15 +15,15 @@
                     </b-input-group>
                 </b-input-group>
             </b-col>
-            <hr class="mt-4">
         </b-row>
-        <b-row class="px-5 mb-5">
-            <b-col v-for="pet in pets" :key="pet.id" cols="12" sm="6" md="4" lg="3" class="mt-3">
+        <hr class="mt-4">
+        <b-row class="mb-5">
+            <b-col v-for="pet in pets" :key="pet.id" cols="12" sm="6" lg="4" xl="3" class="mt-3">
                 <b-card :key="pet.id" :img-src="pet.img" class="pet-card" no-body>
                     <b-row class="transparent absolute-position">
                         <b-col cols="12" class="d-flex justify-content-end">
-                            <b-button variant="dark-gray" class="m-2 py-2 d-flex align-items-center"
-                                @mouseenter="hoverIn(pet.id)" @mouseleave="hoverOut()" pill>
+                            <b-button variant="dark-gray" class="m-2 py-2 d-flex align-items-center" pill
+                                @mouseenter="hoverIn(pet.id)" @mouseleave="hoverOut()">
                                 <b-icon :icon="hover === pet.id ? 'heart' : 'heart-fill'" font-scale="2"
                                     :class="{ 'text-danger': hover !== pet.id, 'mt-1': true }"></b-icon>
                             </b-button>
@@ -33,7 +33,7 @@
                         <b-card-title>{{ pet.name }}</b-card-title>
                         <b-card-sub-title>{{ pet.city }}, {{ pet.state }}</b-card-sub-title>
                         <div class="d-flex justify-content-center">
-                            <b-button pill variant="outline-dark-blue" class="mt-3 px-3 d-flex align-items-center">
+                            <b-button pill variant="outline-dark-blue" class="mt-3 px-5 d-flex align-items-center">
                                 <span>Ver detalles</span>
                             </b-button>
                         </div>
@@ -106,25 +106,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.title {
-    font-size: 150%;
-}
-
-.relative-position {
-    position: relative;
-}
-
-.absolute-position {
-    position: absolute;
-    top: 0;
-    right: 0;
-}
-
-.pet-card img {
-    height: 200px;
-    object-fit: cover;
-    border-bottom-left-radius: 0px !important;
-    border-bottom-right-radius: 0px !important;
-}
-</style>
+<style scoped></style>

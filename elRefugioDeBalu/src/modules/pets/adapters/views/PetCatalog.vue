@@ -21,7 +21,7 @@
                                         <b-form-select v-model="category" :options="categories"
                                             class="form-select"></b-form-select>
                                     </b-col>
-                                    <b-col cols="12" sm="6" class="mt-3 mt-md-2">
+                                    <b-col cols="12" sm="6" class="mt-3 mt-sm-2">
                                         <b-form-select v-model="size" :options="sizes"
                                             class="form-select"></b-form-select>
                                     </b-col>
@@ -64,7 +64,7 @@
             </b-col>
         </b-row>
         <b-row class="px-5 mb-5">
-            <b-col v-for="pet in pets" :key="pet.id" cols="12" sm="6" md="4" lg="3" class="mt-3">
+            <b-col v-for="pet in pets" :key="pet.id" cols="12" sm="6" lg="4" xl="3" class="mt-3">
                 <b-card :key="pet.id" :img-src="pet.img" class="pet-card" no-body>
                     <b-row class="transparent absolute-position">
                         <b-col cols="12" class="d-flex justify-content-end">
@@ -80,7 +80,7 @@
                         <b-card-title>{{ pet.name }}</b-card-title>
                         <b-card-sub-title>{{ pet.city }}, {{ pet.state }}</b-card-sub-title>
                         <div class="d-flex justify-content-center">
-                            <b-button pill variant="outline-dark-blue" class="mt-3 px-3 d-flex align-items-center">
+                            <b-button pill variant="outline-dark-blue" class="mt-3 px-5 d-flex align-items-center">
                                 <span>Ver detalles</span>
                             </b-button>
                         </div>
@@ -161,21 +161,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.relative-position {
-    position: relative;
-}
-
-.absolute-position {
-    position: absolute;
-    top: 0;
-    right: 0;
-}
-
-.pet-card img {
-    height: 200px;
-    object-fit: cover;
-    border-bottom-left-radius: 0px !important;
-    border-bottom-right-radius: 0px !important;
-}
-</style>
+<style scoped></style>
