@@ -107,6 +107,7 @@ export default {
     }
 }
 </script>
+
 <style scoped>
 .chat-icon {
     position: relative;
