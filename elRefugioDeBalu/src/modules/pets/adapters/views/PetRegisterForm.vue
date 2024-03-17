@@ -9,7 +9,7 @@
                 <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
                     <b-row>
                         <b-col cols="10" md="8" lg="6">
-                            <b-card bg-variant="card-header-orange" class="py-2 card-shadow" no-body>
+                            <b-card bg-variant="card-header-orange" class="py-2 card-shadow relative-position form-card-title" no-body>
                                 <div class="d-flex align-items-center ms-3 ms-md-4">
                                     <i class="material-icons me-2" style="font-size: 1.5rem">pets</i>
                                     <h4 class="mb-0 mt-1">Información general</h4>
@@ -19,10 +19,10 @@
                     </b-row>
                     <b-row>
                         <b-col cols="12">
-                            <b-card bg-variant="card-content-orange" class="card-shadow">
+                            <b-card bg-variant="card-content-orange" class="card-shadow form-card-content">
                                 <b-card-body>
                                     <b-row>
-                                        <b-col cols="12" lg="5" xl="4" class="px-3">
+                                        <b-col cols="12" lg="5" xl="4" class="px-3 pt-4">
                                             <b-row>
                                                 <b-col cols="12" class="position-relative">
                                                     <b-img :src="showImg()" class="main-img"
@@ -187,7 +187,7 @@
                 <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
                     <b-row>
                         <b-col cols="10" md="8" lg="6">
-                            <b-card bg-variant="card-header-blue" class="py-2 card-shadow" no-body>
+                            <b-card bg-variant="card-header-blue" class="py-2 card-shadow relative-position form-card-title" no-body>
                                 <div class="d-flex align-items-center ms-3 ms-md-4">
                                     <i class="material-icons me-2" style="font-size: 1.5rem">pets</i>
                                     <h4 class="mb-0 mt-1">Información médica</h4>
@@ -197,7 +197,7 @@
                     </b-row>
                     <b-row>
                         <b-col cols="12">
-                            <b-card bg-variant="card-content-blue" class="card-shadow">
+                            <b-card bg-variant="card-content-blue" class="card-shadow form-card-content">
                                 <b-card-body>
                                     <b-row>
                                         <b-col cols="12">
@@ -293,7 +293,7 @@
                 <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
                     <b-row>
                         <b-col cols="10" md="8" lg="6">
-                            <b-card bg-variant="card-header-secondary-orange" class="py-2 card-shadow" no-body>
+                            <b-card bg-variant="card-header-secondary-orange" class="py-2 card-shadow relative-position form-card-title" no-body>
                                 <div class="d-flex align-items-center ms-3 ms-md-4">
                                     <i class="material-icons me-2" style="font-size: 1.5rem">pets</i>
                                     <h4 class="mb-0 mt-1">Información adicional</h4>
@@ -303,7 +303,7 @@
                     </b-row>
                     <b-row>
                         <b-col cols="12">
-                            <b-card bg-variant="card-content-secondary-orange" class="card-shadow">
+                            <b-card bg-variant="card-content-secondary-orange" class="card-shadow form-card-content">
                                 <b-card-body>
                                     <b-row>
                                         <b-col cols="12" md="6">
