@@ -4,17 +4,20 @@
             <b-col cols="12" sm="7" md="6" class="d-flex align-items-center">
                 <span class="title">Mis mascotas favoritas</span>
             </b-col>
-            <b-col cols="12" sm="5" md="6" class="mt-3 mt-sm-0">                
+            <b-col cols="12" sm="5" md="6" class="mt-3 mt-sm-0">
                 <b-input-group>
-                    <b-form-input type="text" placeholder="Buscar..."></b-form-input>
-                    <b-input-group-append is-text>
-                        <b-icon icon="search" style="height: 1.55rem" variant="dark"></b-icon>
-                    </b-input-group-append>
+                    <b-input-group>
+                        <b-form-input type="text" placeholder="Buscar..." id="search"></b-form-input>
+                        <b-button variant="dark-gray" type="button" id="search"
+                            class="d-flex align-items-center justify-content-between">
+                            <b-icon icon="search"></b-icon>
+                        </b-button>
+                    </b-input-group>
                 </b-input-group>
             </b-col>
             <hr class="mt-4">
-        </b-row>        
-        <b-row class="px-5 mb-5">            
+        </b-row>
+        <b-row class="px-5 mb-5">
             <b-col v-for="pet in pets" :key="pet.id" cols="12" sm="6" md="4" lg="3" class="mt-3">
                 <b-card :key="pet.id" :img-src="pet.img" class="pet-card" no-body>
                     <b-row class="transparent absolute-position">
