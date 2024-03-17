@@ -28,10 +28,11 @@
             </b-col>
             <b-col cols="12" md="3" class="pt-0 pt-md-3">
                 <b-input-group class="mt-3">
-                    <b-form-input type="text" placeholder="Buscar..." v-model="search"></b-form-input>
-                    <b-input-group-append is-text>
-                        <b-icon icon="search" style="height: 1.55rem" variant="dark"></b-icon>
-                    </b-input-group-append>
+                    <b-form-input type="text" placeholder="Buscar..." id="search"></b-form-input>
+                    <b-button variant="dark-gray" type="button" id="search"
+                        class="d-flex align-items-center justify-content-between">
+                        <b-icon icon="search"></b-icon>
+                    </b-button>
                 </b-input-group>
             </b-col>
         </b-row>

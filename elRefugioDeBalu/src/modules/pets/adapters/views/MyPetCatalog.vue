@@ -1,21 +1,21 @@
 <template>
     <b-container fluid>
         <b-row class="px-5 mt-5 d-flex align-items-center">
-            <b-col cols="12" md="6" lg="5" class="d-flex align-items-center justify-content-center justify-content-md-start">
-                <span class="title">
-                    Mis publicaciones de mascotas
-                </span>
+            <b-col cols="12" md="6" lg="5"
+                class="d-flex align-items-center justify-content-center justify-content-md-start">
+                <span class="title">Mis publicaciones de mascotas</span>
             </b-col>
             <b-col cols="12" md="6" lg="7" class="mt-3 mt-md-0">
                 <b-row class="d-flex justify-content-center">
                     <b-col cols="12" sm="6" md="12" lg="5" class="">
                         <b-input-group>
-                            <b-form-input type="text" placeholder="Buscar..."></b-form-input>
-                            <b-input-group-append is-text>
-                                <b-icon icon="search" style="height: 1.55rem" variant="dark"></b-icon>
-                            </b-input-group-append>
+                            <b-form-input type="text" placeholder="Buscar..." id="search"></b-form-input>
+                            <b-button variant="dark-gray" type="button" id="search"
+                                class="d-flex align-items-center justify-content-between">
+                                <b-icon icon="search"></b-icon>
+                            </b-button>
                         </b-input-group>
-                    </b-col>                    
+                    </b-col>
                     <b-col cols="12" sm="6" md="12" lg="4" class="mt-3 mt-sm-0 mt-md-3 mt-lg-0">
                         <b-input-group>
                             <b-form-select :options="status" v-model="statusFilter" class="form-select"></b-form-select>
@@ -107,7 +107,6 @@ export default {
 }
 </script>
 <style scoped>
-
 .title {
     font-size: 150%;
 }
@@ -125,8 +124,8 @@ export default {
 .pet-card img {
     height: 200px;
     object-fit: cover;
-ttom-left-radius: 0px !important;
-ttom-right-radius: 0px !important;
+    bottom-left-radius: 0px !important;
+    bottom-right-radius: 0px !important;
 }
 
 .icon-chat {
