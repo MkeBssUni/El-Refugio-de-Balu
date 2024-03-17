@@ -27,7 +27,7 @@
                 <b-card> 
                     <b-row>
                         <b-col cols="12" sm="12" lg="4" md="4">
-                            <img  src="https://static.nationalgeographic.es/files/styles/image_3200/public/75552.ngsversion.1422285553360.jpg?w=1600&h=1067" alt="Imagen de perfil" class="img-fluid" />                                      
+                            <img  src="https://es.mypet.com/wp-content/uploads/sites/23/2021/03/GettyImages-623368750-e1582816063521-1.jpg" alt="Imagen de perfil" class="img-fluid" />                                      
                         </b-col>
                         <b-col cols="12" sm="12" lg="8" md="8">
                             <b-card bg-variant="orange">
@@ -61,7 +61,9 @@
 </template>
 
 <script>
+
 export default {
+    name: "ViewAplication",
 
 }
 </script>
