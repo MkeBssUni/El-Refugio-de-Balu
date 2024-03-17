@@ -331,14 +331,14 @@
                     <b-row class="mt-4 d-flex justify-content-end">
                         <b-col cols="12" sm="6">
                             <b-button type="submit" variant="outline-dark-secondary-blue"
-                                class="form-btn me-3 d-flex align-items-center justify-content-between w-100">
+                                class="me-3 d-flex align-items-center justify-content-between w-100">
                                 <span class="me-2">Solicitar adoptar</span>
                                 <b-icon icon="heart" font-scale="1.3"></b-icon>
                             </b-button>
                         </b-col>
                         <b-col cols="12" sm="6" class="mt-3 mt-sm-0">
                             <b-button variant="outline-danger"
-                                class="form-btn d-flex align-items-center justify-content-between w-100">
+                                class="d-flex align-items-center justify-content-between w-100">
                                 <span class="me-2">Regresar</span>
                                 <b-icon icon="arrow-left-circle" font-scale="1.3"></b-icon>
                             </b-button>
