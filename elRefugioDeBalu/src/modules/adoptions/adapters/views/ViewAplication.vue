@@ -207,7 +207,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .target {
   background-image: url("../../../../assets/imgs/pawBackground.jpg") !important;
   background-size: cover;
@@ -251,7 +251,7 @@ export default {
 
 .homePhotos{
     width: 80%;
-    height: 30%;
+    height: 100%;
     border-radius: 15px;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
     transition: transform 0.3s ease; /* Agrega una transición suave para el efecto de zoom */
