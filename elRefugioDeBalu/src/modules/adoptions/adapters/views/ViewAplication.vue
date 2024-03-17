@@ -202,6 +202,7 @@
 </template>
 
 <script>
+
 export default {
   name: "ViewAplication",
 };
