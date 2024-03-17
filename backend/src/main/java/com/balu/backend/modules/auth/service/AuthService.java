@@ -29,7 +29,6 @@ public class AuthService {
     private final UserService userService;
     private final JwtProvider jwtProvider;
     private final HashService hashService;
-    private final String prefix = "Bearer";
     private final AuthenticationManager authenticationManager;
     private final IUserRepository iUserRepository;
 
@@ -56,7 +55,8 @@ public class AuthService {
             SecurityContextHolder.getContext().setAuthentication(auth);
             String token = jwtProvider.generateToken(auth);
 
-            SignedDto signedDto = new SignedDto(token, prefix,hashService.encrypt(user.getId()),user.getRole());
+            String PREFIX = "Bearer";
+            SignedDto signedDto = new SignedDto(token, PREFIX,hashService.encrypt(user.getId()),user.getRole());
 
             signedDto.setUserId(hashService.encrypt(user.getId()));
 

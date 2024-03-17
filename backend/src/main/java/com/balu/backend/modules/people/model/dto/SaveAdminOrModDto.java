@@ -1,18 +1,29 @@
 package com.balu.backend.modules.people.model.dto;
 
-import com.balu.backend.modules.roles.model.Role;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class SaveAdminOrModDto {
-    private String encripted_user_id;
     private String name;
     private String lastname;
     private String surname;
     private String phoneNumber;
     private String username;
-    private String password;
-    private Role role;
+    private String roleString;
+    private Long roleId;
+
+    @Override
+    public String toString() {
+        return "SaveAdminOrModDto{" +
+                "name='" + name + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", surname='" + surname + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", username='" + username + '\'' +
+                ", roleString='" + roleString + '\'' +
+                ", roleId=" + roleId +
+                '}';
+    }
 }

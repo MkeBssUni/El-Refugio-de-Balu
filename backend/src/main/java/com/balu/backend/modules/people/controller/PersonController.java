@@ -3,6 +3,7 @@ package com.balu.backend.modules.people.controller;
 import com.balu.backend.kernel.ErrorMessages;
 import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.kernel.SearchDto;
+import com.balu.backend.modules.people.model.IPersonViewPaged;
 import com.balu.backend.modules.people.model.Person;
 import com.balu.backend.modules.people.model.dto.ChangePasswordDto;
 import com.balu.backend.modules.people.model.dto.PersonDto;
@@ -31,8 +32,8 @@ public class PersonController {
         return new ResponseEntity<>(response, response.getStatus());
     }
     @PostMapping("/")
-    public ResponseEntity<ResponseApi<Person>> saveAdminOrMod(@RequestBody SaveAdminOrModDto dto) throws Exception {
-        ResponseApi<Person> response = personService.saveAdminOrMod(dto);
+    public ResponseEntity<ResponseApi<String>> saveAdminOrMod(@RequestBody SaveAdminOrModDto dto) throws Exception {
+        ResponseApi<String> response = personService.saveAdminOrMod(dto);
         return new ResponseEntity<>(response, response.getStatus());
     }
     @PostMapping("/details")
@@ -63,14 +64,14 @@ public class PersonController {
         }
     }
     @PostMapping("/paged/")
-    public ResponseEntity<ResponseApi<Page<Person>>> getPage(
+    public ResponseEntity<ResponseApi<Page<IPersonViewPaged>>> getPage(
             @RequestParam(defaultValue = "0", required = false) int page,
             @RequestParam(defaultValue = "10", required = false) int size,
             @RequestParam(defaultValue = "id", required = false) String sort,
             @RequestParam(defaultValue = "asc", required = false) String direction,
             @RequestBody SearchDto dto) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort));
-        ResponseApi<Page<Person>> responseApi = personService.getPaged(dto, pageable);
+        ResponseApi<Page<IPersonViewPaged>> responseApi = personService.getPaged(dto, pageable);
         return new ResponseEntity<>(responseApi, responseApi.getStatus());
     }
     @PatchMapping("/reset/password")

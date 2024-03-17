@@ -30,31 +30,32 @@ public class InitialConfig implements CommandLineRunner {
     @Override
     @Transactional(rollbackFor = {SQLException.class,Exception.class})
     public void run(String... args) throws Exception {
-        getOrSaveStatus(Statusses.ADOPTADA);
-        getOrSaveStatus(Statusses.APROBADA);
-        getOrSaveStatus(Statusses.CERRADA);
-        getOrSaveStatus(Statusses.PENDIENTE);
-        getOrSaveStatus(Statusses.EN_REVISION);
+        String password = "baluchis";
+        this.getOrSaveStatus(Statusses.ADOPTADA);
+        this.getOrSaveStatus(Statusses.APROBADA);
+        this.getOrSaveStatus(Statusses.CERRADA);
+        this.getOrSaveStatus(Statusses.PENDIENTE);
+        this.getOrSaveStatus(Statusses.EN_REVISION);
 
-        getOrSaveRoles(Roles.GENERAL);
-        getOrSaveRoles(Roles.ADMINISTRADOR);
-        getOrSaveRoles(Roles.MODERADOR);
+        this.getOrSaveRoles(Roles.GENERAL);
+        this.getOrSaveRoles(Roles.ADMINISTRADOR);
+        this.getOrSaveRoles(Roles.MODERADOR);
 
-        getOrSaveUser("baluchis@mail.com", "baluchis", Roles.ADMINISTRADOR);
-        getOrSaveUser("baluchis_general@mail.com", "baluchis", Roles.GENERAL);
-        getOrSaveUser("baluchis_mod@mail.com", "baluchis", Roles.MODERADOR);
+        this.getOrSaveUser("baluchis@mail.com", password, Roles.ADMINISTRADOR);
+        this.getOrSaveUser("baluchis_general@mail.com", password, Roles.GENERAL);
+        this.getOrSaveUser("baluchis_mod@mail.com", password, Roles.MODERADOR);
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public void getOrSaveStatus (Statusses name){
         Optional<Status> optionalStatus = iStatusRepository.findByName(name);
-        optionalStatus.orElseGet(() -> iStatusRepository.saveAndFlush(new Status(name)));
+        if(optionalStatus.isEmpty()) iStatusRepository.saveAndFlush(new Status(name));
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public void getOrSaveRoles (Roles name){
         Optional<Role> optionalRole = iRoleRepository.findByName(name);
-        optionalRole.orElseGet(() -> iRoleRepository.saveAndFlush(new Role(name)));
+        if(optionalRole.isEmpty())iRoleRepository.saveAndFlush(new Role(name));
     }
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public void getOrSaveUser (String username, String password, Roles role) throws Exception {
@@ -63,9 +64,7 @@ public class InitialConfig implements CommandLineRunner {
         Optional<User> optionalUser = iUserRepository.findByUsername(username);
         if(optionalUser.isEmpty()){
             String finalUsername = username;
-            optionalRole.ifPresent(role1 -> {
-                iUserRepository.saveAndFlush(new User(finalUsername, passwordEncoder.encode(password), role1));
-            });
+            optionalRole.ifPresent(role1 -> iUserRepository.saveAndFlush(new User(finalUsername, passwordEncoder.encode(password), role1)));
         }
     }
 }
