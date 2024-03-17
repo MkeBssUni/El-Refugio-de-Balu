@@ -2,7 +2,7 @@
   <div>
     <Encabezado
       color="#FFBC58"
-      :imagenUrl="require('@/assets/imgs/black-pig.png')"
+      :imagenUrl="require('@/assets/imgs/frogs-bros.png')"
       titulo="Solicitudes de adopción"
     />
     <b-container fluid class="my-3">
@@ -276,6 +276,11 @@ export default {
 
 .information-pet {
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  transition: transform 0.3s ease; /* Agrega una transición suave para el efecto de zoom */
+}
+
+.information-pet:hover {
+  transform: scale(1.1); /* Aumenta el tamaño de la imagen al 110% */
 }
 
 .my-line {
