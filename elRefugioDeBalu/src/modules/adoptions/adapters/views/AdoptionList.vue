@@ -97,7 +97,6 @@
               <b-card-body>
                 <b-card-title>
                   Sr. Bigotes
-                  <b-card-text> <b>Edad:</b> 8 meses </b-card-text>
                 </b-card-title>
                 <hr class="my-line" />
                 <b-row>
@@ -119,6 +118,12 @@
                   </b-col>
                   <b-col cols="12" sm="12" lg="6" md="6" xl="6">
                     <b-card-text> <b>Etapa:</b> Joven </b-card-text>
+                  </b-col>
+                  <b-col cols="12" sm="12" lg="6" md="6" xl="6">
+                    <b-card-text> <b>Edad:</b> 8 meses </b-card-text>
+                  </b-col>
+                  <b-col cols="12" sm="12" lg="6" md="6" xl="6">
+                    <b-card-text> <b>Género:</b> Macho </b-card-text>
                   </b-col>
                 </b-row>
               </b-card-body>
@@ -258,7 +263,10 @@ export default {
 }
 
 .select{
+    color: #a5a5a5 !important;
+    border-color: #a5a5a5  !important;
     border-radius: 15px;
+    height: 37px;
 }
 
 /* Cuando el mouse pasa sobre la imagen */
@@ -275,4 +283,6 @@ export default {
   height: 2px;
   background-color: black;
 }
+
+
 </style>
