@@ -261,3 +261,12 @@ body {
 .categoryImage {
   height: 7rem;
 }
+
+.form-card-title {
+  margin-top: 20px;
+  z-index: 10;
+}
+
+.form-card-content {
+  margin-top: -20px;
+}
