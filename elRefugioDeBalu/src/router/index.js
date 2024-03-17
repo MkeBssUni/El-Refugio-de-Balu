@@ -91,7 +91,7 @@ const routes = [
       {
         path: "/petForm",
         name: "petForm",
-        component: () => import("../modules/pets/adapters/views/RegisterForm.vue"),
+        component: () => import("../modules/pets/adapters/views/PetRegisterForm.vue"),
       },      
       {
         path: "/usersList",
