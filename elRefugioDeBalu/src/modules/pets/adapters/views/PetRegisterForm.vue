@@ -9,7 +9,8 @@
                 <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
                     <b-row>
                         <b-col cols="10" md="8" lg="6">
-                            <b-card bg-variant="card-header-orange" class="py-2 card-shadow relative-position form-card-title" no-body>
+                            <b-card bg-variant="card-header-orange"
+                                class="py-2 card-shadow relative-position form-card-title" no-body>
                                 <div class="d-flex align-items-center ms-3 ms-md-4">
                                     <i class="material-icons me-2" style="font-size: 1.5rem">pets</i>
                                     <h4 class="mb-0 mt-1">Información general</h4>
@@ -187,7 +188,8 @@
                 <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
                     <b-row>
                         <b-col cols="10" md="8" lg="6">
-                            <b-card bg-variant="card-header-blue" class="py-2 card-shadow relative-position form-card-title" no-body>
+                            <b-card bg-variant="card-header-blue"
+                                class="py-2 card-shadow relative-position form-card-title" no-body>
                                 <div class="d-flex align-items-center ms-3 ms-md-4">
                                     <i class="material-icons me-2" style="font-size: 1.5rem">pets</i>
                                     <h4 class="mb-0 mt-1">Información médica</h4>
@@ -293,7 +295,8 @@
                 <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
                     <b-row>
                         <b-col cols="10" md="8" lg="6">
-                            <b-card bg-variant="card-header-secondary-orange" class="py-2 card-shadow relative-position form-card-title" no-body>
+                            <b-card bg-variant="card-header-secondary-orange"
+                                class="py-2 card-shadow relative-position form-card-title" no-body>
                                 <div class="d-flex align-items-center ms-3 ms-md-4">
                                     <i class="material-icons me-2" style="font-size: 1.5rem">pets</i>
                                     <h4 class="mb-0 mt-1">Información adicional</h4>
@@ -355,17 +358,23 @@
                         </b-col>
                     </b-row>
                 </b-col>
-                <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5 d-flex justify-content-end">
-                    <b-button type="submit" variant="outline-dark-secondary-blue"
-                        class="form-btn me-3 d-flex align-items-center justify-content-between">
-                        <span class="me-2">Publicar</span>
-                        <b-icon icon="arrow-up-right-circle" font-scale="1.3"></b-icon>
-                    </b-button>
-                    <b-button variant="outline-danger"
-                        class="form-btn d-flex align-items-center justify-content-between">
-                        <span class="me-2">Cancelar</span>
-                        <b-icon icon="trash" font-scale="1.3"></b-icon>
-                    </b-button>
+                <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
+                    <b-row class="px-5 px-sm-0 d-flex justify-content-end">
+                        <b-col cols="12" sm="6" md="5" lg="4" xl="3">
+                            <b-button type="submit" variant="outline-dark-secondary-blue"
+                                class="d-flex align-items-center justify-content-between w-100">
+                                <span class="me-2">Publicar</span>
+                                <b-icon icon="arrow-up-right-circle" font-scale="1.3"></b-icon>
+                            </b-button>
+                        </b-col>
+                        <b-col cols="12" sm="6" md="5" lg="4" xl="3" class="mt-3 mt-sm-0">
+                            <b-button variant="outline-danger"
+                                class="d-flex align-items-center justify-content-between w-100">
+                                <span class="me-2">Cancelar</span>
+                                <b-icon icon="trash" font-scale="1.3"></b-icon>
+                            </b-button>
+                        </b-col>
+                    </b-row>
                 </b-col>
             </b-form>
         </b-row>
@@ -592,10 +601,6 @@ export default {
         margin-right: auto;
         margin-left: auto;
     }
-
-    .form-btn {
-        width: 40%;
-    }
 }
 
 @media (min-width: 768px) {
@@ -603,10 +608,6 @@ export default {
         width: 60%;
         margin-right: auto;
         margin-left: auto;
-    }
-
-    .form-btn {
-        width: 30%;
     }
 }
 
