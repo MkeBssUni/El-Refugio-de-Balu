@@ -1,13 +1,13 @@
 <template>
-    <b-container fluid>
-        <b-row class="px-5 mt-5 d-flex align-items-center">
+    <b-container fluid class="px-5">
+        <b-row class="mt-5 d-flex align-items-center">
             <b-col cols="12" md="6" lg="5"
                 class="d-flex align-items-center justify-content-center justify-content-md-start">
-                <span class="title">Mis publicaciones de mascotas</span>
+                <span class="custom-h1">Mis publicaciones de mascotas</span>
             </b-col>
             <b-col cols="12" md="6" lg="7" class="mt-3 mt-md-0">
                 <b-row class="d-flex justify-content-center">
-                    <b-col cols="12" sm="6" md="12" lg="5" class="">
+                    <b-col cols="12" sm="6" md="12" lg="5">
                         <b-input-group>
                             <b-form-input type="text" placeholder="Buscar..." id="search"></b-form-input>
                             <b-button variant="dark-gray" type="button" id="search"
@@ -30,19 +30,20 @@
                     </b-col>
                 </b-row>
             </b-col>
-            <hr class="mt-4">
         </b-row>
-        <b-row class="px-5 mb-5">
-            <b-col v-for="pet in pets" :key="pet.id" cols="12" sm="6" md="4" lg="3" class="mt-3">
+        <hr class="mt-4">
+        <b-row class="mb-5">
+            <b-col v-for="pet in pets" :key="pet.id" cols="12" sm="6" lg="4" xl="3" class="mt-3">
                 <b-card :key="pet.id" :img-src="pet.img" class="pet-card" no-body>
                     <b-row v-if="pet.comments > 0" class="transparent absolute-position">
                         <b-col cols="12" class="d-flex justify-content-end">
                             <b-button class="py-2 d-flex align-items-center relative-position custom-transparent-button"
                                 pill>
                                 <b-icon icon="chat-left-fill" font-scale="3"
-                                    class="text-dark-secondary-orange icon-chat mt-2"></b-icon>
-                                <span class="text-light comments-over-icon">{{ (pet.comments > 9) ? '9+' : pet.comments
-                                    }}</span>
+                                    class="text-dark-secondary-orange chat-icon mt-2"></b-icon>
+                                <span class="text-light comments">
+                                    {{ (pet.comments > 9) ? '9+' : pet.comments }}
+                                </span>
                             </b-button>
                         </b-col>
                     </b-row>
@@ -52,7 +53,7 @@
                         <b-badge :variant="getBadgeVariant(pet.status)" class="mt-2">{{ pet.status }}</b-badge>
                         <div class="d-flex justify-content-center">
                             <b-button pill variant="outline-dark-blue"
-                                class="mt-3 px-3 d-flex align-items-center justify-content-center">
+                                class="mt-3 px-5 d-flex align-items-center justify-content-center">
                                 <span>Ver detalles</span>
                             </b-button>
                         </div>
@@ -106,34 +107,14 @@ export default {
     }
 }
 </script>
+
 <style scoped>
-.title {
-    font-size: 150%;
-}
-
-.relative-position {
-    position: relative;
-}
-
-.absolute-position {
-    position: absolute;
-    top: 0;
-    right: 0;
-}
-
-.pet-card img {
-    height: 200px;
-    object-fit: cover;
-    bottom-left-radius: 0px !important;
-    bottom-right-radius: 0px !important;
-}
-
-.icon-chat {
+.chat-icon {
     position: relative;
     z-index: 1;
 }
 
-.comments-over-icon {
+.comments {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -148,7 +129,7 @@ export default {
     width: 100%;
 }
 
-.custom-transparent-button:hover .icon-chat {
+.custom-transparent-button:hover .chat-icon {
     color: #ff7d4a !important;
 }
 </style>
