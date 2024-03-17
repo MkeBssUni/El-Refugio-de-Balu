@@ -59,7 +59,8 @@
                             </b-button>
                         </div>
                         <div class="d-inline-block d-md-none">
-                            <b-button pill size="sm" variant="outline-dark-blue" class="px-2 d-flex align-items-center">
+                            <b-button pill size="sm" variant="outline-dark-blue" class="px-2 d-flex align-items-center"
+                                v-b-tooltip.hover.top="'Ver detalles'">
                                 <b-icon icon="info-circle" font-scale="1"></b-icon>
                             </b-button>
                         </div>

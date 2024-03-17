@@ -38,7 +38,7 @@
                     <b-row v-if="pet.comments > 0" class="transparent absolute-position">
                         <b-col cols="12" class="d-flex justify-content-end">
                             <b-button class="py-2 d-flex align-items-center relative-position custom-transparent-button"
-                                pill>
+                                pill v-b-tooltip.hover.left="'Ver comentarios'">
                                 <b-icon icon="chat-left-fill" font-scale="3"
                                     class="text-dark-secondary-orange chat-icon mt-2"></b-icon>
                                 <span class="text-light comments">
