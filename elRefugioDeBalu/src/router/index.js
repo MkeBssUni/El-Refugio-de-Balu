@@ -57,6 +57,10 @@ const routes = [
         path: "/myAplicationAdoption",
         name: "myAplicationAdoption",
         component: () => import("../modules/adoptions/adapters/views/MyAplicationAdoption.vue"),
+      },{
+        path: "/adoptionList",
+        name: "adoptionList",
+        component: () => import("../modules/adoptions/adapters/views/AdoptionList.vue"),
       },
       {
         path: "/login",
