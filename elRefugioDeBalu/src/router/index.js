@@ -84,8 +84,8 @@ const routes = [
         component: () => import("../modules/auth/adapters/views/Login.vue"),
       },
       {
-        path: "/pet-list",
-        name: "pet-list",
+        path: "/petList",
+        name: "petList",
         component: () => import("../modules/pets/adapters/views/PetList.vue"),
       },
       {
