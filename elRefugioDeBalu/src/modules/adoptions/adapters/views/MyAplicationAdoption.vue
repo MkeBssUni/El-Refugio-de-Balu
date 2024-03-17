@@ -7,7 +7,7 @@
     />
     <b-container fluid> 
         <b-row align-h="center">
-        <b-col cols="12" md="5" class="pt-md-3">
+        <b-col cols="12" md="5" sm="12" lg="5"   class="pt-md-3 my-2">
             <b-form-input
             class="buscador tam-buscador"
               type="text"
@@ -161,7 +161,7 @@ export default {
 }
 
 .tam-buscador{
-    width: 500px;
+    width: 90%;
 }
 
 .buscador::placeholder {
