@@ -24,18 +24,17 @@
               <br />
               <b-badge variant="warning">Pendiente</b-badge>
               <br />
-              Debido a que esta en pendiente aun estamos revisando tu
-              información...
+              Estamos actualmente revisando tu información ya que todavía se encuentra pendiente.
             </b-card-text>
           </b-card>
         </b-col>
         <b-col cols="12" sm="12" lg="8" md="8">
           <b-row>
             <b-col cols="12" lg="12" md="12">
-              <b-card-group deck>
+              <b-card-group deck >
                 <b-card
                   bg-variant="orange"
-                  class="text-center box-shadow-pretty tam-enca"
+                  class="text-center box-shadow-pretty tam-enca "
                 >
                 <b-card-title>
                     Datos personales
@@ -46,16 +45,28 @@
                   class="box-shadow-pretty text-center"
                 >
                 <b-row>
-              <b-col cols="12" sm="12" lg="6" md="6" xl="6">
+              <b-col cols="12" sm="12" lg="12" md="12" xl="12">
                 <b-card-text>
                     <b>Nombre:</b> Anna Christina Bustos
                 </b-card-text>
 
               </b-col>
-              <b-col cols="12" sm="12" lg="6" md="6" xl="6">
+              <b-col cols="12" sm="12" lg="4" md="4" xl="4">
                 <b-card-text>
                   <b>Edad</b>
                   22 años
+                </b-card-text>
+              </b-col>
+              <b-col cols="12" sm="12" lg="4" md="4" xl="4">
+                <b-card-text>
+                  <b>Sexo:</b>
+                  Mujer
+                </b-card-text>
+              </b-col>
+              <b-col cols="12" sm="12" lg="4" md="4" xl="4">
+                <b-card-text>
+                  <b>Teléfono:</b>
+                  777 123 4567
                 </b-card-text>
               </b-col>
             </b-row>
@@ -77,22 +88,22 @@
                   class="box-shadow-pretty text-center"
                 >
                 <b-row>
-              <b-col cols="12" sm="12" lg="6" md="6" xl="6">
+              <b-col cols="12" sm="12" lg="3" md="3" xl="3">
                 <b-card-text>
                     <b>Municipio:</b> Cuernavaca
                 </b-card-text>
 
               </b-col>
-              <b-col cols="12" sm="12" lg="6" md="6" xl="6">
+              <b-col cols="12" sm="12" lg="3" md="3" xl="3">
                 <b-card-text>
-                  <b>Dirección:</b>
-                  Melchor Ocampo #203 Col. Empleaod 
+                  <b>Estado:</b>
+                  Morelos
                 </b-card-text>
               </b-col>
               <b-col cols="12" sm="12" lg="6" md="6" xl="6">
                 <b-card-text>
-                  <b>Estado:</b>
-                  Morelos
+                  <b>Dirección:</b>
+                  Melchor Ocampo #203 Col. Empleaod 
                 </b-card-text>
               </b-col>
               
@@ -143,7 +154,7 @@
           </b-card>
         </b-col>
         <b-col cols="12" sm="12" lg="8" md="8">
-          <b-card bg-variant="light" class="my-3 box-shadow-pretty">
+          <b-card bg-variant="light" class=" box-shadow-pretty">
             <b-card-title class="text-center">Motivos de adopción</b-card-title>
             <b-row>
               <b-col cols="12" sm="12" lg="6" md="6" xl="6">
@@ -230,14 +241,14 @@
           variant="outline-dark-secondary-blue pill"
           class="mt-3 rounded-button mx-4"
         >
-          Regresar
+           Aprobar solicitud
         </b-button>
         <b-button
           type="submit"
           variant="outline-danger pills"
           class="mt-3 rounded-button"
         >
-          Cancelar solicitud
+          Finalizar solicitud
         </b-button>
       </div>
     </b-card>
@@ -312,5 +323,6 @@ export default {
 
 .tam-enca {
     height: 50px;
+
 }
 </style>
