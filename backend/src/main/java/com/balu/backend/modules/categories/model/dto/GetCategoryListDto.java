@@ -6,7 +6,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GetCategoryListDto {
-    private Long id;
+    private String id;
     private String name;
+
+    public GetCategoryListDto(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
 }
