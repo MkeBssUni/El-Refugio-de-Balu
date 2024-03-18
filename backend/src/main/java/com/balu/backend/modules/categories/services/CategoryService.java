@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -34,19 +35,38 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public ResponseApi<List<GetCategoryListDto>> getListCategories() {
-        List<GetCategoryListDto> category = iCategoryRepository.getListCategories();
-        if (category.isEmpty())
+        List<Category> activeCategories = iCategoryRepository.findByStatusTrue();
+
+        if (activeCategories.isEmpty())
             return new ResponseApi<>(
                     HttpStatus.OK,
                     false,
                     ErrorMessages.NO_RECORDS.name()
             );
-
+       List<GetCategoryListDto> categoryListDtos= activeCategories.stream()
+               .map(category -> {
+                   try {
+                       return new GetCategoryListDto(hashService.encrypt(category.getId()) , hashService.encrypt(category.getName()));
+                   } catch (NoSuchAlgorithmException e) {
+                       throw new RuntimeException(e);
+                   } catch (NoSuchPaddingException e) {
+                       throw new RuntimeException(e);
+                   } catch (InvalidAlgorithmParameterException e) {
+                       throw new RuntimeException(e);
+                   } catch (InvalidKeyException e) {
+                       throw new RuntimeException(e);
+                   } catch (IllegalBlockSizeException e) {
+                       throw new RuntimeException(e);
+                   } catch (BadPaddingException e) {
+                       throw new RuntimeException(e);
+                   }
+               })
+               .collect(Collectors.toList());
         return new ResponseApi<>(
-                category,
+                categoryListDtos,
                 HttpStatus.OK,
                 false,
-                "OK"
+                "ok"
         );
     }
 
