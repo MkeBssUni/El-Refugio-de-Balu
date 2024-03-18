@@ -28,7 +28,7 @@ public class Validations {
         return false;
     }
 
-    public static boolean isValidBase64Image(String base64String) {
+    public boolean isValidBase64Image(String base64String) {
         if (!BASE64_PATTERN.matcher(base64String).matches()) {
             return true;
         }

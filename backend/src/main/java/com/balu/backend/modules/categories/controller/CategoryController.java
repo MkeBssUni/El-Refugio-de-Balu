@@ -5,6 +5,7 @@ import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.modules.categories.model.Category;
 import com.balu.backend.modules.categories.model.dto.GetCategoryListDto;
 import com.balu.backend.modules.categories.model.dto.SaveCategoryDto;
+import com.balu.backend.modules.categories.model.dto.UpdateCategoryDto;
 import com.balu.backend.modules.categories.services.CategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,9 +34,20 @@ public class CategoryController {
     @PostMapping("/")
     public ResponseEntity<ResponseApi<Category>> saveCategory(@RequestBody SaveCategoryDto saveCategoryDto){
         try{
-            ResponseApi<Category> responseApi=this.categoryService.SaveCategory(saveCategoryDto);
+            ResponseApi<Category> responseApi=this.categoryService.saveCategory(saveCategoryDto);
             return new ResponseEntity<>(responseApi,responseApi.getStatus());
         }catch (Exception e){
+            return  new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/")
+    public ResponseEntity<ResponseApi<Integer>> updateCategory(@RequestBody UpdateCategoryDto updateCategoryDto){
+        try{
+            ResponseApi<Integer> responseApi=this.categoryService.updateCategory(updateCategoryDto);
+            return new ResponseEntity<>(responseApi,responseApi.getStatus());
+        }catch (Exception e){
+            System.out.println("error en put"+e);
             return  new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
