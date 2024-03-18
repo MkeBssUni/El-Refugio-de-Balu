@@ -8,7 +8,6 @@ import java.util.List;
 
 @Repository
 public interface ICategoryRepository  extends JpaRepository<Category,Long> {
-    @Query(value="SELECT id,name  FROM categories WHERE status=true", nativeQuery = true)
-    List<GetCategoryListDto>getListCategories();
+    List<Category> findByStatusTrue();
     Category findByName(String name);
 }
