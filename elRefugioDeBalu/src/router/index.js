@@ -113,6 +113,11 @@ const routes = [
         path: "/selfRegistration",
         name: "selfRegistration",
         component: () => import("../modules/users/components/SelfRegistration.vue"),
+      },
+      {
+        path: "/Profile",
+        name: "Profile",
+        component: () => import("../modules/users/components/Profile.vue"),
       }
     ],
   },
