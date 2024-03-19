@@ -38,4 +38,11 @@ public class AdoptionRequest {
     @Column(insertable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
+    // por medio de json
+    @Column(columnDefinition = "json",nullable = false)
+    private String reasons_for_adoption;
+    @Column(columnDefinition = "json",nullable = false)
+    private String previous_experience;
+    @Column(columnDefinition = "json",nullable = false)
+    private String additional_information;
 }
