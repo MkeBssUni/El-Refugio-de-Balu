@@ -15,6 +15,7 @@ public enum ErrorMessages {
     INTERNAL_ERROR,
     NO_RECORDS,
     UNSUPPORTED_IMAGE_FORMAT,
-    INVALID_ID
+    INVALID_ID,
+    INVALID_STATUS
 
 }

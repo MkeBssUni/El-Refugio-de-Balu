@@ -5,6 +5,7 @@ import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.kernel.Validations;
 import com.balu.backend.modules.categories.model.Category;
 import com.balu.backend.modules.categories.model.ICategoryRepository;
+import com.balu.backend.modules.categories.model.dto.ChangeStatusCategoryDto;
 import com.balu.backend.modules.categories.model.dto.GetCategoryListDto;
 import com.balu.backend.modules.categories.model.dto.SaveCategoryDto;
 import com.balu.backend.modules.categories.model.dto.UpdateCategoryDto;
@@ -43,25 +44,25 @@ public class CategoryService {
                     false,
                     ErrorMessages.NO_RECORDS.name()
             );
-       List<GetCategoryListDto> categoryListDtos= activeCategories.stream()
-               .map(category -> {
-                   try {
-                       return new GetCategoryListDto(hashService.encrypt(category.getId()) , hashService.encrypt(category.getName()));
-                   } catch (NoSuchAlgorithmException e) {
-                       throw new RuntimeException(e);
-                   } catch (NoSuchPaddingException e) {
-                       throw new RuntimeException(e);
-                   } catch (InvalidAlgorithmParameterException e) {
-                       throw new RuntimeException(e);
-                   } catch (InvalidKeyException e) {
-                       throw new RuntimeException(e);
-                   } catch (IllegalBlockSizeException e) {
-                       throw new RuntimeException(e);
-                   } catch (BadPaddingException e) {
-                       throw new RuntimeException(e);
-                   }
-               })
-               .collect(Collectors.toList());
+        List<GetCategoryListDto> categoryListDtos = activeCategories.stream()
+                .map(category -> {
+                    try {
+                        return new GetCategoryListDto(hashService.encrypt(category.getId()), hashService.encrypt(category.getName()));
+                    } catch (NoSuchAlgorithmException e) {
+                        throw new RuntimeException(e);
+                    } catch (NoSuchPaddingException e) {
+                        throw new RuntimeException(e);
+                    } catch (InvalidAlgorithmParameterException e) {
+                        throw new RuntimeException(e);
+                    } catch (InvalidKeyException e) {
+                        throw new RuntimeException(e);
+                    } catch (IllegalBlockSizeException e) {
+                        throw new RuntimeException(e);
+                    } catch (BadPaddingException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .collect(Collectors.toList());
         return new ResponseApi<>(
                 categoryListDtos,
                 HttpStatus.OK,
@@ -85,7 +86,7 @@ public class CategoryService {
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
         if (validations.isValidBase64Image(saveCategoryDto.getImage()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.UNSUPPORTED_IMAGE_FORMAT.name());
-        LocalDateTime Date=LocalDateTime.now();
+        LocalDateTime Date = LocalDateTime.now();
         Category newCategory = this.iCategoryRepository.saveAndFlush(new Category(0l, saveCategoryDto.getName(), saveCategoryDto.getDescription(), saveCategoryDto.getImage(), Date, true, null));
         return new ResponseApi<>(
                 newCategory,
@@ -95,34 +96,56 @@ public class CategoryService {
         );
     }
 
-    @Transactional(rollbackFor ={SQLException.class,Exception.class} )
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseApi<Integer> updateCategory(UpdateCategoryDto updateCategoryDto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-      updateCategoryDto.setName(hashService.decrypt(updateCategoryDto.getName()));
-      updateCategoryDto.setDescription(hashService.decrypt(updateCategoryDto.getDescription()));
-      updateCategoryDto.setImage(hashService.decrypt(updateCategoryDto.getImage()));
+        updateCategoryDto.setName(hashService.decrypt(updateCategoryDto.getName()));
+        updateCategoryDto.setDescription(hashService.decrypt(updateCategoryDto.getDescription()));
+        updateCategoryDto.setImage(hashService.decrypt(updateCategoryDto.getImage()));
         Long id;
         try {
-          id = Long.parseLong(hashService.decrypt(updateCategoryDto.getId()));
+            id = Long.parseLong(hashService.decrypt(updateCategoryDto.getId()));
         } catch (NumberFormatException e) {
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_ID.name());
         }
 
-      if (updateCategoryDto.getId()== null && updateCategoryDto.getImage()== null && updateCategoryDto.getDescription()== null && updateCategoryDto.getImage()== null)
-          return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
-      if(!(this.iCategoryRepository.findByName(updateCategoryDto.getName()) == null))
-          return new ResponseApi<>(HttpStatus.CONFLICT, true, ErrorMessages.DUPLICATE_RECORD.name());
-      if(validations.isNotBlankString(updateCategoryDto.getName()) && validations.isNotBlankString(updateCategoryDto.getDescription()) && validations.isNotBlankString(updateCategoryDto.getImage()))
-          return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
-      if(!validations.isValidBase64Image(updateCategoryDto.getImage()))
-          return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.UNSUPPORTED_IMAGE_FORMAT.name());
+        if (updateCategoryDto.getId() == null && updateCategoryDto.getImage() == null && updateCategoryDto.getDescription() == null && updateCategoryDto.getImage() == null)
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
+        if (!(this.iCategoryRepository.findByName(updateCategoryDto.getName()) == null))
+            return new ResponseApi<>(HttpStatus.CONFLICT, true, ErrorMessages.DUPLICATE_RECORD.name());
+        if (validations.isNotBlankString(updateCategoryDto.getName()) && validations.isNotBlankString(updateCategoryDto.getDescription()) && validations.isNotBlankString(updateCategoryDto.getImage()))
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
+        if (!validations.isValidBase64Image(updateCategoryDto.getImage()))
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.UNSUPPORTED_IMAGE_FORMAT.name());
 
-      Integer category = this.iCategoryRepository.updateCategory(id,updateCategoryDto.getName(),updateCategoryDto.getDescription(),updateCategoryDto.getImage());
-      return new ResponseApi<>(
-              category,
-              HttpStatus.OK,
-              false,
-              "successful modification"
-      );
+        Integer category = this.iCategoryRepository.updateCategory(id, updateCategoryDto.getName(), updateCategoryDto.getDescription(), updateCategoryDto.getImage());
+        return new ResponseApi<>(
+                category,
+                HttpStatus.OK,
+                false,
+                "successful modification"
+        );
+
+    }
+
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
+    public ResponseApi<Integer> changeStatusCategory(ChangeStatusCategoryDto changeStatusCategoryDto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        Long  id = Long.parseLong(hashService.decrypt(changeStatusCategoryDto.getId()));
+        Boolean status= Boolean.parseBoolean(hashService.decrypt(changeStatusCategoryDto.getStatus()));
+        if (validations.isValidId(changeStatusCategoryDto.getId()))
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_ID.name());
+        if (validations.isValidBooleanStatus(changeStatusCategoryDto.getStatus()))
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_STATUS.name());
+        if (changeStatusCategoryDto.getId() == null && changeStatusCategoryDto.getStatus() == null)
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
+
+
+        Integer category = this.iCategoryRepository.changeStatusCategory(id, !status);
+        return new ResponseApi<>(
+                category,
+                HttpStatus.OK,
+                false,
+                "successful status change"
+        );
 
     }
 }
