@@ -22,14 +22,55 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.stream.Collectors;
 
-
+@Service
+@Transactional
+@AllArgsConstructor
 public class ServiceAdoptionRequest {
-//    private final IAdoptionRequestRepository iAdoptionRequestRepository;
-//
-//    @Transactional(readOnly = true)
-//    public Page<GetAdoptionRequestDto> adoptionByUser(int id){
-//        return iAdoptionRequestRepository.findByUser_Id(id);
-//    }
+    private final IAdoptionRequestRepository repository;
+    private final HashService hashService;
+    private final Validations validations = new Validations();
+
+    @Transactional(readOnly = true)
+    public ResponseApi<Page<GetCategoryListDto>> getListBygeneral(String User){
+        Page<AdoptionRequest> adoptionRequests = repository.findAllByUser(User);
+
+        if(adoptionRequests.isEmpty())
+            return new ResponseApi<>(
+                    HttpStatus.OK,
+                    false,
+                    ErrorMessages.NO_RECORDS.name()
+            );
+
+        Page<GetAdoptionRequestDto> requestListDto = adoptionRequests.stream()
+                .map(request -> {
+                    try {
+                        return new GetAdoptionRequestDto(hashService.encrypt(request.getId()) , hashService.encrypt(request.getUser()));
+                    } catch (NoSuchAlgorithmException e) {
+                        throw new RuntimeException(e);
+                    } catch (NoSuchPaddingException e) {
+                        throw new RuntimeException(e);
+                    } catch (InvalidAlgorithmParameterException e) {
+                        throw new RuntimeException(e);
+                    } catch (InvalidKeyException e) {
+                        throw new RuntimeException(e);
+                    } catch (IllegalBlockSizeException e) {
+                        throw new RuntimeException(e);
+                    } catch (BadPaddingException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).collect(Collectors.toList());
+        return new ResponseApi<>(
+                requestListDto,
+                HttpStatus.OK,
+                false,
+                "ok"
+        );
+    }
+
+
+
+
+
 
 
 
