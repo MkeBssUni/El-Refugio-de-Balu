@@ -29,7 +29,7 @@ public class Person {
     private String phoneNumber;
     private String secondaryPhoneNumber;
     private String secondaryEmail;
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String profilePicture;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
