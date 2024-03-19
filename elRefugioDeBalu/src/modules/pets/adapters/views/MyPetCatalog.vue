@@ -22,7 +22,7 @@
                         </b-input-group>
                     </b-col>
                     <b-col cols="12" sm="6" md="12" lg="3" class="d-flex justify-content-center mt-3 mt-lg-0">
-                        <b-button variant="outline-success w-100"
+                        <b-button variant="outline-success w-100" to="/petForm"
                             class="d-flex align-items-center justify-content-between">
                             <span class="mr-2">Agregar</span>
                             <b-icon icon="plus-circle" class="ms-2"></b-icon>
@@ -53,7 +53,7 @@
                         <b-badge :variant="getBadgeVariant(pet.status)" class="mt-2">{{ pet.status }}</b-badge>
                         <div class="d-flex justify-content-center">
                             <b-button pill variant="outline-dark-blue"
-                                class="mt-3 px-5 d-flex align-items-center justify-content-center">
+                                class="mt-3 px-5 d-flex align-items-center justify-content-center" to="/petDetails">
                                 <span>Ver detalles</span>
                             </b-button>
                         </div>

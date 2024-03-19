@@ -55,6 +55,7 @@
                     size="sm"
                     variant="outline-dark-blue"
                     class="px-2 d-none d-md-inline-block"
+                    to="/viewAplicationAdoptionRequest"
                   >
                     Visualizar
                     <b-icon icon="info-circle" font-scale="1"></b-icon>

@@ -111,7 +111,7 @@
             <b-col class="px-1_5" cols="11" sm="11" md="11" lg="11" xl="10">
                 <div class="title-headerPage info-homepage w-100 mb-2 py-3  text-center w-100">
                     <h4>Tu compañero ideal está esperando: descubre los amigos que tenemos para ti.</h4>
-                    <b-button class="home"><i class="material-icons">pets</i> Vamos a conocerlos <i
+                    <b-button class="home" to="/pets"><i class="material-icons">pets</i> Vamos a conocerlos <i
                             class="material-icons">pets</i></b-button>
                 </div>
             </b-col>

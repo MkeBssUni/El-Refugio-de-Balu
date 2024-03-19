@@ -165,14 +165,14 @@
                     <hr class="divider my-0">
                     <b-row class="mt-4 d-flex justify-content-end">
                         <b-col cols="5" lg="4" xl="3">
-                            <b-button type="submit" variant="outline-dark-secondary-blue"
+                            <b-button type="submit" variant="outline-dark-secondary-blue" to="/formAdoption"
                                 class="form-btn me-3 d-flex align-items-center justify-content-between w-100">
                                 <span class="me-2">Solicitar adoptar</span>
                                 <b-icon icon="heart" font-scale="1.3"></b-icon>
                             </b-button>
                         </b-col>
                         <b-col cols="5" lg="4" xl="3">
-                            <b-button variant="outline-danger"
+                            <b-button variant="outline-danger" @click="goBack"
                                 class="form-btn d-flex align-items-center justify-content-between w-100">
                                 <span class="me-2">Regresar</span>
                                 <b-icon icon="arrow-left-circle" font-scale="1.3"></b-icon>
@@ -330,14 +330,14 @@
                     <hr class="divider my-0">
                     <b-row class="mt-4 d-flex justify-content-end">
                         <b-col cols="12" sm="6">
-                            <b-button type="submit" variant="outline-dark-secondary-blue"
+                            <b-button type="submit" variant="outline-dark-secondary-blue" to="/formAdoption"
                                 class="me-3 d-flex align-items-center justify-content-between w-100">
                                 <span class="me-2">Solicitar adoptar</span>
                                 <b-icon icon="heart" font-scale="1.3"></b-icon>
                             </b-button>
                         </b-col>
                         <b-col cols="12" sm="6" class="mt-3 mt-sm-0">
-                            <b-button variant="outline-danger"
+                            <b-button variant="outline-danger" @click="goBack"
                                 class="d-flex align-items-center justify-content-between w-100">
                                 <span class="me-2">Regresar</span>
                                 <b-icon icon="arrow-left-circle" font-scale="1.3"></b-icon>
@@ -393,6 +393,11 @@ export default {
             }
         }
     },
+    methods: {
+        goBack() {
+            this.$router.go(-1);
+        }
+    }
 }
 </script>
 

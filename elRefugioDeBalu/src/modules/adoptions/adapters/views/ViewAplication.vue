@@ -185,6 +185,7 @@
                 type="submit"
                 variant="outline-dark-secondary-blue pill"
                 class="mt-3 rounded-button mx-4"
+                @click="goBack"
               >
                 Regresar
               </b-button>
@@ -204,6 +205,14 @@
 <script>
 export default {
   name: "ViewAplication",
+  data(){
+    return{}
+  },
+  methods:{
+    goBack(){
+      this.$router.go(-1);
+  }
+  }
 };
 </script>
 

@@ -369,7 +369,7 @@
                         </b-col>
                         <b-col cols="12" sm="6" md="5" lg="4" xl="3" class="mt-3 mt-sm-0">
                             <b-button variant="outline-danger"
-                                class="d-flex align-items-center justify-content-between w-100">
+                                class="d-flex align-items-center justify-content-between w-100" @click="goBack">
                                 <span class="me-2">Cancelar</span>
                                 <b-icon icon="trash" font-scale="1.3"></b-icon>
                             </b-button>
@@ -509,6 +509,9 @@ export default {
         },
         removeCare(index) {
             this.form.care.splice(index, 1);
+        },
+        goBack() {
+            this.$router.go(-1);
         },
     },
     components: {
