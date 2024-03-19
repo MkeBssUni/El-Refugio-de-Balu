@@ -174,6 +174,8 @@ export default {
           icon: "error",
           showConfirmButton: false,
           timer: 1500,
+        }).then(() => {
+          this.$router.go(-1);
         });
       }
     },
