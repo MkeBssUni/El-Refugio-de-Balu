@@ -20,33 +20,58 @@ export default {
             this.chevron = this.dropdownOpen ? 'chevron-down' : 'chevron-up';
             this.dropdownOpen = !this.dropdownOpen;
         },
-        cerrarSesion() {
-            console.log("click en cerrar sesion")
-            Swal.fire({
-                title: "¿Estás seguro?",
-                text: "¿Estás seguro que deseas cerrar sesión? Deberás iniciar sesión nuevamente para poder acceder a tu cuenta.",
-                icon: "warning",
-                iconColor: "#FF0000",
-                showCancelButton: true,
-                showConfirmButton: true,
-                confirmButtonText: "Continuar",
-                cancelButtonText: "Cancelar",
-            }).then((result) => {
-                console.log("result: ", result)
-                if (result.isConfirmed) {
-                    console.log("cerrar sesion")
-                } else {
-                    console.log("no cerrar sesion")
-                }
-            });
+        async goToSession() {
+            await this.getRole();
+            if (this.role) {
+                Swal.fire({
+                    title: "¿Estás seguro?",
+                    text: "¿Estás seguro que deseas cerrar sesión? Deberás iniciar sesión nuevamente para poder acceder a tu cuenta.",
+                    icon: "warning",
+                    iconColor: "#FF0000",
+                    showCancelButton: true,
+                    showConfirmButton: true,
+                    confirmButtonText: "Continuar",
+                    cancelButtonText: "Cancelar",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        localStorage.removeItem('role');
+                        localStorage.removeItem('token');
+
+                        Swal.fire({
+                            title: "Sesión cerrada",
+                            text: "Tu sesión ha sido cerrada correctamente.",
+                            icon: "success",
+                            iconColor: "#00FF00",
+                            timer: 1500,
+                            timerProgressBar: true,
+                        }).then(() => {
+                            this.$router.push('/');
+                        });
+                    } else {
+                        Swal.close();
+                    }
+                });
+            }else{
+                this.$router.push('/login');
+            }
+
+
         },
-        async getRole(){
+        async getRole() {
             let decryptedRole = localStorage.getItem('role');
-            if(decryptedRole !== null){
+            if (decryptedRole !== null) {
                 decryptedRole = await decrypt(decryptedRole)
                 this.role = decryptedRole;
-            }else{
+            } else {
                 this.role = '';
+            }
+        },
+        async goToProfile() {
+            await this.getRole();
+            if (this.role) {
+                this.$router.push('/profile');
+            } else {
+                this.$router.push('/selfRegistration');
             }
         }
     }
@@ -63,14 +88,14 @@ export default {
             </b-navbar-nav>
             <b-navbar-nav class="me-2 d-flex align-items-center">
                 <b-nav-item class="me-2 d-none d-md-inline-block">
-                    <b-button to="/selfRegistration" variant="outline-light" class="px-3 d-flex align-items-center">
+                    <b-button @click="goToProfile" variant="outline-light" class="px-3 d-flex align-items-center">
                         <span v-if="role" style="font-size: 1rem;">Ver perfil</span>
                         <span v-else style="font-size: 1rem;">Crear cuenta</span>
                         <b-icon :icon="role !== '' ? 'person' : 'person-plus'" font-scale="1" class="ms-2"></b-icon>
                     </b-button>
                 </b-nav-item>
                 <b-nav-item class="me-2 d-none d-md-inline-block">
-                    <b-button variant="outline-light" class="px-3 d-flex align-items-center">
+                    <b-button @click="goToSession" variant="outline-light" class="px-3 d-flex align-items-center">
                         <span v-if="role" style="font-size: 1rem;">Cerrar sesión</span>
                         <span v-else style="font-size: 1rem;">Iniciar sesión</span>
                         <b-icon :icon="role ? 'box-arrow-right' : 'box-arrow-in-right'" font-scale="1"
@@ -89,7 +114,7 @@ export default {
                             <b-icon :icon="role ? 'person' : 'person-plus'" font-scale="1" class="ms-2"></b-icon>
                         </a>
                         <hr class="my-0">
-                        <a href="#" class="item-2 d-flex justify-content-between p-3">
+                        <a class="item-2 d-flex justify-content-between p-3" @click="goToSession">
                             <span v-if="role">Cerrar sesión</span>
                             <span v-else>Iniciar sesión</span>
                             <b-icon :icon="role ? 'box-arrow-right' : 'box-arrow-in-right'" font-scale="1"
