@@ -114,8 +114,8 @@ const routes = [
         component: () => import("../modules/users/components/SelfRegistration.vue"),
       },
       {
-        path: "/Profile",
-        name: "Profile",
+        path: "/profile",
+        name: "profile",
         component: () => import("../modules/users/components/Profile.vue"),
       }
     ],
