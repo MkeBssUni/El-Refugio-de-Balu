@@ -23,10 +23,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.Random;
 
 @Service
 @Transactional
@@ -103,12 +108,13 @@ public class PersonService {
         return new ResponseApi<>(hashService.encrypt(password), HttpStatus.CREATED, false,"OK");
     }
     @Transactional(readOnly = true)
-    public ResponseApi<Person> getDetails(PersonDto dto){
-        //Igual, faltaría meter la lógica de la encriptación
-        if(dto.getPersonId() == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
-        Optional<Person> person = iPersonRepository.findById(dto.getPersonId());
-        return person.map(value -> new ResponseApi<>(value, HttpStatus.OK, false, "OK")).orElseGet(() -> new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name()));
-
+    public ResponseApi<Person> getDetails(PersonDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        if(dto.getUserId() == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
+        Optional<User> user = iUserRepository.findById(Long.parseLong(hashService.decrypt(dto.getUserId())));
+        if(user.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
+        Optional<Person> person = iPersonRepository.findByUserId(user.get().getId());
+        if(person.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
+        return new ResponseApi<>(person.get(), HttpStatus.OK, false, "OK");
     }
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseApi<Person> changeStatus(PersonDto dto) throws Exception{
