@@ -16,4 +16,8 @@ public interface ICategoryRepository  extends JpaRepository<Category,Long> {
     @Modifying
     @Query(value = "UPDATE categories SET name = :name, description = :description, image = :image WHERE id = :id", nativeQuery = true)
     Integer updateCategory(@Param("id") Long id, @Param("name") String name, @Param("description") String description, @Param("image") String image);
+
+    @Modifying
+    @Query(value = "UPDATE categories SET status = :status WHERE id = :id", nativeQuery = true)
+    Integer changeStatusCategory(@Param("id") Long id, @Param("status") Boolean status);
 }

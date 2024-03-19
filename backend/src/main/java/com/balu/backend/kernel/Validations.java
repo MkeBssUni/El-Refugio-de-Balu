@@ -37,4 +37,18 @@ public class Validations {
         String header = base64String.split(",")[0];
         return !header.equals(JPEG_HEADER) || !header.equals(PNG_HEADER);
     }
+
+    public boolean isValidBooleanStatus(String str) {
+        String lowerCaseStr = str.toLowerCase();
+        if(lowerCaseStr.equals("true") || lowerCaseStr.equals("false")) return false;
+        return  true ;
+    }
+    public boolean isValidId(String str) {
+        try {
+            Long.parseLong(str);
+            return false;
+        } catch (NumberFormatException e) {
+            return true;
+        }
+    }
 }

@@ -3,6 +3,7 @@ package com.balu.backend.modules.categories.controller;
 import com.balu.backend.kernel.ErrorMessages;
 import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.modules.categories.model.Category;
+import com.balu.backend.modules.categories.model.dto.ChangeStatusCategoryDto;
 import com.balu.backend.modules.categories.model.dto.GetCategoryListDto;
 import com.balu.backend.modules.categories.model.dto.SaveCategoryDto;
 import com.balu.backend.modules.categories.model.dto.UpdateCategoryDto;
@@ -51,4 +52,16 @@ public class CategoryController {
             return  new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PatchMapping("/")
+    public ResponseEntity<ResponseApi<Integer>> changeStatusCategory(@RequestBody ChangeStatusCategoryDto changeStatusCategoryDto){
+        try{
+            ResponseApi<Integer> responseApi=this.categoryService.changeStatusCategory(changeStatusCategoryDto);
+            return new ResponseEntity<>(responseApi,responseApi.getStatus());
+        }catch (Exception e){
+            System.out.println("error en put"+e);
+            return  new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
