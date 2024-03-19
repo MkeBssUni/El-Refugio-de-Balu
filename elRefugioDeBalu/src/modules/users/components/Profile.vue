@@ -11,10 +11,11 @@
         <b-card class="contentform" img-alt="Card image">
           <b-container>
             <div class="clearfix">
+              <!-- obtén la imagen de: information.profilePicture, es un base 64 -->
               <b-img
                 left
-                src="https://picsum.photos/200/200/?image=58"
-                alt="Left image"
+                alt="profilePic"
+                src="https://img.freepik.com/foto-gratis/retrato-hombre-blanco-aislado_53876-40306.jpg?t=st=1710875960~exp=1710879560~hmac=70796c11c06ff737b58e2f82fd3ab45b89ae7d6525c374b0c92aac9ea0514887&w=900"
                 class="mb-4"
                 style="max-width: 400px; margin-top: 70px"
               ></b-img>
@@ -39,30 +40,30 @@
                         <div class="row">
                           <div class="col-md-4">
                             <b-form-group label="Nombre" label-align="left">
-                              <b-input v-model="name" :readonly="!editing"></b-input>
+                              <b-input v-model="information.name" :readonly="!editing"></b-input>
                             </b-form-group>
                           </div>
                           <div class="col-md-4">
                             <b-form-group label="Apellido" label-align="left">
-                              <b-input v-model="lastName" :readonly="!editing"></b-input>
+                              <b-input v-model="information.lastName" :readonly="!editing"></b-input>
                             </b-form-group>
                           </div>
                           <div class="col-md-4">
                             <b-form-group label="Segundo apellido" label-align="left">
-                              <b-input v-model="surName" :readonly="!editing"></b-input>
+                              <b-input v-model="information.surName" :readonly="!editing"></b-input>
                             </b-form-group>
                           </div>
                         </div>
                         <div class="row">
                           <div class="col-md-4">
                             <b-form-group label="Teléfono" label-align="left" :state="phoneNumberValidation">
-                              <b-input v-model="phoneNumber" type="tel"></b-input>
+                              <b-input v-model="information.phoneNumber" type="tel"></b-input>
                               <b-form-invalid-feedback :state="phoneNumberValidation">Ingresa solo números</b-form-invalid-feedback>
                             </b-form-group>
                           </div>
                           <div class="col-md-4">
-                            <b-form-group label="Correo electrónico secundario" label-align="left" :state="secondaryEmailValidation">
-                              <b-input v-model="secondaryEmail" type="email"></b-input>
+                            <b-form-group label="Correo electrónico" label-align="left" :state="secondaryEmailValidation">
+                              <b-input v-model="information.user.username" type="email"></b-input>
                               <b-form-invalid-feedback :state="secondaryEmailValidation">Correo electrónico inválido</b-form-invalid-feedback>
                             </b-form-group>
                           </div>
@@ -118,10 +119,13 @@
 <script>
 import swal from "sweetalert2";
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
+import instance from "../../../config/axios";
+import { decrypt } from "../../../kernel/hashFunctions";
 export default {
   name: "FormStyle",
   data() {
     return {
+      userId: null,
       name: "Andrea",
       lastName: "Díaz",
       surName: "Zagal",
@@ -138,9 +142,41 @@ export default {
       passwordValidationMessage: "",
       confirmPasswordValidation: null,
       confirmPasswordValidationMessage: "",
+      information:{}
     };
   },
+  mounted() {
+    this.getDetails();
+  },
   methods: {
+    async getDetails(){
+      swal.fire({
+        title: "Espera un momento...",
+        text: "Estamos cargando tus datos",
+        imageUrl: gatoWalkingGif,
+        imageWidth: 160, 
+        imageHeight: 160,
+        showConfirmButton: false,
+      });
+      try {
+        const response = await instance.post("/person/details",{
+        userId:  localStorage.getItem("userId")
+        })
+        this.information = response.data.data;
+        this.information.phoneNumber = await decrypt(this.information.phoneNumber);
+        this.information.user.username = await decrypt(this.information.user.username);
+        swal.close();
+
+      } catch (error) {
+        swal.fire({
+          title: "Error",
+          text: "No se pudieron cargar tus datos",
+          icon: "error",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    },
     toggleSidebar() {
       this.$bvModal.show("sidebar-1");
     },
