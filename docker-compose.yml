@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  ui-balu:
+    container_name: uibalu
+    build:
+      dockerfile: Dockerfile
+      context: './elRefugioDeBalu'
+    ports:
+      - '8101:80'
+    networks:
+      - balunet
+    depends_on:
+      - api-balu
+  api-balu:
+    container_name: apibalu
+    build:
+      dockerfile: Dockerfile
+      context: './backend'
+    ports:
+      - '82:8080'
+    networks:
+      - balunet
+    depends_on:
+      - db
+  db:
+    image: mysql:8.0
+    ports:
+      - '3397:3306'
+    networks:
+      - balunet
+    environment:
+      - MYSQL_ROOT_USER=baluroot
+      - MYSQL_DATABASE=refugio_balu
+      - MYSQL_USER=balu
+      - MYSQL_PASSWORD=s2nd0b4lu
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+networks:
+  balunet:
+    driver: bridge
