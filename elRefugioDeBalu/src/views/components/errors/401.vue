@@ -1,10 +1,28 @@
 <template>
-   <img src="../../../assets/imgs/error/401.svg" class="error">
+  <b-container fluid>
+    <b-row class="d-flex justify-content-center">
+      <b-col cols="12" class="mt-3">
+        <img src="../../../assets/imgs/error/401.svg" class="error">
+      </b-col>
+      <b-col cols="3" class="mt-2 d-flex justify-content-center">
+        <b-button @click="goBack" variant="outline-orange"
+          class="w-100 d-flex align-items-center justify-content-center">
+          <b-icon icon="arrow-left-circle" class="me-3"></b-icon>
+          <span>Regresar</span>
+        </b-button>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
 export default {
-    name: '401'
+  name: '401',
+  methods: {
+    goBack() {
+      this.$router.go(-1);
+    }
+  }
 }
 </script>
 
@@ -13,8 +31,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80vh;
+  height: 70vh;
   width: 100%;
 }
-
 </style>
