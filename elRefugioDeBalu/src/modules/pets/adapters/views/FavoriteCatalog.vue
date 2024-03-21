@@ -33,7 +33,7 @@
                         <b-card-title>{{ pet.name }}</b-card-title>
                         <b-card-sub-title>{{ pet.city }}, {{ pet.state }}</b-card-sub-title>
                         <div class="d-flex justify-content-center">
-                            <b-button pill variant="outline-dark-blue" class="mt-3 px-5 d-flex align-items-center">
+                            <b-button pill variant="outline-dark-blue" class="mt-3 px-5 d-flex align-items-center" to="/petDetails" >
                                 <span>Ver detalles</span>
                             </b-button>
                         </div>

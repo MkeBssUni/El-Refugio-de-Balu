@@ -129,7 +129,7 @@ export default {
                 </b-nav-item>
             </b-navbar-nav>
         </b-navbar>
-        <b-sidebar id="sidebar" width="300px" backdrop shadow visible no-header>
+        <b-sidebar id="sidebar" width="300px" backdrop shadow no-header>
             <template #default="{ hide }">
                 <div class="my-3 d-flex align-items-center justify-content-between">
                     <span class="ms-3 text-dark-secondary-blue" style="font-size: 1.4rem;">¡Bienvenido/a!</span>
