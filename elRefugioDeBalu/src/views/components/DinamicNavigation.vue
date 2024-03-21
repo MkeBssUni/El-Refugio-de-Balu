@@ -87,6 +87,12 @@ export default {
                 </b-navbar-brand>
             </b-navbar-nav>
             <b-navbar-nav class="me-2 d-flex align-items-center">
+                <b-nav-item class="me-2 d-none d-md-inline-block" v-if="!role" to="/pets">
+                    <b-button variant="outline-light" class="px-3 d-flex align-items-center">
+                        <span style="font-size: 1rem;">Ver mascotas</span>
+                        <i class="material-icons ms-2" style="font-size: 1rem;">pets</i>
+                    </b-button>
+                </b-nav-item>
                 <b-nav-item class="me-2 d-none d-md-inline-block">
                     <b-button @click="goToProfile" variant="outline-light" class="px-3 d-flex align-items-center">
                         <span v-if="role" style="font-size: 1rem;">Ver perfil</span>
@@ -122,7 +128,7 @@ export default {
                         </a>
                     </div>
                 </b-nav-item>
-                <b-nav-item>
+                <b-nav-item v-if="role">
                     <b-button v-b-toggle.sidebar variant="outline-light" class="d-flex align-items-center">
                         <b-icon icon="list" font-scale="1"></b-icon>
                     </b-button>
@@ -144,27 +150,32 @@ export default {
                         Ver mascotas
                         <i class="material-icons ms-2" style="font-size: larger;">pets</i>
                     </b-button>
-                    <b-button variant="outline-dark-secondary-orange" :to="'/'"
+                    <b-button variant="outline-dark-secondary-orange" :to="'/myPets'"
                         class="mt-3 d-flex align-items-center justify-content-center">
-                        Dar en adopción
+                        Mis mascotas publicadas
                         <i class="material-icons ms-2" style="font-size: larger;">handshake</i>
                     </b-button>
-                    <b-button variant="outline-dark-secondary-orange" :to="'/'"
+                    <b-button variant="outline-dark-secondary-orange" :to="'/favorites'"
                         class="mt-3 d-flex align-items-center justify-content-center">
-                        Antes de adoptar
-                        <i class="material-icons ms-2" style="font-size: larger;">info</i>
+                        Mis mascotas favoritas
+                        <i class="material-icons ms-2" style="font-size: larger;">favorites</i>
                     </b-button>
                     <b-button variant="outline-dark-secondary-orange" :to="'/'"
                         class="mt-3 d-flex align-items-center justify-content-center">
-                        Preguntas frecuentes (FAQ)
-                        <i class="material-icons ms-2" style="font-size: larger;">quiz</i>
+                        Mis solicitudes de adopción
+                        <i class="material-icons ms-2" style="font-size: larger;">badge</i>
                     </b-button>
                 </b-nav>
                 <b-nav v-else-if="role === 'MODERADOR'" vertical class="my-2 px-3 text-center">
-                    <b-button variant="outline-dark-secondary-orange" :to="'/'"
+                    <b-button variant="outline-dark-secondary-orange" :to="'/petList'"
                         class="mt-3 d-flex align-items-center justify-content-center">
-                        Solicitudes de adopción
-                        <i class="material-icons ms-2" style="font-size: larger;">assignment</i>
+                        Mis mascotas asignadas
+                        <i class="material-icons ms-2" style="font-size: larger;">favorite</i>
+                    </b-button>
+                    <b-button variant="outline-dark-secondary-orange" :to="'/petList'"
+                        class="mt-3 d-flex align-items-center justify-content-center">
+                        Nuevas mascotas
+                        <i class="material-icons ms-2" style="font-size: larger;">pets</i>
                     </b-button>
                 </b-nav>
                 <b-nav v-else-if="role === 'ADMINISTRADOR'" vertical class="my-2 px-3 text-center">
@@ -178,7 +189,7 @@ export default {
                         Gestión de categorías
                         <i class="material-icons ms-2" style="font-size: larger;">dashboard</i>
                     </b-button>
-                    <b-button variant="outline-dark-secondary-orange" :to="'/pet-list'"
+                    <!-- <b-button variant="outline-dark-secondary-orange" :to="'/pet-list'"
                         class="mt-3 d-flex align-items-center justify-content-center">
                         Gestión de animales
                         <i class="material-icons ms-2" style="font-size: larger;">pets</i>
@@ -187,7 +198,7 @@ export default {
                         class="mt-3 d-flex align-items-center justify-content-center">
                         Solicitudes de adopción
                         <i class="material-icons ms-2" style="font-size: larger;">assignment</i>
-                    </b-button>
+                    </b-button> -->
                 </b-nav>
                 <b-nav v-else vertical class="my-2 px-3 text-center">
                     <b-button variant="outline-dark-secondary-orange" :to="'/pets'"
