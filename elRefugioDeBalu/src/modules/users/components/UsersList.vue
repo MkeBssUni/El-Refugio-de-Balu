@@ -145,14 +145,14 @@ export default {
       Swal.fire({
         title: "¿Estás seguro?",
         text: person.blocked
-          ? "Estás a punto de bloquear a este usuario"
-          : "Estás a punto de desbloquear a este usuario",
+          ? "Estás a punto de desbloquear a este usuario"
+          : "Estás a punto de bloquear a este usuario",
         icon: "warning",
         showCancelButton: true,
         showConfirmButton: true,
         confirmButtonText: person.blocked
-          ? "Bloquear"
-          : "Desbloquear",
+          ? "Desbloquear"
+          : "Bloquear",
         cancelButtonText: "Cancelar",
       }).then((result) => {
         if (result.isConfirmed) {
