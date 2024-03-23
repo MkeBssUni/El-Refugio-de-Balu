@@ -5,6 +5,8 @@ import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.kernel.SearchDto;
 import com.balu.backend.kernel.Validations;
 import com.balu.backend.modules.hash.service.HashService;
+import com.balu.backend.modules.logs.model.LogTypes;
+import com.balu.backend.modules.logs.service.LogService;
 import com.balu.backend.modules.people.model.*;
 import com.balu.backend.modules.people.model.dto.ChangePasswordDto;
 import com.balu.backend.modules.people.model.dto.PersonDto;
@@ -43,6 +45,7 @@ public class PersonService {
     private final PasswordEncoder encoder;
     private final Validations validations = new Validations();
     private final HashService hashService;
+    private final LogService logService;
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseApi<Person> publicRegister(PublicRegisterDto dto) throws Exception {
@@ -74,6 +77,7 @@ public class PersonService {
         user = iUserRepository.saveAndFlush(user);
         dto.setPhoneNumber(hashService.encrypt(dto.getPhoneNumber()));
         person.savePublicRegister(dto,user);
+        logService.saveLog("New general user registered: " + person.getName() + " " + person.getLastName(), LogTypes.INSERT, "PEOPLE | USERS");
         return new ResponseApi<>(iPersonRepository.saveAndFlush(person), HttpStatus.CREATED, false,"OK");
     }
 
@@ -105,6 +109,7 @@ public class PersonService {
         user = iUserRepository.saveAndFlush(user);
         person.saveAdminOrMod(dto,user);
         iPersonRepository.saveAndFlush(person);
+        logService.saveLog("New " + role.get().getName() + " registered: " + person.getName() + " " + person.getLastName(), LogTypes.INSERT, "PEOPLE | USERS");
         return new ResponseApi<>(hashService.encrypt(password), HttpStatus.CREATED, false,"OK");
     }
     @Transactional(readOnly = true)
@@ -128,6 +133,7 @@ public class PersonService {
             person.get().getUser().setBlockedAt(null);
         }
         iUserRepository.saveAndFlush(person.get().getUser());
+        logService.saveLog("User with id: " + person.get().getUser().getId() + " blocked changed to " + person.get().getUser().isBlocked(), LogTypes.UPDATE, "PEOPLE | USERS");
         return new ResponseApi<>(iPersonRepository.saveAndFlush(person.get()), HttpStatus.OK, false, "OK");
     }
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
@@ -144,6 +150,7 @@ public class PersonService {
         person.get().getUser().setBlockedAt(null);
 
         iUserRepository.saveAndFlush(person.get().getUser());
+        logService.saveLog("Password changed for user with id: " + person.get().getUser().getId(), LogTypes.UPDATE, "PEOPLE | USERS");
         return new ResponseApi<>(iPersonRepository.saveAndFlush(person.get()), HttpStatus.OK, false, "OK");
     }
     @Transactional(readOnly = true)
@@ -162,7 +169,7 @@ public class PersonService {
         String newPassword = generateRandomPassword();
         user.get().setPassword(encoder.encode(newPassword));
         iUserRepository.saveAndFlush(user.get());
-
+        logService.saveLog("Password reset for user with id: " + user.get().getId(), LogTypes.UPDATE, "PEOPLE | USERS");
         return new ResponseApi<>(hashService.encrypt(newPassword), HttpStatus.OK, false, "OK");
     }
     private String generateRandomPassword(){
