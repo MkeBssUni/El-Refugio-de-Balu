@@ -16,14 +16,9 @@ public class LogService {
     private final ILogRepository iLogRepository;
 
     @Transactional(rollbackFor = {SQLException.class,Exception.class})
-    public boolean saveLog(String message, LogTypes logTypes, String tableAffected){
-        try{
+    public void saveLog(String message, LogTypes logTypes, String tableAffected){
             Log log = new Log();
             log.saveLog(message,logTypes,tableAffected);
             iLogRepository.saveAndFlush(log);
-            return true;
-        }catch (Exception e){
-            return false;
-        }
     }
 }
