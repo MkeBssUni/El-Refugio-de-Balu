@@ -35,8 +35,6 @@ public class Pet {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Genders gender;
-    @Column(nullable = false, columnDefinition = "varchar(50)")
-    private String breed;
     @Column(nullable = false)
     private int age;
     @Column(nullable = false)
