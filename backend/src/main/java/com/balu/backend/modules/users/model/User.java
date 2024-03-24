@@ -53,9 +53,12 @@ public class User {
     @OneToOne(mappedBy = "user")
     @JsonIgnore
     private Address address;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "owner")
     @JsonIgnore
-    private List<Pet> pets;
+    private List<Pet> ownedPets;
+    @OneToMany(mappedBy = "moderator")
+    @JsonIgnore
+    private List<Pet> moderatedPets;
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<AdoptionRequest> adoptionRequests;
