@@ -19,11 +19,12 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@Entity
+@Table(name = "pets")
 public class Pet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,26 +35,31 @@ public class Pet {
     @Enumerated(EnumType.STRING)
     private Genders gender;
     @Column(nullable = false)
+    private String breed;
+    @Column(nullable = false)
     private Double age;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AgeUnits ageUnit;
     @Column(nullable = false)
-    private String breed;
+    @Enumerated(EnumType.STRING)
+    private LifeStages lifeStage;
     @Column(nullable = false)
     private Double weight;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private WeightUnits weightUnit;
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private LifeStages lifeStage;
-    @Column(columnDefinition = "text", nullable = false)
+    @Column(columnDefinition = "varchar(500)", nullable = false)
     private String description;
-    @Column(columnDefinition = "json", nullable = false)
+    @Column(columnDefinition = "text", nullable = false)
     private String characteristics;
     @Column(columnDefinition = "text", nullable = false)
     private String mainImage;
+    @OneToMany(mappedBy = "pet")
+    @JsonIgnore
+    private List<PetImages> petImages;
+    @OneToOne(mappedBy = "pet")
+    private MedicalRecord medicalRecord;
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     @JsonIncludeProperties({"id", "name"})
@@ -63,14 +69,13 @@ public class Pet {
     @JsonIncludeProperties({"id", "name"})
     private Status status;
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_owner_id", referencedColumnName = "id")
     @JsonIncludeProperties({"id"})
-    private User user;
-    @OneToMany(mappedBy = "pet")
-    @JsonIgnore
-    private List<PetImages> petImages;
-    @OneToOne(mappedBy = "pet")
-    private MedicalRecord medicalRecord;
+    private User owner;
+    @ManyToOne
+    @JoinColumn(name = "user_moderator_id", referencedColumnName = "id")
+    @JsonIncludeProperties({"id"})
+    private User moderator;
     @OneToMany(mappedBy = "pet")
     @JsonIgnore
     private List<AdoptionRequest> adoptionRequests;

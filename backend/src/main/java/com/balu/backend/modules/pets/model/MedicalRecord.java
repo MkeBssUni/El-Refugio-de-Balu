@@ -25,15 +25,14 @@ public class MedicalRecord {
     private boolean dewormed;
     @Column(nullable = false)
     private boolean microchip;
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "varchar(250)")
     private String observations;
-    @Column(columnDefinition = "json")
+    @Column(columnDefinition = "text")
     private String diseases;
-    @Column(columnDefinition = "json")
+    @Column(columnDefinition = "text")
     private String allergies;
     @OneToOne
     @JoinColumn(name = "pet_id", referencedColumnName = "id")
     @JsonIgnore
     private Pet pet;
-
 }
