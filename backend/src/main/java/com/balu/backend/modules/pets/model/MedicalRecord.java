@@ -35,4 +35,7 @@ public class MedicalRecord {
     @JoinColumn(name = "pet_id", referencedColumnName = "id")
     @JsonIgnore
     private Pet pet;
+
+    public MedicalRecord(boolean vaccinated, boolean sterilized, boolean dewormed, boolean microchip, String s, String s1, String s2, Pet savedPet) {
+    }
 }

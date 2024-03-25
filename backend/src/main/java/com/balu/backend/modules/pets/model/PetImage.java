@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "pet_images")
-public class PetImages {
+public class PetImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,4 +23,9 @@ public class PetImages {
     @JoinColumn(name = "pet_id", referencedColumnName = "id")
     @JsonIgnore
     private Pet pet;
+
+    public PetImage(String image, Pet pet) {
+        this.image = image;
+        this.pet = pet;
+    }
 }
