@@ -66,12 +66,4 @@ public class ServiceAdoptionRequest {
                 "ok"
         );
     }
-
-
-
-
-
-
-
-
 }
