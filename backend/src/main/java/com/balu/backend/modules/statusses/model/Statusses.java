@@ -5,5 +5,5 @@ public enum Statusses {
     CLOSED,
     ADOPTED,
     IN_REVISION,
-    APRROVED,
+    APPROVED,
 }

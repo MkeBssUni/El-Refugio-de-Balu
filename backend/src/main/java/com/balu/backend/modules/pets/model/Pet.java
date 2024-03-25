@@ -13,10 +13,7 @@ import com.balu.backend.modules.users.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -85,4 +82,22 @@ public class Pet {
     @OneToMany(mappedBy = "pet")
     @JsonIgnore
     private List<FavoritePet> favoritePets;
+
+    public Pet(String name, String gender, String breed, int age, String ageUnit, String lifeStage, Double weight, String weightUnit, String description, String characteristics, String specialCares, String mainImage, Category category, User user, Status status) {
+        this.name = name;
+        this.gender = Genders.valueOf(gender.toUpperCase());
+        this.breed = breed;
+        this.age = age;
+        this.ageUnit = AgeUnits.valueOf(ageUnit.toUpperCase());
+        this.lifeStage = LifeStages.valueOf(lifeStage.toUpperCase());
+        this.weight = weight;
+        this.weightUnit = WeightUnits.valueOf(weightUnit.toUpperCase());
+        this.description = description;
+        this.characteristics = characteristics;
+        this.specialCares = specialCares;
+        this.mainImage = mainImage;
+        this.category = category;
+        this.owner = user;
+        this.status = status;
+    }
 }

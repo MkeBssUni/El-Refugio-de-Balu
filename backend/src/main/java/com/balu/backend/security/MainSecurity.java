@@ -68,6 +68,7 @@ public class MainSecurity {
                         .requestMatchers(WHITE_LIST_URL).permitAll()
                         .requestMatchers("/api/person/").hasAnyAuthority(Roles.ADMIN.name())
                         .requestMatchers("/api/person/paged/").hasAnyAuthority(Roles.ADMIN.name())
+                        .requestMatchers("/api/pet/").hasAnyAuthority(Roles.GENERAL.name())
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())

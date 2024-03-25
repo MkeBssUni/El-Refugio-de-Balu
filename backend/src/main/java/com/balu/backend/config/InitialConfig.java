@@ -33,8 +33,8 @@ public class InitialConfig implements CommandLineRunner {
         String password = "baluchis";
         this.getOrSaveStatus(Statusses.ADOPTED);
         this.getOrSaveStatus(Statusses.PENDING);
-        this.getOrSaveStatus(Statusses.APRROVED);
-        this.getOrSaveStatus(Statusses.PENDING);
+        this.getOrSaveStatus(Statusses.APPROVED);
+        this.getOrSaveStatus(Statusses.CLOSED);
         this.getOrSaveStatus(Statusses.IN_REVISION);
 
         this.getOrSaveRoles(Roles.GENERAL);
