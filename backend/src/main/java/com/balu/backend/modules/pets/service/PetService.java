@@ -6,11 +6,17 @@ import com.balu.backend.kernel.Validations;
 import com.balu.backend.modules.categories.model.Category;
 import com.balu.backend.modules.categories.model.ICategoryRepository;
 import com.balu.backend.modules.pets.model.IPetRepository;
+import com.balu.backend.modules.pets.model.MedicalRecord;
+import com.balu.backend.modules.pets.model.Pet;
+import com.balu.backend.modules.pets.model.PetImages;
 import com.balu.backend.modules.pets.model.dto.PetDto;
 import com.balu.backend.modules.pets.model.enums.AgeUnits;
 import com.balu.backend.modules.pets.model.enums.Genders;
 import com.balu.backend.modules.pets.model.enums.LifeStages;
 import com.balu.backend.modules.pets.model.enums.WeightUnits;
+import com.balu.backend.modules.statusses.model.IStatusRepository;
+import com.balu.backend.modules.statusses.model.Status;
+import com.balu.backend.modules.statusses.model.Statusses;
 import com.balu.backend.modules.users.model.IUserRepository;
 import com.balu.backend.modules.users.model.User;
 import lombok.AllArgsConstructor;
@@ -29,6 +35,7 @@ public class PetService {
     private final IPetRepository petRepository;
     private final ICategoryRepository categoryRepository;
     private final IUserRepository userRepository;
+    private final IStatusRepository statusRepository;
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseApi<?> save(PetDto dto) {
@@ -90,6 +97,14 @@ public class PetService {
         if (!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
         User user = optionalUser.get();
 
-        return new ResponseApi<>(HttpStatus.OK, false, "Pet saved successfully!");
+        Optional<Status> optionalStatus = statusRepository.findByName(Statusses.PENDING);
+        if (!optionalStatus.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        Status status = optionalStatus.get();
+
+        Pet pet = new Pet(dto.getName().trim(),dto.getGender(), dto.getBreed().trim(), dto.getAge(), dto.getAgeUnit(), dto.getLifeStage(), dto.getWeight(), dto.getWeightUnit(), dto.getDescription().trim(), String.join(",", dto.getCharacteristics()), dto.getSpecialCares() != null ? String.join(",", dto.getCharacteristics()) : null, dto.getMainImage().trim(), category, user, status);
+        Pet savedPet = petRepository.saveAndFlush(pet);
+        if (savedPet == null) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.PET_NOT_SAVED.name());
+
+        return new ResponseApi<>(savedPet, HttpStatus.CREATED,false, "OK");
     }
 }
