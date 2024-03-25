@@ -46,8 +46,8 @@
               </b-badge>
             </template>
             <template #cell(role)="data">
-              <b-badge :variant="data.item.role === 'ADMINISTRADOR' ? 'warning' : 'info'">
-                {{ data.item.role === 'ADMINISTRADOR' ? "Administrador" : "Moderador" }}
+              <b-badge :variant="data.item.role === 'ADMIN' ? 'warning' : 'info'">
+                {{ data.item.role === 'ADMIN' ? "Administrador" : "Moderador" }}
               </b-badge>
             </template>
           </b-table>
