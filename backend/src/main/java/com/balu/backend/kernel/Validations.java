@@ -51,4 +51,8 @@ public class Validations {
             return true;
         }
     }
+
+    public boolean isInvalidMinAndMaxLength(String str, int min, int max) {
+        return str.length() < min || str.length() > max;
+    }
 }
