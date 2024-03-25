@@ -52,8 +52,10 @@ public class Pet {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private WeightUnits weightUnit;
-    @Column(columnDefinition = "varchar(500)", nullable = false)
+    @Column(columnDefinition = "varchar(1500)", nullable = false)
     private String description;
+    @Column(columnDefinition = "text")
+    private String specialCares;
     @Column(columnDefinition = "text", nullable = false)
     private String characteristics;
     @Column(columnDefinition = "text", nullable = false)
@@ -85,36 +87,4 @@ public class Pet {
     @OneToMany(mappedBy = "pet")
     @JsonIgnore
     private List<FavoritePet> favoritePets;
-
-    public Pet(PetDto dto) {
-        this.name = dto.getName();
-        this.gender = dto.getGender();
-        this.breed = dto.getBreed();
-        this.age = dto.getAge();
-        this.ageUnit = dto.getAgeUnit();
-        this.lifeStage = dto.getLifeStage();
-        this.weight = dto.getWeight();
-        this.weightUnit = dto.getWeightUnit();
-        this.description = dto.getDescription();
-        this.characteristics = dto.getCharacteristics();
-        this.mainImage = dto.getMainImage();
-        this.category = dto.getCategory();
-        this.owner = dto.getOwner();
-    }
-
-    public Pet(PetDto dto) {
-        this.name = dto.getName();
-        this.gender = dto.getGender();
-        this.breed = dto.getBreed();
-        this.age = dto.getAge();
-        this.ageUnit = dto.getAgeUnit();
-        this.lifeStage = dto.getLifeStage();
-        this.weight = dto.getWeight();
-        this.weightUnit = dto.getWeightUnit();
-        this.description = dto.getDescription();
-        this.characteristics = dto.getCharacteristics();
-        this.mainImage = dto.getMainImage();
-        this.category = dto.getCategory();
-        this.owner = dto.getOwner();
-    }
 }
