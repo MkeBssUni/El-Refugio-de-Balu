@@ -102,7 +102,7 @@ const routes = [
         path: "/myAplicationAdoption",
         name: "myAplicationAdoption",
         meta: {
-          title: "Mis Solicitud de adopción",
+          title: "Mis Solicitudes de adopción",
           requiresAuth: true,
           role: [rolesAvailable.general],
         },

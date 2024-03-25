@@ -3,7 +3,7 @@
     <Encabezado
       color="#FFBC58"
       :imagenUrl="require('@/assets/imgs/black-pig.png')"
-      titulo="Mis Solicitudes"
+      titulo="Mis Solicitudes de adopción"
     />
     <b-container fluid> 
         <b-row align-h="center">

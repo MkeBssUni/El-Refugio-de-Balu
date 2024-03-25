@@ -22,7 +22,17 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.stream.Collectors;
 
-
+@Service
+@Transactional
+@AllArgsConstructor
 public class ServiceAdoptionRequest {
+    private final IAdoptionRequestRepository iAdoptionRequestRepository;
+
+    @Transactional(readOnly = true)
+    public Page<GetAdoptionRequestDto> adoptionByUser(int id){
+        return iAdoptionRequestRepository.findByUser_Id(id);
+    }
+
+
 
 }

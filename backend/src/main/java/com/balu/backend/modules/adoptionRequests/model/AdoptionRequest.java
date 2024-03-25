@@ -31,18 +31,17 @@ public class AdoptionRequest {
     @JsonIncludeProperties({"id", "username"})
     private Pet pet;
     @Column(columnDefinition = "json", nullable = false)
-    private String images;
+    private String place_of_residence;
     @ManyToOne
     @JoinColumn(name = "status_id", referencedColumnName = "id")
     private Status status;
     @Column(insertable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
-    // por medio de json
     @Column(columnDefinition = "json",nullable = false)
     private String reasons_for_adoption;
     @Column(columnDefinition = "json",nullable = false)
     private String previous_experience;
-    @Column(columnDefinition = "json",nullable = false)
+    @Column(nullable = false)
     private String additional_information;
 }
