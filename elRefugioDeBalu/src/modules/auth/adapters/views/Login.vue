@@ -24,6 +24,9 @@ export default {
             },
             arrayRegex: {
                 validUsername: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+            },
+            encryptedForm: {
+                username: ''
             }
         }
     },
@@ -129,7 +132,87 @@ export default {
                         break;
                 }
             }
-        }
+        },
+        async activateAccount() {
+            Swal.fire({
+                title: "Código de verificación",
+                text: "Ingresa el correo electrónico con el que te registraste para enviar un código de verificación",
+                input: "text",
+                inputAttributes: {
+                    autocapitalize: "off",
+                },
+                showCancelButton: true,
+                confirmButtonText: "Enviar código",
+                cancelButtonText: "Cancelar",
+                showLoaderOnConfirm: true,
+                preConfirm: async (email) => {
+                    this.encryptedForm.username = await encrypt(email);
+                    return instance.patch("/person/send/newCode", { username: this.encryptedForm.username })
+                        .then((response) => {
+                            if (response.status === 200) {
+                                Swal.fire({
+                                    title: "Código reenviado",
+                                    text: "Hemos enviado un nuevo código de verificación a tu correo",
+                                    icon: "success",
+                                    showConfirmButton: true,
+                                }).then(() => {
+                                    Swal.fire({
+                                        title: "Código de verificación",
+                                        text: "Ingresa el código de verificación que te enviamos a tu correo",
+                                        input: "text",
+                                        showCancelButton: true,
+                                        confirmButtonText: "Verificar",
+                                        cancelButtonText: "Cancelar",
+                                        showDenyButton: true,
+                                        denyButtonText: "Reenviar código",
+                                        preConfirm: async (code) => {
+                                            let encryptedCode = await encrypt(code);
+                                            return instance.patch("/person/activate/account", { activationCode: encryptedCode, username: this.encryptedForm.username })
+                                                .then((response) => {
+                                                    if (response.status === 200) {
+                                                        Swal.fire({
+                                                            title: "Cuenta verificada",
+                                                            text: "Tu cuenta ha sido verificada con éxito, ahora puedes iniciar sesión",
+                                                            icon: "success",
+                                                            showConfirmButton: true,
+                                                        });
+                                                        this.$router.push("/login");
+                                                    } else {
+                                                        Swal.fire({
+                                                            title: "Error",
+                                                            text: "El código de verificación es incorrecto",
+                                                            icon: "error",
+                                                            showConfirmButton: true,
+                                                        });
+                                                    }
+                                                })
+                                                .catch((error) => {
+                                                    Swal.fire({
+                                                        title: "Error",
+                                                        text: "Algo salió mal, por favor intenta de nuevo más tarde",
+                                                        icon: "error",
+                                                        showConfirmButton: true,
+                                                    }).then(() => {
+                                                        this.activateAccount();
+                                                    });
+                                                });
+                                        },
+                                        allowOutsideClick: false,
+                                    });
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: "Error",
+                                    text: "Algo salió mal, por favor intenta de nuevo más tarde",
+                                    icon: "error",
+                                    showConfirmButton: true,
+                                });
+                            }
+                        })
+                },
+                allowOutsideClick: false,
+            });
+        },
     }
 }
 </script>
@@ -168,6 +251,12 @@ export default {
                             <b-col class="d-flex justify-content-center align-items-center mt-3">
                                 <b-link to="/selfRegistration" class="text-dark-blue text-decoration-none">
                                     ¿No tienes cuenta? Regístrate</b-link>
+                            </b-col>
+                        </b-row>
+                        <b-row class="justify-content-center">
+                            <b-col class="d-flex justify-content-center align-items-center mt-3">
+                                <b-link @click="activateAccount" class="text-dark-blue text-decoration-none">
+                                    Activa tu cuenta</b-link>
                             </b-col>
                         </b-row>
                     </b-form>
