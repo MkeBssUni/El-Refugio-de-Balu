@@ -160,7 +160,7 @@ export default {
                         Mis mascotas favoritas
                         <i class="material-icons ms-2" style="font-size: larger;">favorites</i>
                     </b-button>
-                    <b-button variant="outline-dark-secondary-orange" :to="'/'"
+                    <b-button variant="outline-dark-secondary-orange" :to="'/myAplicationAdoption'"
                         class="mt-3 d-flex align-items-center justify-content-center">
                         Mis solicitudes de adopción
                         <i class="material-icons ms-2" style="font-size: larger;">badge</i>
