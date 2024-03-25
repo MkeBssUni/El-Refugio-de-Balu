@@ -9,4 +9,6 @@ public interface IAdoptionRequestRepository  extends JpaRepository<AdoptionReque
 
 //    Page<GetAdoptionRequestDto> findByUser_Id(int id);
 
+    Page<GetAdoptionRequestDto> findByUser_Id(int id);
+
 }
