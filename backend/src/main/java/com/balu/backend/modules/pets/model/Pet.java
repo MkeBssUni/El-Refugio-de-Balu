@@ -4,7 +4,6 @@ import com.balu.backend.modules.adoptionRequests.model.AdoptionRequest;
 import com.balu.backend.modules.categories.model.Category;
 import com.balu.backend.modules.favoritePets.model.FavoritePet;
 import com.balu.backend.modules.pets.model.dto.PetDto;
-import com.balu.backend.modules.pets.model.dto.PetDto;
 import com.balu.backend.modules.pets.model.enums.AgeUnits;
 import com.balu.backend.modules.pets.model.enums.Genders;
 import com.balu.backend.modules.pets.model.enums.LifeStages;
@@ -28,7 +27,6 @@ public class Pet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false, columnDefinition = "varchar(50)")
     @Column(nullable = false, columnDefinition = "varchar(50)")
     private String name;
     @Column(nullable = false)
