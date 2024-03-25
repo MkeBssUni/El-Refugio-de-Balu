@@ -38,12 +38,12 @@ public class InitialConfig implements CommandLineRunner {
         this.getOrSaveStatus(Statusses.EN_REVISION);
 
         this.getOrSaveRoles(Roles.GENERAL);
-        this.getOrSaveRoles(Roles.ADMINISTRADOR);
-        this.getOrSaveRoles(Roles.MODERADOR);
+        this.getOrSaveRoles(Roles.ADMIN);
+        this.getOrSaveRoles(Roles.MOD);
 
-        this.getOrSaveUser("baluchis@mail.com", password, Roles.ADMINISTRADOR);
+        this.getOrSaveUser("baluchis@mail.com", password, Roles.ADMIN);
         this.getOrSaveUser("baluchis_general@mail.com", password, Roles.GENERAL);
-        this.getOrSaveUser("baluchis_mod@mail.com", password, Roles.MODERADOR);
+        this.getOrSaveUser("baluchis_mod@mail.com", password, Roles.MOD);
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
