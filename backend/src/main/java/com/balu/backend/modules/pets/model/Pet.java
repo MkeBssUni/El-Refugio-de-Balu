@@ -4,6 +4,7 @@ import com.balu.backend.modules.adoptionRequests.model.AdoptionRequest;
 import com.balu.backend.modules.categories.model.Category;
 import com.balu.backend.modules.favoritePets.model.FavoritePet;
 import com.balu.backend.modules.pets.model.dto.PetDto;
+import com.balu.backend.modules.pets.model.dto.PetDto;
 import com.balu.backend.modules.pets.model.enums.AgeUnits;
 import com.balu.backend.modules.pets.model.enums.Genders;
 import com.balu.backend.modules.pets.model.enums.LifeStages;
@@ -31,10 +32,13 @@ public class Pet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, columnDefinition = "varchar(50)")
+    @Column(nullable = false, columnDefinition = "varchar(50)")
     private String name;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Genders gender;
+    @Column(nullable = false, columnDefinition = "varchar(50)")
+    private String breed;
     @Column(nullable = false)
     private int age;
     @Column(nullable = false)
@@ -81,6 +85,22 @@ public class Pet {
     @OneToMany(mappedBy = "pet")
     @JsonIgnore
     private List<FavoritePet> favoritePets;
+
+    public Pet(PetDto dto) {
+        this.name = dto.getName();
+        this.gender = dto.getGender();
+        this.breed = dto.getBreed();
+        this.age = dto.getAge();
+        this.ageUnit = dto.getAgeUnit();
+        this.lifeStage = dto.getLifeStage();
+        this.weight = dto.getWeight();
+        this.weightUnit = dto.getWeightUnit();
+        this.description = dto.getDescription();
+        this.characteristics = dto.getCharacteristics();
+        this.mainImage = dto.getMainImage();
+        this.category = dto.getCategory();
+        this.owner = dto.getOwner();
+    }
 
     public Pet(PetDto dto) {
         this.name = dto.getName();
