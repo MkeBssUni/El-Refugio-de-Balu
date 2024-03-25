@@ -25,7 +25,7 @@ public class MedicalRecord {
     private boolean dewormed;
     @Column(nullable = false)
     private boolean microchip;
-    @Column(columnDefinition = "varchar(250)")
+    @Column(columnDefinition = "varchar(500)")
     private String observations;
     @Column(columnDefinition = "text")
     private String diseases;

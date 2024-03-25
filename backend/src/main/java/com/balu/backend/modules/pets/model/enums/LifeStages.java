@@ -1,7 +1,7 @@
 package com.balu.backend.modules.pets.model.enums;
 
 public enum LifeStages {
-    PUPPY,
+    BABY,
     YOUNG,
     ADULT,
     SENIOR
