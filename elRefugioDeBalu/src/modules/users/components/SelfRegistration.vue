@@ -39,8 +39,8 @@
             passwordValidationMessage
           }}</b-form-invalid-feedback>
             </b-form-group>
-            <b-form-group class="my-3" label="Repetir Contraseña:" label-for="input-password" :state="passwordValidation">
-              <b-form-input id="input-password" class="bg-light shadow text-dark-gray-input"
+            <b-form-group class="my-3" label="Repetir Contraseña:" label-for="input-password-confirm" :state="passwordValidation">
+              <b-form-input id="input-password-confirm" class="bg-light shadow text-dark-gray-input"
                 v-model.trim="form.confirmPassword" type="password"></b-form-input>
               <b-form-invalid-feedback :state="confirmPasswordValidation">{{
             confirmPasswordValidationMessage
@@ -116,6 +116,76 @@ export default {
         this.confirmPasswordValidation === true
       );
     },
+    async activateAccount(){
+      swal.fire({
+            title: "Código de verificación",
+            text: "Ingresa el código de verificación que te enviamos a tu correo",
+            input: "text",
+            showCancelButton: true,
+            confirmButtonText: "Verificar",
+            cancelButtonText: "Cancelar",
+            //botón de volver a enviar código
+            showDenyButton: true,
+            denyButtonText: "Reenviar código",
+            showLoaderOnConfirm: true,
+            preDeny: async ()=>{
+              console.log("first deny")
+              return instance.patch("/person/send/newCode", { username: this.encryptedForm.username })
+              .then((response) => {
+                if (response.status === 200) {
+                  swal.fire({
+                    title: "Código reenviado",
+                    text: "Hemos enviado un nuevo código de verificación a tu correo",
+                    icon: "success",
+                    showConfirmButton: true,
+                  }).then(() => {
+                    this.activateAccount();
+                  });
+                } else {
+                  swal.fire({
+                    title: "Error",
+                    text: "Algo salió mal, por favor intenta de nuevo más tarde",
+                    icon: "error",
+                    showConfirmButton: true,
+                  });
+                }
+              })
+            },
+            preConfirm: async (code) => {
+              let encryptedCode = await encrypt(code);
+              return instance.patch("/person/activate/account", { activationCode: encryptedCode, username: this.encryptedForm.username })
+                .then((response) => {
+                  if (response.status === 200) {
+                    swal.fire({
+                      title: "Cuenta verificada",
+                      text: "Tu cuenta ha sido verificada con éxito, ahora puedes iniciar sesión",
+                      icon: "success",
+                      showConfirmButton: true,
+                    });
+                    this.$router.push("/login");
+                  } else {
+                    swal.fire({
+                      title: "Error",
+                      text: "El código de verificación es incorrecto",
+                      icon: "error",
+                      showConfirmButton: true,
+                    });
+                  }
+                })
+                .catch((error) => {
+                  swal.fire({
+                    title: "Error",
+                    text: "Algo salió mal, por favor intenta de nuevo más tarde",
+                    icon: "error",
+                    showConfirmButton: true,
+                  }).then(() => {
+                    this.activateAccount();
+                  });
+                });
+            },
+            allowOutsideClick: false, 
+          });
+    },
     async sendForm() {
       this.encryptedForm.password = await encrypt(this.form.password);
       this.encryptedForm.lastname = await encrypt(this.form.lastname);
@@ -131,8 +201,9 @@ export default {
             text: "Tu solicitud ha sido enviada con éxito, en breve recibirás un correo para activar tu cuenta",
             icon: "success",
             showConfirmButton: true,
+          }).then(() => {
+            this.activateAccount();
           });
-          this.$router.push("/login");
         }
       } catch (error) {
         swal.fire({
