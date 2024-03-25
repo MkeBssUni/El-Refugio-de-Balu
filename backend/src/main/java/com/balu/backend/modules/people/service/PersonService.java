@@ -1,9 +1,6 @@
 package com.balu.backend.modules.people.service;
 
-import com.balu.backend.kernel.ErrorMessages;
-import com.balu.backend.kernel.ResponseApi;
-import com.balu.backend.kernel.SearchDto;
-import com.balu.backend.kernel.Validations;
+import com.balu.backend.kernel.*;
 import com.balu.backend.modules.hash.service.HashService;
 import com.balu.backend.modules.logs.model.LogTypes;
 import com.balu.backend.modules.logs.service.LogService;
@@ -46,6 +43,7 @@ public class PersonService {
     private final Validations validations = new Validations();
     private final HashService hashService;
     private final LogService logService;
+    private final EmailService emailService;
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseApi<Person> publicRegister(PublicRegisterDto dto) throws Exception {
@@ -73,11 +71,13 @@ public class PersonService {
         User user = new User();
         Optional<Role> role = iRoleRepository.findByName(Roles.GENERAL);
         if(role.isEmpty()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.ROLE_NOT_FOUND.name());
-        user.save(hashService.encrypt(dto.getUsername()),encoder.encode(dto.getPassword()),role.get());
+        String activationCode = generateRandomString();
+        user.save(hashService.encrypt(dto.getUsername()),encoder.encode(dto.getPassword()),role.get(),activationCode);
         user = iUserRepository.saveAndFlush(user);
         dto.setPhoneNumber(hashService.encrypt(dto.getPhoneNumber()));
         person.savePublicRegister(dto,user);
         logService.saveLog("New general user registered: " + person.getName() + " " + person.getLastName(), LogTypes.INSERT, "PEOPLE | USERS");
+        emailService.sendEmailNewAccount(dto.getUsername(),activationCode);
         return new ResponseApi<>(iPersonRepository.saveAndFlush(person), HttpStatus.CREATED, false,"OK");
     }
 
@@ -104,8 +104,8 @@ public class PersonService {
 
         Person person = new Person();
         User user = new User();
-        String password = generateRandomPassword();
-        user.save(dto.getUsername(), encoder.encode(password),role.get());
+        String password = generateRandomString();
+        user.save(dto.getUsername(), encoder.encode(password),role.get(),generateRandomString());
         user = iUserRepository.saveAndFlush(user);
         person.saveAdminOrMod(dto,user);
         iPersonRepository.saveAndFlush(person);
@@ -166,13 +166,13 @@ public class PersonService {
         Optional<User> user = iUserRepository.findByUsername(dto.getUsername());
         if(user.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
 
-        String newPassword = generateRandomPassword();
+        String newPassword = generateRandomString();
         user.get().setPassword(encoder.encode(newPassword));
         iUserRepository.saveAndFlush(user.get());
         logService.saveLog("Password reset for user with id: " + user.get().getId(), LogTypes.UPDATE, "PEOPLE | USERS");
         return new ResponseApi<>(hashService.encrypt(newPassword), HttpStatus.OK, false, "OK");
     }
-    private String generateRandomPassword(){
+    private String generateRandomString(){
         String alphabet = "abcdefghijklmnopqrstuvwxyz";
         String specialCharacters = "._#";
         StringBuilder newPassword = new StringBuilder();
@@ -188,7 +188,7 @@ public class PersonService {
             randomIndex = (int) (Math.random() * 10);
             newPassword.append(randomIndex);
         }
-        if(validations.isInvalidPassword(newPassword.toString())) return generateRandomPassword();
+        if(validations.isInvalidPassword(newPassword.toString())) return generateRandomString();
         return newPassword.toString();
     }
 }

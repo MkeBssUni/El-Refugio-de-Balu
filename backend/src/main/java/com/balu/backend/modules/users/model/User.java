@@ -41,6 +41,7 @@ public class User {
     @Column(columnDefinition = "TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime blockedAt;
+    private String activationCode;
     @Column(insertable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
@@ -71,10 +72,11 @@ public class User {
         this.password = password;
         this.role = role1;
     }
-    public void save(String username, String password, Role role){
+    public void save(String username, String password, Role role, String recoveryCode){
         this.username = username;
         this.password = password;
         this.role = role;
+        this.activationCode = recoveryCode;
         this.blocked = true;
     }
 
