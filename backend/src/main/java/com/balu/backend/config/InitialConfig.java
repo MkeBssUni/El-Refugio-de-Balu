@@ -31,11 +31,11 @@ public class InitialConfig implements CommandLineRunner {
     @Transactional(rollbackFor = {SQLException.class,Exception.class})
     public void run(String... args) throws Exception {
         String password = "baluchis";
-        this.getOrSaveStatus(Statusses.ADOPTADA);
-        this.getOrSaveStatus(Statusses.APROBADA);
-        this.getOrSaveStatus(Statusses.CERRADA);
-        this.getOrSaveStatus(Statusses.PENDIENTE);
-        this.getOrSaveStatus(Statusses.EN_REVISION);
+        this.getOrSaveStatus(Statusses.ADOPTED);
+        this.getOrSaveStatus(Statusses.PENDING);
+        this.getOrSaveStatus(Statusses.APRROVED);
+        this.getOrSaveStatus(Statusses.PENDING);
+        this.getOrSaveStatus(Statusses.IN_REVISION);
 
         this.getOrSaveRoles(Roles.GENERAL);
         this.getOrSaveRoles(Roles.ADMIN);
