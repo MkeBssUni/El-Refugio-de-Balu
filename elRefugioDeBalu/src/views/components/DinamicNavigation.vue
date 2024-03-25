@@ -166,7 +166,7 @@ export default {
                         <i class="material-icons ms-2" style="font-size: larger;">badge</i>
                     </b-button>
                 </b-nav>
-                <b-nav v-else-if="role === 'MODERADOR'" vertical class="my-2 px-3 text-center">
+                <b-nav v-else-if="role === 'MOD'" vertical class="my-2 px-3 text-center">
                     <b-button variant="outline-dark-secondary-orange" :to="'/petList'"
                         class="mt-3 d-flex align-items-center justify-content-center">
                         Mis mascotas asignadas
@@ -178,7 +178,7 @@ export default {
                         <i class="material-icons ms-2" style="font-size: larger;">pets</i>
                     </b-button>
                 </b-nav>
-                <b-nav v-else-if="role === 'ADMINISTRADOR'" vertical class="my-2 px-3 text-center">
+                <b-nav v-else-if="role === 'ADMIN'" vertical class="my-2 px-3 text-center">
                     <b-button variant="outline-dark-secondary-orange" :to="'/UsersList'"
                         class="mt-3 d-flex align-items-center justify-content-center">
                         Gestión de usuarios
