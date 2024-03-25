@@ -5,10 +5,7 @@ import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.kernel.Validations;
 import com.balu.backend.modules.categories.model.Category;
 import com.balu.backend.modules.categories.model.ICategoryRepository;
-import com.balu.backend.modules.pets.model.IPetRepository;
-import com.balu.backend.modules.pets.model.MedicalRecord;
-import com.balu.backend.modules.pets.model.Pet;
-import com.balu.backend.modules.pets.model.PetImages;
+import com.balu.backend.modules.pets.model.*;
 import com.balu.backend.modules.pets.model.dto.PetDto;
 import com.balu.backend.modules.pets.model.enums.AgeUnits;
 import com.balu.backend.modules.pets.model.enums.Genders;
@@ -25,6 +22,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,6 +36,8 @@ public class PetService {
     private final ICategoryRepository categoryRepository;
     private final IUserRepository userRepository;
     private final IStatusRepository statusRepository;
+    private final IMedicalRecordRepository medicalRecordRepository;
+    private final IPetImageRepository petImageRepository;
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseApi<?> save(PetDto dto) {
@@ -53,7 +55,12 @@ public class PetService {
 
         if (validations.isInvalidImage(dto.getMainImage())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_IMAGE.name());
         if (dto.getImages() != null) {
+            if (dto.getImages().length > 4) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
+            HashSet<String> imagesSet = new HashSet<>();
+            imagesSet.add(dto.getMainImage());
             for (String image : dto.getImages()) {
+                boolean isAdded = imagesSet.add(image);
+                if (!isAdded) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.DUPLICATE_IMAGE.name());
                 if (validations.isInvalidImage(image)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_IMAGE.name());
             }
         }
@@ -104,6 +111,20 @@ public class PetService {
         Pet pet = new Pet(dto.getName().trim(),dto.getGender(), dto.getBreed().trim(), dto.getAge(), dto.getAgeUnit(), dto.getLifeStage(), dto.getWeight(), dto.getWeightUnit(), dto.getDescription().trim(), String.join(",", dto.getCharacteristics()), dto.getSpecialCares() != null ? String.join(",", dto.getCharacteristics()) : null, dto.getMainImage().trim(), category, user, status);
         Pet savedPet = petRepository.saveAndFlush(pet);
         if (savedPet == null) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.PET_NOT_SAVED.name());
+
+        MedicalRecord medicalRecord = new MedicalRecord(dto.isVaccinated(), dto.isSterilized(), dto.isDewormed(), dto.isMicrochip(), dto.getObservations() != null ? dto.getObservations().trim() : null, dto.getDiseases() != null ? String.join(",", dto.getDiseases()) : null, dto.getAllergies() != null ? String.join(",", dto.getAllergies()) : null, savedPet);
+        MedicalRecord savedMedicalRecord = medicalRecordRepository.saveAndFlush(medicalRecord);
+        if (savedMedicalRecord == null) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.MEDICAL_RECORD_NOT_SAVED.name());
+
+        List<PetImage> petImages = new ArrayList<>();
+        if (dto.getImages() != null) {
+            for (String image : dto.getImages()) {
+                PetImage petImage = new PetImage(image.trim(), savedPet);
+                PetImage savedPetImage = petImageRepository.saveAndFlush(petImage);
+                if (savedPetImage != null) petImages.add(savedPetImage);
+            }
+            if (petImages.size() != dto.getImages().length) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.IMAGE_NOT_SAVED.name());
+        }
 
         return new ResponseApi<>(savedPet, HttpStatus.CREATED,false, "OK");
     }
