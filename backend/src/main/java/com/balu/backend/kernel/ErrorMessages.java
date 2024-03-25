@@ -19,5 +19,6 @@ public enum ErrorMessages {
     INVALID_STATUS,
     INVALID_IMAGE,
     INVALID_LENGTH,
-    NOT_FOUND
+    NOT_FOUND,
+    PET_NOT_SAVED
 }
