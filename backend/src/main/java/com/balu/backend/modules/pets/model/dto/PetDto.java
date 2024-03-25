@@ -5,8 +5,6 @@ import com.balu.backend.modules.users.model.User;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 public class PetDto {
@@ -34,7 +32,7 @@ public class PetDto {
 
     private String mainImage;
 
-    private List<String> images;
+    private String[] images;
 
     private boolean vaccinated;
 
