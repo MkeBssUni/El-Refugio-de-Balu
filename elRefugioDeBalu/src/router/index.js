@@ -6,7 +6,7 @@ Vue.use(VueRouter);
 const DEFAULT_TITLE = "El Refugio de Balu";
 
 const rolesAvailable = {
-  general: "GEN",
+  general: "GENERAL",
   mod: "MOD",
   admin: "ADMIN",
 };
