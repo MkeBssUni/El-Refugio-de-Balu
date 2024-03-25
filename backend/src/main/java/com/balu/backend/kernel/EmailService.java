@@ -16,7 +16,7 @@ public class EmailService {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
             helper.setTo(email);
-            helper.setSubject("Bienvenido a la plataforma");
+            helper.setSubject("Activar cuenta");
             helper.setText(EmailTemplates.newAccountTemplate(code),true);
             javaMailSender.send(message);
         } catch (Exception e) {
