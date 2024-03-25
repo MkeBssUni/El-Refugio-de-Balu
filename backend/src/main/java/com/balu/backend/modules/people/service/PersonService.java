@@ -205,12 +205,12 @@ public class PersonService {
     public ResponseApi<User> sendNewActivationCode(ActivateAccountDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         Optional<User> existentUser = iUserRepository.findByUsername(dto.getUsername());
         if(existentUser.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
+        if(existentUser.get().getActivationCode() == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
         String activationCode = generateRandomString();
         existentUser.get().setActivationCode(hashService.encrypt(activationCode));
         iUserRepository.saveAndFlush(existentUser.get());
         emailService.sendEmailNewAccount(hashService.decrypt(dto.getUsername()),activationCode);
         logService.saveLog("New activation code sent to user with id: " + existentUser.get().getId(), LogTypes.UPDATE, "PEOPLE | USERS");
-        System.out.println("se enviara un correo con el codigo de activacion");
         return new ResponseApi<>(HttpStatus.OK, false, "OK");
     }
 }

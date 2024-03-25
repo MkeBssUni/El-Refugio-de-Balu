@@ -124,12 +124,10 @@ export default {
             showCancelButton: true,
             confirmButtonText: "Verificar",
             cancelButtonText: "Cancelar",
-            //botón de volver a enviar código
             showDenyButton: true,
             denyButtonText: "Reenviar código",
             showLoaderOnConfirm: true,
             preDeny: async ()=>{
-              console.log("first deny")
               return instance.patch("/person/send/newCode", { username: this.encryptedForm.username })
               .then((response) => {
                 if (response.status === 200) {

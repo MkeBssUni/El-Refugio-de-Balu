@@ -55,4 +55,11 @@ public class Validations {
     public boolean isInvalidMinAndMaxLength(String str, int min, int max) {
         return str.length() < min || str.length() > max;
     }
+
+    public boolean isInvalidEnum(String str, Class<? extends Enum<?>> enumClass) {
+        for (Enum<?> e : enumClass.getEnumConstants()) {
+            if (e.name().equals(str)) return false;
+        }
+        return true;
+    }
 }

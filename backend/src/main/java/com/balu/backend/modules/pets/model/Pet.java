@@ -13,10 +13,7 @@ import com.balu.backend.modules.users.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -50,15 +47,17 @@ public class Pet {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private WeightUnits weightUnit;
-    @Column(columnDefinition = "varchar(500)", nullable = false)
+    @Column(columnDefinition = "varchar(1500)", nullable = false)
     private String description;
+    @Column(columnDefinition = "text")
+    private String specialCares;
     @Column(columnDefinition = "text", nullable = false)
     private String characteristics;
     @Column(columnDefinition = "text", nullable = false)
     private String mainImage;
     @OneToMany(mappedBy = "pet")
     @JsonIgnore
-    private List<PetImages> petImages;
+    private List<PetImage> petImages;
     @OneToOne(mappedBy = "pet")
     private MedicalRecord medicalRecord;
     @ManyToOne
@@ -84,19 +83,21 @@ public class Pet {
     @JsonIgnore
     private List<FavoritePet> favoritePets;
 
-    public Pet(PetDto dto) {
-        this.name = dto.getName();
-        this.gender = dto.getGender();
-        this.breed = dto.getBreed();
-        this.age = dto.getAge();
-        this.ageUnit = dto.getAgeUnit();
-        this.lifeStage = dto.getLifeStage();
-        this.weight = dto.getWeight();
-        this.weightUnit = dto.getWeightUnit();
-        this.description = dto.getDescription();
-        this.characteristics = dto.getCharacteristics();
-        this.mainImage = dto.getMainImage();
-        this.category = dto.getCategory();
-        this.owner = dto.getOwner();
+    public Pet(String name, String gender, String breed, int age, String ageUnit, String lifeStage, Double weight, String weightUnit, String description, String characteristics, String specialCares, String mainImage, Category category, User user, Status status) {
+        this.name = name;
+        this.gender = Genders.valueOf(gender.toUpperCase());
+        this.breed = breed;
+        this.age = age;
+        this.ageUnit = AgeUnits.valueOf(ageUnit.toUpperCase());
+        this.lifeStage = LifeStages.valueOf(lifeStage.toUpperCase());
+        this.weight = weight;
+        this.weightUnit = WeightUnits.valueOf(weightUnit.toUpperCase());
+        this.description = description;
+        this.characteristics = characteristics;
+        this.specialCares = specialCares;
+        this.mainImage = mainImage;
+        this.category = category;
+        this.owner = user;
+        this.status = status;
     }
 }

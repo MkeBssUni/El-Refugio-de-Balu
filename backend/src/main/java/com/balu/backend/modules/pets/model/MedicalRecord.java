@@ -25,7 +25,7 @@ public class MedicalRecord {
     private boolean dewormed;
     @Column(nullable = false)
     private boolean microchip;
-    @Column(columnDefinition = "varchar(250)")
+    @Column(columnDefinition = "varchar(500)")
     private String observations;
     @Column(columnDefinition = "text")
     private String diseases;
@@ -35,4 +35,15 @@ public class MedicalRecord {
     @JoinColumn(name = "pet_id", referencedColumnName = "id")
     @JsonIgnore
     private Pet pet;
+
+    public MedicalRecord(boolean vaccinated, boolean sterilized, boolean dewormed, boolean microchip, String observations, String diseases, String allergies, Pet pet) {
+        this.vaccinated = vaccinated;
+        this.sterilized = sterilized;
+        this.dewormed = dewormed;
+        this.microchip = microchip;
+        this.observations = observations;
+        this.diseases = diseases;
+        this.allergies = allergies;
+        this.pet = pet;
+    }
 }
