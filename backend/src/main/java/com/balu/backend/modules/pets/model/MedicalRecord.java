@@ -36,6 +36,14 @@ public class MedicalRecord {
     @JsonIgnore
     private Pet pet;
 
-    public MedicalRecord(boolean vaccinated, boolean sterilized, boolean dewormed, boolean microchip, String s, String s1, String s2, Pet savedPet) {
+    public MedicalRecord(boolean vaccinated, boolean sterilized, boolean dewormed, boolean microchip, String observations, String diseases, String allergies, Pet pet) {
+        this.vaccinated = vaccinated;
+        this.sterilized = sterilized;
+        this.dewormed = dewormed;
+        this.microchip = microchip;
+        this.observations = observations;
+        this.diseases = diseases;
+        this.allergies = allergies;
+        this.pet = pet;
     }
 }
