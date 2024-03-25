@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface IAdoptionRequestRepository  extends JpaRepository<AdoptionRequest,Long> {
     
 
+    Page<GetAdoptionRequestDto> findByUser_Id(int id);
+
 }
