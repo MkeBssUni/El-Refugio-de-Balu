@@ -31,6 +31,8 @@ public class MainSecurity {
             "/api/person/reset/password",
             "/api/auth/",
             "/api/category/list",
+            "/api/person/activate/account",
+            "/api/person/send/newCode",
     };
 
     private final UserDetailsServiceImpl userDetailsService;

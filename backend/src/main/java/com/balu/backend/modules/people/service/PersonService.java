@@ -5,10 +5,7 @@ import com.balu.backend.modules.hash.service.HashService;
 import com.balu.backend.modules.logs.model.LogTypes;
 import com.balu.backend.modules.logs.service.LogService;
 import com.balu.backend.modules.people.model.*;
-import com.balu.backend.modules.people.model.dto.ChangePasswordDto;
-import com.balu.backend.modules.people.model.dto.PersonDto;
-import com.balu.backend.modules.people.model.dto.PublicRegisterDto;
-import com.balu.backend.modules.people.model.dto.SaveAdminOrModDto;
+import com.balu.backend.modules.people.model.dto.*;
 import com.balu.backend.modules.roles.model.IRoleRepository;
 import com.balu.backend.modules.roles.model.Role;
 import com.balu.backend.modules.roles.model.Roles;
@@ -72,7 +69,7 @@ public class PersonService {
         Optional<Role> role = iRoleRepository.findByName(Roles.GENERAL);
         if(role.isEmpty()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.ROLE_NOT_FOUND.name());
         String activationCode = generateRandomString();
-        user.save(hashService.encrypt(dto.getUsername()),encoder.encode(dto.getPassword()),role.get(),activationCode);
+        user.save(hashService.encrypt(dto.getUsername()),encoder.encode(dto.getPassword()),role.get(), hashService.encrypt(activationCode));
         user = iUserRepository.saveAndFlush(user);
         dto.setPhoneNumber(hashService.encrypt(dto.getPhoneNumber()));
         person.savePublicRegister(dto,user);
@@ -190,5 +187,30 @@ public class PersonService {
         }
         if(validations.isInvalidPassword(newPassword.toString())) return generateRandomString();
         return newPassword.toString();
+    }
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
+    public ResponseApi<User> activateAccount(ActivateAccountDto dto){
+        Optional<User> existentUser = iUserRepository.findByUsername(dto.getUsername());
+        if(existentUser.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
+        if(existentUser.get().getActivationCode().equals(dto.getActivationCode())){
+            existentUser.get().setBlocked(false);
+            existentUser.get().setActivationCode(null);
+            iUserRepository.saveAndFlush(existentUser.get());
+            logService.saveLog("User with id: " + existentUser.get().getId() + " activated", LogTypes.UPDATE, "PEOPLE | USERS");
+            return new ResponseApi<>(HttpStatus.OK, false, "OK");
+        }
+        return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
+    }
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
+    public ResponseApi<User> sendNewActivationCode(ActivateAccountDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        Optional<User> existentUser = iUserRepository.findByUsername(dto.getUsername());
+        if(existentUser.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
+        String activationCode = generateRandomString();
+        existentUser.get().setActivationCode(hashService.encrypt(activationCode));
+        iUserRepository.saveAndFlush(existentUser.get());
+        emailService.sendEmailNewAccount(hashService.decrypt(dto.getUsername()),activationCode);
+        logService.saveLog("New activation code sent to user with id: " + existentUser.get().getId(), LogTypes.UPDATE, "PEOPLE | USERS");
+        System.out.println("se enviara un correo con el codigo de activacion");
+        return new ResponseApi<>(HttpStatus.OK, false, "OK");
     }
 }
