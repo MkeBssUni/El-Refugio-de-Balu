@@ -1,6 +1,9 @@
 package com.balu.backend.modules.categories.model;
 
 import com.balu.backend.modules.categories.model.dto.GetCategoryListDto;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +23,14 @@ public interface ICategoryRepository  extends JpaRepository<Category,Long> {
     @Modifying
     @Query(value = "UPDATE categories SET status = :status WHERE id = :id", nativeQuery = true)
     Integer changeStatusCategory(@Param("id") Long id, @Param("status") Boolean status);
+
+    @Query(value =
+            "SELECT id, \n" +
+            "       name AS categoryName, \n" +
+            "       description AS categoryDescription, \n" +
+            "       image AS categoryImage, \n" +
+            "       status AS categoryStatus \n" +
+            "FROM categories \n" +
+            "WHERE LOWER(name) LIKE '%:name%' OR LOWER(description) LIKE '%:description%';",nativeQuery=true)
+    Page<ICategoryViewPaged> findAllPaged(String name, String description, Pageable peageable);
 }
