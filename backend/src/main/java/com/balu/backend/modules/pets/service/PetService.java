@@ -12,12 +12,14 @@ import com.balu.backend.modules.pets.model.enums.AgeUnits;
 import com.balu.backend.modules.pets.model.enums.Genders;
 import com.balu.backend.modules.pets.model.enums.LifeStages;
 import com.balu.backend.modules.pets.model.enums.WeightUnits;
+import com.balu.backend.modules.roles.model.Roles;
 import com.balu.backend.modules.statusses.model.IStatusRepository;
 import com.balu.backend.modules.statusses.model.Status;
 import com.balu.backend.modules.statusses.model.Statusses;
 import com.balu.backend.modules.users.model.IUserRepository;
 import com.balu.backend.modules.users.model.User;
 import lombok.AllArgsConstructor;
+import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,40 +100,45 @@ public class PetService {
             if (validations.isInvalidMinAndMaxLength(dto.getObservations(), 50, 500)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
         }
 
-        String categoryId = hashService.decrypt(dto.getCategory());
-        if (!validations.isValidId(categoryId)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
-        Optional<Category> optionalCategory = categoryRepository.findById(Long.valueOf(categoryId));
-        if (!optionalCategory.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
-        Category category = optionalCategory.get();
+        try {
+            String categoryId = hashService.decrypt(dto.getCategory());
+            if (validations.isInvalidId(categoryId)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+            Optional<Category> optionalCategory = categoryRepository.findById(Long.valueOf(categoryId));
+            if (!optionalCategory.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+            Category category = optionalCategory.get();
 
-        String userId = hashService.decrypt(dto.getOwner());
-        if (!validations.isValidId(userId)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
-        Optional<User> optionalUser = userRepository.findById(Long.valueOf(userId));
-        if (!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
-        User user = optionalUser.get();
+            String userId = hashService.decrypt(dto.getOwner());
+            if (validations.isInvalidId(userId)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+            Optional<User> optionalUser = userRepository.findById(Long.valueOf(userId));
+            if (!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+            User user = optionalUser.get();
+            if (!user.getRole().getName().equals(Roles.GENERAL)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ROLE.name());
 
-        Optional<Status> optionalStatus = statusRepository.findByName(Statusses.PENDING);
-        if (!optionalStatus.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
-        Status status = optionalStatus.get();
+            Optional<Status> optionalStatus = statusRepository.findByName(Statusses.PENDING);
+            if (!optionalStatus.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+            Status status = optionalStatus.get();
 
-        Pet pet = new Pet(dto.getName().trim(),dto.getGender(), dto.getBreed().trim(), dto.getAge(), dto.getAgeUnit(), dto.getLifeStage(), dto.getWeight(), dto.getWeightUnit(), dto.getDescription().trim(), String.join(",", dto.getCharacteristics()), dto.getSpecialCares() != null ? String.join(",", dto.getSpecialCares()) : null, dto.getMainImage().trim(), category, user, status);
-        Pet savedPet = petRepository.saveAndFlush(pet);
-        if (savedPet == null) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.PET_NOT_SAVED.name());
+            Pet pet = new Pet(dto.getName().trim(),dto.getGender(), dto.getBreed().trim(), dto.getAge(), dto.getAgeUnit(), dto.getLifeStage(), dto.getWeight(), dto.getWeightUnit(), dto.getDescription().trim(), String.join(",", dto.getCharacteristics()), dto.getSpecialCares() != null ? String.join(",", dto.getSpecialCares()) : null, dto.getMainImage().trim(), category, user, status);
+            Pet savedPet = petRepository.saveAndFlush(pet);
+            if (savedPet == null) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.PET_NOT_SAVED.name());
 
-        MedicalRecord medicalRecord = new MedicalRecord(dto.isVaccinated(), dto.isSterilized(), dto.isDewormed(), dto.isMicrochip(), dto.getObservations().trim() != null ? dto.getObservations().trim() : null, dto.getDiseases() != null ? String.join(",", dto.getDiseases()) : null, dto.getAllergies() != null ? String.join(",", dto.getAllergies()) : null, savedPet);
-        MedicalRecord savedMedicalRecord = medicalRecordRepository.saveAndFlush(medicalRecord);
-        if (savedMedicalRecord == null) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.MEDICAL_RECORD_NOT_SAVED.name());
+            MedicalRecord medicalRecord = new MedicalRecord(dto.isVaccinated(), dto.isSterilized(), dto.isDewormed(), dto.isMicrochip(), dto.getObservations().trim() != null ? dto.getObservations().trim() : null, dto.getDiseases() != null ? String.join(",", dto.getDiseases()) : null, dto.getAllergies() != null ? String.join(",", dto.getAllergies()) : null, savedPet);
+            MedicalRecord savedMedicalRecord = medicalRecordRepository.saveAndFlush(medicalRecord);
+            if (savedMedicalRecord == null) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.MEDICAL_RECORD_NOT_SAVED.name());
 
-        List<PetImage> petImages = new ArrayList<>();
-        if (dto.getImages() != null) {
-            for (String image : dto.getImages()) {
-                PetImage petImage = new PetImage(image.trim(), savedPet);
-                PetImage savedPetImage = petImageRepository.saveAndFlush(petImage);
-                if (savedPetImage != null) petImages.add(savedPetImage);
+            List<PetImage> petImages = new ArrayList<>();
+            if (dto.getImages() != null) {
+                for (String image : dto.getImages()) {
+                    PetImage petImage = new PetImage(image.trim(), savedPet);
+                    PetImage savedPetImage = petImageRepository.saveAndFlush(petImage);
+                    if (savedPetImage != null) petImages.add(savedPetImage);
+                }
+                if (petImages.size() != dto.getImages().length) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.IMAGE_NOT_SAVED.name());
             }
-            if (petImages.size() != dto.getImages().length) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.IMAGE_NOT_SAVED.name());
-        }
 
-        return new ResponseApi<>(savedPet, HttpStatus.CREATED,false, "OK");
+            return new ResponseApi<>(savedPet, HttpStatus.CREATED,false, "OK");
+        } catch (Exception e) {
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+        }
     }
 }
