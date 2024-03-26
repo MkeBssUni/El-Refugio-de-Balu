@@ -11,6 +11,7 @@ import com.balu.backend.modules.hash.service.HashService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,18 +21,31 @@ import javax.crypto.NoSuchPaddingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
 @AllArgsConstructor
 public class ServiceAdoptionRequest {
-//    private final IAdoptionRequestRepository iAdoptionRequestRepository;
-//
-//    @Transactional(readOnly = true)
-//    public Page<GetAdoptionRequestDto> adoptionByUser(int id){
-//        return iAdoptionRequestRepository.findByUser_Id(id);
-//    }
+    private final IAdoptionRequestRepository iAdoptionRequestRepository;
+    private final HashService hashService;
+
+    @Transactional(readOnly = true)
+    public ResponseApi<Optional<AdoptionRequest>> adoptionByUser(String idUser) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        if(idUser == null) {
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
+        }
+        Optional<AdoptionRequest> adoptionRequestOptional = iAdoptionRequestRepository.findByUser_Id(Long.parseLong(hashService.decrypt(idUser)));
+        if (adoptionRequestOptional.isPresent()) {
+            return new ResponseApi<>(adoptionRequestOptional,HttpStatus.OK, false, "Success");
+        } else {
+            return new ResponseApi<>(HttpStatus.NOT_FOUND, true, "No se encontraron solicitudes de adopción para el usuario con ID " + idUser);
+        }
+    }
+
+
+
 
 
 

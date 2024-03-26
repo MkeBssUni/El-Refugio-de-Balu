@@ -23,4 +23,6 @@ public class ResponseApi<T> {
         this.data = data;
         this.status = status;
     }
+
+
 }
