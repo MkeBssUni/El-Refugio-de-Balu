@@ -5,6 +5,7 @@ import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.kernel.Validations;
 import com.balu.backend.modules.categories.model.Category;
 import com.balu.backend.modules.categories.model.ICategoryRepository;
+import com.balu.backend.modules.hash.service.HashService;
 import com.balu.backend.modules.pets.model.*;
 import com.balu.backend.modules.pets.model.dto.PetDto;
 import com.balu.backend.modules.pets.model.enums.AgeUnits;
@@ -38,9 +39,10 @@ public class PetService {
     private final IStatusRepository statusRepository;
     private final IMedicalRecordRepository medicalRecordRepository;
     private final IPetImageRepository petImageRepository;
+    private final HashService hashService;
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseApi<?> save(PetDto dto) {
+    public ResponseApi<?> save(PetDto dto) throws Exception {
         if (dto.getName() == null || validations.isNotBlankString(dto.getName().trim()) || dto.getGender() == null || validations.isNotBlankString(dto.getGender().trim()) || dto.getBreed() == null || validations.isNotBlankString(dto.getBreed().trim()) || dto.getAge() == 0 || dto.getAgeUnit() == null || validations.isNotBlankString(dto.getAgeUnit().trim()) || dto.getLifeStage() == null || validations.isNotBlankString(dto.getLifeStage().trim()) || dto.getWeight() == null || dto.getWeight() == 0.00 || dto.getWeightUnit() == null || validations.isNotBlankString(dto.getWeightUnit().trim()) || dto.getDescription() == null || validations.isNotBlankString(dto.getDescription().trim()) || dto.getCharacteristics() == null || dto.getCharacteristics().length < 3 || dto.getMainImage() == null || validations.isNotBlankString(dto.getMainImage().trim()) || dto.getCategory() == null || dto.getOwner() == null)
             return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
 
@@ -96,11 +98,15 @@ public class PetService {
             if (validations.isInvalidMinAndMaxLength(dto.getObservations(), 50, 500)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
         }
 
-        Optional<Category> optionalCategory = categoryRepository.findById(dto.getCategory().getId());
+        String categoryId = hashService.decrypt(dto.getCategory());
+        if (!validations.isValidId(categoryId)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+        Optional<Category> optionalCategory = categoryRepository.findById(Long.valueOf(categoryId));
         if (!optionalCategory.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
         Category category = optionalCategory.get();
 
-        Optional<User> optionalUser = userRepository.findById(dto.getOwner().getId());
+        String userId = hashService.decrypt(dto.getOwner());
+        if (!validations.isValidId(userId)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+        Optional<User> optionalUser = userRepository.findById(Long.valueOf(userId));
         if (!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
         User user = optionalUser.get();
 
