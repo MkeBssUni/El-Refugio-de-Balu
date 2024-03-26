@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface IPetRepository extends JpaRepository<Pet,Long> {
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "select * from pets", nativeQuery = true)
     List<Pet> findAllPaged(Long categoryId, String size, String lifeStage, String gender, String location, Pageable pageable);
 }

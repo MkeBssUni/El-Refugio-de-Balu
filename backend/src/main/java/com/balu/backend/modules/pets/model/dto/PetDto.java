@@ -1,7 +1,5 @@
 package com.balu.backend.modules.pets.model.dto;
 
-import com.balu.backend.modules.categories.model.Category;
-import com.balu.backend.modules.users.model.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +21,8 @@ public class PetDto {
     private Double weight;
 
     private String weightUnit;
+
+    private String size;
 
     private String description;
 
