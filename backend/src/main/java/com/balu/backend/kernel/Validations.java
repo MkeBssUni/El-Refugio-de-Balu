@@ -43,7 +43,7 @@ public class Validations {
         if(lowerCaseStr.equals("true") || lowerCaseStr.equals("false")) return false;
         return  true ;
     }
-    public boolean isValidId(String str) {
+    public boolean isInvalidId(String str) {
         try {
             Long.parseLong(str);
             return false;

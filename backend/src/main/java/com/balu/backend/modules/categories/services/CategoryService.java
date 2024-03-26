@@ -131,7 +131,7 @@ public class CategoryService {
     public ResponseApi<Integer> changeStatusCategory(ChangeStatusCategoryDto changeStatusCategoryDto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         Long  id = Long.parseLong(hashService.decrypt(changeStatusCategoryDto.getId()));
         Boolean status= Boolean.parseBoolean(hashService.decrypt(changeStatusCategoryDto.getStatus()));
-        if (validations.isValidId(changeStatusCategoryDto.getId()))
+        if (validations.isInvalidId(changeStatusCategoryDto.getId()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_ID.name());
         if (validations.isValidBooleanStatus(changeStatusCategoryDto.getStatus()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_STATUS.name());
