@@ -47,7 +47,7 @@ public class CategoryService {
         List<GetCategoryListDto> categoryListDtos = activeCategories.stream()
                 .map(category -> {
                     try {
-                        return new GetCategoryListDto(hashService.encrypt(category.getId()), hashService.encrypt(category.getName()));
+                        return new GetCategoryListDto(hashService.encrypt(category.getId()), category.getName());
                     } catch (NoSuchAlgorithmException e) {
                         throw new RuntimeException(e);
                     } catch (NoSuchPaddingException e) {
