@@ -6,6 +6,8 @@ import com.balu.backend.kernel.Validations;
 import com.balu.backend.modules.categories.model.Category;
 import com.balu.backend.modules.categories.model.ICategoryRepository;
 import com.balu.backend.modules.hash.service.HashService;
+import com.balu.backend.modules.logs.model.LogTypes;
+import com.balu.backend.modules.logs.service.LogService;
 import com.balu.backend.modules.pets.model.*;
 import com.balu.backend.modules.pets.model.dto.PetDto;
 import com.balu.backend.modules.pets.model.enums.AgeUnits;
@@ -19,7 +21,6 @@ import com.balu.backend.modules.statusses.model.Statusses;
 import com.balu.backend.modules.users.model.IUserRepository;
 import com.balu.backend.modules.users.model.User;
 import lombok.AllArgsConstructor;
-import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +43,7 @@ public class PetService {
     private final IMedicalRecordRepository medicalRecordRepository;
     private final IPetImageRepository petImageRepository;
     private final HashService hashService;
+    private final LogService logService;
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseApi<?> save(PetDto dto) throws Exception {
@@ -135,6 +137,8 @@ public class PetService {
                 }
                 if (petImages.size() != dto.getImages().length) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.IMAGE_NOT_SAVED.name());
             }
+
+            logService.saveLog("New pet in adoption request registered: " + savedPet.getId(), LogTypes.INSERT, "PETS | MEDICAL_RECORDS | PET_IMAGES");
 
             return new ResponseApi<>(savedPet, HttpStatus.CREATED,false, "OK");
         } catch (Exception e) {
