@@ -16,7 +16,7 @@ public class PetController {
     private final PetService petService;
 
     @PostMapping("/")
-    public ResponseEntity<ResponseApi<?>> save(@RequestBody PetDto dto) {
+    public ResponseEntity<ResponseApi<?>> save(@RequestBody PetDto dto) throws Exception {
         ResponseApi<?> response = petService.save(dto);
         return ResponseEntity.status(response.getStatus()).body(response);
     }

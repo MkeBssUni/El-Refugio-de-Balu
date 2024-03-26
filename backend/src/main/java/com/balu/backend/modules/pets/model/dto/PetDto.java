@@ -48,7 +48,7 @@ public class PetDto {
 
     private String[] allergies;
 
-    private Category category;
+    private String category;
 
-    private User owner;
+    private String owner;
 }
