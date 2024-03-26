@@ -11,5 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchCategoryDto {
-    private String searcgCategoryValue;
+    private String searchCategoryValue;
 }
