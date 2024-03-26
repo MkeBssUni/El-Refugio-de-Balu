@@ -9,11 +9,9 @@ import com.balu.backend.modules.hash.service.HashService;
 import com.balu.backend.modules.logs.model.LogTypes;
 import com.balu.backend.modules.logs.service.LogService;
 import com.balu.backend.modules.pets.model.*;
+import com.balu.backend.modules.pets.model.dto.FindAllPetsPagedDto;
 import com.balu.backend.modules.pets.model.dto.PetDto;
-import com.balu.backend.modules.pets.model.enums.AgeUnits;
-import com.balu.backend.modules.pets.model.enums.Genders;
-import com.balu.backend.modules.pets.model.enums.LifeStages;
-import com.balu.backend.modules.pets.model.enums.WeightUnits;
+import com.balu.backend.modules.pets.model.enums.*;
 import com.balu.backend.modules.roles.model.Roles;
 import com.balu.backend.modules.statusses.model.IStatusRepository;
 import com.balu.backend.modules.statusses.model.Status;
@@ -21,6 +19,7 @@ import com.balu.backend.modules.statusses.model.Statusses;
 import com.balu.backend.modules.users.model.IUserRepository;
 import com.balu.backend.modules.users.model.User;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +43,45 @@ public class PetService {
     private final IPetImageRepository petImageRepository;
     private final HashService hashService;
     private final LogService logService;
+
+    @Transactional(readOnly = true)
+    public ResponseApi<?> findAllPaged(FindAllPetsPagedDto dto, Pageable pageable) {
+        if (dto.getCategory() == null || validations.isNotBlankString(dto.getCategory().trim()) || dto.getSize() == null || validations.isNotBlankString(dto.getSize().trim()) || dto.getLifeStage() == null || validations.isNotBlankString(dto.getLifeStage().trim()) || dto.getGender() == null || validations.isNotBlankString(dto.getGender().trim()))
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
+
+        if ((dto.getLocation() == null || validations.isNotBlankString(dto.getLocation().trim())) && (dto.getUser() == null || validations.isNotBlankString(dto.getUser()))) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
+
+        if ((dto.getLocation() != null && !validations.isNotBlankString(dto.getLocation().trim())) && (dto.getUser() != null && !validations.isNotBlankString(dto.getUser()))) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+
+        if (!dto.getSize().toLowerCase().equals("all") || validations.isInvalidEnum(dto.getSize().toUpperCase().trim(), Sizes.class)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if (!dto.getLifeStage().toLowerCase().equals("all") || validations.isInvalidEnum(dto.getLifeStage().toUpperCase().trim(), LifeStages.class)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if (!dto.getGender().toLowerCase().equals("all") || validations.isInvalidEnum(dto.getGender().toUpperCase().trim(), Genders.class)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+
+        try {
+            String categoryId = hashService.decrypt(dto.getCategory());
+            if (validations.isInvalidId(categoryId)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+            Optional<Category> optionalCategory = categoryRepository.findById(Long.valueOf(categoryId));
+            if (!optionalCategory.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+
+            if (dto.getUser() != null) {
+                String userId = hashService.decrypt(dto.getUser());
+                if (validations.isInvalidId(userId)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+                Optional<User> optionalUser = userRepository.findById(Long.valueOf(userId));
+                if (!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+                User user = optionalUser.get();
+                if ((user.getAddress().getState() != null)) {
+                    dto.setLocation(user.getAddress().getState());
+                } else {
+                    dto.setLocation("all");
+                }
+            }
+
+            List<Pet> pets = petRepository.findAllPaged(Long.valueOf(categoryId), dto.getSize().toLowerCase().trim(), dto.getLifeStage().toLowerCase().trim(), dto.getGender().toLowerCase().trim(), dto.getLocation().toLowerCase().trim(), pageable);
+            return new ResponseApi<>(pets, HttpStatus.OK,false, "OK");
+        } catch (Exception e) {
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+        }
+    }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseApi<?> save(PetDto dto) throws Exception {
