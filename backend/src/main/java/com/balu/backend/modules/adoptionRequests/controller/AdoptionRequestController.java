@@ -19,10 +19,10 @@ import java.util.Optional;
 public class AdoptionRequestController {
     private final ServiceAdoptionRequest serviceAdoptionRequest;
 
-    @GetMapping("/{idUser}")
-    public ResponseEntity<ResponseApi<Optional<AdoptionRequest>>> getByUserId(@PathVariable String idUser)throws Exception{
+    @GetMapping("/")
+    public ResponseEntity<ResponseApi<Optional<AdoptionRequest>>> getByUserId(@RequestBody GetAdoptionRequestDto dto)throws Exception{
         try {
-            ResponseApi<Optional<AdoptionRequest>> response = serviceAdoptionRequest.adoptionByUser(idUser);
+            ResponseApi<Optional<AdoptionRequest>> response = serviceAdoptionRequest.adoptionByUser(dto.getIdUser());
             return new ResponseEntity<>(response,response.getStatus());
         }catch (Exception e){
             return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
