@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetAdoptionRequestDto {
+
     private long id;
     private User user;
     private Pet pet;
@@ -24,5 +25,4 @@ public class GetAdoptionRequestDto {
     private String reasons_for_adoption;
     private String previous_experience;
     private String additional_information;
-
 }
