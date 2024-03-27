@@ -53,6 +53,12 @@ public class PetController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
+    @PostMapping("/end")
+    public ResponseEntity<ResponseApi<?>> end(@RequestBody EndPetRequestDto dto) {
+        ResponseApi<?> response = petService.end(dto);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
     @PostMapping("/comment")
     public ResponseEntity<ResponseApi<?>> comment(@RequestBody CommentPetDto dto) {
         ResponseApi<?> response = petService.comment(dto);
