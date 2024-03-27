@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PetsPagedDto {
+public class PetCatalogPagedDto {
     private String category;
     private String size;
     private String lifeStage;

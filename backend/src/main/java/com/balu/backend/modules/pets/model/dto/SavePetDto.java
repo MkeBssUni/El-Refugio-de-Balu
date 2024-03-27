@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PetDto {
+public class SavePetDto {
     private String name;
 
     private String gender;

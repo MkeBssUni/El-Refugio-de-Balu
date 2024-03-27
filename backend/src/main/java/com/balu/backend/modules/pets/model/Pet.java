@@ -3,7 +3,6 @@ package com.balu.backend.modules.pets.model;
 import com.balu.backend.modules.adoptionRequests.model.AdoptionRequest;
 import com.balu.backend.modules.categories.model.Category;
 import com.balu.backend.modules.favoritePets.model.FavoritePet;
-import com.balu.backend.modules.pets.model.dto.PetDto;
 import com.balu.backend.modules.pets.model.enums.*;
 import com.balu.backend.modules.statusses.model.Status;
 import com.balu.backend.modules.users.model.User;

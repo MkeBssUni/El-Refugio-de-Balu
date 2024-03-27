@@ -33,7 +33,8 @@ public class MainSecurity {
             "/api/category/list",
             "/api/person/activate/account",
             "/api/person/send/newCode",
-            "/api/pet/catalog"
+            "/api/pet/catalog",
+            "/api/pet/credential",
     };
 
     private final UserDetailsServiceImpl userDetailsService;
