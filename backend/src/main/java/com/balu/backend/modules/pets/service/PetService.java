@@ -308,6 +308,8 @@ public class PetService {
         Comment savedComment = commentRepository.saveAndFlush(comment);
         if (savedComment == null) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.INTERNAL_ERROR.name());
 
+        logService.saveLog("Pet " + pet.getId() + " commented by " + user.getId(), LogTypes.INSERT, "COMMENTS");
+
         return new ResponseApi<>(HttpStatus.OK,false, "Comment saved successfully");
     }
 
