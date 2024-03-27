@@ -11,6 +11,8 @@ import com.balu.backend.modules.favoritePets.model.dto.FindFavoritePetsDto;
 import com.balu.backend.modules.favoritePets.model.dto.RemoveFavoritePetDto;
 import com.balu.backend.modules.favoritePets.model.views.IFavoritePetsView;
 import com.balu.backend.modules.hash.service.HashService;
+import com.balu.backend.modules.logs.model.LogTypes;
+import com.balu.backend.modules.logs.service.LogService;
 import com.balu.backend.modules.pets.model.Pet;
 import com.balu.backend.modules.pets.model.repositories.IPetRepository;
 import com.balu.backend.modules.users.model.IUserRepository;
@@ -38,6 +40,7 @@ public class FavoritePetService {
     private final IFavoritePetRepository favoritePetRepository;
     private final IPetRepository petRepository;
     private final IUserRepository userRepository;
+    private final LogService logService;
     private final HashService hashService;
     private final Validations validations = new Validations();
 
@@ -93,7 +96,11 @@ public class FavoritePetService {
         if (favoritePetRepository.existsByPetAndUser(pet, user)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.ALREADY_EXISTS.name());
 
         FavoritePet favoritePet = new FavoritePet(user, pet);
-        favoritePetRepository.saveAndFlush(favoritePet);
+        FavoritePet favoritePetSaved = favoritePetRepository.saveAndFlush(favoritePet);
+        if (favoritePetSaved == null) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.PET_NOT_ADDED_AS_FAVORITE.name());
+
+        logService.saveLog("Pet added to favorites: " + favoritePetSaved.getId(), LogTypes.INSERT, "FAVORITE_PETS");
+
         return new ResponseApi<>(HttpStatus.OK,false, "Pet added to favorites successfully");
     }
 
@@ -117,6 +124,8 @@ public class FavoritePetService {
         if (!favoritePetEntity.getUser().getId().equals(user.getId())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_USER.name());
 
         favoritePetRepository.delete(favoritePetEntity);
+        logService.saveLog("Pet removed from favorites: " + favoritePetEntity.getId(), LogTypes.DELETE, "FAVORITE_PETS");
+
         return new ResponseApi<>(HttpStatus.OK,false, "Pet removed from favorites successfully");
     }
 
