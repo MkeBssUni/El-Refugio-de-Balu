@@ -21,6 +21,9 @@ public class Validations {
     public boolean isInvalidImage(String logo){
         return !logo.matches("data:image/(png|jpg|jpeg);base64,([a-zA-Z\\d+/=])+");
     }
+    public boolean isInvalidImageLength(String image){
+        return image.length() > 65535;
+    }
     public boolean isNotBlankString(String... args){
         for (String arg : args) {
             if(arg.isBlank()) return true;
