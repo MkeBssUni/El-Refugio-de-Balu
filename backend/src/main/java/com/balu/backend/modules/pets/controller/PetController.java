@@ -1,10 +1,7 @@
 package com.balu.backend.modules.pets.controller;
 
 import com.balu.backend.kernel.ResponseApi;
-import com.balu.backend.modules.pets.model.dto.FindPetRequestsDto;
-import com.balu.backend.modules.pets.model.dto.PetCredentialDto;
-import com.balu.backend.modules.pets.model.dto.SavePetDto;
-import com.balu.backend.modules.pets.model.dto.PetCatalogPagedDto;
+import com.balu.backend.modules.pets.model.dto.*;
 import com.balu.backend.modules.pets.service.PetService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -47,6 +44,12 @@ public class PetController {
     @PostMapping("/credential")
     public ResponseEntity<ResponseApi<?>> findCredentialById(@RequestBody PetCredentialDto dto) {
         ResponseApi<?> response = petService.findPetCredentials(dto.getId());
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @PostMapping("/select")
+    public ResponseEntity<ResponseApi<?>> select(@RequestBody SelectPetDto dto) {
+        ResponseApi<?> response = petService.select(dto);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
