@@ -1,6 +1,7 @@
 package com.balu.backend.modules.pets.controller;
 
 import com.balu.backend.kernel.ResponseApi;
+import com.balu.backend.modules.pets.model.dto.FindPetRequestsDto;
 import com.balu.backend.modules.pets.model.dto.PetCredentialDto;
 import com.balu.backend.modules.pets.model.dto.SavePetDto;
 import com.balu.backend.modules.pets.model.dto.PetCatalogPagedDto;
@@ -29,6 +30,18 @@ public class PetController {
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(order), sort));
         return ResponseEntity.ok(petService.findAllPaged(dto, pageable));
+    }
+
+    @PostMapping("/requests")
+    public ResponseEntity<ResponseApi<?>> findNewPetRequestsPaged(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String order,
+            @RequestBody FindPetRequestsDto dto
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(order), sort));
+        return ResponseEntity.ok(petService.findNewPetRequests(dto, pageable));
     }
 
     @PostMapping("/credential")

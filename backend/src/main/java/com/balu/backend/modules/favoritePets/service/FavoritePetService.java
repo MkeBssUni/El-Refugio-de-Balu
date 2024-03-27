@@ -48,7 +48,11 @@ public class FavoritePetService {
     public ResponseApi<?> findFavoritePets(FindFavoritePetsDto dto, Pageable pageable) {
         if (dto.getUser() == null || validations.isNotBlankString(dto.getUser())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
 
-        if (dto.getSearchValue() == null) dto.setSearchValue("");
+        if (dto.getSearchValue() == null) {
+            dto.setSearchValue("");
+        } else {
+            dto.setSearchValue(dto.getSearchValue().toLowerCase().trim());
+        }
 
         Long userId = decryptId(dto.getUser());
         if (userId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());

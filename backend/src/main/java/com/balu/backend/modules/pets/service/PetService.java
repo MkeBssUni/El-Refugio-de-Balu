@@ -9,13 +9,16 @@ import com.balu.backend.modules.hash.service.HashService;
 import com.balu.backend.modules.logs.model.LogTypes;
 import com.balu.backend.modules.logs.service.LogService;
 import com.balu.backend.modules.pets.model.*;
+import com.balu.backend.modules.pets.model.dto.FindPetRequestsDto;
 import com.balu.backend.modules.pets.model.dto.PetCatalogPagedDto;
+import com.balu.backend.modules.pets.model.dto.PetRequestList;
 import com.balu.backend.modules.pets.model.dto.SavePetDto;
 import com.balu.backend.modules.pets.model.enums.*;
 import com.balu.backend.modules.pets.model.repositories.IMedicalRecordRepository;
 import com.balu.backend.modules.pets.model.repositories.IPetImageRepository;
 import com.balu.backend.modules.pets.model.repositories.IPetRepository;
 import com.balu.backend.modules.pets.model.views.IPetCredentialView;
+import com.balu.backend.modules.pets.model.views.IPetRequestsView;
 import com.balu.backend.modules.roles.model.Roles;
 import com.balu.backend.modules.statusses.model.IStatusRepository;
 import com.balu.backend.modules.statusses.model.Status;
@@ -23,11 +26,18 @@ import com.balu.backend.modules.statusses.model.Statusses;
 import com.balu.backend.modules.users.model.IUserRepository;
 import com.balu.backend.modules.users.model.User;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -79,6 +89,45 @@ public class PetService {
         Optional<IPetCredentialView> optionalPet = petRepository.findCredentialById(petId);
         if (!optionalPet.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
         return new ResponseApi<>(optionalPet.get(), HttpStatus.OK,false, "OK");
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseApi<?> findNewPetRequests(FindPetRequestsDto dto, Pageable pageable) {
+        if (dto.getSearchValue() == null) {
+            dto.setSearchValue("");
+        } else {
+            dto.setSearchValue(dto.getSearchValue().toLowerCase().trim());
+        }
+
+        Long categoryId = null;
+        if (dto.getCategory() != null) {
+            categoryId = decryptId(dto.getCategory());
+            if (categoryId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+            Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+            if (!optionalCategory.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        }
+
+        Page<IPetRequestsView> petRequests = categoryId != null ? petRepository.findNewPetRequestsByCategory(categoryId, dto.getSearchValue(), pageable) : petRepository.findNewPetRequests(dto.getSearchValue(), pageable);
+
+        Page<PetRequestList> petRequestList = petRequests.map(petRequest -> {
+            try {
+                return new PetRequestList(
+                        hashService.encrypt(petRequest.getId()),
+                        petRequest.getCategory(),
+                        petRequest.getName(),
+                        petRequest.getBreed(),
+                        petRequest.getSize(),
+                        petRequest.getGender(),
+                        petRequest.getAge(),
+                        petRequest.getAgeUnit(),
+                        petRequest.getStatus()
+                );
+            } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        return new ResponseApi<>(petRequestList, HttpStatus.OK,false, "New pet requests retrieved successfully");
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
