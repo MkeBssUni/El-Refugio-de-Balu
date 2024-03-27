@@ -32,4 +32,9 @@ public class FavoritePet {
     @Column(insertable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime addedAt;
+
+    public FavoritePet(User user, Pet pet) {
+        this.user = user;
+        this.pet = pet;
+    }
 }
