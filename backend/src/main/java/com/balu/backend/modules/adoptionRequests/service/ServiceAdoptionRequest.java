@@ -40,12 +40,9 @@ public class ServiceAdoptionRequest {
         if (adoptionRequestOptional.isPresent()) {
             return new ResponseApi<>(adoptionRequestOptional,HttpStatus.OK, false, "Success");
         } else {
-            return new ResponseApi<>(HttpStatus.NOT_FOUND, true, "No se encontraron solicitudes de adopción para el usuario con ID " + idUser);
+            return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.NO_RECORDS.name());
         }
     }
-
-
-
 
 
 

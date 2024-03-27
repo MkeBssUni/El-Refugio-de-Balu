@@ -5,12 +5,12 @@ import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.kernel.Validations;
 import com.balu.backend.modules.categories.model.Category;
 import com.balu.backend.modules.categories.model.ICategoryRepository;
-import com.balu.backend.modules.categories.model.dto.ChangeStatusCategoryDto;
-import com.balu.backend.modules.categories.model.dto.GetCategoryListDto;
-import com.balu.backend.modules.categories.model.dto.SaveCategoryDto;
-import com.balu.backend.modules.categories.model.dto.UpdateCategoryDto;
+import com.balu.backend.modules.categories.model.ICategoryViewPaged;
+import com.balu.backend.modules.categories.model.dto.*;
 import com.balu.backend.modules.hash.service.HashService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +47,7 @@ public class CategoryService {
         List<GetCategoryListDto> categoryListDtos = activeCategories.stream()
                 .map(category -> {
                     try {
-                        return new GetCategoryListDto(hashService.encrypt(category.getId()), hashService.encrypt(category.getName()));
+                        return new GetCategoryListDto(hashService.encrypt(category.getId()), category.getName());
                     } catch (NoSuchAlgorithmException e) {
                         throw new RuntimeException(e);
                     } catch (NoSuchPaddingException e) {
@@ -131,7 +131,7 @@ public class CategoryService {
     public ResponseApi<Integer> changeStatusCategory(ChangeStatusCategoryDto changeStatusCategoryDto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         Long  id = Long.parseLong(hashService.decrypt(changeStatusCategoryDto.getId()));
         Boolean status= Boolean.parseBoolean(hashService.decrypt(changeStatusCategoryDto.getStatus()));
-        if (validations.isValidId(changeStatusCategoryDto.getId()))
+        if (validations.isInvalidId(changeStatusCategoryDto.getId()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_ID.name());
         if (validations.isValidBooleanStatus(changeStatusCategoryDto.getStatus()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_STATUS.name());
@@ -147,5 +147,12 @@ public class CategoryService {
                 "successful status change"
         );
 
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseApi<Page<ICategoryViewPaged>> getPaged(SearchCategoryDto searchCategoryDto, Pageable peageable){
+        searchCategoryDto.setSearcgCategoryValue(searchCategoryDto.getSearcgCategoryValue().toLowerCase());
+        Page<ICategoryViewPaged> categoryPage= iCategoryRepository.findAllPaged(searchCategoryDto.getSearcgCategoryValue(),searchCategoryDto.getSearcgCategoryValue(),peageable);
+        return new ResponseApi<>(categoryPage,HttpStatus.OK,false,"OK");
     }
 }

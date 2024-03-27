@@ -3,11 +3,7 @@ package com.balu.backend.modules.pets.model;
 import com.balu.backend.modules.adoptionRequests.model.AdoptionRequest;
 import com.balu.backend.modules.categories.model.Category;
 import com.balu.backend.modules.favoritePets.model.FavoritePet;
-import com.balu.backend.modules.pets.model.dto.PetDto;
-import com.balu.backend.modules.pets.model.enums.AgeUnits;
-import com.balu.backend.modules.pets.model.enums.Genders;
-import com.balu.backend.modules.pets.model.enums.LifeStages;
-import com.balu.backend.modules.pets.model.enums.WeightUnits;
+import com.balu.backend.modules.pets.model.enums.*;
 import com.balu.backend.modules.statusses.model.Status;
 import com.balu.backend.modules.users.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -47,6 +43,9 @@ public class Pet {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private WeightUnits weightUnit;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Sizes size;
     @Column(columnDefinition = "varchar(1500)", nullable = false)
     private String description;
     @Column(columnDefinition = "text")
@@ -83,7 +82,7 @@ public class Pet {
     @JsonIgnore
     private List<FavoritePet> favoritePets;
 
-    public Pet(String name, String gender, String breed, int age, String ageUnit, String lifeStage, Double weight, String weightUnit, String description, String characteristics, String specialCares, String mainImage, Category category, User user, Status status) {
+    public Pet(String name, String gender, String breed, int age, String ageUnit, String lifeStage, Double weight, String weightUnit, String size, String description, String characteristics, String specialCares, String mainImage, Category category, User user, Status status) {
         this.name = name;
         this.gender = Genders.valueOf(gender.toUpperCase());
         this.breed = breed;
@@ -92,6 +91,7 @@ public class Pet {
         this.lifeStage = LifeStages.valueOf(lifeStage.toUpperCase());
         this.weight = weight;
         this.weightUnit = WeightUnits.valueOf(weightUnit.toUpperCase());
+        this.size = Sizes.valueOf(size.toUpperCase());
         this.description = description;
         this.characteristics = characteristics;
         this.specialCares = specialCares;
