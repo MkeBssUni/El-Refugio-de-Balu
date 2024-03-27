@@ -28,44 +28,22 @@ import java.util.stream.Collectors;
 @Transactional
 @AllArgsConstructor
 public class ServiceAdoptionRequest {
-    private final IAdoptionRequestRepository repository;
+    private final IAdoptionRequestRepository iAdoptionRequestRepository;
     private final HashService hashService;
-    private final Validations validations = new Validations();
 
     @Transactional(readOnly = true)
-    public ResponseApi<Page<GetCategoryListDto>> getListBygeneral(String User){
-        Page<AdoptionRequest> adoptionRequests = repository.findAllByUser(User);
-
-        if(adoptionRequests.isEmpty())
-            return new ResponseApi<>(
-                    HttpStatus.OK,
-                    false,
-                    ErrorMessages.NO_RECORDS.name()
-            );
-
-        Page<GetAdoptionRequestDto> requestListDto = adoptionRequests.stream()
-                .map(request -> {
-                    try {
-                        return new GetAdoptionRequestDto(hashService.encrypt(request.getId()) , hashService.encrypt(request.getUser()));
-                    } catch (NoSuchAlgorithmException e) {
-                        throw new RuntimeException(e);
-                    } catch (NoSuchPaddingException e) {
-                        throw new RuntimeException(e);
-                    } catch (InvalidAlgorithmParameterException e) {
-                        throw new RuntimeException(e);
-                    } catch (InvalidKeyException e) {
-                        throw new RuntimeException(e);
-                    } catch (IllegalBlockSizeException e) {
-                        throw new RuntimeException(e);
-                    } catch (BadPaddingException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).collect(Collectors.toList());
-        return new ResponseApi<>(
-                requestListDto,
-                HttpStatus.OK,
-                false,
-                "ok"
-        );
+    public ResponseApi<Optional<AdoptionRequest>> adoptionByUser(String idUser) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        if(idUser == null) {
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
+        }
+        Optional<AdoptionRequest> adoptionRequestOptional = iAdoptionRequestRepository.findByUser_Id(Long.parseLong(hashService.decrypt(idUser)));
+        if (adoptionRequestOptional.isPresent()) {
+            return new ResponseApi<>(adoptionRequestOptional,HttpStatus.OK, false, "Success");
+        } else {
+            return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.NO_RECORDS.name());
+        }
     }
+
+
+
 }
