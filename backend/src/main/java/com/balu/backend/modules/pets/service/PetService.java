@@ -11,6 +11,7 @@ import com.balu.backend.modules.logs.service.LogService;
 import com.balu.backend.modules.pets.model.*;
 import com.balu.backend.modules.pets.model.dto.*;
 import com.balu.backend.modules.pets.model.enums.*;
+import com.balu.backend.modules.pets.model.repositories.ICommentRepository;
 import com.balu.backend.modules.pets.model.repositories.IMedicalRecordRepository;
 import com.balu.backend.modules.pets.model.repositories.IPetImageRepository;
 import com.balu.backend.modules.pets.model.repositories.IPetRepository;
@@ -52,6 +53,7 @@ public class PetService {
     private final IStatusRepository statusRepository;
     private final IMedicalRecordRepository medicalRecordRepository;
     private final IPetImageRepository petImageRepository;
+    private final ICommentRepository commentRepository;
     private final HashService hashService;
     private final LogService logService;
 
@@ -278,6 +280,35 @@ public class PetService {
             logService.saveLog("Pet " + savedPet.getId() + " sent to revision by " + user.getId(), LogTypes.UPDATE, "PETS");
             return new ResponseApi<>(HttpStatus.OK,false, "Pet sent to revision successfully");
         }
+    }
+
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
+    public ResponseApi<?> comment(CommentPetDto dto) {
+        if (dto.getPet() == null || validations.isNotBlankString(dto.getPet().trim()) || dto.getUser() == null || validations.isNotBlankString(dto.getUser().trim()) || dto.getComment() == null || validations.isNotBlankString(dto.getComment().trim()))
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
+
+        if (validations.isInvalidMinAndMaxLength(dto.getComment().trim(), 30, 500)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
+
+        Long petId = decryptId(dto.getPet());
+        if (petId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+        Optional<Pet> optionalPet = petRepository.findById(petId);
+        if (!optionalPet.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        Pet pet = optionalPet.get();
+        if (!pet.getStatus().getName().equals(Statusses.IN_REVISION) && !pet.getStatus().getName().equals(Statusses.APPROVED)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_ALLOWED.name());
+
+        Long userId = decryptId(dto.getUser());
+        if (userId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        User user = optionalUser.get();
+        if (!user.getRole().getName().equals(Roles.MOD) && !user.getRole().getName().equals(Roles.GENERAL)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ROLE.name());
+        if (pet.getModerator() != user && pet.getOwner() != user) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_USER.name());
+
+        Comment comment = new Comment(dto.getComment().trim(), pet, user);
+        Comment savedComment = commentRepository.saveAndFlush(comment);
+        if (savedComment == null) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.INTERNAL_ERROR.name());
+
+        return new ResponseApi<>(HttpStatus.OK,false, "Comment saved successfully");
     }
 
     public Long decryptId(String encryptedId) {

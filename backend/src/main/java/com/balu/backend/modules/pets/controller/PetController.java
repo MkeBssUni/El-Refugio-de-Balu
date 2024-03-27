@@ -53,6 +53,12 @@ public class PetController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
+    @PostMapping("/comment")
+    public ResponseEntity<ResponseApi<?>> comment(@RequestBody CommentPetDto dto) {
+        ResponseApi<?> response = petService.comment(dto);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
     @PostMapping("/")
     public ResponseEntity<ResponseApi<?>> save(@RequestBody SavePetDto dto) {
         ResponseApi<?> response = petService.save(dto);
