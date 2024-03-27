@@ -132,7 +132,7 @@ public class PetService {
                 allergies = String.join(",", dto.getAllergies());
             }
 
-            if (validations.isInvalidImage(dto.getMainImage())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_IMAGE.name());
+            if (validations.isInvalidImage(dto.getMainImage()) || validations.isInvalidImageLength(dto.getMainImage())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_IMAGE.name());
             if (dto.getImages() != null) {
                 if (dto.getImages().length > 4) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
                 HashSet<String> imagesSet = new HashSet<>();
@@ -140,7 +140,7 @@ public class PetService {
                 for (String image : dto.getImages()) {
                     boolean isAdded = imagesSet.add(image);
                     if (!isAdded) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.DUPLICATE_IMAGE.name());
-                    if (validations.isInvalidImage(image)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_IMAGE.name());
+                    if (validations.isInvalidImage(image) || validations.isInvalidImageLength(image)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_IMAGE.name());
                 }
             }
 
@@ -168,7 +168,10 @@ public class PetService {
 
             MedicalRecord medicalRecord = new MedicalRecord(dto.isVaccinated(), dto.isSterilized(), dto.isDewormed(), dto.isMicrochip(), dto.getObservations() != null ? dto.getObservations().trim() : null, diseases, allergies, savedPet);
             MedicalRecord savedMedicalRecord = medicalRecordRepository.saveAndFlush(medicalRecord);
-            if (savedMedicalRecord == null) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.MEDICAL_RECORD_NOT_SAVED.name());
+            if (savedMedicalRecord == null) {
+                petRepository.delete(savedPet);
+                return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.MEDICAL_RECORD_NOT_SAVED.name());
+            }
 
             if (dto.getImages() != null) {
                 List<PetImage> petImages = new ArrayList<>();
@@ -177,12 +180,17 @@ public class PetService {
                     PetImage savedPetImage = petImageRepository.saveAndFlush(petImage);
                     if (savedPetImage != null) petImages.add(savedPetImage);
                 }
-                if (petImages.size() != dto.getImages().length) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.IMAGE_NOT_SAVED.name());
+                if (petImages.size() != dto.getImages().length) {
+                    medicalRecordRepository.delete(savedMedicalRecord);
+                    petRepository.delete(savedPet);
+                    for (PetImage petImage : petImages) petImageRepository.delete(petImage);
+                    return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.IMAGE_NOT_SAVED.name());
+                }
             }
 
             logService.saveLog("New pet in adoption request registered: " + savedPet.getId(), LogTypes.INSERT, "PETS | MEDICAL_RECORDS | PET_IMAGES");
 
-            return new ResponseApi<>(savedPet, HttpStatus.CREATED,false, "OK");
+            return new ResponseApi<>(HttpStatus.CREATED,false, "Pet saved successfully");
         } catch (Exception e) {
             return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.INTERNAL_ERROR.name());
         }
