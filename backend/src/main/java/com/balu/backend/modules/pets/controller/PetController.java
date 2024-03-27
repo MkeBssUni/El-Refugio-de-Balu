@@ -1,8 +1,9 @@
 package com.balu.backend.modules.pets.controller;
 
 import com.balu.backend.kernel.ResponseApi;
-import com.balu.backend.modules.pets.model.dto.PetDto;
-import com.balu.backend.modules.pets.model.dto.PetsPagedDto;
+import com.balu.backend.modules.pets.model.dto.PetCredentialDto;
+import com.balu.backend.modules.pets.model.dto.SavePetDto;
+import com.balu.backend.modules.pets.model.dto.PetCatalogPagedDto;
 import com.balu.backend.modules.pets.service.PetService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -24,14 +25,20 @@ public class PetController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sort,
             @RequestParam(defaultValue = "asc") String order,
-            @RequestBody PetsPagedDto dto
+            @RequestBody PetCatalogPagedDto dto
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(order), sort));
         return ResponseEntity.ok(petService.findAllPaged(dto, pageable));
     }
 
+    @PostMapping("/credential")
+    public ResponseEntity<ResponseApi<?>> findCredentialById(@RequestBody PetCredentialDto dto) {
+        ResponseApi<?> response = petService.findPetCredentials(dto.getId());
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
     @PostMapping("/")
-    public ResponseEntity<ResponseApi<?>> save(@RequestBody PetDto dto) {
+    public ResponseEntity<ResponseApi<?>> save(@RequestBody SavePetDto dto) {
         ResponseApi<?> response = petService.save(dto);
         return ResponseEntity.status(response.getStatus()).body(response);
     }

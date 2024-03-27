@@ -9,9 +9,13 @@ import com.balu.backend.modules.hash.service.HashService;
 import com.balu.backend.modules.logs.model.LogTypes;
 import com.balu.backend.modules.logs.service.LogService;
 import com.balu.backend.modules.pets.model.*;
-import com.balu.backend.modules.pets.model.dto.PetsPagedDto;
-import com.balu.backend.modules.pets.model.dto.PetDto;
+import com.balu.backend.modules.pets.model.dto.PetCatalogPagedDto;
+import com.balu.backend.modules.pets.model.dto.SavePetDto;
 import com.balu.backend.modules.pets.model.enums.*;
+import com.balu.backend.modules.pets.model.repositories.IMedicalRecordRepository;
+import com.balu.backend.modules.pets.model.repositories.IPetImageRepository;
+import com.balu.backend.modules.pets.model.repositories.IPetRepository;
+import com.balu.backend.modules.pets.model.views.IPetCredentialView;
 import com.balu.backend.modules.roles.model.Roles;
 import com.balu.backend.modules.statusses.model.IStatusRepository;
 import com.balu.backend.modules.statusses.model.Status;
@@ -45,7 +49,7 @@ public class PetService {
     private final LogService logService;
 
     @Transactional(readOnly = true)
-    public ResponseApi<?> findAllPaged(PetsPagedDto dto, Pageable pageable) {
+    public ResponseApi<?> findAllPaged(PetCatalogPagedDto dto, Pageable pageable) {
         if (dto.getGender() != null && validations.isInvalidEnum(dto.getGender().toUpperCase().trim(), Genders.class)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
 
         if (dto.getCategory() != null) {
@@ -67,8 +71,18 @@ public class PetService {
         return new ResponseApi<>(petRepository.findAll(pageable), HttpStatus.OK,false, "OK");
     }
 
+    @Transactional(readOnly = true)
+    public ResponseApi<?> findPetCredentials(String pet) {
+        if (pet == null || validations.isNotBlankString(pet.trim())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
+        Long petId = decryptId(pet);
+        if (petId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+        Optional<IPetCredentialView> optionalPet = petRepository.findCredentialById(petId);
+        if (!optionalPet.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        return new ResponseApi<>(optionalPet.get(), HttpStatus.OK,false, "OK");
+    }
+
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseApi<?> save(PetDto dto) {
+    public ResponseApi<?> save(SavePetDto dto) {
         try {
             if (dto.getName() == null || validations.isNotBlankString(dto.getName().trim()) || dto.getGender() == null || validations.isNotBlankString(dto.getGender().trim()) || dto.getBreed() == null || validations.isNotBlankString(dto.getBreed().trim()) || dto.getAge() == 0 || dto.getAgeUnit() == null || validations.isNotBlankString(dto.getAgeUnit().trim()) || dto.getLifeStage() == null || validations.isNotBlankString(dto.getLifeStage().trim()) || dto.getWeight() == null || dto.getWeight() == 0.00 || dto.getWeightUnit() == null || validations.isNotBlankString(dto.getWeightUnit().trim()) || dto.getSize() == null || validations.isNotBlankString(dto.getSize().trim()) || dto.getDescription() == null || validations.isNotBlankString(dto.getDescription().trim()) || dto.getCharacteristics() == null || dto.getCharacteristics().length < 3 || dto.getMainImage() == null || validations.isNotBlankString(dto.getMainImage().trim()) || dto.getCategory() == null || validations.isNotBlankString(dto.getCategory().trim()) || dto.getOwner() == null || validations.isNotBlankString(dto.getOwner().trim()))
                 return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
