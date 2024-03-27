@@ -272,8 +272,10 @@ public class PetService {
         if (savedPet == null) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.INTERNAL_ERROR.name());
 
         if (dto.getStatus().equalsIgnoreCase(Statusses.APPROVED.name())) {
+            logService.saveLog("Pet " + savedPet.getId() + " approved by " + user.getId(), LogTypes.UPDATE, "PETS");
             return new ResponseApi<>(HttpStatus.OK,false, "Pet approved successfully");
         } else {
+            logService.saveLog("Pet " + savedPet.getId() + " sent to revision by " + user.getId(), LogTypes.UPDATE, "PETS");
             return new ResponseApi<>(HttpStatus.OK,false, "Pet sent to revision successfully");
         }
     }
