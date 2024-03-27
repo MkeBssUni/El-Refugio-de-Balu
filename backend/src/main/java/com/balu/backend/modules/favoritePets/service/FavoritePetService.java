@@ -5,7 +5,8 @@ import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.kernel.Validations;
 import com.balu.backend.modules.favoritePets.model.FavoritePet;
 import com.balu.backend.modules.favoritePets.model.IFavoritePetRepository;
-import com.balu.backend.modules.favoritePets.model.dto.FavoritePetDto;
+import com.balu.backend.modules.favoritePets.model.dto.AddFavoritePetDto;
+import com.balu.backend.modules.favoritePets.model.dto.FindFavoritePetsDto;
 import com.balu.backend.modules.favoritePets.model.dto.RemoveFavoritePetDto;
 import com.balu.backend.modules.hash.service.HashService;
 import com.balu.backend.modules.pets.model.Pet;
@@ -13,6 +14,7 @@ import com.balu.backend.modules.pets.model.repositories.IPetRepository;
 import com.balu.backend.modules.users.model.IUserRepository;
 import com.balu.backend.modules.users.model.User;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,8 +32,23 @@ public class FavoritePetService {
     private final HashService hashService;
     private final Validations validations = new Validations();
 
+    @Transactional(readOnly = true)
+    public ResponseApi<?> findFavoritePets(FindFavoritePetsDto dto, Pageable pageable) {
+        if (dto.getUser() == null || validations.isNotBlankString(dto.getUser())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
+
+        if (dto.getSearchValue() == null) dto.setSearchValue("");
+
+        Long userId = decryptId(dto.getUser());
+        if (userId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        User user = optionalUser.get();
+
+        return new ResponseApi<>(favoritePetRepository.findByUserPaged(user.getId(), dto.getSearchValue(), pageable), HttpStatus.OK,false, "Favorite pet catalog");
+    }
+
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseApi<?> addFavoritePet(FavoritePetDto dto) {
+    public ResponseApi<?> addFavoritePet(AddFavoritePetDto dto) {
         if (dto.getPet() == null || validations.isNotBlankString(dto.getPet()) || dto.getUser() == null || validations.isNotBlankString(dto.getUser()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
 
