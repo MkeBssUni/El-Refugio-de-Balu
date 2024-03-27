@@ -9,10 +9,7 @@ import com.balu.backend.modules.hash.service.HashService;
 import com.balu.backend.modules.logs.model.LogTypes;
 import com.balu.backend.modules.logs.service.LogService;
 import com.balu.backend.modules.pets.model.*;
-import com.balu.backend.modules.pets.model.dto.FindPetRequestsDto;
-import com.balu.backend.modules.pets.model.dto.PetCatalogPagedDto;
-import com.balu.backend.modules.pets.model.dto.PetRequestList;
-import com.balu.backend.modules.pets.model.dto.SavePetDto;
+import com.balu.backend.modules.pets.model.dto.*;
 import com.balu.backend.modules.pets.model.enums.*;
 import com.balu.backend.modules.pets.model.repositories.IMedicalRecordRepository;
 import com.balu.backend.modules.pets.model.repositories.IPetImageRepository;
@@ -242,6 +239,42 @@ public class PetService {
             return new ResponseApi<>(HttpStatus.CREATED,false, "Pet saved successfully");
         } catch (Exception e) {
             return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.INTERNAL_ERROR.name());
+        }
+    }
+
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
+    public ResponseApi<?> select(SelectPetDto dto) {
+        if (dto.getPet() == null || validations.isNotBlankString(dto.getPet().trim()) || dto.getUser() == null || validations.isNotBlankString(dto.getUser().trim()) || dto.getStatus() == null || validations.isNotBlankString(dto.getStatus().trim()))
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
+
+        if (!dto.getStatus().equalsIgnoreCase(Statusses.APPROVED.name()) && !dto.getStatus().equalsIgnoreCase(Statusses.IN_REVISION.name())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        Optional<Status> optionalStatus = statusRepository.findByName(Statusses.valueOf(dto.getStatus().toUpperCase()));
+        Status status = optionalStatus.get();
+
+        Long petId = decryptId(dto.getPet());
+        if (petId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+        Optional<Pet> optionalPet = petRepository.findById(petId);
+        if (!optionalPet.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        Pet pet = optionalPet.get();
+        if (pet.getModerator() != null || !pet.getStatus().getName().equals(Statusses.PENDING)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_ALLOWED.name());
+
+        Long userId = decryptId(dto.getUser());
+        if (userId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        User user = optionalUser.get();
+
+        if (petRepository.countActivePetsByUser(userId) == 10) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_USER.name());
+
+        pet.setModerator(user);
+        pet.setStatus(status);
+        Pet savedPet = petRepository.saveAndFlush(pet);
+        if (savedPet == null) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.INTERNAL_ERROR.name());
+
+        if (dto.getStatus().equalsIgnoreCase(Statusses.APPROVED.name())) {
+            return new ResponseApi<>(HttpStatus.OK,false, "Pet approved successfully");
+        } else {
+            return new ResponseApi<>(HttpStatus.OK,false, "Pet sent to revision successfully");
         }
     }
 

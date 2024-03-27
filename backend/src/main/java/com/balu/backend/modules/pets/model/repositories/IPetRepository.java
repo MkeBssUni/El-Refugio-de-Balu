@@ -30,4 +30,7 @@ public interface IPetRepository extends JpaRepository<Pet,Long> {
     Page<IPetRequestsView> findNewPetRequestsByCategory(Long categoryId, String searchValue, Pageable pageable);
 
     boolean existsByIdAndOwner(Long id, User owner);
+
+    @Query(value = "select count(*) from pets where status_id = 5 or status_id = 3 and user_moderator_id = ?1", nativeQuery = true)
+    int countActivePetsByUser(Long userId);
 }
