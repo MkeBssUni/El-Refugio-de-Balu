@@ -6,6 +6,7 @@ import com.balu.backend.kernel.Validations;
 import com.balu.backend.modules.favoritePets.model.FavoritePet;
 import com.balu.backend.modules.favoritePets.model.IFavoritePetRepository;
 import com.balu.backend.modules.favoritePets.model.dto.FavoritePetDto;
+import com.balu.backend.modules.favoritePets.model.dto.RemoveFavoritePetDto;
 import com.balu.backend.modules.hash.service.HashService;
 import com.balu.backend.modules.pets.model.Pet;
 import com.balu.backend.modules.pets.model.repositories.IPetRepository;
@@ -53,6 +54,29 @@ public class FavoritePetService {
         FavoritePet favoritePet = new FavoritePet(user, pet);
         favoritePetRepository.saveAndFlush(favoritePet);
         return new ResponseApi<>(HttpStatus.OK,false, "Pet added to favorites successfully");
+    }
+
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
+    public ResponseApi<?> removeFavoritePet(RemoveFavoritePetDto dto) {
+        if (dto.getFavoritePet() == null || validations.isNotBlankString(dto.getFavoritePet()) || dto.getUser() == null || validations.isNotBlankString(dto.getUser()))
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
+
+        Long favoritePetId = decryptId(dto.getFavoritePet());
+        if (favoritePetId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+        Optional<FavoritePet> optionalFavoritePet = favoritePetRepository.findById(favoritePetId);
+        if (!optionalFavoritePet.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        FavoritePet favoritePetEntity = optionalFavoritePet.get();
+
+        Long userId = decryptId(dto.getUser());
+        if (userId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        User user = optionalUser.get();
+
+        if (!favoritePetEntity.getUser().getId().equals(user.getId())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_USER.name());
+
+        favoritePetRepository.delete(favoritePetEntity);
+        return new ResponseApi<>(HttpStatus.OK,false, "Pet removed from favorites successfully");
     }
 
     public Long decryptId(String encryptedId) {
