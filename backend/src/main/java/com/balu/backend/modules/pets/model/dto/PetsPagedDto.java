@@ -5,11 +5,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class FindAllPetsPagedDto {
+public class PetsPagedDto {
     private String category;
     private String size;
     private String lifeStage;
     private String gender;
     private String location;
-    private String user;
+    private String owner;
 }
