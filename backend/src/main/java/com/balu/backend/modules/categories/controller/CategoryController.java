@@ -66,17 +66,17 @@ public class CategoryController {
             return  new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/paged")
-    public ResponseEntity<ResponseApi<Page<ICategoryViewPaged>>> getCategoryPaged(
-            @RequestParam(defaultValue = "0", required = false) int page,
-            @RequestParam(defaultValue = "10", required = false) int size,
-            @RequestParam(defaultValue = "id", required = false) String sort,
-            @RequestParam(defaultValue = "asc", required = false) String direction,
-            @RequestBody SearchCategoryDto searchCategoryDto){
-        Pageable pageable =PageRequest.of(page,size, Sort.by(Sort.Direction.fromString(direction),sort));
-        ResponseApi<Page<ICategoryViewPaged>> responseApi = categoryService.getPaged(searchCategoryDto,pageable);
-        return new ResponseEntity<>(responseApi,responseApi.getStatus());
-    }
-
+//    @GetMapping("/paged")
+//    public ResponseEntity<ResponseApi<Page<ICategoryViewPaged>>> getCategoryPaged(
+//            @RequestParam(defaultValue = "0", required = false) int page,
+//            @RequestParam(defaultValue = "10", required = false) int size,
+//            @RequestParam(defaultValue = "id", required = false) String sort,
+//            @RequestParam(defaultValue = "asc", required = false) String direction,
+//            @RequestBody SearchCategoryDto searchCategoryDto){
+//        Pageable pageable =PageRequest.of(page,size, Sort.by(Sort.Direction.fromString(direction),sort));
+//        ResponseApi<Page<ICategoryViewPaged>> responseApi = categoryService.getPaged(searchCategoryDto,pageable);
+//        return new ResponseEntity<>(responseApi,responseApi.getStatus());
+//    }
+//
 
 }
