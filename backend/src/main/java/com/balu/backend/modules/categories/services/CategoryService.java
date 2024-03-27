@@ -149,10 +149,10 @@ public class CategoryService {
 
     }
 
-//    @Transactional(readOnly = true)
-//    public ResponseApi<Page<ICategoryViewPaged>> getPaged(SearchCategoryDto searchCategoryDto, Pageable peageable){
-//        searchCategoryDto.setSearcgCategoryValue(searchCategoryDto.getSearcgCategoryValue().toLowerCase());
-//        Page<ICategoryViewPaged> categoryPage= iCategoryRepository.findAllPaged(searchCategoryDto.getSearcgCategoryValue(),searchCategoryDto.getSearcgCategoryValue(),peageable);
-//        return new ResponseApi<>(categoryPage,HttpStatus.OK,false,"OK");
-//    }
+    @Transactional(readOnly = true)
+    public ResponseApi<Page<ICategoryViewPaged>> getPaged(SearchCategoryDto searchCategoryDto, Pageable peageable){
+        searchCategoryDto.setSearcgCategoryValue(searchCategoryDto.getSearcgCategoryValue().toLowerCase());
+        Page<ICategoryViewPaged> categoryPage= iCategoryRepository.findAllPaged(searchCategoryDto.getSearcgCategoryValue(),searchCategoryDto.getSearcgCategoryValue(),peageable);
+        return new ResponseApi<>(categoryPage,HttpStatus.OK,false,"OK");
+    }
 }
