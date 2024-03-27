@@ -6,19 +6,28 @@ import com.balu.backend.kernel.Validations;
 import com.balu.backend.modules.favoritePets.model.FavoritePet;
 import com.balu.backend.modules.favoritePets.model.IFavoritePetRepository;
 import com.balu.backend.modules.favoritePets.model.dto.AddFavoritePetDto;
+import com.balu.backend.modules.favoritePets.model.dto.FavoritePetsCatalog;
 import com.balu.backend.modules.favoritePets.model.dto.FindFavoritePetsDto;
 import com.balu.backend.modules.favoritePets.model.dto.RemoveFavoritePetDto;
+import com.balu.backend.modules.favoritePets.model.views.IFavoritePetsView;
 import com.balu.backend.modules.hash.service.HashService;
 import com.balu.backend.modules.pets.model.Pet;
 import com.balu.backend.modules.pets.model.repositories.IPetRepository;
 import com.balu.backend.modules.users.model.IUserRepository;
 import com.balu.backend.modules.users.model.User;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.Optional;
 
@@ -44,7 +53,22 @@ public class FavoritePetService {
         if (!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
         User user = optionalUser.get();
 
-        return new ResponseApi<>(favoritePetRepository.findByUserPaged(user.getId(), dto.getSearchValue(), pageable), HttpStatus.OK,false, "Favorite pet catalog");
+        Page<IFavoritePetsView> favoritePets = favoritePetRepository.findByUserPaged(user.getId(), dto.getSearchValue(), pageable);
+        Page<FavoritePetsCatalog> favoritePetsCatalog = favoritePets.map(favoritePet ->
+                {
+                    try {
+                        return new FavoritePetsCatalog(
+                                hashService.encrypt(favoritePet.getId()),
+                                favoritePet.getName(),
+                                favoritePet.getImage(),
+                                favoritePet.getLocation()
+                        );
+                    } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+        );
+        return new ResponseApi<>(favoritePetsCatalog, HttpStatus.OK, false, "Favorite pets catalog retrieved successfully");
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
