@@ -15,6 +15,7 @@ import com.balu.backend.modules.pets.model.repositories.ICommentRepository;
 import com.balu.backend.modules.pets.model.repositories.IMedicalRecordRepository;
 import com.balu.backend.modules.pets.model.repositories.IPetImageRepository;
 import com.balu.backend.modules.pets.model.repositories.IPetRepository;
+import com.balu.backend.modules.pets.model.views.IMyPetsAsModView;
 import com.balu.backend.modules.pets.model.views.IPetCredentialView;
 import com.balu.backend.modules.pets.model.views.IPetRequestsView;
 import com.balu.backend.modules.roles.model.Roles;
@@ -127,6 +128,57 @@ public class PetService {
         });
 
         return new ResponseApi<>(petRequestList, HttpStatus.OK,false, "New pet requests retrieved successfully");
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseApi<?> findMyPetsAsMod(FindMyPetsAsModDto dto, Pageable pageable) {
+        if (dto.getUser() == null || validations.isNotBlankString(dto.getUser().trim())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
+
+        if (dto.getStatus() == null) {
+            dto.setStatus("");
+        } else {
+            if (validations.isInvalidEnum(dto.getStatus().toUpperCase().trim(), Statusses.class)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+            dto.setStatus(dto.getStatus().toLowerCase().trim());
+        }
+
+        if (dto.getSearchValue() == null) {
+            dto.setSearchValue("");
+        } else {
+            dto.setSearchValue(dto.getSearchValue().toLowerCase().trim());
+        }
+
+        Long userId = decryptId(dto.getUser());
+        if (userId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        User user = optionalUser.get();
+        if (!user.getRole().getName().equals(Roles.MOD)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ROLE.name());
+
+        Long categoryId = null;
+        if (dto.getCategory() != null) {
+            categoryId = decryptId(dto.getCategory());
+            if (categoryId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+            Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+            if (!optionalCategory.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        }
+
+        Page<IMyPetsAsModView> myPetsAsMod = categoryId != null ? petRepository.findMyPetsAsModByCategory(userId, categoryId, dto.getStatus(), dto.getSearchValue(), pageable) : petRepository.findMyPetsAsMod(userId, dto.getStatus(), dto.getSearchValue(), pageable);
+
+        Page<MyPetsAsModList> myPetsAsModList = myPetsAsMod.map(myPetAsMod -> {
+            try {
+                return new MyPetsAsModList(
+                        hashService.encrypt(myPetAsMod.getId()),
+                        myPetAsMod.getComments(),
+                        myPetAsMod.getCategory(),
+                        myPetAsMod.getName(),
+                        myPetAsMod.getStatus()
+                );
+            } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        return new ResponseApi<>(myPetsAsModList, HttpStatus.OK,false, "My pets as moderator retrieved successfully");
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
