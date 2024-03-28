@@ -41,6 +41,19 @@ public class PetController {
         return ResponseEntity.ok(petService.findNewPetRequests(dto, pageable));
     }
 
+    @PostMapping("/moderated")
+    public ResponseEntity<ResponseApi<?>> findMyPetsAsModPaged(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String order,
+            @RequestBody FindMyPetsAsModDto dto
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(order), sort));
+        ResponseApi<?> response = petService.findMyPetsAsMod(dto, pageable);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
     @PostMapping("/credential")
     public ResponseEntity<ResponseApi<?>> findCredentialById(@RequestBody PetCredentialDto dto) {
         ResponseApi<?> response = petService.findPetCredentials(dto.getId());

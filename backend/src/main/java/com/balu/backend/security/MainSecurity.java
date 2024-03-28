@@ -74,6 +74,7 @@ public class MainSecurity {
                         .requestMatchers("/api/pet/").hasAnyAuthority(Roles.GENERAL.name())
                         .requestMatchers("/api/pet/credential").hasAnyAuthority(Roles.MOD.name())
                         .requestMatchers("/api/pet/requests").hasAnyAuthority(Roles.MOD.name())
+                        .requestMatchers("/api/pet/moderated").hasAnyAuthority(Roles.MOD.name())
                         .requestMatchers("/api/pet/select").hasAnyAuthority(Roles.MOD.name())
                         .requestMatchers("/api/pet/comment").hasAnyAuthority(Roles.MOD.name(), Roles.GENERAL.name())
                         .requestMatchers("/api/pet/end").hasAnyAuthority(Roles.MOD.name())
