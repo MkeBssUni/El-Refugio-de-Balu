@@ -88,6 +88,12 @@ public class PetController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
+    @PostMapping("/comment/all")
+    public ResponseEntity<ResponseApi<?>> comments(@RequestBody FindCommentsDto dto) {
+        ResponseApi<?> response = petService.findComments(dto);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
     @PostMapping("/")
     public ResponseEntity<ResponseApi<?>> save(@RequestBody SavePetDto dto) {
         ResponseApi<?> response = petService.save(dto);

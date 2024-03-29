@@ -15,10 +15,7 @@ import com.balu.backend.modules.pets.model.repositories.ICommentRepository;
 import com.balu.backend.modules.pets.model.repositories.IMedicalRecordRepository;
 import com.balu.backend.modules.pets.model.repositories.IPetImageRepository;
 import com.balu.backend.modules.pets.model.repositories.IPetRepository;
-import com.balu.backend.modules.pets.model.views.IMyPetsAsModView;
-import com.balu.backend.modules.pets.model.views.IMyPetsView;
-import com.balu.backend.modules.pets.model.views.IPetCredentialView;
-import com.balu.backend.modules.pets.model.views.IPetRequestsView;
+import com.balu.backend.modules.pets.model.views.*;
 import com.balu.backend.modules.roles.model.Roles;
 import com.balu.backend.modules.statusses.model.IStatusRepository;
 import com.balu.backend.modules.statusses.model.Status;
@@ -408,6 +405,34 @@ public class PetService {
         logService.saveLog("Pet " + savedPet.getId() + " request closed by " + user.getId(), LogTypes.UPDATE, "PETS");
 
         return new ResponseApi<>(HttpStatus.OK,false, "Pet request closed successfully");
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseApi<?> findComments(FindCommentsDto dto) {
+        if (dto.getPet() == null || validations.isNotBlankString(dto.getPet().trim()) || dto.getUser() == null || validations.isNotBlankString(dto.getUser())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
+
+        Long petId = decryptId(dto.getPet());
+        if (petId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+        Optional<Pet> optionalPet = petRepository.findById(petId);
+        if (!optionalPet.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        Pet pet = optionalPet.get();
+
+        Long userId = decryptId(dto.getUser());
+        if (userId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        User user = optionalUser.get();
+
+        if (user.getRole().getName().equals(Roles.GENERAL)) {
+            if (pet.getOwner() != user) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_USER.name());
+        } else if (user.getRole().getName().equals(Roles.MOD)) {
+            if (pet.getModerator() != user) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_USER.name());
+        } else {
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ROLE.name());
+        }
+
+        List<ICommentView> comments = commentRepository.findByPet(petId);
+        return new ResponseApi<>(comments, HttpStatus.OK,false, "Comments retrieved successfully");
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
