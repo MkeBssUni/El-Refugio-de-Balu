@@ -240,35 +240,48 @@ public class PetService {
             if (dto.getAge() < 0 || dto.getWeight() < 0) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
 
             if(dto.getCharacteristics().length > 20) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
-            for (String characteristic : dto.getCharacteristics()) {
-                if (validations.isInvalidName(characteristic.trim())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FORMAT.name());
-                if (validations.isInvalidMinAndMaxLength(characteristic.trim(), 3, 50)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
+
+            for (int i = 0; i < dto.getCharacteristics().length; i++) {
+                if (validations.isInvalidName(dto.getCharacteristics()[i].trim())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FORMAT.name());
+                if (validations.isInvalidMinAndMaxLength(dto.getCharacteristics()[i].trim(), 3, 50)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
+                for (int j = i + 1; j < dto.getCharacteristics().length; j++) {
+                    if (dto.getCharacteristics()[i].equals(dto.getCharacteristics()[j])) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.DUPLICATE_RECORD.name());
+                }
             }
             String characteristics = String.join(",", dto.getCharacteristics());
 
             String specialCares = null;
             if (dto.getSpecialCares() != null) {
-                for (String specialCare : dto.getSpecialCares()) {
-                    if (validations.isInvalidName(specialCare.trim())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FORMAT.name());
-                    if (validations.isInvalidMinAndMaxLength(specialCare.trim(), 20, 200)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
+                for (int i = 0; i < dto.getSpecialCares().length; i++) {
+                    if (validations.isInvalidName(dto.getSpecialCares()[i].trim())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FORMAT.name());
+                    if (validations.isInvalidMinAndMaxLength(dto.getSpecialCares()[i].trim(), 20, 200)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
+                    for (int j = i + 1; j < dto.getSpecialCares().length; j++) {
+                        if (dto.getSpecialCares()[i].equals(dto.getSpecialCares()[j])) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.DUPLICATE_RECORD.name());
+                    }
                 }
                 specialCares = String.join(",", dto.getSpecialCares());
             }
 
             String diseases = null;
             if (dto.getDiseases() != null) {
-                for (String disease : dto.getDiseases()) {
-                    if (validations.isInvalidName(disease.trim())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FORMAT.name());
-                    if (validations.isInvalidMinAndMaxLength(disease.trim(), 3, 50)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
+                for (int i = 0; i < dto.getDiseases().length; i++) {
+                    if (validations.isInvalidName(dto.getDiseases()[i].trim())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FORMAT.name());
+                    if (validations.isInvalidMinAndMaxLength(dto.getDiseases()[i].trim(), 3, 50)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
+                    for (int j = i + 1; j < dto.getDiseases().length; j++) {
+                        if (dto.getDiseases()[i].equals(dto.getDiseases()[j])) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.DUPLICATE_RECORD.name());
+                    }
                 }
                 diseases = String.join(",", dto.getDiseases());
             }
 
             String allergies = null;
             if (dto.getAllergies() != null) {
-                for (String allergy : dto.getAllergies()) {
-                    if (validations.isInvalidName(allergy.trim())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FORMAT.name());
-                    if (validations.isInvalidMinAndMaxLength(allergy.trim(), 3, 50)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
+                for (int i = 0; i < dto.getAllergies().length; i++) {
+                    if (validations.isInvalidName(dto.getAllergies()[i].trim())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FORMAT.name());
+                    if (validations.isInvalidMinAndMaxLength(dto.getAllergies()[i].trim(), 3, 50)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
+                    for (int j = i + 1; j < dto.getAllergies().length; j++) {
+                        if (dto.getAllergies()[i].equals(dto.getAllergies()[j])) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.DUPLICATE_RECORD.name());
+                    }
                 }
                 allergies = String.join(",", dto.getAllergies());
             }
