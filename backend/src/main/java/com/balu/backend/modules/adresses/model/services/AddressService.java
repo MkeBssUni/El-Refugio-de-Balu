@@ -20,6 +20,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
 import com.balu.backend.kernel.ErrorMessages;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 @Transactional
@@ -45,7 +46,7 @@ public class AddressService {
     }
 
     @Transactional(rollbackFor = {NoSuchAlgorithmException.class, NoSuchPaddingException.class, InvalidAlgorithmParameterException.class, InvalidKeyException.class, IllegalBlockSizeException.class, BadPaddingException.class})
-    public ResponseApi<Address> saveAddress(Address address) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+    public ResponseApi<Address> saveAddress(@RequestBody Address address) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         if (StringUtils.isEmpty(address.getCountry()) || StringUtils.isEmpty(address.getStreet()) || StringUtils.isEmpty(address.getColony()) || StringUtils.isEmpty(address.getCity()) || StringUtils.isEmpty(address.getState()) || StringUtils.isEmpty(address.getPostalCode()) || StringUtils.isEmpty(address.getAddressReference()) || StringUtils.isEmpty(address.getExteriorNumber()) || StringUtils.isEmpty(address.getInteriorNumber())) {
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
         }
@@ -56,7 +57,7 @@ public class AddressService {
     }
 
     @Transactional(rollbackFor = {NoSuchAlgorithmException.class, NoSuchPaddingException.class, InvalidAlgorithmParameterException.class, InvalidKeyException.class, IllegalBlockSizeException.class, BadPaddingException.class})
-    public ResponseApi<Address> updateAddress(Long addressId, UpdateAddressDto updateAddressDto) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+    public ResponseApi<Address> updateAddress(Long addressId, @RequestBody UpdateAddressDto updateAddressDto) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         if (updateAddressDto == null || (StringUtils.isEmpty(updateAddressDto.getCountry()) && StringUtils.isEmpty(updateAddressDto.getStreet()) && StringUtils.isEmpty(updateAddressDto.getColony()) && StringUtils.isEmpty(updateAddressDto.getCity()) && StringUtils.isEmpty(updateAddressDto.getState()) && StringUtils.isEmpty(updateAddressDto.getPostalCode()) && StringUtils.isEmpty(updateAddressDto.getAddressReference()) && StringUtils.isEmpty(updateAddressDto.getExteriorNumber()) && StringUtils.isEmpty(updateAddressDto.getInteriorNumber()))) {
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
         }
@@ -69,6 +70,7 @@ public class AddressService {
         existingAddress.setCountry(updateAddressDto.getCountry());
         existingAddress.setStreet(updateAddressDto.getStreet());
         existingAddress.setColony(updateAddressDto.getColony());
+        existingAddress.setCity(updateAddressDto.getCity());
         existingAddress.setCity(updateAddressDto.getCity());
         existingAddress.setState(updateAddressDto.getState());
         existingAddress.setPostalCode(updateAddressDto.getPostalCode());
