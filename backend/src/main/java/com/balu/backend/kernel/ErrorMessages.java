@@ -1,5 +1,7 @@
 package com.balu.backend.kernel;
 
+import jakarta.annotation.Resource;
+
 public enum ErrorMessages {
     DUPLICATE_RECORD,
     ROLE_NOT_FOUND,
@@ -27,5 +29,6 @@ public enum ErrorMessages {
     IMAGE_NOT_SAVED,
     DUPLICATE_IMAGE,
     ALREADY_EXISTS,
-    NOT_ALLOWED
+    NOT_ALLOWED,
+    NO_ADDRESS_FOUND ;
 }

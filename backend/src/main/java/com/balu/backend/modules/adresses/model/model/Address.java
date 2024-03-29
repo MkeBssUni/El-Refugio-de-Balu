@@ -1,4 +1,4 @@
-package com.balu.backend.modules.adresses.model;
+package com.balu.backend.modules.adresses.model.model;
 
 import com.balu.backend.modules.homeSpecification.model.HomeSpecification;
 import com.balu.backend.modules.users.model.User;
