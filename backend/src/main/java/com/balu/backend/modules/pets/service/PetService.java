@@ -16,6 +16,7 @@ import com.balu.backend.modules.pets.model.repositories.IMedicalRecordRepository
 import com.balu.backend.modules.pets.model.repositories.IPetImageRepository;
 import com.balu.backend.modules.pets.model.repositories.IPetRepository;
 import com.balu.backend.modules.pets.model.views.IMyPetsAsModView;
+import com.balu.backend.modules.pets.model.views.IMyPetsView;
 import com.balu.backend.modules.pets.model.views.IPetCredentialView;
 import com.balu.backend.modules.pets.model.views.IPetRequestsView;
 import com.balu.backend.modules.roles.model.Roles;
@@ -89,6 +90,49 @@ public class PetService {
         Optional<IPetCredentialView> optionalPet = petRepository.findCredentialById(petId);
         if (!optionalPet.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
         return new ResponseApi<>(optionalPet.get(), HttpStatus.OK,false, "OK");
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseApi<?> findMyPets(FindMyPetsDto dto, Pageable pageable) {
+        if (dto.getUser() == null || validations.isNotBlankString(dto.getUser().trim())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
+
+        if (dto.getStatus() == null) {
+            dto.setStatus("");
+        } else {
+            if (validations.isInvalidEnum(dto.getStatus().toUpperCase().trim(), Statusses.class)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+            dto.setStatus(dto.getStatus().toLowerCase().trim());
+        }
+
+        if (dto.getSearchValue() == null) {
+            dto.setSearchValue("");
+        } else {
+            dto.setSearchValue(dto.getSearchValue().toLowerCase().trim());
+        }
+
+        Long userId = decryptId(dto.getUser());
+        if (userId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        User user = optionalUser.get();
+        if (!user.getRole().getName().equals(Roles.GENERAL)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ROLE.name());
+
+        Page<IMyPetsView> myPets = petRepository.findMyPetsByOwner(userId, dto.getStatus(), dto.getSearchValue(), pageable);
+
+        Page<MyPetsCatalog> myPetsCatalog = myPets.map(myPet -> {
+            try {
+                return new MyPetsCatalog(
+                        hashService.encrypt(myPet.getId()),
+                        myPet.getComments(),
+                        myPet.getName(),
+                        myPet.getLocation(),
+                        myPet.getStatus()
+                );
+            } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        return new ResponseApi<>(myPetsCatalog, HttpStatus.OK,false, "My pets retrieved successfully");
     }
 
     @Transactional(readOnly = true)
