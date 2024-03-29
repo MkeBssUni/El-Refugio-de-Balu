@@ -100,6 +100,12 @@ public class PetController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
+    @PostMapping("/update")
+    public ResponseEntity<ResponseApi<?>> update(@RequestBody UpdatePetDto dto) {
+        ResponseApi<?> response = petService.update(dto);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
     @PostMapping("/cancel")
     public ResponseEntity<ResponseApi<?>> cancel(@RequestBody CancelDto dto) {
         ResponseApi<?> response = petService.cancel(dto);
