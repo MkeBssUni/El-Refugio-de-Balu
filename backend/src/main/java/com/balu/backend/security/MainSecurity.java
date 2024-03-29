@@ -77,6 +77,7 @@ public class MainSecurity {
                         .requestMatchers("/api/favorite/pet/remove").hasAnyAuthority(Roles.GENERAL.name())
                         .requestMatchers("/api/favorite/pet/catalog").hasAnyAuthority(Roles.GENERAL.name())
                         .requestMatchers("/api/adoption/").hasAnyAuthority(Roles.GENERAL.name())
+                        .requestMatchers("/api/adoption/byPet").hasAnyAuthority(Roles.MOD.name())
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())

@@ -30,8 +30,6 @@ public class AdoptionRequest {
     @JoinColumn(name = "pet_id", referencedColumnName = "id")
     @JsonIncludeProperties({"id", "username"})
     private Pet pet;
-    @Column(columnDefinition = "json", nullable = false)
-    private String place_of_residence;
     @ManyToOne
     @JoinColumn(name = "status_id", referencedColumnName = "id")
     private Status status;

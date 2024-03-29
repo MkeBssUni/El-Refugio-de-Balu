@@ -68,39 +68,44 @@ public class ServiceAdoptionRequest {
         }
     }
 
+    @Transactional(readOnly = true)
+    public ResponseApi<Optional<AdoptionRequest>> adoptionByModerador(String idPet) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        if(idPet == null) {
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
+        }
+        Optional<AdoptionRequest> adoptionRequestOptional = iAdoptionRequestRepository.findByPet_Id(Long.parseLong(hashService.decrypt(idPet)));
+        if (adoptionRequestOptional.isPresent()) {
+            return new ResponseApi<>(adoptionRequestOptional,HttpStatus.OK, false, "Success");
+        } else {
+            return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.NO_RECORDS.name());
+        }
+    }
+
     @Transactional(rollbackFor = {SQLException.class,Exception.class})
     public ResponseApi<?> save(SaveAdoptionRequestDto dto){
         try{
-            if(dto.getUser() == null || validations.isNotBlankString(dto.getUser()) || dto.getPet() == null || validations.isNotBlankString(dto.getPet())  ||dto.getPlace_of_residence() == null || validations.isNotBlankString(dto.getPlace_of_residence()) || dto.getAdditional_information() == null || validations.isNotBlankString(dto.getAdditional_information()) || dto.getHomeImage() == null || dto.getHomeSpecification() == null)
+            if(dto.getUser() == null || validations.isNotBlankString(dto.getUser()) || dto.getPet() == null || validations.isNotBlankString(dto.getPet())  || dto.getAdditional_information() == null || validations.isNotBlankString(dto.getAdditional_information()) || dto.getHomeImage() == null || dto.getHomeSpecification() == null)
                 return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.MISSING_FIELDS.name());
 
             if(validations.isNotBlankString(dto.getReasonsForAdoption().getPeopleAgreeToAdopt()) || validations.isNotBlankString(dto.getReasonsForAdoption().getHaveHadPets()) || validations.isNotBlankString(dto.getReasonsForAdoption().getWhereWillThePetBe())||
                     validations.isNotBlankString(dto.getPreviousExperiencieDto().getWhatDidYouDoWhenThePetGotSick()) || validations.isNotBlankString(dto.getPreviousExperiencieDto().getWhatKindOfPetsHaveYouHadBefore())|| validations.isNotBlankString(dto.getPreviousExperiencieDto().getWhatMemoriesDoYouHaveWithYourPet()))
                 return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.MISSING_FIELDS.name());
 
-            if(validations.isInvalidMinAndMaxLength(dto.getReasonsForAdoption().getPeopleAgreeToAdopt().trim(),3,50) || validations.isInvalidMinAndMaxLength(dto.getReasonsForAdoption().getHaveHadPets().trim(),5,50) || validations.isInvalidMinAndMaxLength(dto.getReasonsForAdoption().getWhereWillThePetBe().trim(),5,50)
-            ||validations.isInvalidMinAndMaxLength(dto.getPreviousExperiencieDto().getWhatDidYouDoWhenThePetGotSick().trim(),5,50)
-                    || validations.isInvalidMinAndMaxLength(dto.getPreviousExperiencieDto().getWhatKindOfPetsHaveYouHadBefore().trim(),5,50)
-                    || validations.isInvalidMinAndMaxLength(dto.getPreviousExperiencieDto().getWhatMemoriesDoYouHaveWithYourPet().trim(),5,50)||
+            if(validations.isInvalidMinAndMaxLength(dto.getReasonsForAdoption().getPeopleAgreeToAdopt().trim(),3,100) || validations.isInvalidMinAndMaxLength(dto.getReasonsForAdoption().getHaveHadPets().trim(),5,100) || validations.isInvalidMinAndMaxLength(dto.getReasonsForAdoption().getWhereWillThePetBe().trim(),5,100)
+            ||validations.isInvalidMinAndMaxLength(dto.getPreviousExperiencieDto().getWhatDidYouDoWhenThePetGotSick().trim(),5,100)
+                    || validations.isInvalidMinAndMaxLength(dto.getPreviousExperiencieDto().getWhatKindOfPetsHaveYouHadBefore().trim(),5,100)
+                    || validations.isInvalidMinAndMaxLength(dto.getPreviousExperiencieDto().getWhatMemoriesDoYouHaveWithYourPet().trim(),5,100)||
             validations.isInvalidMinAndMaxLength(dto.getAdditional_information().trim(),5,100)){
-                System.out.println("Error aqui");
                 return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.INVALID_LENGTH.name());
             }
 
 
             if(dto.getReasonsForAdoption().getAdditionalComments().length() > 0){
-                if(validations.isInvalidMinAndMaxLength(dto.getReasonsForAdoption().getAdditionalComments().trim(),5,100)) {
-                    System.out.println("comments");
-                    return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.INVALID_LENGTH.name());
-                }
+                if(validations.isInvalidMinAndMaxLength(dto.getReasonsForAdoption().getAdditionalComments().trim(),5,100)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.INVALID_LENGTH.name());
             }
 
             if(dto.getPreviousExperiencieDto().getLastPet().length()>2){
-                if(validations.isInvalidMinAndMaxLength(dto.getPreviousExperiencieDto().getLastPet().trim(),5,50)){
-                    System.out.println("Error en previos experiencie");
-                    return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.INVALID_LENGTH.name());
-                }
-
+                if(validations.isInvalidMinAndMaxLength(dto.getPreviousExperiencieDto().getLastPet().trim(),5,100))return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.INVALID_LENGTH.name());
             }
 
             Long userId = decryptId(dto.getUser());
@@ -114,11 +119,12 @@ public class ServiceAdoptionRequest {
                 Long idStatus = 2L;
                 Long activeAdoptionRequestsCount = iAdoptionRequestRepository.countByUser_IdAndStatus_Id(userId, idStatus);
                 int count = activeAdoptionRequestsCount != null ? activeAdoptionRequestsCount.intValue() : 0;
-
+                System.out.println("Cantidad de solicitudes"+count);
                 if (count >= 5) {
                     return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MAX_ADOPTIONREQUEST.name());
                 }
             }
+
             if (user.getAddress() == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_USER.name());
 
             Long petId = decryptId(dto.getPet());
@@ -129,6 +135,7 @@ public class ServiceAdoptionRequest {
 
             Optional<AdoptionRequest> existingRequest = iAdoptionRequestRepository.findByUser_IdAndPet_Id(userId, petId);
             if (existingRequest.isPresent()) {
+                System.out.println(existingRequest);
                 return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.DUPLICATE_REQUEST.name());
             }
 

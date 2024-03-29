@@ -18,7 +18,6 @@ import lombok.Setter;
 public class SaveAdoptionRequestDto {
     private String user;
     private String pet;
-    private String place_of_residence;
     private ReasonsForAdoptionDto reasonsForAdoption;
     private PreviousExperiencieDto previousExperiencieDto;
     private String additional_information;
