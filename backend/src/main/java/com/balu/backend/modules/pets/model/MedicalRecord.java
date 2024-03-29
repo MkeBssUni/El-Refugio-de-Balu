@@ -46,4 +46,14 @@ public class MedicalRecord {
         this.allergies = allergies;
         this.pet = pet;
     }
+
+    public void update(boolean vaccinated, boolean sterilized, boolean dewormed, boolean microchip, String observations, String diseases, String allergies) {
+        this.vaccinated = vaccinated;
+        this.sterilized = sterilized;
+        this.dewormed = dewormed;
+        this.microchip = microchip;
+        this.observations = observations;
+        this.diseases = diseases;
+        this.allergies = allergies;
+    }
 }

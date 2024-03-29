@@ -102,4 +102,21 @@ public class Pet {
         this.owner = user;
         this.status = status;
     }
+
+    public void update(String name, String gender, String breed, int age, String ageUnit, String lifeStage, Double weight, String weightUnit, String size, String description, String characteristics, String specialCares, String mainImage, Category category) {
+        this.name = name;
+        this.gender = Genders.valueOf(gender.toUpperCase());
+        this.breed = breed;
+        this.age = age;
+        this.ageUnit = AgeUnits.valueOf(ageUnit.toUpperCase());
+        this.lifeStage = LifeStages.valueOf(lifeStage.toUpperCase());
+        this.weight = weight;
+        this.weightUnit = WeightUnits.valueOf(weightUnit.toUpperCase());
+        this.size = Sizes.valueOf(size.toUpperCase());
+        this.description = description;
+        this.characteristics = characteristics;
+        this.specialCares = specialCares;
+        this.mainImage = mainImage;
+        this.category = category;
+    }
 }
