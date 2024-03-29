@@ -29,6 +29,16 @@ public class PetController {
         return ResponseEntity.ok(petService.findAllPaged(dto, pageable));
     }
 
+    @PostMapping("/owned")
+    public ResponseEntity<ResponseApi<?>> findMyPetsPaged(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size,
+            @RequestBody FindMyPetsDto dto
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(petService.findMyPets(dto, pageable));
+    }
+
     @PostMapping("/requests")
     public ResponseEntity<ResponseApi<?>> findNewPetRequestsPaged(
             @RequestParam(defaultValue = "0") int page,
