@@ -228,73 +228,22 @@ public class PetService {
             if (dto.getName() == null || validations.isNotBlankString(dto.getName().trim()) || dto.getGender() == null || validations.isNotBlankString(dto.getGender().trim()) || dto.getBreed() == null || validations.isNotBlankString(dto.getBreed().trim()) || dto.getAge() == 0 || dto.getAgeUnit() == null || validations.isNotBlankString(dto.getAgeUnit().trim()) || dto.getLifeStage() == null || validations.isNotBlankString(dto.getLifeStage().trim()) || dto.getWeight() == null || dto.getWeight() == 0.00 || dto.getWeightUnit() == null || validations.isNotBlankString(dto.getWeightUnit().trim()) || dto.getSize() == null || validations.isNotBlankString(dto.getSize().trim()) || dto.getDescription() == null || validations.isNotBlankString(dto.getDescription().trim()) || dto.getCharacteristics() == null || dto.getCharacteristics().length < 3 || dto.getMainImage() == null || validations.isNotBlankString(dto.getMainImage().trim()) || dto.getCategory() == null || validations.isNotBlankString(dto.getCategory().trim()) || dto.getOwner() == null || validations.isNotBlankString(dto.getOwner().trim()))
                 return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
 
-            if (validations.isInvalidEnum(dto.getGender().toUpperCase().trim(), Genders.class)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
-            if (validations.isInvalidEnum(dto.getAgeUnit().toUpperCase().trim(), AgeUnits.class)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
-            if (validations.isInvalidEnum(dto.getLifeStage().toUpperCase().trim(), LifeStages.class)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
-            if (validations.isInvalidEnum(dto.getWeightUnit().toUpperCase().trim(), WeightUnits.class)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
-            if (validations.isInvalidEnum(dto.getSize().toUpperCase().trim(), Sizes.class)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
-
-            if (validations.isInvalidName(dto.getName()) || validations.isInvalidName(dto.getBreed())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FORMAT.name());
-            if (validations.isInvalidMinAndMaxLength(dto.getName().trim(), 3, 30) || validations.isInvalidMinAndMaxLength(dto.getBreed().trim(), 3, 50) || validations.isInvalidMinAndMaxLength(dto.getDescription().trim(), 100, 1500)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
-            if (dto.getObservations() != null && validations.isInvalidMinAndMaxLength(dto.getObservations().trim(), 50, 500)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
-            if (dto.getAge() < 0 || dto.getWeight() < 0) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
-
-            if(dto.getCharacteristics().length > 20) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
-            for (int i = 0; i < dto.getCharacteristics().length; i++) {
-                if (validations.isInvalidName(dto.getCharacteristics()[i].trim())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FORMAT.name());
-                if (validations.isInvalidMinAndMaxLength(dto.getCharacteristics()[i].trim(), 3, 50)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
-                for (int j = i + 1; j < dto.getCharacteristics().length; j++) {
-                    if (dto.getCharacteristics()[i].equals(dto.getCharacteristics()[j])) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.DUPLICATE_RECORD.name());
-                }
-            }
-            String characteristics = String.join(",", dto.getCharacteristics());
-
-            String specialCares = null;
-            if (dto.getSpecialCares() != null) {
-                for (int i = 0; i < dto.getSpecialCares().length; i++) {
-                    if (validations.isInvalidName(dto.getSpecialCares()[i].trim())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FORMAT.name());
-                    if (validations.isInvalidMinAndMaxLength(dto.getSpecialCares()[i].trim(), 20, 200)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
-                    for (int j = i + 1; j < dto.getSpecialCares().length; j++) {
-                        if (dto.getSpecialCares()[i].equals(dto.getSpecialCares()[j])) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.DUPLICATE_RECORD.name());
-                    }
-                }
-                specialCares = String.join(",", dto.getSpecialCares());
-            }
-
-            String diseases = null;
-            if (dto.getDiseases() != null) {
-                for (int i = 0; i < dto.getDiseases().length; i++) {
-                    if (validations.isInvalidName(dto.getDiseases()[i].trim())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FORMAT.name());
-                    if (validations.isInvalidMinAndMaxLength(dto.getDiseases()[i].trim(), 3, 50)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
-                    for (int j = i + 1; j < dto.getDiseases().length; j++) {
-                        if (dto.getDiseases()[i].equals(dto.getDiseases()[j])) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.DUPLICATE_RECORD.name());
-                    }
-                }
-                diseases = String.join(",", dto.getDiseases());
-            }
-
-            String allergies = null;
-            if (dto.getAllergies() != null) {
-                for (int i = 0; i < dto.getAllergies().length; i++) {
-                    if (validations.isInvalidName(dto.getAllergies()[i].trim())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FORMAT.name());
-                    if (validations.isInvalidMinAndMaxLength(dto.getAllergies()[i].trim(), 3, 50)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
-                    for (int j = i + 1; j < dto.getAllergies().length; j++) {
-                        if (dto.getAllergies()[i].equals(dto.getAllergies()[j])) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.DUPLICATE_RECORD.name());
-                    }
-                }
-                allergies = String.join(",", dto.getAllergies());
-            }
-
-            if (validations.isInvalidImage(dto.getMainImage()) || validations.isInvalidImageLength(dto.getMainImage())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_IMAGE.name());
-            if (dto.getImages() != null) {
-                if (dto.getImages().length > 4) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
-                HashSet<String> imagesSet = new HashSet<>();
-                imagesSet.add(dto.getMainImage());
-                for (String image : dto.getImages()) {
-                    boolean isAdded = imagesSet.add(image);
-                    if (!isAdded) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.DUPLICATE_IMAGE.name());
-                    if (validations.isInvalidImage(image) || validations.isInvalidImageLength(image)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_IMAGE.name());
-                }
+            String errorMessage = saveAndUpdatePetValidations(dto.getName(), dto.getGender(), dto.getBreed(), dto.getAge(), dto.getAgeUnit(), dto.getLifeStage(), dto.getWeight(), dto.getWeightUnit(), dto.getSize(), dto.getDescription(), dto.getCharacteristics(), dto.getSpecialCares(), dto.getDiseases(), dto.getAllergies(), dto.getObservations(), dto.getMainImage(), dto.getImages());
+            switch (errorMessage) {
+                case "invalid field":
+                    return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+                case "invalid format":
+                    return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FORMAT.name());
+                case "invalid length":
+                    return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
+                case "duplicate record":
+                    return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.DUPLICATE_RECORD.name());
+                case "invalid image":
+                    return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_IMAGE.name());
+                case "duplicate image":
+                    return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.DUPLICATE_IMAGE.name());
+                case "":
+                    break;
             }
 
             Long categoryId = decryptId(dto.getCategory());
@@ -314,11 +263,11 @@ public class PetService {
             Optional<Status> optionalStatus = statusRepository.findByName(Statusses.PENDING);
             Status status = optionalStatus.get();
 
-            Pet pet = new Pet(dto.getName().trim(),dto.getGender(), dto.getBreed().trim(), dto.getAge(), dto.getAgeUnit(), dto.getLifeStage(), dto.getWeight(), dto.getWeightUnit(), dto.getSize(), dto.getDescription().trim(), characteristics, specialCares, dto.getMainImage().trim(), category, user, status);
+            Pet pet = new Pet(dto.getName().trim(),dto.getGender(), dto.getBreed().trim(), dto.getAge(), dto.getAgeUnit(), dto.getLifeStage(), dto.getWeight(), dto.getWeightUnit(), dto.getSize(), dto.getDescription().trim(), String.join(",", dto.getCharacteristics()), dto.getSpecialCares() != null ? String.join(",", dto.getSpecialCares()) : null, dto.getMainImage().trim(), category, user, status);
             Pet savedPet = petRepository.saveAndFlush(pet);
             if (savedPet == null) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.PET_NOT_SAVED.name());
 
-            MedicalRecord medicalRecord = new MedicalRecord(dto.isVaccinated(), dto.isSterilized(), dto.isDewormed(), dto.isMicrochip(), dto.getObservations() != null ? dto.getObservations().trim() : null, diseases, allergies, savedPet);
+            MedicalRecord medicalRecord = new MedicalRecord(dto.isVaccinated(), dto.isSterilized(), dto.isDewormed(), dto.isMicrochip(), dto.getObservations() != null ? dto.getObservations().trim() : null, dto.getDiseases() != null ? String.join(",", dto.getDiseases()) : null, dto.getAllergies() != null ? String.join(",", dto.getAllergies()) : null, savedPet);
             pet.setMedicalRecord(medicalRecord);
 
             MedicalRecord savedMedicalRecord = medicalRecordRepository.saveAndFlush(medicalRecord);
