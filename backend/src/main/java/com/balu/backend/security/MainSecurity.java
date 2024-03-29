@@ -33,7 +33,8 @@ public class MainSecurity {
             "/api/category/list",
             "/api/person/activate/account",
             "/api/person/send/newCode",
-            "/api/pet/catalog"
+            "/api/pet/catalog",
+            "/api/address"
     };
 
     private final UserDetailsServiceImpl userDetailsService;
@@ -82,6 +83,7 @@ public class MainSecurity {
                         .requestMatchers("/api/favorite/pet/remove").hasAnyAuthority(Roles.GENERAL.name())
                         .requestMatchers("/api/favorite/pet/catalog").hasAnyAuthority(Roles.GENERAL.name())
                         .requestMatchers("/api/adoption/").hasAnyAuthority(Roles.GENERAL.name())
+                        .requestMatchers("/api/address").hasAnyAuthority( Roles.GENERAL.name())
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())
