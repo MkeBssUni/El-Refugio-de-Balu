@@ -44,4 +44,14 @@ public class AdoptionRequest {
     private String previous_experience;
     @Column(nullable = false)
     private String additional_information;
+
+    public AdoptionRequest(User user, Pet pet,  Status status, String reasons_for_adoption, String previous_experience, String additional_information) {
+        this.user = user;
+        this.pet = pet;
+        this.status = status;
+        this.reasons_for_adoption = reasons_for_adoption;
+        this.previous_experience = previous_experience;
+        this.additional_information = additional_information;
+    }
+
 }

@@ -4,6 +4,7 @@ import com.balu.backend.kernel.ErrorMessages;
 import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.modules.adoptionRequests.model.AdoptionRequest;
 import com.balu.backend.modules.adoptionRequests.model.dto.GetAdoptionRequestDto;
+import com.balu.backend.modules.adoptionRequests.model.dto.SaveAdoptionRequestDto;
 import com.balu.backend.modules.adoptionRequests.service.ServiceAdoptionRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,12 @@ public class AdoptionRequestController {
         }catch (Exception e){
             return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<ResponseApi<?>> save (@RequestBody SaveAdoptionRequestDto dto){
+        ResponseApi<?> response = serviceAdoptionRequest.save(dto);
+        return ResponseEntity.status(response.getStatus()).body(response);
     }
 
 
