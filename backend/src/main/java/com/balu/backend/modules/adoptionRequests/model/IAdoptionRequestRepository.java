@@ -14,5 +14,6 @@ public interface IAdoptionRequestRepository  extends JpaRepository<AdoptionReque
 
     Optional<AdoptionRequest> findByUser_IdAndPet_Id(Long userId, Long petId);
     Optional<AdoptionRequest> findByPet_Id(Long idPet);
+    Long countAdoptionRequestByPet_Id(Long idPet);
 
 }

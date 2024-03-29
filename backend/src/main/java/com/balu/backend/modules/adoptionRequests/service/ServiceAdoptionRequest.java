@@ -119,7 +119,6 @@ public class ServiceAdoptionRequest {
                 Long idStatus = 2L;
                 Long activeAdoptionRequestsCount = iAdoptionRequestRepository.countByUser_IdAndStatus_Id(userId, idStatus);
                 int count = activeAdoptionRequestsCount != null ? activeAdoptionRequestsCount.intValue() : 0;
-                System.out.println("Cantidad de solicitudes"+count);
                 if (count >= 5) {
                     return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MAX_ADOPTIONREQUEST.name());
                 }
@@ -133,11 +132,15 @@ public class ServiceAdoptionRequest {
             if (!optionalPet.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
             Pet pet = optionalPet.get();
 
+            Long countByPet = iAdoptionRequestRepository.countAdoptionRequestByPet_Id(petId);
+            int count = countByPet != null ? countByPet.intValue() : 0;
+            if(count >=20)return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.LIMIT_ADOPTIONREQUEST.name());
+            
             Optional<AdoptionRequest> existingRequest = iAdoptionRequestRepository.findByUser_IdAndPet_Id(userId, petId);
             if (existingRequest.isPresent()) {
-                System.out.println(existingRequest);
                 return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.DUPLICATE_REQUEST.name());
             }
+
 
             Optional<Status> optionalStatus = statusRepository.findByName(Statusses.PENDING);
             if (!optionalStatus.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
