@@ -466,6 +466,42 @@ public class PetService {
         return new ResponseApi<>(HttpStatus.OK,false, "Comment saved successfully");
     }
 
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
+    public ResponseApi<?> cancel(CancelDto dto) {
+        if (dto.getPet() == null || validations.isNotBlankString(dto.getPet().trim()) || dto.getOwner() == null || validations.isNotBlankString(dto.getOwner().trim()) || dto.getCancelReason() == null || validations.isNotBlankString(dto.getCancelReason().trim()))
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
+
+        if (validations.isInvalidMinAndMaxLength(dto.getCancelReason().trim(), 50, 500)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
+
+        Long petId = decryptId(dto.getPet());
+        if (petId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+        Optional<Pet> optionalPet = petRepository.findById(petId);
+        if (!optionalPet.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        Pet pet = optionalPet.get();
+        if (!pet.getStatus().getName().equals(Statusses.IN_REVISION) && !pet.getStatus().getName().equals(Statusses.APPROVED) && !pet.getStatus().getName().equals(Statusses.PENDING)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_ALLOWED.name());
+
+        Long ownerId = decryptId(dto.getOwner());
+        if (ownerId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+        Optional<User> optionalUser = userRepository.findById(ownerId);
+        if (!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        User owner = optionalUser.get();
+        if (!owner.getRole().getName().equals(Roles.GENERAL)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ROLE.name());
+
+        if (pet.getOwner() != owner) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_USER.name());
+
+        pet.setCancelReason(dto.getCancelReason());
+        if (pet.getStatus().getName().equals(Statusses.PENDING)) pet.setStatus(statusRepository.findByName(Statusses.CLOSED).get());
+        if (pet.getStatus().getName().equals(Statusses.APPROVED)) pet.setStatus(statusRepository.findByName(Statusses.IN_REVISION).get());
+
+        Pet savedPet = petRepository.saveAndFlush(pet);
+        if (savedPet == null) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.INTERNAL_ERROR.name());
+
+        String logMessage = pet.getStatus().equals(Statusses.PENDING) ? "Pet " + savedPet.getId() + " request canceled by " + owner.getId() : "Pet " + savedPet.getId() + " cancellation request sent by " + owner.getId();
+        logService.saveLog(logMessage, LogTypes.UPDATE, "PETS");
+
+        return new ResponseApi<>(HttpStatus.OK,false, "Pet cancellation process successful");
+    }
+
     public Long decryptId(String encryptedId) {
         try {
             String decryptedId = hashService.decrypt(encryptedId);
