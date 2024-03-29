@@ -54,6 +54,8 @@ public class Pet {
     private String characteristics;
     @Column(columnDefinition = "text", nullable = false)
     private String mainImage;
+    @Column(columnDefinition = "varchar(500)")
+    private String cancelReason;
     @OneToMany(mappedBy = "pet")
     @JsonIgnore
     private List<PetImage> petImages;

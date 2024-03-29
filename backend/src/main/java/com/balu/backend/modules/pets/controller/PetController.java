@@ -99,4 +99,10 @@ public class PetController {
         ResponseApi<?> response = petService.save(dto);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
+
+    @PostMapping("/cancel")
+    public ResponseEntity<ResponseApi<?>> cancel(@RequestBody CancelDto dto) {
+        ResponseApi<?> response = petService.cancel(dto);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
 }
