@@ -1,10 +1,7 @@
 package com.balu.backend.modules.pets.model.repositories;
 
 import com.balu.backend.modules.pets.model.Pet;
-import com.balu.backend.modules.pets.model.views.IMyPetsAsModView;
-import com.balu.backend.modules.pets.model.views.IMyPetsView;
-import com.balu.backend.modules.pets.model.views.IPetCredentialView;
-import com.balu.backend.modules.pets.model.views.IPetRequestsView;
+import com.balu.backend.modules.pets.model.views.*;
 import com.balu.backend.modules.users.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +13,12 @@ import java.util.Optional;
 
 @Repository
 public interface IPetRepository extends JpaRepository<Pet,Long> {
+    @Query(value = "select p.id as id, p.name as name, concat(a.city, ', ', a.state) as location from pets p " +
+                        "inner join addresses a on p.user_owner_id = a.user_id " +
+                        "where p.status_id = 3 and lower(p.size) like %?1% and lower(p.life_stage) like %?2% and lower(a.state) like %?3% " +
+                        "and (p.gender = ?4 or ?4 is null) and (p.category_id = ?5 or ?5 is null)", nativeQuery = true)
+    Page<IPetsView> findAllPaged(String size, String lifeStage, String location, String gender, Long categoryId, Pageable pageable);
+
     @Query(value = "select p.name as name, p.breed as breed, lower(c.name) as category, lower(concat(p.weight,' ',p.weight_unit)) as weight, lower(p.size) as size, lower(p.life_stage) as lifeStage, lower(concat(p.age,' ',p.age_unit)) as age, lower(gender) as gender from pets p inner join categories c on p.category_id = c.id where p.id = ?1", nativeQuery = true)
     Optional<IPetCredentialView> findCredentialById(Long id);
 
