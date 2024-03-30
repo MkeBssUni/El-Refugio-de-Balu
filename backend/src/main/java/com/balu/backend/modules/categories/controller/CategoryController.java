@@ -16,6 +16,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @RestController
@@ -66,13 +72,13 @@ public class CategoryController {
             return  new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/paged")
+    @PostMapping ("/paged")
     public ResponseEntity<ResponseApi<Page<ICategoryViewPaged>>> getCategoryPaged(
             @RequestParam(defaultValue = "0", required = false) int page,
-            @RequestParam(defaultValue = "10", required = false) int size,
+            @RequestParam(defaultValue = "8", required = false) int size,
             @RequestParam(defaultValue = "id", required = false) String sort,
             @RequestParam(defaultValue = "asc", required = false) String direction,
-            @RequestBody SearchCategoryDto searchCategoryDto){
+            @RequestBody SearchCategoryDto searchCategoryDto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         Pageable pageable =PageRequest.of(page,size, Sort.by(Sort.Direction.fromString(direction),sort));
         ResponseApi<Page<ICategoryViewPaged>> responseApi = categoryService.getPaged(searchCategoryDto,pageable);
         return new ResponseEntity<>(responseApi,responseApi.getStatus());

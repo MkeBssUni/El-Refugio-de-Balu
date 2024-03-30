@@ -35,6 +35,7 @@ public class MainSecurity {
             "/api/person/send/newCode",
             "/api/pet/catalog",
             "/api/pet/details"
+
     };
 
     private final UserDetailsServiceImpl userDetailsService;
