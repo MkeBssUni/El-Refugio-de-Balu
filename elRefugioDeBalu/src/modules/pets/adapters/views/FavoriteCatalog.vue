@@ -7,7 +7,8 @@
             <b-col cols="12" sm="5" md="6" class="mt-3 mt-sm-0">
                 <b-input-group>
                     <b-input-group>
-                        <b-form-input type="text" placeholder="Buscar..." id="searchValue" v-model="searchValue" @keyup.enter="getFavorites()"></b-form-input>
+                        <b-form-input type="text" placeholder="Buscar..." id="searchValue" v-model="searchValue"
+                            @keyup.enter="getFavorites()"></b-form-input>
                         <b-button variant="dark-gray" type="button" id="searchValue"
                             class="d-flex align-items-center justify-content-between">
                             <b-icon icon="search" @click="getFavorites()"></b-icon>
@@ -23,7 +24,8 @@
                     <b-row class="transparent absolute-position">
                         <b-col cols="12" class="d-flex justify-content-end">
                             <b-button variant="dark-gray" class="m-2 py-2 d-flex align-items-center" pill
-                                @mouseenter="hoverIn(pet.id)" @mouseleave="hoverOut()" v-b-tooltip.hover.left="'Eliminar de favoritas'">
+                                @mouseenter="hoverIn(pet.id)" @mouseleave="hoverOut()" @click="showRemovePetConfirmation(pet)"
+                                v-b-tooltip.hover.left="'Eliminar de favoritas'">
                                 <b-icon :icon="hover === pet.id ? 'heart' : 'heart-fill'" font-scale="2"
                                     :class="{ 'text-danger': hover !== pet.id, 'mt-1': true }"></b-icon>
                             </b-button>
@@ -33,7 +35,8 @@
                         <b-card-title>{{ pet.name }}</b-card-title>
                         <b-card-sub-title>{{ pet.location }}</b-card-sub-title>
                         <div class="d-flex justify-content-center">
-                            <b-button pill variant="outline-dark-blue" class="mt-3 px-5 d-flex align-items-center" to="/petDetails" >
+                            <b-button pill variant="outline-dark-blue" class="mt-3 px-5 d-flex align-items-center"
+                                to="/petDetails">
                                 <span>Ver detalles</span>
                             </b-button>
                         </div>
@@ -96,7 +99,6 @@ export default {
                 this.total = response.data.data.totalElements
                 Swal.close()
             } catch (error) {
-                console.error(error)
                 Swal.fire({
                     title: 'Error',
                     text: 'Ocurrió un error al cargar las mascotas',
@@ -110,7 +112,60 @@ export default {
                 })
             }
         },
-        getDetails(pet) {            
+        async removePet(pet) {
+            try {
+                Swal.fire({
+                    title: 'Cargando...',
+                    text: 'Eliminando mascota de tus favoritas, espera un momento',
+                    imageUrl: gatoWalkingGif,
+                    imageWidth: 160,
+                    imageHeight: 160,
+                    showConfirmButton: false
+                })
+                const response = await instance.post(`/favorite/pet/remove`, {
+                    user: localStorage.getItem("userId"),
+                    favoritePet: pet.id
+                })
+                console.log(response)
+                Swal.fire({
+                    title: 'Mascota eliminada',
+                    text: 'La mascota ha sido eliminada de tus favoritas',
+                    icon: 'success',
+                    iconColor: '#4BB543',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                }).then(() => {
+                    this.getFavorites()
+                })
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error al eliminar la mascota de tus favoritas',
+                    icon: 'error',
+                    iconColor: '#A93D3D',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                })
+            }
+        },
+        showRemovePetConfirmation(pet) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Estás a punto de eliminar a esta mascota de tus favoritas',
+                icon: 'warning',
+                showCancelButton: true,
+                showConfirmButton: true,
+                confirmButtonText: 'Eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.removePet(pet)
+                }
+            });
+        },
+        getDetails(pet) {
             this.$router.push({ name: 'petDetails', params: { petId: pet.id } });
             localStorage.setItem('petId', pet.id);
         }
