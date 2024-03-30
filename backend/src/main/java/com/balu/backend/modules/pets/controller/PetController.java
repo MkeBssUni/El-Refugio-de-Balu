@@ -80,6 +80,12 @@ public class PetController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
+    @PostMapping("/complete/adoption")
+    public ResponseEntity<ResponseApi<?>> complete(@RequestBody CompleteAdoptionDto dto) {
+        ResponseApi<?> response = petService.completeAdoption(dto);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
     @PostMapping("/end")
     public ResponseEntity<ResponseApi<?>> end(@RequestBody EndPetRequestDto dto) {
         ResponseApi<?> response = petService.end(dto);

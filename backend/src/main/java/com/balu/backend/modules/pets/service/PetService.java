@@ -493,6 +493,42 @@ public class PetService {
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
+    public ResponseApi<?> completeAdoption(CompleteAdoptionDto dto) {
+        if (dto.getPet() == null || validations.isNotBlankString(dto.getPet().trim()) || dto.getAdoptant() == null || validations.isNotBlankString(dto.getAdoptant().trim()) || dto.getModerator() == null || validations.isNotBlankString(dto.getModerator().trim()))
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
+
+        Long petId = decryptId(dto.getPet());
+        if (petId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+        Optional<Pet> optionalPet = petRepository.findById(petId);
+        if (!optionalPet.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        Pet pet = optionalPet.get();
+
+        if (!pet.getStatus().getName().equals(Statusses.APPROVED)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_ALLOWED.name());
+
+        Long adoptantId = decryptId(dto.getAdoptant());
+        if (adoptantId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+        Optional<User> optionalAdoptant = userRepository.findById(adoptantId);
+        if (!optionalAdoptant.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        User adoptant = optionalAdoptant.get();
+        if (!adoptant.getRole().getName().equals(Roles.GENERAL)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ROLE.name());
+
+        Long moderatorId = decryptId(dto.getModerator());
+        if (moderatorId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+        Optional<User> optionalModerator = userRepository.findById(moderatorId);
+        if (!optionalModerator.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        User moderator = optionalModerator.get();
+        if (!moderator.getRole().getName().equals(Roles.MOD)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ROLE.name());
+
+        if (pet.getModerator() != moderator) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_USER.name());
+
+        pet.setAdoptant(adoptant);
+        pet.setStatus(statusRepository.findByName(Statusses.ADOPTED).get());
+        Pet savedPet = petRepository.saveAndFlush(pet);
+        if (savedPet == null) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.INTERNAL_ERROR.name());
+        return new ResponseApi<>(HttpStatus.OK,false, "Adoption completed successfully");
+    }
+
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseApi<?> end(EndPetRequestDto dto) {
         if (dto.getPet() == null || validations.isNotBlankString(dto.getPet().trim()) || dto.getUser() == null || validations.isNotBlankString(dto.getUser().trim()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
