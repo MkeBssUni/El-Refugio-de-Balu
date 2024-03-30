@@ -520,6 +520,7 @@ public class PetService {
         if (!moderator.getRole().getName().equals(Roles.MOD)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ROLE.name());
 
         if (pet.getModerator() != moderator) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_USER.name());
+        if (pet.getOwner() == adoptant) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_USER.name());
 
         pet.setAdoptant(adoptant);
         pet.setStatus(statusRepository.findByName(Statusses.ADOPTED).get());
