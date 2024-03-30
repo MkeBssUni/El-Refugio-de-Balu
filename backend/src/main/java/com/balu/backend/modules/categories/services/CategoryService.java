@@ -151,8 +151,8 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public ResponseApi<Page<ICategoryViewPaged>> getPaged(SearchCategoryDto searchCategoryDto, Pageable peageable){
-        searchCategoryDto.setSearcgCategoryValue(searchCategoryDto.getSearcgCategoryValue().toLowerCase());
-        Page<ICategoryViewPaged> categoryPage= iCategoryRepository.findAllPaged(searchCategoryDto.getSearcgCategoryValue(),searchCategoryDto.getSearcgCategoryValue(),peageable);
+        searchCategoryDto.setSearchCategoryValue(searchCategoryDto.getSearchCategoryValue().toLowerCase());
+        Page<ICategoryViewPaged> categoryPage= iCategoryRepository.findAllPaged(searchCategoryDto.getSearchCategoryValue(),searchCategoryDto.getSearchCategoryValue(),peageable);
         return new ResponseApi<>(categoryPage,HttpStatus.OK,false,"OK");
     }
 }

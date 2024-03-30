@@ -1,5 +1,7 @@
 package com.balu.backend.kernel;
 
+import jakarta.annotation.Resource;
+
 public enum ErrorMessages {
     DUPLICATE_RECORD,
     ROLE_NOT_FOUND,
@@ -22,6 +24,7 @@ public enum ErrorMessages {
     INVALID_LENGTH,
     NOT_FOUND,
     PET_NOT_SAVED,
+    PET_NOT_UPDATED,
     PET_NOT_ADDED_AS_FAVORITE,
     MEDICAL_RECORD_NOT_SAVED,
     IMAGE_NOT_SAVED,
@@ -34,4 +37,6 @@ public enum ErrorMessages {
     LIMIT_ADOPTIONREQUEST,
     ERROR_STATUS,
     NOT_CHANGESTATUS_ADOPTIONREQUEST
+    NOT_ALLOWED,
+    NO_ADDRESS_FOUND ;
 }

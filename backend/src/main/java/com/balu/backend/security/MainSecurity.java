@@ -33,7 +33,8 @@ public class MainSecurity {
             "/api/category/list",
             "/api/person/activate/account",
             "/api/person/send/newCode",
-            "/api/pet/catalog"
+            "/api/pet/catalog",
+            "/api/pet/details"
     };
 
     private final UserDetailsServiceImpl userDetailsService;
@@ -71,14 +72,25 @@ public class MainSecurity {
                         .requestMatchers(WHITE_LIST_URL).permitAll()
                         .requestMatchers("/api/person/").hasAnyAuthority(Roles.ADMIN.name())
                         .requestMatchers("/api/person/paged/").hasAnyAuthority(Roles.ADMIN.name())
-                        .requestMatchers("/api/pet/").hasAnyAuthority(Roles.GENERAL.name())
+                        .requestMatchers("/api/pet/owned").hasAnyAuthority(Roles.GENERAL.name())
+                        .requestMatchers("/api/pet/save").hasAnyAuthority(Roles.GENERAL.name())
+                        .requestMatchers("/api/pet/update").hasAnyAuthority(Roles.GENERAL.name())
+                        .requestMatchers("/api/pet/cancel").hasAnyAuthority(Roles.GENERAL.name())
+                        .requestMatchers("/api/pet/requests").hasAnyAuthority(Roles.MOD.name())
+                        .requestMatchers("/api/pet/moderated").hasAnyAuthority(Roles.MOD.name())
                         .requestMatchers("/api/pet/credential").hasAnyAuthority(Roles.MOD.name())
+                        .requestMatchers("/api/pet/select").hasAnyAuthority(Roles.MOD.name())
+                        .requestMatchers("/api/pet/adoption").hasAnyAuthority(Roles.MOD.name())
+                        .requestMatchers("/api/pet/end").hasAnyAuthority(Roles.MOD.name())
+                        .requestMatchers("/api/pet/comment/all").hasAnyAuthority(Roles.MOD.name(), Roles.GENERAL.name())
+                        .requestMatchers("/api/pet/comment").hasAnyAuthority(Roles.MOD.name(), Roles.GENERAL.name())
                         .requestMatchers("/api/favorite/pet/add").hasAnyAuthority(Roles.GENERAL.name())
                         .requestMatchers("/api/favorite/pet/remove").hasAnyAuthority(Roles.GENERAL.name())
                         .requestMatchers("/api/favorite/pet/catalog").hasAnyAuthority(Roles.GENERAL.name())
                         .requestMatchers("/api/adoption/").hasAnyAuthority(Roles.GENERAL.name())
                         .requestMatchers("/api/adoption/byPet").hasAnyAuthority(Roles.MOD.name())
                         .requestMatchers("/api/adoption/changeStatus").hasAnyAuthority(Roles.MOD.name())
+                        .requestMatchers("/api/address").hasAnyAuthority( Roles.GENERAL.name())
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())
