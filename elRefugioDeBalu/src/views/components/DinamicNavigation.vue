@@ -46,6 +46,7 @@ export default {
                             timer: 1500,
                             timerProgressBar: true,
                         }).then(() => {
+                            this.getRole();
                             this.$router.push('/');
                         });
                     } else {
@@ -74,6 +75,11 @@ export default {
             } else {
                 this.$router.push('/selfRegistration');
             }
+        }
+    },
+    watch:{
+        '$route' (to, from){
+            this.getRole();
         }
     }
 }
