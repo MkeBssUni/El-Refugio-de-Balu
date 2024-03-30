@@ -66,6 +66,7 @@ public class FavoritePetService {
                     try {
                         return new FavoritePetsCatalog(
                                 hashService.encrypt(favoritePet.getId()),
+                                hashService.encrypt(favoritePet.getPetId()),
                                 favoritePet.getName(),
                                 favoritePet.getImage(),
                                 favoritePet.getLocation()
