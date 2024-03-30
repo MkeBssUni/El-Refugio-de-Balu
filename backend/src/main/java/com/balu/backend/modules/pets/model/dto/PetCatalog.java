@@ -9,6 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PetCatalog {
     private String id;
+    private String image;
     private String name;
     private String location;
     private boolean isFavorite;
