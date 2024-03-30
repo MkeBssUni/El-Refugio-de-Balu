@@ -4,5 +4,5 @@ public interface IPetsByUserView {
     Long getId();
     String getName();
     String getLocation();
-    boolean getIsFavorite();
+    Long getFavorite();
 }

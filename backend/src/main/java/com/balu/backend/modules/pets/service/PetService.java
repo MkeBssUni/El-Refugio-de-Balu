@@ -60,11 +60,13 @@ public class PetService {
     public ResponseApi<?> findAllPaged(FindPetsDto dto, Pageable pageable) {
         if (dto.getSize() != null) dto.setSize(dto.getSize().toLowerCase().trim());
         if (dto.getLifeStage() != null) dto.setLifeStage(dto.getLifeStage().toLowerCase().trim());
-        if (dto.getGender() != null) dto.setGender(dto.getGender().toLowerCase().trim());
+        if (dto.getGender() != null) {
+            if (validations.isNotBlankString(dto.getGender().trim())) dto.setGender(null);
+            else dto.setGender(dto.getGender().toLowerCase().trim());
+        }
         if (dto.getLocation() != null) dto.setLocation(dto.getLocation().toLowerCase().trim());
 
         Long categoryId = null;
-
         if (dto.getCategory() != null) {
             categoryId = decryptId(dto.getCategory());
             if (categoryId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
@@ -72,10 +74,9 @@ public class PetService {
             if (!optionalCategory.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
         }
 
-        Page<IPetsView> pets = null;
-
+        Long userId = null;
         if (dto.getUser() != null) {
-            Long userId = decryptId(dto.getUser());
+            userId = decryptId(dto.getUser());
             if (userId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
             Optional<User> optionalUser = userRepository.findById(userId);
             if (!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
@@ -86,25 +87,36 @@ public class PetService {
                 else dto.setLocation("");
             }
 
-            return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, "Not implemented");
+            Page<IPetsByUserView> pets = petRepository.findAllByUserPaged(dto.getSize(), dto.getLifeStage(), dto.getLocation(), dto.getGender(), categoryId, userId, pageable);
+            Page<PetCatalog> petsCatalog = pets.map(pet -> {
+                try {
+                    return new PetCatalog(
+                            hashService.encrypt(pet.getId()),
+                            pet.getName(),
+                            pet.getLocation(),
+                            pet.getFavorite() == 1 ? true : false
+                    );
+                } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            return new ResponseApi<>(petsCatalog, HttpStatus.OK,false, "Pets retrieved successfully");
         } else {
-            pets = petRepository.findAllPaged(dto.getSize(), dto.getLifeStage(), dto.getLocation(), dto.getGender(), categoryId, pageable);
+            Page<IPetsView> pets = petRepository.findAllPaged(dto.getSize(), dto.getLifeStage(), dto.getLocation(), dto.getGender(), categoryId, pageable);
+            Page<PetCatalog> petsCatalog = pets.map(pet -> {
+                try {
+                    return new PetCatalog(
+                            hashService.encrypt(pet.getId()),
+                            pet.getName(),
+                            pet.getLocation(),
+                            false
+                    );
+                } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            return new ResponseApi<>(petsCatalog, HttpStatus.OK,false, "Pets retrieved successfully");
         }
-
-        Page<PetCatalog> petsCatalog = pets.map(pet -> {
-            try {
-                return new PetCatalog(
-                        hashService.encrypt(pet.getId()),
-                        pet.getName(),
-                        pet.getLocation(),
-                        false
-                );
-            } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        return new ResponseApi<>(petsCatalog, HttpStatus.OK,false, "Pets retrieved successfully");
     }
 
     @Transactional(readOnly = true)
