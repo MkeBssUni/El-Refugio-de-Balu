@@ -1,5 +1,6 @@
 package com.balu.backend.modules.adoptionRequests.service;
 
+import com.balu.backend.kernel.EmailService;
 import com.balu.backend.kernel.ErrorMessages;
 import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.kernel.Validations;
@@ -55,6 +56,7 @@ public class ServiceAdoptionRequest {
     private final HomeSpecificationRepository homeSpecificationRepository;
     private final HomeImageRepository homeImageRepository;
     private final LogService logService;
+    private final EmailService emailService;
 
     @Transactional(readOnly = true)
     public ResponseApi<Optional<AdoptionRequest>> adoptionByUser(String idUser) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
@@ -137,10 +139,10 @@ public class ServiceAdoptionRequest {
             int count = countByPet != null ? countByPet.intValue() : 0;
             if(count >=20)return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.LIMIT_ADOPTIONREQUEST.name());
 
-            Optional<AdoptionRequest> existingRequest = iAdoptionRequestRepository.findByUser_IdAndPet_Id(userId, petId);
-            if (existingRequest.isPresent()) {
-                return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.DUPLICATE_REQUEST.name());
-            }
+//            Optional<AdoptionRequest> existingRequest = iAdoptionRequestRepository.findByUser_IdAndPet_Id(userId, petId);
+//            if (existingRequest.isPresent()) {
+//                return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.DUPLICATE_REQUEST.name());
+//            }
 
 
             Optional<Status> optionalStatus = statusRepository.findByName(Statusses.PENDING);
@@ -174,6 +176,7 @@ public class ServiceAdoptionRequest {
                     return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.IMAGE_NOT_SAVED.name());
                 }
             }
+            sendEmailModerador(userId,pet.getName());
             logService.saveLog("New adoption request registered: "+saveAdoption.getId(), LogTypes.INSERT,"ADOPTIONREQUEST | HOMESPECEFITACTION | HOMEIMAGES | ADRESSES");
             return new ResponseApi<>(HttpStatus.CREATED,false,"Adoption request saved successfully");
         }catch (Exception e){
@@ -185,33 +188,56 @@ public class ServiceAdoptionRequest {
     public ResponseApi<?> changeStatus(ChangeStatusAdoptionRequestDto dto){
         try{
             if(dto.getAdoptionId() == null || validations.isNotBlankString(dto.getAdoptionId())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.MISSING_FIELDS.name());
-
             Long idAdoption = decryptId(dto.getAdoptionId());
             Optional<AdoptionRequest> optionalAdoptionRequest = iAdoptionRequestRepository.findById(idAdoption);
-            if(optionalAdoptionRequest.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.NOT_FOUND.name());
+            if(!optionalAdoptionRequest.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.NOT_FOUND.name());
             AdoptionRequest adoptionRequest = optionalAdoptionRequest.get();
-            Optional<Status> statusOptional= statusRepository.findById(adoptionRequest.getId());
+            Optional<Status> statusOptional= statusRepository.findById(adoptionRequest.getStatus().getId());
             if(!statusOptional.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.NOT_FOUND.name());
             Status status = statusOptional.get();
+            System.out.println(status.getName());
             if(status.getName() != Statusses.PENDING) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.ERROR_STATUS.name());
-            if(dto.getStatus() != Statusses.ADOPTED || dto.getStatus() != Statusses.CLOSED) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.ERROR_STATUS.name());
+            System.out.println(dto.getStatus() != Statusses.ADOPTED && dto.getStatus() != Statusses.CLOSED);
+            if(dto.getStatus() != Statusses.ADOPTED && dto.getStatus() != Statusses.CLOSED) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.ERROR_STATUS.name());
             Optional<Status> statusID = statusRepository.findByName(dto.getStatus());
             Long idStatus = statusID.get().getId();
             Integer adoption = this.iAdoptionRequestRepository.changeStatusAdoptionRequest(idAdoption,idStatus);
             if(adoption == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.NOT_CHANGESTATUS_ADOPTIONREQUEST.name());
             // servicio de pets cambio de estado
+            Optional<Pet> optionalPet = petRepository.findById(adoptionRequest.getPet().getId());
+            if (!optionalPet.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+            Pet pet = optionalPet.get();
+            Optional<User> userOptional = userRepository.findById(adoptionRequest.getUser().getId());
+            if(!userOptional.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+            User user = userOptional.get();
             if(adoption != null){
                 if(dto.getStatus() == Statusses.ADOPTED){
-                    System.out.println("Envio Correo AdoptionApprovalTemplate");
+                    emailService.sendAdoptionApprovalTemplate(hashService.decrypt(user.getUsername()),pet.getName());
                 }
                 if(dto.getStatus() == Statusses.CLOSED){
-                    System.out.println("Envio correo FinalizeAdoptionTemplate");
+                    emailService.finalizeAdoptionTemplate(hashService.decrypt(user.getUsername()),pet.getName());
                 }
             }
             logService.saveLog("New adoption request registered: "+adoption, LogTypes.INSERT,"ADOPTIONREQUEST | PET");
             return new ResponseApi<>(adoption,HttpStatus.OK,false,"Adoption request change status successfully");
         }catch (Exception e){
             return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name());
+        }
+    }
+
+    public boolean sendEmailModerador(Long idUser,String namePet){
+        try{
+            Optional<User> optionalUser = userRepository.findById(idUser);
+            if(!optionalUser.isPresent()) return false;
+            User moderador = optionalUser.get();
+            Long countRequest = iAdoptionRequestRepository.countAdoptionRequestByPet_Moderator_Id(moderador.getId());
+            int count = countRequest != null ? countRequest.intValue() : 0;
+            if(count > 1){
+                emailService.activeRequestTemplate(hashService.decrypt(moderador.getUsername()),namePet,count);
+            }
+            return true;
+        }catch (Exception e){
+            return false;
         }
     }
 
@@ -233,8 +259,5 @@ public class ServiceAdoptionRequest {
             return null;
         }
     }
-
-
-
 
 }

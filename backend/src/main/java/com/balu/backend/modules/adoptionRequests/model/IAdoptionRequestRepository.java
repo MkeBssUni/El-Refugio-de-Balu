@@ -23,4 +23,6 @@ public interface IAdoptionRequestRepository  extends JpaRepository<AdoptionReque
     @Query(value = "UPDATE adoption_requests SET  status_id= :status WHERE id = :id", nativeQuery = true)
     Integer changeStatusAdoptionRequest(@Param("id") Long id, @Param("status") Long idStatus);
 
+    Long countAdoptionRequestByPet_Moderator_Id(Long idModerador);
+
 }
