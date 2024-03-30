@@ -9,8 +9,18 @@
     </div>
     <b-container fluid>
       <div class="mt-3">
-        <b-row class="justify-content-end"  v-if="saveCategoryForm && updateCategoryForm" >
-          <b-col cols="12" sm="12" md="3"  lg="2" xl="2" class="d-flex justify-content-end my-2">
+        <b-row
+          class="justify-content-end"
+          v-if="saveCategoryForm && updateCategoryForm"
+        >
+          <b-col
+            cols="12"
+            sm="12"
+            md="3"
+            lg="2"
+            xl="2"
+            class="d-flex justify-content-end my-2"
+          >
             <b-button
               as="col"
               cols="12"
@@ -122,23 +132,16 @@
             md="4 "
             lg="3"
             xl="3"
-            v-for="(animal, index) in paginatedAnimalsList"
-            :key="index"
+            v-for="animal in AnimalsList"
+            :key="animal.index"
           >
             <b-card
-              :title="animal.name"
-              :img-src="animal.image"
+              :title="animal.categoryName"
+              :img-src="animal.categoryImage"
               img-alt="Image"
               img-top
               tag="article"
-              style="
-                max-width: 20rem;
-                border-top-left-radius: 2rem;
-                border-top-right-radius: 2rem;
-                border-bottom-left-radius: 1rem;
-                border-bottom-right-radius: 1rem;
-              "
-              class="mb-2"
+              class="mb-2 card-img-top-animals "
             >
               <b-card-body class="py-0 justify-content-center">
                 <b-row v-if="saveCategoryForm && updateCategoryForm">
@@ -171,13 +174,13 @@
                     xl="5"
                   >
                     <b-button
-                      v-if="animal.status"
+                      v-if="animal.categoryStatus"
                       pill
                       variant="outline-success"
                       class="d-flex align-items-center justify-content-center w-100 px-0"
                       v-b-tooltip.hover
                       title="Esta categoria es visible para los usuarios"
-                      style="font-size: 0.8rem" 
+                      style="font-size: 0.8rem"
                       @click="ViewAlertConfirmationChangeCategoryStatus(animal)"
                       >Habilitada
                       <i class="material-icons ms-2" style="font-size: 1rem"
@@ -191,7 +194,8 @@
                       style="font-size: 0.8rem"
                       class="d-flex align-items-center justify-content-center w-100 px-0"
                       v-b-tooltip.hover
-                      title="Esta categoria no es visible para los usuarios" @click="ViewAlertConfirmationChangeCategoryStatus(animal)"
+                      title="Esta categoria no es visible para los usuarios"
+                      @click="ViewAlertConfirmationChangeCategoryStatus(animal)"
                       >Deshabilitada
                       <i class="material-icons ms-2" style="font-size: 1rem"
                         >close</i
@@ -280,8 +284,10 @@ import Encabezado from "../../../../views/components/Encabezado.vue";
 import tortugas from "../../../../assets/imgs/tortugas1.jpeg";
 import SaveCategory from "./SaveCategory.vue";
 import UpdateCategory from "./UpdateCategory.vue";
-import FishLoading from "../../../../assets/imgs/peces.gif"
+import FishLoading from "../../../../assets/imgs/peces.gif";
 import Swal from "sweetalert2";
+import instance from "../../../../config/axios";
+import { encrypt,decrypt } from '../../../../kernel/hashFunctions';
 
 export default {
   name: "AnimalCategories",
@@ -431,12 +437,13 @@ export default {
       selected: null,
       currentPage: 1,
       perPage: 8,
+      rows: 1,
       saveCategoryForm: true,
       updateCategoryForm: true,
       categoryToModify: null,
     };
   },
-  computed: {
+  /* computed: {
     rows() {
       return this.AnimalsList.length;
     },
@@ -445,13 +452,25 @@ export default {
       const endIndex = startIndex + this.perPage;
       return this.AnimalsList.slice(startIndex, endIndex);
     },
-  },
+  }, */
   methods: {
     ViewCategoryRegistrationForm() {
       this.saveCategoryForm = !this.saveCategoryForm;
     },
-    GetAllCategories() {
-      //Aqui se hara la peticion al back
+    async GetAllCategories() {
+      try {
+        const searchCategoryValueDto=await encrypt(this.search)
+        l
+        const response = await instance.post("/category/paged", {
+          searchCategoryValue: searchCategoryValueDto,
+        });
+        this.rows = response.data.totalPages;
+        this.AnimalsList = response.data.data.content;
+        this.perPage = response.data.pageSize;
+        this.currentPage = response.data.pageNumber;
+      } catch (error) {
+        console.error("Error al obtener categorías:", error);
+      }
     },
     HideCategoryRegistrationForm() {
       this.ViewCategoryRegistrationForm();
@@ -465,10 +484,10 @@ export default {
       this.categoryToModify = category;
       this.updateCategoryForm = !this.updateCategoryForm;
     },
-    ViewAlertConfirmationChangeCategoryStatus(category){
-       Swal.fire({
+    ViewAlertConfirmationChangeCategoryStatus(category) {
+      Swal.fire({
         title: "¿Seguro que desea realizar la acción?",
-        text:"Se cambiara el estatus de la categoria"+category.name, 
+        text: "Se cambiara el estatus de la categoria" + category.name,
         icon: "question",
         showCancelButton: true,
         confirmButtonColor: "#53A93D",
@@ -487,20 +506,23 @@ export default {
             imageHeight: 160, // Altura de la imagen
             showConfirmButton: false,
           }).then(() => {
-            this. ChangeCategoryStatus(category);
+            this.ChangeCategoryStatus(category);
           });
         }
       });
     },
-    ChangeCategoryStatus(category){
-      console.log(category,"Cambio de estatus corecto");
-       Swal.fire({
+    ChangeCategoryStatus(category) {
+      console.log(category, "Cambio de estatus corecto");
+      Swal.fire({
         title: "Acción realizada con exito",
         icon: "success",
         confirmButtonColor: "#118A95",
       });
-      this.GetAllCategories()
-    }
+      this.GetAllCategories();
+    },
+  },
+  mounted() {
+    this.GetAllCategories();
   },
 };
 </script>
