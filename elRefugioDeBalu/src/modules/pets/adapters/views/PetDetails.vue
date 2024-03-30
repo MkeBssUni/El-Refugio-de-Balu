@@ -3,16 +3,16 @@
         <b-row>
             <b-col cols="12" class="mt-5 px-5">
                 <!-- md, lg, xl card -->
-                <b-card class="full-height-card p-4 d-none d-md-block" bg-variant="gray">
+                <b-card class="full-height-card p-4 d-none d-md-block card-shadow" bg-variant="gray">
                     <b-row>
                         <b-col cols="6" lg="5" xl="4">
                             <b-row>
                                 <b-col cols="12">
-                                    <b-img :src="pet.mainImage" class="img border-img"
+                                    <b-img :src="pet.mainImage" class="img border-img img-shadow"
                                         alt="Imagen principal de la mascota" fluid center rounded></b-img>
                                 </b-col>
                                 <b-col v-for="(image, index) in pet.images" :key="index" cols="3" class="mt-3">
-                                    <div class="additional-img-container">
+                                    <div class="additional-img-container img-shadow">
                                         <b-img :src="image" class="additional-img" alt="Imagen adicional" fluid center
                                             @click="swapImage(image)"></b-img>
                                     </div>
@@ -454,6 +454,10 @@ export default {
     border-bottom-right-radius: 0 !important;
 }
 
+.card-shadow {
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.089);
+}
+
 .img {
     width: 360px;
     height: 280px;
@@ -478,6 +482,10 @@ export default {
     width: 100%;
     object-fit: cover;
 }
+
+.img-shadow {
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+} 
 
 .divider {
     border-width: 2.8px;
