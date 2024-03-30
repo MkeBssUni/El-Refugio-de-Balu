@@ -120,6 +120,45 @@ public class PetService {
     }
 
     @Transactional(readOnly = true)
+    public ResponseApi<?> findPetDetails(FindPetDetailsDto dto) {
+        if (dto.getId() == null || validations.isNotBlankString(dto.getId().trim())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
+
+        Long petId = decryptId(dto.getId());
+        if (petId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+        Optional<Pet> optionalPet = petRepository.findById(petId);
+        if (!optionalPet.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        Pet pet = optionalPet.get();
+
+        PetDetails petDetails = new PetDetails(
+                pet.getMainImage(),
+                pet.getPetImages().stream().map(PetImage::getImage).toArray(String[]::new),
+                pet.getName(),
+                pet.getOwner().getAddress().getCity() + ", " + pet.getOwner().getAddress().getState(),
+                pet.getGender().toString(),
+                pet.getCategory().getName(),
+                pet.getBreed(),
+                pet.getSize().toString(),
+                pet.getLifeStage().toString(),
+                pet.getAge(),
+                pet.getAgeUnit().toString(),
+                pet.getWeight(),
+                pet.getWeightUnit().toString(),
+                pet.getCharacteristics().split(","),
+                pet.getDescription(),
+                pet.getMedicalRecord().isVaccinated(),
+                pet.getMedicalRecord().isDewormed(),
+                pet.getMedicalRecord().isSterilized(),
+                pet.getMedicalRecord().isMicrochip(),
+                pet.getMedicalRecord().getDiseases() != null ? pet.getMedicalRecord().getDiseases().split(",") : null,
+                pet.getMedicalRecord().getAllergies() != null ? pet.getMedicalRecord().getAllergies().split(",") : null,
+                pet.getMedicalRecord().getObservations(),
+                pet.getSpecialCares() != null ? pet.getSpecialCares().split(",") : null
+        );
+
+        return new ResponseApi<>(petDetails, HttpStatus.OK,false, "Pet details retrieved successfully");
+    }
+
+    @Transactional(readOnly = true)
     public ResponseApi<?> findPetCredentials(String pet) {
         if (pet == null || validations.isNotBlankString(pet.trim())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
         Long petId = decryptId(pet);
