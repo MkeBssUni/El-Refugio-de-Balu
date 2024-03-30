@@ -82,19 +82,19 @@
                                 </b-col>
                                 <b-col cols="12" lg="6" class="d-flex">
                                     <p class="me-2">Tamaño:</p>
-                                    <p class="text-dark-gray-input">{{ pet.size }}</p>
+                                    <p class="text-dark-gray-input">{{ mapSize((pet.size).toString().toLowerCase()) }}</p>
                                 </b-col>
                                 <b-col cols="12" lg="6" class="d-flex">
                                     <p class="me-2">Etapa:</p>
-                                    <p class="text-dark-gray-input">{{ pet.lifeStage }}</p>
+                                    <p class="text-dark-gray-input">{{ mapLifeStage((pet.lifeStage).toString().toLowerCase()) }}</p>
                                 </b-col>
                                 <b-col cols="12" lg="6" class="d-flex">
                                     <p class="me-2">Edad</p>
-                                    <p class="text-dark-gray-input">{{ pet.age }} {{ pet.ageUnit }}</p>
+                                    <p class="text-dark-gray-input">{{ pet.age }} {{ mapAgeUnit((pet.ageUnit).toString().toLowerCase()) }}</p>
                                 </b-col>
                                 <b-col cols="12" lg="6" class="d-flex">
                                     <p class="me-2">Peso</p>
-                                    <p class="text-dark-gray-input">{{ pet.weight }} {{ pet.weightUnit }}</p>
+                                    <p class="text-dark-gray-input">{{ pet.weight }} {{ mapWeightUnit((pet.weightUnit).toString().toLowerCase()) }}</p>
                                 </b-col>
                             </b-row>
                             <hr class="divider my-0">
@@ -195,8 +195,7 @@
                                     <b-img :src="pet.mainImage" class="img border-img"
                                         alt="Imagen principal de la mascota" fluid center rounded></b-img>
                                 </b-col>
-                                <b-col v-for="(image, index) in pet.images" :key="index" cols="3"
-                                    class="mt-3">
+                                <b-col v-for="(image, index) in pet.images" :key="index" cols="3" class="mt-3">
                                     <div class="additional-img-container">
                                         <b-img :src="image" class="additional-img" alt="Imagen adicional" fluid
                                             center></b-img>
@@ -216,7 +215,8 @@
                                             font-scale="3.6"></b-icon>
                                         <b-icon v-else icon="gender-female" variant="gender-female"
                                             font-scale="3.6"></b-icon>
-                                        <b-card-sub-title class="mt-2" v-if="pet.gender === 'MALE'">Macho</b-card-sub-title>
+                                        <b-card-sub-title class="mt-2"
+                                            v-if="pet.gender === 'MALE'">Macho</b-card-sub-title>
                                         <b-card-sub-title class="mt-2" v-else>Hembra</b-card-sub-title>
                                     </div>
                                 </b-col>
@@ -233,19 +233,19 @@
                                 </b-col>
                                 <b-col cols="12" sm="6" class="d-flex">
                                     <p class="me-2">Tamaño:</p>
-                                    <p class="text-dark-gray-input">{{ pet.size }}</p>
+                                    <p class="text-dark-gray-input">{{ mapSize((pet.size).toString().toLowerCase()) }}</p>
                                 </b-col>
                                 <b-col cols="12" sm="6" class="d-flex">
                                     <p class="me-2">Etapa:</p>
-                                    <p class="text-dark-gray-input">{{ pet.lifeStage }}</p>
+                                    <p class="text-dark-gray-input">{{ mapLifeStage((pet.lifeStage).toString().toLowerCase()) }}</p>
                                 </b-col>
                                 <b-col cols="12" sm="6" class="d-flex">
                                     <p class="me-2">Edad</p>
-                                    <p class="text-dark-gray-input">{{ pet.age }} {{ pet.ageUnit }}</p>
+                                    <p class="text-dark-gray-input">{{ pet.age }} {{ mapAgeUnit((pet.ageUnit).toString().toLowerCase()) }}</p>
                                 </b-col>
                                 <b-col cols="12" sm="6" class="d-flex">
                                     <p class="me-2">Peso</p>
-                                    <p class="text-dark-gray-input">{{ pet.weight }} {{ pet.weightUnit }}</p>
+                                    <p class="text-dark-gray-input">{{ pet.weight }} {{ mapWeightUnit((pet.weightUnit).toString().toLowerCase()) }}</p>
                                 </b-col>
                             </b-row>
                             <hr class="divider my-0">
@@ -364,6 +364,7 @@ import Swal from "sweetalert2";
 import instance from "../../../../config/axios";
 
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
+import { sizes, lifeStages, weightUnits, ageUnits } from "../../../../kernel/data/mappingDictionaries";
 
 export default {
     props: {
@@ -382,6 +383,18 @@ export default {
         }
     },
     methods: {
+        mapSize(size) {
+            return sizes[size] || size;
+        },
+        mapLifeStage(lifeStage) {
+            return lifeStages[lifeStage] || lifeStage;
+        },
+        mapAgeUnit(unit) {
+            return ageUnits[unit] || unit;
+        },
+        mapWeightUnit(unit) {
+            return weightUnits[unit] || unit;
+        },
         async getDetails() {
             try {
                 Swal.fire({
