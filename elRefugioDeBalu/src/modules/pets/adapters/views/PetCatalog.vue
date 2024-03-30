@@ -246,7 +246,8 @@ export default {
             this.getPetCatalog()
         },
         getDetails(pet) {
-            this.$router.push({ name: 'petDetails', params: { id: pet.id, previous: 'petCatalog' } });
+            this.$router.push({ name: 'petDetails', params: { petId: pet.id, previous: 'petCatalog' } });
+            localStorage.setItem('petId', pet.id);
         }
     },
     mounted() {

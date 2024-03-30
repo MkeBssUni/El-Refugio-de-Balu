@@ -82,19 +82,23 @@
                                 </b-col>
                                 <b-col cols="12" lg="6" class="d-flex">
                                     <p class="me-2">Tamaño:</p>
-                                    <p class="text-dark-gray-input">{{ mapSize((pet.size).toString().toLowerCase()) }}</p>
+                                    <p class="text-dark-gray-input">{{ mapSize((pet.size).toString().toLowerCase()) }}
+                                    </p>
                                 </b-col>
                                 <b-col cols="12" lg="6" class="d-flex">
                                     <p class="me-2">Etapa:</p>
-                                    <p class="text-dark-gray-input">{{ mapLifeStage((pet.lifeStage).toString().toLowerCase()) }}</p>
+                                    <p class="text-dark-gray-input">{{
+                                        mapLifeStage((pet.lifeStage).toString().toLowerCase()) }}</p>
                                 </b-col>
                                 <b-col cols="12" lg="6" class="d-flex">
                                     <p class="me-2">Edad</p>
-                                    <p class="text-dark-gray-input">{{ pet.age }} {{ mapAgeUnit((pet.ageUnit).toString().toLowerCase()) }}</p>
+                                    <p class="text-dark-gray-input">{{ pet.age }} {{
+                                        mapAgeUnit((pet.ageUnit).toString().toLowerCase()) }}</p>
                                 </b-col>
                                 <b-col cols="12" lg="6" class="d-flex">
                                     <p class="me-2">Peso</p>
-                                    <p class="text-dark-gray-input">{{ pet.weight }} {{ mapWeightUnit((pet.weightUnit).toString().toLowerCase()) }}</p>
+                                    <p class="text-dark-gray-input">{{ pet.weight }} {{
+                                        mapWeightUnit((pet.weightUnit).toString().toLowerCase()) }}</p>
                                 </b-col>
                             </b-row>
                             <hr class="divider my-0">
@@ -233,19 +237,23 @@
                                 </b-col>
                                 <b-col cols="12" sm="6" class="d-flex">
                                     <p class="me-2">Tamaño:</p>
-                                    <p class="text-dark-gray-input">{{ mapSize((pet.size).toString().toLowerCase()) }}</p>
+                                    <p class="text-dark-gray-input">{{ mapSize((pet.size).toString().toLowerCase()) }}
+                                    </p>
                                 </b-col>
                                 <b-col cols="12" sm="6" class="d-flex">
                                     <p class="me-2">Etapa:</p>
-                                    <p class="text-dark-gray-input">{{ mapLifeStage((pet.lifeStage).toString().toLowerCase()) }}</p>
+                                    <p class="text-dark-gray-input">{{
+                                        mapLifeStage((pet.lifeStage).toString().toLowerCase()) }}</p>
                                 </b-col>
                                 <b-col cols="12" sm="6" class="d-flex">
                                     <p class="me-2">Edad</p>
-                                    <p class="text-dark-gray-input">{{ pet.age }} {{ mapAgeUnit((pet.ageUnit).toString().toLowerCase()) }}</p>
+                                    <p class="text-dark-gray-input">{{ pet.age }} {{
+                                        mapAgeUnit((pet.ageUnit).toString().toLowerCase()) }}</p>
                                 </b-col>
                                 <b-col cols="12" sm="6" class="d-flex">
                                     <p class="me-2">Peso</p>
-                                    <p class="text-dark-gray-input">{{ pet.weight }} {{ mapWeightUnit((pet.weightUnit).toString().toLowerCase()) }}</p>
+                                    <p class="text-dark-gray-input">{{ pet.weight }} {{
+                                        mapWeightUnit((pet.weightUnit).toString().toLowerCase()) }}</p>
                                 </b-col>
                             </b-row>
                             <hr class="divider my-0">
@@ -368,7 +376,7 @@ import { sizes, lifeStages, weightUnits, ageUnits } from "../../../../kernel/dat
 
 export default {
     props: {
-        id: {
+        petId: {
             type: String,
             required: true
         },
@@ -404,14 +412,14 @@ export default {
                     imageWidth: 160,
                     imageHeight: 160,
                     showConfirmButton: false
-                })
-                const response = await instance.post(`/pet/details`, { id: this.id });
+                })                
+                const response = await instance.post(`/pet/details`, { id: this.petId });
                 this.pet = response.data.data;
                 Swal.close();
             } catch (error) {
                 Swal.fire({
                     title: 'Error',
-                    text: 'Ocurrió un error al cargar las mascotas',
+                    text: 'Ocurrió un error al cargar los detalles de la mascota',
                     icon: 'error',
                     iconColor: '#A93D3D',
                     timer: 3000,
@@ -427,6 +435,7 @@ export default {
         }
     },
     mounted() {
+        if (!this.petId && localStorage.getItem('petId')) this.petId = localStorage.getItem('petId');
         this.getDetails();
     }
 }
