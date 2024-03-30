@@ -133,7 +133,7 @@
             lg="3"
             xl="3"
             v-for="animal in AnimalsList"
-            :key="animal.index"
+            :key="animal.id"
           >
             <b-card
               :title="animal.categoryName"
@@ -141,7 +141,7 @@
               img-alt="Image"
               img-top
               tag="article"
-              class="mb-2 card-img-top-animals "
+              class="mb-2 card-img-top-animals"
             >
               <b-card-body class="py-0 justify-content-center">
                 <b-row v-if="saveCategoryForm && updateCategoryForm">
@@ -287,6 +287,7 @@ import UpdateCategory from "./UpdateCategory.vue";
 import FishLoading from "../../../../assets/imgs/peces.gif";
 import Swal from "sweetalert2";
 import instance from "../../../../config/axios";
+import { decrypt, encrypt } from '../../../../kernel/hashFunctions';
 
 export default {
   name: "AnimalCategories",
@@ -440,7 +441,11 @@ export default {
       saveCategoryForm: true,
       updateCategoryForm: true,
       categoryToModify: null,
-      searchCategoryValueDto:''
+      searchCategoryValueDto: "",
+      changeStatusDto:{
+          id: 0,
+          status:false
+        }
     };
   },
   methods: {
@@ -472,10 +477,10 @@ export default {
       this.categoryToModify = category;
       this.updateCategoryForm = !this.updateCategoryForm;
     },
-    ViewAlertConfirmationChangeCategoryStatus(category) {
+    async ViewAlertConfirmationChangeCategoryStatus(category) {
       Swal.fire({
         title: "¿Seguro que desea realizar la acción?",
-        text: "Se cambiara el estatus de la categoria" + category.name,
+        text: "Se cambiará el estatus de la categoría " + category.categoryName,
         icon: "question",
         showCancelButton: true,
         confirmButtonColor: "#53A93D",
@@ -485,13 +490,13 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           Swal.fire({
-            title: "Espera un momento...",
+            title: "Espera un momento…",
             text: "Estamos realizando tu modificación",
             imageUrl: FishLoading,
             timer: 2000,
             timerProgressBar: true,
-            imageWidth: 160, // Ancho de la imagen
-            imageHeight: 160, // Altura de la imagen
+            imageWidth: 160,
+            imageHeight: 160,
             showConfirmButton: false,
           }).then(() => {
             this.ChangeCategoryStatus(category);
@@ -499,15 +504,39 @@ export default {
         }
       });
     },
-    ChangeCategoryStatus(category) {
-      console.log(category, "Cambio de estatus corecto");
-      Swal.fire({
-        title: "Acción realizada con exito",
-        icon: "success",
-        confirmButtonColor: "#118A95",
-      });
-      this.GetAllCategories();
-    },
+    async ChangeCategoryStatus(category) {
+      try {
+      
+        this.changeStatusDto.id= await encrypt(category.id),
+        this.changeStatusDto.status= await encrypt(category.categoryStatus)
+        const response = await instance.patch("/category/", this.changeStatusDto);
+        if (response.status == 200) {
+          Swal.fire({
+            title: "Acción realizada con exito",
+            icon: "success",
+            confirmButtonColor: "#118A95",
+          });
+          this.GetAllCategories(); 
+        }else{
+          Swal.fire({
+            title: "Ha sucedido un error",
+            text:"Inténtelo de nuevo más tarde",
+            icon: "error",
+            confirmButtonColor: "#118A95",
+          });
+          this.GetAllCategories(); 
+        
+        }
+      } catch (error) {
+        Swal.fire({
+            title: "Ha sucedido un error",
+            text:"codigo de error: "+error.code,
+            icon: "error",
+            confirmButtonColor: "#118A95",
+          });
+          this.GetAllCategories(); 
+        }
+      }
   },
   mounted() {
     this.GetAllCategories();

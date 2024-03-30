@@ -43,15 +43,15 @@ public class Validations {
 
     public boolean isValidBooleanStatus(String str) {
         String lowerCaseStr = str.toLowerCase();
-        if(lowerCaseStr.equals("true") || lowerCaseStr.equals("false")) return false;
-        return  true ;
+        if(lowerCaseStr.equals("true") || lowerCaseStr.equals("false")) return true;
+        return  false ;
     }
     public boolean isInvalidId(String str) {
         try {
             Long.parseLong(str);
-            return false;
-        } catch (NumberFormatException e) {
             return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 
