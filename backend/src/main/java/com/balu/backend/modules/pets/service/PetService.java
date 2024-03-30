@@ -525,6 +525,9 @@ public class PetService {
         pet.setStatus(statusRepository.findByName(Statusses.ADOPTED).get());
         Pet savedPet = petRepository.saveAndFlush(pet);
         if (savedPet == null) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.INTERNAL_ERROR.name());
+
+        logService.saveLog("Pet " + savedPet.getId() + " adopted by " + adoptant.getId() + ". Process moderated by " + moderator.getId(), LogTypes.UPDATE, "PETS");
+
         return new ResponseApi<>(HttpStatus.OK,false, "Adoption completed successfully");
     }
 
