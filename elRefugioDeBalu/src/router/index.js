@@ -145,11 +145,20 @@ const routes = [
         path: "/petList",
         name: "petList",
         meta: {
-          title: "Mascotas asignadas",
+          title: "Nuevas mascotas",
           requiresAuth: true,
           role: rolesAvailable.mod,
         },
         component: () => import("../modules/pets/adapters/views/PetList.vue"),
+      },
+      {
+        path: "/moderated/petList",
+        name: "moderatedPetList",
+        meta: {
+          title: "Mascotas asignadas",
+          requiresAuth: false,
+        },
+        component: () => import("../modules/pets/adapters/views/ModeratedPetList.vue"),
       },
       {
         path: "/petForm",
