@@ -8,6 +8,8 @@ import com.balu.backend.modules.adoptionRequests.model.AdoptionRequest;
 import com.balu.backend.modules.adoptionRequests.model.IAdoptionRequestRepository;
 import com.balu.backend.modules.adoptionRequests.model.dto.ChangeStatusAdoptionRequestDto;
 import com.balu.backend.modules.adoptionRequests.model.dto.SaveAdoptionRequestDto;
+import com.balu.backend.modules.adresses.model.model.Address;
+import com.balu.backend.modules.adresses.model.model.IAddressRepository;
 import com.balu.backend.modules.hash.service.HashService;
 import com.balu.backend.modules.homeSpecification.model.HomeImage;
 import com.balu.backend.modules.homeSpecification.model.HomeImageRepository;
@@ -57,6 +59,8 @@ public class ServiceAdoptionRequest {
     private final HomeImageRepository homeImageRepository;
     private final LogService logService;
     private final EmailService emailService;
+
+    private final IAddressRepository iAddressRepository;
 
     @Transactional(readOnly = true)
     public ResponseApi<Optional<AdoptionRequest>> adoptionByUser(String idUser) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
@@ -160,6 +164,12 @@ public class ServiceAdoptionRequest {
             HomeSpecification homeSpecification = new HomeSpecification(dto.getHomeSpecification().getType(),dto.getHomeSpecification().isOutdoorArea(),dto.getHomeSpecification().getNumberOfResidents());
             HomeSpecification saveHomeSpecification = homeSpecificationRepository.saveAndFlush(homeSpecification);
             if(saveHomeSpecification == null){
+                iAdoptionRequestRepository.delete(saveAdoption);
+                return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.HOMESPECIFICATION_NOT_SAVED.name());
+            }
+
+            Integer saveAdress = iAddressRepository.changeHomeSpeceficationAssign(user.getAddress().getId(),saveHomeSpecification.getId());
+            if(saveAdress == 0){
                 iAdoptionRequestRepository.delete(saveAdoption);
                 return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.HOMESPECIFICATION_NOT_SAVED.name());
             }

@@ -34,4 +34,11 @@ public class Address {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name ="home_specification_id", referencedColumnName = "id")
     private HomeSpecification homeSpecification;
+
+    public Address(Long id, HomeSpecification homeSpecification) {
+        this.id = id;
+        this.homeSpecification = homeSpecification;
+    }
+
+
 }
