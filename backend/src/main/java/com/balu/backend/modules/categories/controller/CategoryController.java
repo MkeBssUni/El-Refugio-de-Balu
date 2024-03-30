@@ -79,7 +79,6 @@ public class CategoryController {
             @RequestParam(defaultValue = "id", required = false) String sort,
             @RequestParam(defaultValue = "asc", required = false) String direction,
             @RequestBody SearchCategoryDto searchCategoryDto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        System.out.println(searchCategoryDto.getSearchCategoryValue());
         Pageable pageable =PageRequest.of(page,size, Sort.by(Sort.Direction.fromString(direction),sort));
         ResponseApi<Page<ICategoryViewPaged>> responseApi = categoryService.getPaged(searchCategoryDto,pageable);
         return new ResponseEntity<>(responseApi,responseApi.getStatus());
