@@ -110,6 +110,10 @@ export default {
                 })
             }
         },
+        getDetails(pet) {            
+            this.$router.push({ name: 'petDetails', params: { petId: pet.id } });
+            localStorage.setItem('petId', pet.id);
+        }
     },
     mounted() {
         this.getFavorites()
