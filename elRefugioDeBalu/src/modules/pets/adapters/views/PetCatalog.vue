@@ -106,7 +106,7 @@
                         <b-card-sub-title>{{ pet.location }}</b-card-sub-title>
                         <div class="d-flex justify-content-center">
                             <b-button pill variant="outline-dark-blue" class="mt-3 px-5 d-flex align-items-center"
-                                to="/petDetails">
+                                @click="getDetails(pet)">
                                 <span>Ver detalles</span>
                             </b-button>
                         </div>
@@ -244,6 +244,10 @@ export default {
                 location: "",
             }
             this.getPetCatalog()
+        },
+        getDetails(pet) {
+            this.$router.push({ name: 'petDetails', params: { petId: pet.id } });
+            localStorage.setItem('petId', pet.id);
         }
     },
     mounted() {
