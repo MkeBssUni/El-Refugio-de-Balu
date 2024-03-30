@@ -92,6 +92,7 @@ public class PetService {
                 try {
                     return new PetCatalog(
                             hashService.encrypt(pet.getId()),
+                            pet.getImage(),
                             pet.getName(),
                             pet.getLocation(),
                             pet.getFavorite() == 1 ? true : false
@@ -107,6 +108,7 @@ public class PetService {
                 try {
                     return new PetCatalog(
                             hashService.encrypt(pet.getId()),
+                            pet.getImage(),
                             pet.getName(),
                             pet.getLocation(),
                             false

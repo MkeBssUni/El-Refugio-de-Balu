@@ -13,13 +13,13 @@ import java.util.Optional;
 
 @Repository
 public interface IPetRepository extends JpaRepository<Pet,Long> {
-    @Query(value = "select p.id as id, p.name as name, concat(a.city, ', ', a.state) as location from pets p " +
+    @Query(value = "select p.id as id, p.main_image as image, p.name as name, concat(a.city, ', ', a.state) as location from pets p " +
                         "inner join addresses a on p.user_owner_id = a.user_id " +
                         "where p.status_id = 3 and lower(p.size) like %?1% and lower(p.life_stage) like %?2% and lower(a.state) like %?3% " +
                         "and (p.gender = ?4 or ?4 is null) and (p.category_id = ?5 or ?5 is null)", nativeQuery = true)
     Page<IPetsView> findAllPaged(String size, String lifeStage, String location, String gender, Long categoryId, Pageable pageable);
 
-    @Query(value = "select p.id as id, p.name as name, concat(a.city, ', ', a.state) as location, " +
+    @Query(value = "select p.id as id, p.main_image as image, p.name as name, concat(a.city, ', ', a.state) as location, " +
                         "case when f.id is not null then true else false end as favorite from pets p " +
                         "inner join addresses a on p.user_owner_id = a.user_id " +
                         "left join favorite_pets f ON p.id = f.pet_id and f.user_id = ?6 " +
