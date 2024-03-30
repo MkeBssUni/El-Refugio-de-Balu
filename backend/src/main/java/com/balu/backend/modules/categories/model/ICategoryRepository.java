@@ -24,15 +24,6 @@ public interface ICategoryRepository extends JpaRepository<Category, Long> {
     @Query(value = "UPDATE categories SET status = :status WHERE id = :id", nativeQuery = true)
     Integer changeStatusCategory(@Param("id") Long id, @Param("status") Boolean status);
 
-    @Query(value =
-            "SELECT id, \n" +
-                    "       name AS categoryName, \n" +
-                    "       description AS categoryDescription, \n" +
-                    "       image AS categoryImage, \n" +
-                    "       status AS categoryStatus \n" +
-                    "FROM categories \n" +
-                    "WHERE LOWER(name) LIKE %:name% OR LOWER(description) LIKE %:description%\n" +
-                    "ORDER BY id ASC",
-            nativeQuery = true)
+    @Query(value = "SELECT id AS id, name AS categoryName, description AS categoryDescription, image AS categoryImage, status AS categoryStatus FROM categories WHERE LOWER(name) LIKE %:name% OR LOWER(description) LIKE %:description%", nativeQuery = true)
     Page<ICategoryViewPaged> findAllPaged(@Param("name") String name, @Param("description") String description, Pageable pageable);
 }
