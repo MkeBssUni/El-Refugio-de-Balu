@@ -87,8 +87,13 @@ public class ServiceAdoptionRequest {
     @Transactional(rollbackFor = {SQLException.class,Exception.class})
     public ResponseApi<?> save(SaveAdoptionRequestDto dto){
         try{
+            Long userId = decryptId(dto.getUser());
+            Long petId = decryptId(dto.getPet());
+
             if(dto.getUser() == null || validations.isNotBlankString(dto.getUser()) || dto.getPet() == null || validations.isNotBlankString(dto.getPet())  || dto.getAdditional_information() == null || validations.isNotBlankString(dto.getAdditional_information()) || dto.getHomeImage() == null || dto.getHomeSpecification() == null)
                 return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.MISSING_FIELDS.name());
+
+            if(duplicateRequest(userId,petId)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.DUPLICATE_REQUEST.name());
 
             if(validations.isNotBlankString(dto.getReasonsForAdoption().getPeopleAgreeToAdopt()) || validations.isNotBlankString(dto.getReasonsForAdoption().getHaveHadPets()) || validations.isNotBlankString(dto.getReasonsForAdoption().getWhereWillThePetBe())||
                     validations.isNotBlankString(dto.getPreviousExperiencieDto().getWhatDidYouDoWhenThePetGotSick()) || validations.isNotBlankString(dto.getPreviousExperiencieDto().getWhatKindOfPetsHaveYouHadBefore())|| validations.isNotBlankString(dto.getPreviousExperiencieDto().getWhatMemoriesDoYouHaveWithYourPet()))
@@ -111,7 +116,7 @@ public class ServiceAdoptionRequest {
                 if(validations.isInvalidMinAndMaxLength(dto.getPreviousExperiencieDto().getLastPet().trim(),5,100))return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.INVALID_LENGTH.name());
             }
 
-            Long userId = decryptId(dto.getUser());
+
             if(userId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.INVALID_ID.name());
             Optional<User>  optionalUser = userRepository.findById(userId);
             if(!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
@@ -129,20 +134,17 @@ public class ServiceAdoptionRequest {
 
             if (user.getAddress() == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_USER.name());
 
-            Long petId = decryptId(dto.getPet());
+
             if(petId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
             Optional<Pet> optionalPet = petRepository.findById(petId);
             if (!optionalPet.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
             Pet pet = optionalPet.get();
 
+
+
             Long countByPet = iAdoptionRequestRepository.countAdoptionRequestByPet_Id(petId);
             int count = countByPet != null ? countByPet.intValue() : 0;
             if(count >=20)return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.LIMIT_ADOPTIONREQUEST.name());
-
-//            Optional<AdoptionRequest> existingRequest = iAdoptionRequestRepository.findByUser_IdAndPet_Id(userId, petId);
-//            if (existingRequest.isPresent()) {
-//                return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.DUPLICATE_REQUEST.name());
-//            }
 
 
             Optional<Status> optionalStatus = statusRepository.findByName(Statusses.PENDING);
@@ -195,9 +197,7 @@ public class ServiceAdoptionRequest {
             Optional<Status> statusOptional= statusRepository.findById(adoptionRequest.getStatus().getId());
             if(!statusOptional.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.NOT_FOUND.name());
             Status status = statusOptional.get();
-            System.out.println(status.getName());
             if(status.getName() != Statusses.PENDING) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.ERROR_STATUS.name());
-            System.out.println(dto.getStatus() != Statusses.ADOPTED && dto.getStatus() != Statusses.CLOSED);
             if(dto.getStatus() != Statusses.ADOPTED && dto.getStatus() != Statusses.CLOSED) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.ERROR_STATUS.name());
             Optional<Status> statusID = statusRepository.findByName(dto.getStatus());
             Long idStatus = statusID.get().getId();
@@ -222,6 +222,18 @@ public class ServiceAdoptionRequest {
             return new ResponseApi<>(adoption,HttpStatus.OK,false,"Adoption request change status successfully");
         }catch (Exception e){
             return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name());
+        }
+    }
+
+    public boolean duplicateRequest(Long userId, Long petId){
+        try{
+            Optional<AdoptionRequest> existingRequest = iAdoptionRequestRepository.findByUser_IdAndPet_Id(userId, petId);
+            if (existingRequest.isPresent()) {
+                return true;
+            }
+            return false;
+        }catch (Exception e){
+            return false;
         }
     }
 
