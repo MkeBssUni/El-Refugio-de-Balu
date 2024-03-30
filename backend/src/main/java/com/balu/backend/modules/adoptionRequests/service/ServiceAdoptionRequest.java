@@ -5,6 +5,7 @@ import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.kernel.Validations;
 import com.balu.backend.modules.adoptionRequests.model.AdoptionRequest;
 import com.balu.backend.modules.adoptionRequests.model.IAdoptionRequestRepository;
+import com.balu.backend.modules.adoptionRequests.model.dto.ChangeStatusAdoptionRequestDto;
 import com.balu.backend.modules.adoptionRequests.model.dto.SaveAdoptionRequestDto;
 import com.balu.backend.modules.hash.service.HashService;
 import com.balu.backend.modules.homeSpecification.model.HomeImage;
@@ -135,7 +136,7 @@ public class ServiceAdoptionRequest {
             Long countByPet = iAdoptionRequestRepository.countAdoptionRequestByPet_Id(petId);
             int count = countByPet != null ? countByPet.intValue() : 0;
             if(count >=20)return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.LIMIT_ADOPTIONREQUEST.name());
-            
+
             Optional<AdoptionRequest> existingRequest = iAdoptionRequestRepository.findByUser_IdAndPet_Id(userId, petId);
             if (existingRequest.isPresent()) {
                 return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.DUPLICATE_REQUEST.name());
@@ -173,8 +174,42 @@ public class ServiceAdoptionRequest {
                     return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.IMAGE_NOT_SAVED.name());
                 }
             }
-            logService.saveLog("New adoption request registered: "+saveAdoption.getId(), LogTypes.INSERT,"ADOPTIONREQUEST | HOMESPECEFITACTION | HOMEIMAGES");
+            logService.saveLog("New adoption request registered: "+saveAdoption.getId(), LogTypes.INSERT,"ADOPTIONREQUEST | HOMESPECEFITACTION | HOMEIMAGES | ADRESSES");
             return new ResponseApi<>(HttpStatus.CREATED,false,"Adoption request saved successfully");
+        }catch (Exception e){
+            return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name());
+        }
+    }
+
+    @Transactional(rollbackFor = {SQLException.class,Exception.class})
+    public ResponseApi<?> changeStatus(ChangeStatusAdoptionRequestDto dto){
+        try{
+            if(dto.getAdoptionId() == null || validations.isNotBlankString(dto.getAdoptionId())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.MISSING_FIELDS.name());
+
+            Long idAdoption = decryptId(dto.getAdoptionId());
+            Optional<AdoptionRequest> optionalAdoptionRequest = iAdoptionRequestRepository.findById(idAdoption);
+            if(optionalAdoptionRequest.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.NOT_FOUND.name());
+            AdoptionRequest adoptionRequest = optionalAdoptionRequest.get();
+            Optional<Status> statusOptional= statusRepository.findById(adoptionRequest.getId());
+            if(!statusOptional.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.NOT_FOUND.name());
+            Status status = statusOptional.get();
+            if(status.getName() != Statusses.PENDING) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.ERROR_STATUS.name());
+            if(dto.getStatus() != Statusses.ADOPTED || dto.getStatus() != Statusses.CLOSED) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.ERROR_STATUS.name());
+            Optional<Status> statusID = statusRepository.findByName(dto.getStatus());
+            Long idStatus = statusID.get().getId();
+            Integer adoption = this.iAdoptionRequestRepository.changeStatusAdoptionRequest(idAdoption,idStatus);
+            if(adoption == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.NOT_CHANGESTATUS_ADOPTIONREQUEST.name());
+            // servicio de pets cambio de estado
+            if(adoption != null){
+                if(dto.getStatus() == Statusses.ADOPTED){
+                    System.out.println("Envio Correo AdoptionApprovalTemplate");
+                }
+                if(dto.getStatus() == Statusses.CLOSED){
+                    System.out.println("Envio correo FinalizeAdoptionTemplate");
+                }
+            }
+            logService.saveLog("New adoption request registered: "+adoption, LogTypes.INSERT,"ADOPTIONREQUEST | PET");
+            return new ResponseApi<>(adoption,HttpStatus.OK,false,"Adoption request change status successfully");
         }catch (Exception e){
             return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name());
         }

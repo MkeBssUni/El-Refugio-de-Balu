@@ -164,4 +164,8 @@ public class EmailTemplates {
                 "</body>\n" +
                 "</html>";
     }
+
+    public static String InterestedAdoptingTemplate(String namePet){
+        return null;
+    }
 }

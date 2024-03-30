@@ -3,6 +3,7 @@ package com.balu.backend.modules.adoptionRequests.controller;
 import com.balu.backend.kernel.ErrorMessages;
 import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.modules.adoptionRequests.model.AdoptionRequest;
+import com.balu.backend.modules.adoptionRequests.model.dto.ChangeStatusAdoptionRequestDto;
 import com.balu.backend.modules.adoptionRequests.model.dto.GetAdoptionRequestDto;
 import com.balu.backend.modules.adoptionRequests.model.dto.GetByModeradorDto;
 import com.balu.backend.modules.adoptionRequests.model.dto.SaveAdoptionRequestDto;
@@ -44,6 +45,12 @@ public class AdoptionRequestController {
     @PostMapping("/")
     public ResponseEntity<ResponseApi<?>> save (@RequestBody SaveAdoptionRequestDto dto){
         ResponseApi<?> response = serviceAdoptionRequest.save(dto);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @PutMapping("/changeStatus")
+    public ResponseEntity<ResponseApi<?>> changeStatus (@RequestBody ChangeStatusAdoptionRequestDto dto){
+        ResponseApi<?> response = serviceAdoptionRequest.changeStatus(dto);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
