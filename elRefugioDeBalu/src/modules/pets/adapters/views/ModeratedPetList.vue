@@ -29,7 +29,8 @@
         <b-row class="px-4 pt-4">
             <b-col cols="12">
                 <b-table :fields="fields" :items="pets" :filter="searchValue" label-sort-asc="" label-sort-desc=""
-                    no-sort-reset responsive small striped hover class="text-center custom-scroll-style">
+                    no-sort-reset :per-page="perPage" :current-page="currentPage" responsive small striped hover
+                    class="text-center custom-scroll-style">
                     <template #cell(cancelRequest)="data">
                         <b-icon v-if="data.value" icon="exclamation-circle" variant="danger" font-scale="1.3"
                             v-b-tooltip.hover.right="'Solicitud de cancelación'"></b-icon>
@@ -70,6 +71,13 @@
                 </b-table>
             </b-col>
         </b-row>
+        <b-row class="pt-4">
+            <b-col cols="12">
+                <b-pagination pills v-model="currentPage" :total-rows="pets.length" :per-page="perPage"
+                    align="center">
+                </b-pagination>
+            </b-col>
+        </b-row>
     </b-container>
 </template>
 
@@ -81,6 +89,8 @@ export default {
             searchValue: '',
             category: '',
             status: '',
+            perPage: 5,
+            currentPage: 1,
             categories: [
                 { value: '', text: 'Todas las categorías' },
                 { value: 'Perro', text: 'Perro' },
