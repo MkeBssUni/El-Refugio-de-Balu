@@ -287,7 +287,6 @@ import UpdateCategory from "./UpdateCategory.vue";
 import FishLoading from "../../../../assets/imgs/peces.gif";
 import Swal from "sweetalert2";
 import instance from "../../../../config/axios";
-import { encrypt,decrypt } from '../../../../kernel/hashFunctions';
 
 export default {
   name: "AnimalCategories",
@@ -441,28 +440,17 @@ export default {
       saveCategoryForm: true,
       updateCategoryForm: true,
       categoryToModify: null,
+      searchCategoryValueDto:''
     };
   },
-  /* computed: {
-    rows() {
-      return this.AnimalsList.length;
-    },
-    paginatedAnimalsList() {
-      const startIndex = (this.currentPage - 1) * this.perPage;
-      const endIndex = startIndex + this.perPage;
-      return this.AnimalsList.slice(startIndex, endIndex);
-    },
-  }, */
   methods: {
     ViewCategoryRegistrationForm() {
       this.saveCategoryForm = !this.saveCategoryForm;
     },
     async GetAllCategories() {
       try {
-        const searchCategoryValueDto=await encrypt(this.search)
-        l
         const response = await instance.post("/category/paged", {
-          searchCategoryValue: searchCategoryValueDto,
+          searchCategoryValue: this.searchCategoryValueDto,
         });
         this.rows = response.data.totalPages;
         this.AnimalsList = response.data.data.content;
