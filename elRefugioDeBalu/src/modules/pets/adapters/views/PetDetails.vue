@@ -13,8 +13,8 @@
                                 </b-col>
                                 <b-col v-for="(image, index) in pet.images" :key="index" cols="3" class="mt-3">
                                     <div class="additional-img-container">
-                                        <b-img :src="image" class="additional-img" alt="Imagen adicional" fluid
-                                            center></b-img>
+                                        <b-img :src="image" class="additional-img" alt="Imagen adicional" fluid center
+                                            @click="swapImage(image)"></b-img>
                                     </div>
                                 </b-col>
                             </b-row>
@@ -379,10 +379,6 @@ export default {
         petId: {
             type: String,
             required: true
-        },
-        previous: {
-            type: String,
-            required: true
         }
     },
     data() {
@@ -403,6 +399,17 @@ export default {
         mapWeightUnit(unit) {
             return weightUnits[unit] || unit;
         },
+        swapImage(selectedImage) {
+            let mainImage = this.pet.mainImage;
+            this.pet.mainImage = selectedImage;
+
+            const index = this.pet.images.findIndex(image => image === selectedImage);
+            if (index !== -1) {
+                this.pet.images.splice(index, 1, mainImage);
+            } else {
+                this.pet.images.push(mainImage);
+            }
+        },
         async getDetails() {
             try {
                 Swal.fire({
@@ -412,7 +419,7 @@ export default {
                     imageWidth: 160,
                     imageHeight: 160,
                     showConfirmButton: false
-                })                
+                })
                 const response = await instance.post(`/pet/details`, { id: this.petId });
                 this.pet = response.data.data;
                 Swal.close();
