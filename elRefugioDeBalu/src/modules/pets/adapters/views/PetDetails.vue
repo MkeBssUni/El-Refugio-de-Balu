@@ -352,6 +352,16 @@
 
 <script>
 export default {
+    props: {
+        id: {
+            type: String,
+            required: true
+        },
+        previous: {
+            type: String,
+            required: true
+        }
+    },
     data() {
         return {
             pet: {
@@ -397,6 +407,10 @@ export default {
         goBack() {
             this.$router.go(-1);
         }
+    },
+    mounted() {
+        console.log(this.id);
+        console.log(this.previous);
     }
 }
 </script>
