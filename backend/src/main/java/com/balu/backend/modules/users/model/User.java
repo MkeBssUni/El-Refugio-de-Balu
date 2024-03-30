@@ -60,6 +60,9 @@ public class User {
     @OneToMany(mappedBy = "moderator")
     @JsonIgnore
     private List<Pet> moderatedPets;
+    @OneToMany(mappedBy = "adoptant")
+    @JsonIgnore
+    private List<Pet> adoptedPets;
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<AdoptionRequest> adoptionRequests;

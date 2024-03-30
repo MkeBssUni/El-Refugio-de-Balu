@@ -77,6 +77,10 @@ public class Pet {
     @JoinColumn(name = "user_moderator_id", referencedColumnName = "id")
     @JsonIncludeProperties({"id"})
     private User moderator;
+    @ManyToOne
+    @JoinColumn(name = "user_adoptant_id", referencedColumnName = "id")
+    @JsonIncludeProperties({"id"})
+    private User adoptant;
     @OneToMany(mappedBy = "pet")
     @JsonIgnore
     private List<AdoptionRequest> adoptionRequests;
