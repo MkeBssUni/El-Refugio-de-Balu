@@ -36,6 +36,7 @@ export default {
                     if (result.isConfirmed) {
                         localStorage.removeItem('role');
                         localStorage.removeItem('token');
+                        localStorage.removeItem('userId');
 
                         Swal.fire({
                             title: "Sesión cerrada",
