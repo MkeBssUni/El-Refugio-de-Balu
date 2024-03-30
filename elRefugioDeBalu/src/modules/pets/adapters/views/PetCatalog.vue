@@ -37,7 +37,8 @@
                                     <b-col cols="12" sm="6" class="mt-3">
                                         <b-form-select v-model="payload.lifeStage" class="form-select">
                                             <option value="">Todas las edades</option>
-                                            <option v-for="lifeStage in lifeStages" :key="lifeStage.key" :value="lifeStage.value">
+                                            <option v-for="lifeStage in lifeStages" :key="lifeStage.key"
+                                                :value="lifeStage.value">
                                                 {{ lifeStage.text }}
                                             </option>
                                         </b-form-select>
@@ -51,7 +52,7 @@
                                         </b-form-select>
                                     </b-col>
                                     <b-col cols="12" class="mt-3">
-                                        <b-form-select v-model="payload.location" class="form-select">                                            
+                                        <b-form-select v-model="payload.location" class="form-select">
                                             <option v-for="state in states" :key="state.value" :value="state.value">
                                                 {{ state.value }}
                                             </option>
@@ -62,14 +63,16 @@
                                 <b-row>
                                     <b-col cols="6" class="mt-3">
                                         <b-button variant="outline-danger"
-                                            class="w-100 d-flex align-items-center justify-content-between" @click="cleanForm()">
+                                            class="w-100 d-flex align-items-center justify-content-between"
+                                            @click="cleanForm()">
                                             <span>Limpiar</span>
                                             <b-icon icon="trash"></b-icon>
                                         </b-button>
                                     </b-col>
                                     <b-col cols="6" class="mt-3">
                                         <b-button variant="outline-dark-secondary-blue"
-                                            class="w-100 d-flex align-items-center justify-content-between" @click="getPetCatalog()">
+                                            class="w-100 d-flex align-items-center justify-content-between"
+                                            @click="getPetCatalog()">
                                             <span>Buscar</span>
                                             <b-icon icon="search" flip-h></b-icon>
                                         </b-button>
@@ -90,7 +93,8 @@
                     <b-row class="transparent absolute-position">
                         <b-col cols="12" class="d-flex justify-content-end">
                             <b-button variant="dark-gray" class="m-2 py-2 d-flex align-items-center" pill
-                                @mouseover="hoverIn(pet.id)" @mouseleave="hoverOut(pet.id)" v-b-tooltip.hover.left="pet.favorite ? 'Eliminar de favoritas' : 'Marcar como favorita'">
+                                @mouseover="hoverIn(pet.id)" @mouseleave="hoverOut(pet.id)"
+                                v-b-tooltip.hover.left="pet.favorite ? 'Eliminar de favoritas' : 'Marcar como favorita'">
                                 <b-icon :icon="getIcon(pet)"
                                     :class="{ 'text-danger': shouldHighlight(pet), 'mt-1': true }"
                                     font-scale="2"></b-icon>
@@ -110,6 +114,12 @@
                 </b-card>
             </b-col>
         </b-row>
+        <b-row class="pt-2">
+            <b-col cols="12">
+                <b-pagination pills v-model="page" :total-rows="total" :per-page="size" align="center">
+                </b-pagination>
+            </b-col>
+        </b-row>
     </b-container>
 </template>
 
@@ -126,7 +136,10 @@ import genders from "../../../../kernel/data/genders";
 export default {
     data() {
         return {
-            hoverStates: {},        
+            hoverStates: {},
+            page: 1,
+            size: 8,
+            total: 0,
             payload: {
                 user: localStorage.getItem("userId") ? localStorage.getItem("userId") : null,
                 category: "",
@@ -168,10 +181,10 @@ export default {
                     imageHeight: 160,
                     showConfirmButton: false
                 })
-                const response = await instance.get(`/category/list`)                
+                const response = await instance.get(`/category/list`)
                 this.categories = response.data.data
                 Swal.close()
-            } catch (error) {                
+            } catch (error) {
                 Swal.fire({
                     title: 'Error',
                     text: 'Ocurrió un error al cargar las categorías',
@@ -194,8 +207,8 @@ export default {
                     imageWidth: 160,
                     imageHeight: 160,
                     showConfirmButton: false
-                })                                
-                const response = await instance.post(`/pet/catalog`,{
+                })
+                const response = await instance.post(`/pet/catalog?page=${this.page - 1}&size=${this.size}`, {
                     user: this.payload.user,
                     category: this.payload.category == "" ? null : this.payload.category,
                     size: this.payload.size,
@@ -203,7 +216,8 @@ export default {
                     gender: this.payload.gender,
                     location: this.payload.location
                 })
-                this.pets = response.data.data.content             
+                this.pets = response.data.data.content
+                this.total = response.data.data.totalElements
                 Swal.close()
             } catch (error) {
                 console.error(error)
@@ -233,9 +247,16 @@ export default {
         }
     },
     mounted() {
-        this.getCategories()                        
+        this.getCategories()
         this.getPetCatalog()
-    }
+    },
+    watch: {
+        page(previous, next) {
+            if (previous !== next) {
+                this.getPetCatalog();
+            }
+        }
+    },
 }
 </script>
 
