@@ -11,8 +11,7 @@
                                     <b-img :src="pet.mainImage" class="img border-img"
                                         alt="Imagen principal de la mascota" fluid center rounded></b-img>
                                 </b-col>
-                                <b-col v-for="(image, index) in pet.additionalImages" :key="index" cols="3"
-                                    class="mt-3">
+                                <b-col v-for="(image, index) in pet.images" :key="index" cols="3" class="mt-3">
                                     <div class="additional-img-container">
                                         <b-img :src="image" class="additional-img" alt="Imagen adicional" fluid
                                             center></b-img>
@@ -40,11 +39,14 @@
                                 <b-col cols="12">
                                     <h4>Hábitos y cuidados especiales</h4>
                                 </b-col>
-                                <b-col cols="12">
+                                <b-col cols="12" v-if="pet.specialCares">
                                     <ul>
-                                        <li class="text-dark-gray-input mt-3" v-for="(care, index) in pet.care"
+                                        <li class="text-dark-gray-input mt-3" v-for="(care, index) in pet.specialCares"
                                             :key="index">{{ care }}</li>
                                     </ul>
+                                </b-col>
+                                <b-col cols="12" v-else>
+                                    <p class="text-dark-gray-input ms-3">Sin especificar</p>
                                 </b-col>
                             </b-row>
                         </b-col>
@@ -53,16 +55,17 @@
                                 <b-col cols="9" xl="10" class="d-flex align-items-center">
                                     <div>
                                         <h2>{{ pet.name }}</h2>
-                                        <h4 class="text-dark-gray-input">{{ pet.city }}, {{ pet.state }}</h4>
+                                        <h4 class="text-dark-gray-input">{{ pet.location }}</h4>
                                     </div>
                                 </b-col>
                                 <b-col cols="3" xl="2" class="d-flex justify-content-end pe-4">
                                     <div>
-                                        <b-icon v-if="pet.sex === 'M'" icon="gender-male" variant="gender-male"
+                                        <b-icon v-if="pet.gender === 'MALE'" icon="gender-male" variant="gender-male"
                                             font-scale="3.6"></b-icon>
                                         <b-icon v-else icon="gender-female" variant="gender-female"
                                             font-scale="3.6"></b-icon>
-                                        <b-card-sub-title class="mt-2" v-if="pet.sex === 'M'">Macho</b-card-sub-title>
+                                        <b-card-sub-title class="mt-2"
+                                            v-if="pet.gender === 'MALE'">Macho</b-card-sub-title>
                                         <b-card-sub-title class="mt-2" v-else>Hembra</b-card-sub-title>
                                     </div>
                                 </b-col>
@@ -83,15 +86,15 @@
                                 </b-col>
                                 <b-col cols="12" lg="6" class="d-flex">
                                     <p class="me-2">Etapa:</p>
-                                    <p class="text-dark-gray-input">{{ pet.stage }}</p>
+                                    <p class="text-dark-gray-input">{{ pet.lifeStage }}</p>
                                 </b-col>
                                 <b-col cols="12" lg="6" class="d-flex">
                                     <p class="me-2">Edad</p>
-                                    <p class="text-dark-gray-input">{{ pet.age }}</p>
+                                    <p class="text-dark-gray-input">{{ pet.age }} {{ pet.ageUnit }}</p>
                                 </b-col>
                                 <b-col cols="12" lg="6" class="d-flex">
                                     <p class="me-2">Peso</p>
-                                    <p class="text-dark-gray-input">{{ pet.weight }}</p>
+                                    <p class="text-dark-gray-input">{{ pet.weight }} {{ pet.weightUnit }}</p>
                                 </b-col>
                             </b-row>
                             <hr class="divider my-0">
@@ -103,21 +106,21 @@
                                     <b-col cols="12" lg="6">
                                         <div class="d-flex justify-content-between pe-xl-5">
                                             <p>Vacunado</p>
-                                            <b-icon v-if="pet.isVaccinated" icon="check-circle" variant="success"
+                                            <b-icon v-if="pet.vaccinated" icon="check-circle" variant="success"
                                                 font-scale="1.2" class="me-4 me-xl-5"></b-icon>
                                             <b-icon v-else icon="x-circle" variant="danger" font-scale="1.2"
                                                 class="me-4 me-xl-5"></b-icon>
                                         </div>
                                         <div class="d-flex justify-content-between pe-xl-5">
                                             <p>Desparasitado</p>
-                                            <b-icon v-if="pet.isDewormed" icon="check-circle" variant="success"
+                                            <b-icon v-if="pet.dewormed" icon="check-circle" variant="success"
                                                 font-scale="1.2" class="me-4 me-xl-5"></b-icon>
                                             <b-icon v-else icon="x-circle" variant="danger" font-scale="1.2"
                                                 class="me-4 me-xl-5"></b-icon>
                                         </div>
                                         <div class="d-flex justify-content-between pe-xl-5">
                                             <p>Esterilizado</p>
-                                            <b-icon v-if="pet.isSterilised" icon="check-circle" variant="success"
+                                            <b-icon v-if="pet.sterilised" icon="check-circle" variant="success"
                                                 font-scale="1.2" class="me-4 me-xl-5"></b-icon>
                                             <b-icon v-else icon="x-circle" variant="danger" font-scale="1.2"
                                                 class="me-4 me-xl-5"></b-icon>
@@ -132,20 +135,20 @@
                                     </b-col>
                                     <b-col cols="12" lg="6">
                                         <p class="mt-md-4 mt-lg-0">Enfermedades:</p>
-                                        <p v-if="pet.diseases.length > 0" class="text-dark-gray-input ms-3">
+                                        <p v-if="pet.diseases" class="text-dark-gray-input ms-3">
                                             {{ pet.diseases.join(', ') }}
                                         </p>
                                         <p v-else class="text-dark-gray-input ms-3">Ninguna</p>
                                         <p class="mt-3">Alergias:</p>
-                                        <p v-if="pet.allergies.length > 0" class="text-dark-gray-input ms-3">
+                                        <p v-if="pet.allergies" class="text-dark-gray-input ms-3">
                                             {{ pet.allergies.join(', ') }}
                                         </p>
                                         <p v-else class="text-dark-gray-input ms-3">Ninguna</p>
                                     </b-col>
                                 </b-row>
-                                <b-col cols="12">
+                                <b-col cols="12" v-show="pet.observations">
                                     <p class="mt-3">Comentarios adicionales:</p>
-                                    <p class="comment text-dark-gray-input">{{ pet.comments }}</p>
+                                    <p class="comment text-dark-gray-input">{{ pet.observations }}</p>
                                 </b-col>
                             </b-row>
                             <hr class="divider my-0 d-none d-lg-block">
@@ -153,11 +156,14 @@
                                 <b-col cols="12">
                                     <h4>Hábitos y cuidados especiales</h4>
                                 </b-col>
-                                <b-col cols="12">
+                                <b-col cols="12" v-if="pet.specialCares">
                                     <ul>
-                                        <li class="text-dark-gray-input mt-3" v-for="(care, index) in pet.care"
+                                        <li class="text-dark-gray-input mt-3" v-for="(care, index) in pet.specialCares"
                                             :key="index">{{ care }}</li>
                                     </ul>
+                                </b-col>
+                                <b-col cols="12" v-else>
+                                    <p class="text-dark-gray-input ms-3">Sin especificar</p>
                                 </b-col>
                             </b-row>
                         </b-col>
@@ -181,7 +187,7 @@
                     </b-row>
                 </b-card>
                 <!-- xs, sm card -->
-                <b-card class="full-height-card p-4 d-block d-md-none" bg-variant="gray">
+                <!-- <b-card class="full-height-card p-4 d-block d-md-none" bg-variant="gray">
                     <b-row>
                         <b-col cols="12">
                             <b-row class="px-sm-5">
@@ -344,13 +350,18 @@
                             </b-button>
                         </b-col>
                     </b-row>
-                </b-card>
+                </b-card> -->
             </b-col>
         </b-row>
     </b-container>
 </template>
 
 <script>
+import Swal from "sweetalert2";
+import instance from "../../../../config/axios";
+
+import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
+
 export default {
     props: {
         id: {
@@ -364,53 +375,43 @@ export default {
     },
     data() {
         return {
-            pet: {
-                mainImage: 'https://i.pinimg.com/236x/28/bb/ce/28bbce5c0fa2e6bc2b786937be1c2ed9.jpg',
-                additionalImages: [
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtdFCuqK3UhNKl1A7YbogPffipGf2bR0DmyWG03Rhx24HnDHJl',
-                    'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTZPAVHDCzHATFVORtAnf0roPACfbl1N37jTexERTs8tj7M3JXV',
-                    'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRwjes3zWjaJV15Junz6ZPmzxFmcYpllrodcKdSpatr71vpyw52',
-                    'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSCEM8KenUzZ_081jNyum-ie9NQp62MjBlvkuj9fx-M61zXVZ-v',
-                ],
-                name: 'Bolita Santos',
-                sex: 'H',
-                state: 'Morelos',
-                city: 'Cuernavaca',
-                category: 'Gato',
-                breed: 'Siames',
-                size: 'Pequeño',
-                stage: 'Cachorro',
-                age: '11 meses',
-                weight: '3.5 kg',
-                isVaccinated: true,
-                isDewormed: false,
-                isSterilised: false,
-                microchip: true,
-                diseases: ['Leucemia Felina', 'Rabia'], 
-                /* diseases: [], */
-                /* allergies: ['Polvo', 'Ácaros'], */
-                allergies: [],
-                comments: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                care: [
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                    "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-                ],
-                characteristics: [
-                    "Travieso", "Limpio", "Cariñoso", "Juguetón", "Mimoso", "Guardián"
-                ],
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-            }
+            pet: {}
         }
     },
     methods: {
+        async getDetails() {
+            try {
+                Swal.fire({
+                    title: 'Cargando...',
+                    text: 'Estamos cargando los detalles de la mascota, espera un momento',
+                    imageUrl: gatoWalkingGif,
+                    imageWidth: 160,
+                    imageHeight: 160,
+                    showConfirmButton: false
+                })
+                const response = await instance.post(`/pet/details`, { id: this.id });
+                this.pet = response.data.data;
+                Swal.close();
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error al cargar las mascotas',
+                    icon: 'error',
+                    iconColor: '#A93D3D',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                }).then(() => {
+                    this.$router.push('/pets')
+                })
+            }
+        },
         goBack() {
             this.$router.go(-1);
         }
     },
     mounted() {
-        console.log(this.id);
-        console.log(this.previous);
+        this.getDetails();
     }
 }
 </script>
