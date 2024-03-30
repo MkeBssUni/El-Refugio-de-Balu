@@ -23,4 +23,9 @@ public class HomeImage {
     @JoinColumn(name ="home_specification_id", referencedColumnName = "id")
     @JsonIgnore
     private HomeSpecification homeSpecification;
+
+    public HomeImage(String image, HomeSpecification homeSpecification) {
+        this.image = image;
+        this.homeSpecification = homeSpecification;
+    }
 }

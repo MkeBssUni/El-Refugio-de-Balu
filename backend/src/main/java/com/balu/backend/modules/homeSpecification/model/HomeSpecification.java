@@ -31,4 +31,10 @@ public class HomeSpecification {
     @OneToOne(mappedBy = "homeSpecification")
     @JsonIgnore
     private HomeImage homeImage;
+
+    public HomeSpecification(HomeTypes type, boolean outdoorArea, int numberOfResidents) {
+        this.type = type;
+        this.outdoorArea = outdoorArea;
+        this.numberOfResidents = numberOfResidents;
+    }
 }

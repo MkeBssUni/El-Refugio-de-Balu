@@ -23,4 +23,44 @@ public class EmailService {
             e.printStackTrace();
         }
     }
+
+    public void sendAdoptionApprovalTemplate(String email, String namePet){
+        try{
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+            helper.setTo(email);
+            helper.setSubject("¡Felicidades! se acepto tu solicitud de "+namePet);
+            helper.setText(EmailTemplates.adoptionApprovalTemplate(namePet),true);
+            javaMailSender.send(message);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void finalizeAdoptionTemplate(String email, String namePet){
+        try{
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+            helper.setTo(email);
+            helper.setSubject("¡Malas noticias! se finalizo"+namePet);
+            helper.setText(EmailTemplates.finalizeAdoptionTemplate(namePet),true);
+            javaMailSender.send(message);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void activeRequestTemplate(String email,String namePet,int countRequest){
+        try{
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+            helper.setTo(email);
+            helper.setSubject("¡Ven a revisar! tienes solicitudes");
+            helper.setText(EmailTemplates.ActiveRequestTemplate(countRequest,namePet),true);
+            javaMailSender.send(message);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 }
