@@ -57,26 +57,54 @@ public class PetService {
     private final LogService logService;
 
     @Transactional(readOnly = true)
-    public ResponseApi<?> findAllPaged(PetCatalogPagedDto dto, Pageable pageable) {
-        if (dto.getGender() != null && validations.isInvalidEnum(dto.getGender().toUpperCase().trim(), Genders.class)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+    public ResponseApi<?> findAllPaged(FindPetsDto dto, Pageable pageable) {
+        if (dto.getSize() != null) dto.setSize(dto.getSize().toLowerCase().trim());
+        if (dto.getLifeStage() != null) dto.setLifeStage(dto.getLifeStage().toLowerCase().trim());
+        if (dto.getGender() != null) dto.setGender(dto.getGender().toLowerCase().trim());
+        if (dto.getLocation() != null) dto.setLocation(dto.getLocation().toLowerCase().trim());
+
+        Long categoryId = null;
 
         if (dto.getCategory() != null) {
-            Long categoryId = decryptId(dto.getCategory());
+            categoryId = decryptId(dto.getCategory());
             if (categoryId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
             Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
             if (!optionalCategory.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
         }
 
-        if (dto.getOwner() != null && (dto.getLocation() == null || !validations.isNotBlankString(dto.getLocation().trim()))) {
-            Long ownerId = decryptId(dto.getOwner());
-            if (ownerId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
-            Optional<User> optionalUser = userRepository.findById(ownerId);
+        Page<IPetsView> pets = null;
+
+        if (dto.getUser() != null) {
+            Long userId = decryptId(dto.getUser());
+            if (userId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
+            Optional<User> optionalUser = userRepository.findById(userId);
             if (!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
             User user = optionalUser.get();
-            if (user.getAddress() != null) dto.setLocation(user.getAddress().getState());
+            if (!user.getRole().getName().equals(Roles.GENERAL)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ROLE.name());
+            if (dto.getLocation() == null) {
+                if (user.getAddress().getState() != null) dto.setLocation(user.getAddress().getState().toLowerCase().trim());
+                else dto.setLocation("");
+            }
+
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, "Not implemented");
+        } else {
+            pets = petRepository.findAllPaged(dto.getSize(), dto.getLifeStage(), dto.getLocation(), dto.getGender(), categoryId, pageable);
         }
 
-        return new ResponseApi<>(petRepository.findAll(pageable), HttpStatus.OK,false, "OK");
+        Page<PetCatalog> petsCatalog = pets.map(pet -> {
+            try {
+                return new PetCatalog(
+                        hashService.encrypt(pet.getId()),
+                        pet.getName(),
+                        pet.getLocation(),
+                        false
+                );
+            } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        return new ResponseApi<>(petsCatalog, HttpStatus.OK,false, "Pets retrieved successfully");
     }
 
     @Transactional(readOnly = true)

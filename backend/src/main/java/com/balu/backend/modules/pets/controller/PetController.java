@@ -20,12 +20,10 @@ public class PetController {
     @PostMapping("/catalog")
     public ResponseEntity<ResponseApi<?>> findAllPaged(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sort,
-            @RequestParam(defaultValue = "asc") String order,
-            @RequestBody PetCatalogPagedDto dto
+            @RequestParam(defaultValue = "12") int size,
+            @RequestBody FindPetsDto dto
     ) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(order), sort));
+        Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(petService.findAllPaged(dto, pageable));
     }
 
