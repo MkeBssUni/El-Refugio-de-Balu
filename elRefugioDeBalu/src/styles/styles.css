@@ -202,8 +202,10 @@ body {
 }
 
 .card-img-top {
-  border-radius: 25px !important;
+  max-height: 310px !important;
+  object-fit: cover !important;
 }
+
 
 .pb-7 {
   padding-bottom: 5rem !important;
