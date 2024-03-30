@@ -80,7 +80,7 @@ public class PetController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
-    @PostMapping("/complete/adoption")
+    @PostMapping("/adoption")
     public ResponseEntity<ResponseApi<?>> complete(@RequestBody CompleteAdoptionDto dto) {
         ResponseApi<?> response = petService.completeAdoption(dto);
         return ResponseEntity.status(response.getStatus()).body(response);
@@ -104,7 +104,7 @@ public class PetController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
-    @PostMapping("/")
+    @PostMapping("/save")
     public ResponseEntity<ResponseApi<?>> save(@RequestBody SavePetDto dto) {
         ResponseApi<?> response = petService.save(dto);
         return ResponseEntity.status(response.getStatus()).body(response);
