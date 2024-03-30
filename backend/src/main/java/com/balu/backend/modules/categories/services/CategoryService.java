@@ -129,16 +129,14 @@ public class CategoryService {
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseApi<Integer> changeStatusCategory(ChangeStatusCategoryDto changeStatusCategoryDto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        Long  id = Long.parseLong(hashService.decrypt(changeStatusCategoryDto.getId()));
-        Boolean status= Boolean.parseBoolean(hashService.decrypt(changeStatusCategoryDto.getStatus()));
         if (validations.isInvalidId(changeStatusCategoryDto.getId()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_ID.name());
         if (validations.isValidBooleanStatus(changeStatusCategoryDto.getStatus()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_STATUS.name());
         if (changeStatusCategoryDto.getId() == null && changeStatusCategoryDto.getStatus() == null)
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
-
-
+        Long id = Long.parseLong(hashService.decrypt(changeStatusCategoryDto.getId()));
+        Boolean status = Boolean.parseBoolean(hashService.decrypt(changeStatusCategoryDto.getStatus()));
         Integer category = this.iCategoryRepository.changeStatusCategory(id, !status);
         return new ResponseApi<>(
                 category,
