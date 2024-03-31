@@ -5,28 +5,37 @@
                 titulo="Lista de mascotas" />
         </b-row>
         <b-row align-h="end" class="px-4">
-            <b-col cols="12" md="2" class="pt-3">
+            <b-col cols="12" sm="6" md="3" lg="2" class="pt-3">
                 <b-input-group class="mt-3">
-                    <b-form-select :options="categories" v-model="categoryFilter" class="form-select">
+                    <b-form-select v-model="payload.category" class="form-select">
+                        <option value="">Todas las categorías</option>
+                        <option v-for="category in categories" :key="category.id" :value="category.id">
+                            {{ category.name }}
+                        </option>
                     </b-form-select>
                 </b-input-group>
             </b-col>
-            <b-col cols="12" md="2" class="pt-0 pt-md-3">
+            <b-col cols="12" sm="6" md="3" lg="2" class="pt-0 pt-sm-3">
                 <b-input-group class="mt-3">
-                    <b-form-select :options="sizes" v-model="sizeFilter" class="form-select"></b-form-select>
+                    <b-form-select v-model="size" class="form-select">
+                        <option value="">Todas los tamaños</option>
+                        <option v-for="size in sizes" :key="size.key" :value="size.value">
+                            {{ size.text }}
+                        </option>
+                    </b-form-select>
                 </b-input-group>
             </b-col>
-            <b-col cols="12" md="2" class="pt-0 pt-md-3">
+            <b-col cols="12" sm="6" md="3" lg="2" class="pt-0 pt-md-3">
                 <b-input-group class="mt-3">
-                    <b-form-select :options="genders" v-model="genderFilter" class="form-select"></b-form-select>
+                    <b-form-select v-model="gender" class="form-select">
+                        <option value="">Todos los géneros</option>
+                        <option v-for="gender in genders" :key="gender.key" :value="gender.value">
+                            {{ gender.text }}
+                        </option>
+                    </b-form-select>
                 </b-input-group>
             </b-col>
-            <b-col cols="12" md="2" class="pt-0 pt-md-3">
-                <b-input-group class="mt-3">
-                    <b-form-select :options="status" v-model="statusFilter" class="form-select"></b-form-select>
-                </b-input-group>
-            </b-col>
-            <b-col cols="12" md="3" class="pt-0 pt-md-3">
+            <b-col cols="12" sm="6" md="3" class="pt-0 pt-md-3">
                 <b-input-group class="mt-3">
                     <b-form-input type="text" placeholder="Buscar..." id="search"></b-form-input>
                     <b-button variant="dark-gray" type="button" id="search"
@@ -79,39 +88,28 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
+import instance from "../../../../config/axios";
+
 import Encabezado from "../../../../views/components/Encabezado.vue";
+import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
+import sizes from "../../../../kernel/data/sizes";
+import genders from "../../../../kernel/data/genders";
+
 export default {
     data() {
         return {
-            search: '',
-            categoryFilter: '',
-            sizeFilter: '',
-            genderFilter: '',
-            statusFilter: '',
+            size: "",
+            gender: "",
+            payload: {
+                searchValue: "",
+                category: ""
+            },
             perPage: 5,
             currentPage: 1,
-            genders: [
-                { value: '', text: 'Cualquier sexo' },
-                { value: 'Macho', text: 'Macho' },
-                { value: 'Hembra', text: 'Hembra' }
-            ],
-            sizes: [
-                { value: '', text: 'Todos los tamaños' },
-                { value: 'Pequeño', text: 'Pequeño' },
-                { value: 'Mediano', text: 'Mediano' },
-                { value: 'Grande', text: 'Grande' }
-            ],
-            status: [
-                { value: '', text: 'Todos los estados' },
-                { value: 'Aceptada', text: 'Aceptada' },
-                { value: 'Rechazada', text: 'Rechazada' },
-                { value: 'Pendiente', text: 'Pendiente' }
-            ],
-            categories: [
-                { value: '', text: 'Todas las especies' },
-                { value: 'Perro', text: 'Perro' },
-                { value: 'Gato', text: 'Gato' }
-            ],
+            genders: genders,
+            sizes: sizes,
+            categories: [],
             fields: [
                 { key: 'category', label: 'Especie', sortable: false },
                 { key: 'name', label: 'Nombre', sortable: true },
@@ -148,6 +146,33 @@ export default {
         }
     },
     methods: {
+        async getCategories() {
+            try {
+                Swal.fire({
+                    title: 'Cargando...',
+                    text: 'Estamos cargando las categorías, espera un momento',
+                    imageUrl: gatoWalkingGif,
+                    imageWidth: 160,
+                    imageHeight: 160,
+                    showConfirmButton: false
+                })
+                const response = await instance.get(`/category/list`)
+                this.categories = response.data.data
+                Swal.close()
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error al cargar las categorías',
+                    icon: 'error',
+                    iconColor: '#A93D3D',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                }).then(() => {
+                    this.$router.push('/home')
+                })
+            }
+        },
         getBadgeVariant(status) {
             switch (status) {
                 case 'Aceptada': return 'success';
@@ -156,6 +181,9 @@ export default {
                 default: return 'secondary';
             }
         },
+    },
+    mounted() {
+        this.getCategories()
     },
     components: {
         Encabezado
