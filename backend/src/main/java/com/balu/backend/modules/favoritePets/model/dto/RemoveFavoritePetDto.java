@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RemoveFavoritePetDto {
-    private String favoritePet;
+    private String pet;
     private String user;
 }
