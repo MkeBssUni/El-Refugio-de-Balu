@@ -61,7 +61,7 @@ public class PersonService {
         if(validations.isInvalidName(dto.getSurname())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
         if(validations.isInvalidPhoneNumber(dto.getPhoneNumber())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
 
-        Optional<User> existentUser = iUserRepository.findByUsername(dto.getUsername());
+        Optional<User> existentUser = iUserRepository.findByUsername(hashService.encrypt(dto.getUsername()));
         if(existentUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
 
         Person person = new Person();
