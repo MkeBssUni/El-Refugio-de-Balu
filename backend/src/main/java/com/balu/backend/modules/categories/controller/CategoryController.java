@@ -84,5 +84,11 @@ public class CategoryController {
         return new ResponseEntity<>(responseApi,responseApi.getStatus());
     }
 
-
+    @GetMapping("/carousel")
+    public ResponseEntity<ResponseApi<List<CarouselCategoryDto>>> categoryCarousel(){
+        ResponseApi<List<CarouselCategoryDto>> responseApi = categoryService.carouselList();
+        return new ResponseEntity<>(
+                responseApi, responseApi.getStatus()
+        );
+    }
 }
