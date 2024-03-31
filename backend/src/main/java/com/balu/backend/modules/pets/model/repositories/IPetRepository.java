@@ -24,7 +24,7 @@ public interface IPetRepository extends JpaRepository<Pet,Long> {
                         "inner join addresses a on p.user_owner_id = a.user_id " +
                         "left join favorite_pets f ON p.id = f.pet_id and f.user_id = ?6 " +
                         "where p.status_id = 3 and lower(p.size) like %?1% and lower(p.life_stage) like %?2% and lower(a.state) like %?3% " +
-                        "and (p.gender = ?4 or ?4 is null) and (p.category_id = ?5 or ?5 is null);", nativeQuery = true)
+                        "and (p.gender = ?4 or ?4 is null) and (p.category_id = ?5 or ?5 is null) and p.user_owner_id != ?6", nativeQuery = true)
     Page<IPetsByUserView> findAllByUserPaged(String size, String lifeStage, String location, String gender, Long categoryId, Long userId, Pageable pageable);
 
     @Query(value = "select p.name as name, p.breed as breed, lower(c.name) as category, lower(concat(p.weight,' ',p.weight_unit)) as weight, lower(p.size) as size, lower(p.life_stage) as lifeStage, lower(concat(p.age,' ',p.age_unit)) as age, lower(gender) as gender from pets p inner join categories c on p.category_id = c.id where p.id = ?1", nativeQuery = true)
