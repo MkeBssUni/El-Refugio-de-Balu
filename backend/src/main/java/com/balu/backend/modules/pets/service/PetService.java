@@ -82,10 +82,6 @@ public class PetService {
             if (!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
             User user = optionalUser.get();
             if (!user.getRole().getName().equals(Roles.GENERAL)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ROLE.name());
-            if (dto.getLocation() == null) {
-                if (user.getAddress().getState() != null) dto.setLocation(user.getAddress().getState().toLowerCase().trim());
-                else dto.setLocation("");
-            }
 
             Page<IPetsByUserView> pets = petRepository.findAllByUserPaged(dto.getSize(), dto.getLifeStage(), dto.getLocation(), dto.getGender(), categoryId, userId, pageable);
             Page<PetCatalog> petsCatalog = pets.map(pet -> {
