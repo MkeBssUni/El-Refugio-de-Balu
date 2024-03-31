@@ -93,7 +93,7 @@
                     <b-row class="transparent absolute-position">
                         <b-col cols="12" class="d-flex justify-content-end">
                             <b-button variant="dark-gray" class="m-2 py-2 d-flex align-items-center" pill
-                                @mouseover="hoverIn(pet.id)" @mouseleave="hoverOut(pet.id)"
+                                @mouseover="hoverIn(pet.id)" @mouseleave="hoverOut(pet.id)" @click="addOrRemoveFavoritePet(pet)"
                                 v-b-tooltip.hover.left="pet.favorite ? 'Eliminar de favoritas' : 'Marcar como favorita'">
                                 <b-icon :icon="getIcon(pet)"
                                     :class="{ 'text-danger': shouldHighlight(pet), 'mt-1': true }"
@@ -231,6 +231,118 @@ export default {
                     showConfirmButton: false
                 }).then(() => {
                     this.$router.push('/home')
+                })
+            }
+        },
+        async addFavoritePet(pet) {
+            try {
+                Swal.fire({
+                    title: 'Cargando...',
+                    text: 'Agregando mascota a tus favoritas, espera un momento',
+                    imageUrl: gatoWalkingGif,
+                    imageWidth: 160,
+                    imageHeight: 160,
+                    showConfirmButton: false
+                })
+                await instance.post(`/favorite/pet/add`, {
+                    user: localStorage.getItem("userId"),
+                    pet: pet.id
+                })
+                Swal.fire({
+                    title: 'Mascota agregada',
+                    text: 'La mascota ha sido agregada a tus favoritas',
+                    icon: 'success',
+                    iconColor: '#4BB543',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                }).then(() => {
+                    this.getPetCatalog()
+                })
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error al eliminar la mascota de tus favoritas',
+                    icon: 'error',
+                    iconColor: '#A93D3D',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                })
+            }
+        },
+        async removeFavoritePet(pet) {
+            try {
+                Swal.fire({
+                    title: 'Cargando...',
+                    text: 'Eliminando mascota de tus favoritas, espera un momento',
+                    imageUrl: gatoWalkingGif,
+                    imageWidth: 160,
+                    imageHeight: 160,
+                    showConfirmButton: false
+                })
+                await instance.post(`/favorite/pet/remove`, {
+                    user: localStorage.getItem("userId"),
+                    pet: pet.id
+                })
+                Swal.fire({
+                    title: 'Mascota eliminada',
+                    text: 'La mascota ha sido eliminada de tus favoritas',
+                    icon: 'success',
+                    iconColor: '#4BB543',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                }).then(() => {
+                    this.getPetCatalog()
+                })
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error al eliminar la mascota de tus favoritas',
+                    icon: 'error',
+                    iconColor: '#A93D3D',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                })
+            }
+        },
+        async confirmRemoveFavoritePet(pet) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: '¿Deseas eliminar esta mascota de tus favoritas?',
+                icon: 'warning',
+                iconColor: '#FFA500',
+                showCancelButton: true,
+                confirmButtonColor: '#FFA500',
+                cancelButtonColor: '#A93D3D',
+                confirmButtonText: 'Sí',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.removeFavoritePet(pet)
+                }
+            })
+        },
+        async addOrRemoveFavoritePet(pet) {
+            if (localStorage.getItem("userId")) {
+                if (!pet.favorite) {
+                    this.addFavoritePet(pet)
+                } else {
+                    this.confirmRemoveFavoritePet(pet)
+                }
+            } else {
+                Swal.fire({
+                    title: 'Inicia sesión',
+                    text: 'Para agregar mascotas a tus favoritas, inicia sesión',
+                    icon: 'info',
+                    iconColor: '#FFA500',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                }).then(() => {
+                    this.$router.push('/login')
                 })
             }
         },

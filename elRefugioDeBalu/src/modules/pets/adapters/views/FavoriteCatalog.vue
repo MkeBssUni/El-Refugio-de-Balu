@@ -36,12 +36,15 @@
                         <b-card-sub-title>{{ pet.location }}</b-card-sub-title>
                         <div class="d-flex justify-content-center">
                             <b-button pill variant="outline-dark-blue" class="mt-3 px-5 d-flex align-items-center"
-                                to="/petDetails">
+                                @click="getDetails(pet)">
                                 <span>Ver detalles</span>
                             </b-button>
                         </div>
                     </b-card-body>
                 </b-card>
+            </b-col>
+            <b-col v-show="total == 0">
+                <h5 class="text-center mt-3">No has marcado mascotas como tus favoritas</h5>
             </b-col>
         </b-row>
         <b-row class="pt-2">
@@ -95,7 +98,7 @@ export default {
                     user: this.payload.user,
                     searchValue: this.searchValue
                 })
-                this.pets = response.data.data.content
+                this.pets = response.data.data.content                
                 this.total = response.data.data.totalElements
                 Swal.close()
             } catch (error) {
@@ -122,11 +125,10 @@ export default {
                     imageHeight: 160,
                     showConfirmButton: false
                 })
-                const response = await instance.post(`/favorite/pet/remove`, {
+                await instance.post(`/favorite/pet/remove`, {
                     user: localStorage.getItem("userId"),
-                    favoritePet: pet.id
+                    pet: pet.id
                 })
-                console.log(response)
                 Swal.fire({
                     title: 'Mascota eliminada',
                     text: 'La mascota ha sido eliminada de tus favoritas',
