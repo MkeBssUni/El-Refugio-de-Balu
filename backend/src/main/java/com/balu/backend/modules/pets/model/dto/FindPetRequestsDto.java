@@ -7,5 +7,7 @@ import lombok.Setter;
 @Setter
 public class FindPetRequestsDto {
     private String category;
+    private String size;
+    private String gender;
     private String searchValue;
 }
