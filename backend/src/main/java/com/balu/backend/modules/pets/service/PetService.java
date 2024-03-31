@@ -211,11 +211,10 @@ public class PetService {
 
     @Transactional(readOnly = true)
     public ResponseApi<?> findNewPetRequests(FindPetRequestsDto dto, Pageable pageable) {
-        if (dto.getSearchValue() == null) {
-            dto.setSearchValue("");
-        } else {
-            dto.setSearchValue(dto.getSearchValue().toLowerCase().trim());
-        }
+        if (dto.getCategory() != null && validations.isNotBlankString(dto.getCategory().trim())) dto.setCategory(null);
+        if (dto.getSize() == null) dto.setSize("");
+        if (dto.getGender() != null && validations.isNotBlankString(dto.getGender().trim())) dto.setGender(null);
+        if (dto.getSearchValue() == null) dto.setSearchValue("");
 
         Long categoryId = null;
         if (dto.getCategory() != null) {
@@ -225,7 +224,7 @@ public class PetService {
             if (!optionalCategory.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
         }
 
-        Page<IPetRequestsView> petRequests = categoryId != null ? petRepository.findNewPetRequestsByCategory(categoryId, dto.getSearchValue(), pageable) : petRepository.findNewPetRequests(dto.getSearchValue(), pageable);
+        Page<IPetRequestsView> petRequests = petRepository.findNewPetRequests(categoryId, dto.getSize().toLowerCase().trim(), dto.getGender() == null ? null : dto.getGender().toLowerCase().trim(), dto.getSearchValue().toLowerCase().trim(), pageable);
 
         Page<PetRequestList> petRequestList = petRequests.map(petRequest -> {
             try {
