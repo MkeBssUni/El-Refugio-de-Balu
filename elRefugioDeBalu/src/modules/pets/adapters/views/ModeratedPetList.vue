@@ -6,7 +6,7 @@
         <b-row align-h="end" class="px-4">
             <b-col cols="12" sm="6" md="4" lg="3" class="pt-0 pt-md-3">
                 <b-input-group class="mt-3">
-                    <b-form-select v-model="payload.category" class="form-select">
+                    <b-form-select v-model="payload.category" class="form-select" @change="getPetList()">
                         <option value="">Todas las categorías</option>
                         <option v-for="category in categories" :key="category.id" :value="category.id">
                             {{ category.name }}
@@ -16,7 +16,7 @@
             </b-col>
             <b-col cols="12" sm="6" md="4" lg="3" class="pt-0 pt-md-3">
                 <b-input-group class="mt-3">
-                    <b-form-select v-model="payload.status" class="form-select">
+                    <b-form-select v-model="payload.status" class="form-select" @change="getPetList()">
                         <option value="">Todos los estados</option>
                         <option v-for="status in statusses" :key="status.value" :value="status.value">
                             {{ status.text }}
@@ -26,10 +26,10 @@
             </b-col>
             <b-col cols="12" md="4" lg="4" class="pt-0 pt-md-3">
                 <b-input-group class="mt-3">
-                    <b-form-input type="text" placeholder="Buscar..." id="searchValue"
+                    <b-form-input type="text" placeholder="Buscar..." id="searchValue" @keyup.enter="getPetList()"
                         v-model="payload.searchValue"></b-form-input>
                     <b-button variant="dark-gray" type="button" id="searchValue"
-                        class="d-flex align-items-center justify-content-between">
+                        class="d-flex align-items-center justify-content-between" @click="getPetList()">
                         <b-icon icon="search"></b-icon>
                     </b-button>
                 </b-input-group>
@@ -44,7 +44,7 @@
                             v-b-tooltip.hover.right="'Solicitud de cancelación'"></b-icon>
                     </template>
                     <template #cell(requests)="data">
-                        <b-badge v-if="data.value > 0" variant="warning">{{ data.value }}</b-badge>
+                        <b-badge variant="warning">{{ data.value }}</b-badge>
                     </template>
                     <template #cell(status)="data">
                         <b-badge :variant="getBadgeVariant(data.value)">{{ data.value }}</b-badge>
@@ -79,8 +79,12 @@
                 </b-table>
             </b-col>
         </b-row>
-        <b-row class="pt-4">
-            <b-col cols="12">
+        <b-row class="px-4">
+            <b-col cols="12" class="d-flex align-items-center">
+                <label for="perPage">Selecciona la cantidad de registros que deseas mostrar:</label>
+                <b-form-select :options="options" v-model="size" class="ms-3 my-3 form-select" style="width: 80px" @change="getPetList()"></b-form-select>
+            </b-col>
+            <b-col cols="12" class="mt-1">
                 <b-pagination pills v-model="page" :total-rows="total" :per-page="size" align="center">
                 </b-pagination>
             </b-col>
@@ -94,7 +98,7 @@ import instance from "../../../../config/axios";
 
 import Encabezado from "../../../../views/components/Encabezado.vue";
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
-import getStatusses from "../../../../kernel/data/statusses";
+import getStatusses from "../../../../kernel/data/modStatusses";
 
 export default {
     data() {
@@ -102,6 +106,7 @@ export default {
             size: 5,
             page: 1,
             total: 0,
+            options: [5, 10, 15, 20],
             categories: [],
             statusses: getStatusses,
             payload: {
@@ -112,7 +117,7 @@ export default {
             },
             fields: [
                 { key: 'cancelRequest', label: '' },
-                { key: 'requests', label: 'Solicitudes' },
+                { key: 'requests', label: 'Solicitudes', sortable: true },
                 { key: 'category', label: 'Categoría', sortable: true },
                 { key: 'name', label: 'Nombre', sortable: true },
                 { key: 'status', label: 'Estado' },
@@ -194,6 +199,13 @@ export default {
     mounted() {
         this.getCategories()
         this.getPetList()
+    },    
+    watch: {
+        page(previous, next) {
+            if (previous !== next) {
+                this.getPetList();
+            }
+        }
     },
     components: {
         Encabezado
