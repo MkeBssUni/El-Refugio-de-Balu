@@ -9,5 +9,6 @@ public class PersonDto {
     private String userId;
     private Long personId;
     private String username;
+    private String newPassword;
 
 }

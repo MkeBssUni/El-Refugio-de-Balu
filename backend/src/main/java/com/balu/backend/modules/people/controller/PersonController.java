@@ -99,4 +99,22 @@ public class PersonController {
             return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PatchMapping("/send/confirmationCode")
+    public ResponseEntity<ResponseApi<User>> sendNewCode(@RequestBody ActivateAccountDto dto) throws Exception{
+        try{
+            ResponseApi<User> response = personService.sendNewCode(dto);
+            return new ResponseEntity<>(response, response.getStatus());
+        }catch (Exception e){
+            return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PatchMapping("/validate/code")
+    public ResponseEntity<ResponseApi<User>> validateCode(@RequestBody ActivateAccountDto dto) throws Exception{
+        try{
+            ResponseApi<User> response = personService.validateCode(dto);
+            return new ResponseEntity<>(response, response.getStatus());
+        }catch (Exception e){
+            return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

@@ -24,6 +24,31 @@ public class EmailService {
         }
     }
 
+    public void sendNewCode(String email, String newPassword){
+        try{
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+            helper.setTo(email);
+            helper.setSubject("Código de confirmación");
+            helper.setText(EmailTemplates.newPasswordTemplate(newPassword),true);
+            javaMailSender.send(message);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void passwordChanged(String email){
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+            helper.setTo(email);
+            helper.setSubject("Cambio de contraseña");
+            helper.setText(EmailTemplates.PasswordChangedTemplate(),true);
+            javaMailSender.send(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void sendAdoptionApprovalTemplate(String email, String namePet){
         try{
             MimeMessage message = javaMailSender.createMimeMessage();
