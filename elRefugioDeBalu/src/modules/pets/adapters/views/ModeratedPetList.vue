@@ -36,7 +36,10 @@
             </b-col>
         </b-row>
         <b-row class="px-4 pt-4">
-            <b-col cols="12">
+            <b-col cols="12" v-show="pets.length === 0">
+                <h5 class="text-center my-3">No tienes ninguna mascota asignada</h5>
+            </b-col>
+            <b-col cols="12" v-show="pets.length > 0">
                 <b-table :fields="fields" :items="pets" label-sort-asc="" label-sort-desc="" no-sort-reset responsive
                     small striped hover class="text-center custom-scroll-style">
                     <template #cell(cancelRequest)="data">
