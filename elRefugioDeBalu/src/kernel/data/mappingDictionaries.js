@@ -23,7 +23,11 @@ const weightUnits = {
 }
 
 const statusses = {
-    pending: 'Pendiente'
+    pending: 'Pendiente',
+    approved: 'Aprobada',
+    closed: 'Cerrada',
+    adopted: 'Adoptada',
+    in_revision: 'En revisión',
 }
 
 export { sizes, lifeStages, ageUnits, weightUnits, statusses }
