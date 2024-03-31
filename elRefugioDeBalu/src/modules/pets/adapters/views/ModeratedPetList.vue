@@ -37,8 +37,8 @@
         </b-row>
         <b-row class="px-4 pt-4">
             <b-col cols="12">
-                <b-table :fields="fields" :items="pets" :filter="searchValue" label-sort-asc="" label-sort-desc=""
-                    no-sort-reset responsive small striped hover class="text-center custom-scroll-style">
+                <b-table :fields="fields" :items="pets" label-sort-asc="" label-sort-desc="" no-sort-reset responsive
+                    small striped hover class="text-center custom-scroll-style">
                     <template #cell(cancelRequest)="data">
                         <b-icon v-if="data.value" icon="exclamation-circle" variant="danger" font-scale="1.3"
                             v-b-tooltip.hover.right="'Solicitud de cancelación'"></b-icon>
@@ -47,9 +47,10 @@
                         <b-badge variant="warning">{{ data.value }}</b-badge>
                     </template>
                     <template #cell(status)="data">
-                        <b-badge :variant="getBadgeVariant(data.value)">{{ data.value }}</b-badge>
+                        <b-badge :variant="getBadgeVariant(data.value)">{{
+                mapStatus((data.value).toString().toLowerCase()) }}</b-badge>
                     </template>
-                    <template #cell(actions)>
+                    <template #cell(actions)="data">
                         <div class="d-none d-lg-inline-block">
                             <b-button pill size="sm" variant="outline-dark-blue" class="px-3 d-flex align-items-center">
                                 <span>Solicitudes de adopción</span>
@@ -57,10 +58,12 @@
                             </b-button>
                         </div>
                         <div class="d-none d-lg-inline-block ms-0 ms-sm-2">
-                            <b-button pill size="sm" variant="outline-dark-orange"
+                            <b-button pill size="sm"
+                                :variant="data.item.cancelRequest ? 'outline-danger' : 'outline-dark-orange'"
                                 class="px-3 d-flex align-items-center">
                                 <span>Comentarios</span>
-                                <b-icon icon="chat-left-text" font-scale="1" class="ms-1"></b-icon>
+                                <b-icon :icon="data.item.cancelRequest ? 'exclamation-circle' : 'chat-left-text'"
+                                    font-scale="1" class="ms-1"></b-icon>
                             </b-button>
                         </div>
                         <div class="d-inline-block d-lg-none">
@@ -82,7 +85,8 @@
         <b-row class="px-4">
             <b-col cols="12" class="d-flex align-items-center">
                 <label for="perPage">Selecciona la cantidad de registros que deseas mostrar:</label>
-                <b-form-select :options="options" v-model="size" class="ms-3 my-3 form-select" style="width: 80px" @change="getPetList()"></b-form-select>
+                <b-form-select :options="options" v-model="size" class="ms-3 my-3 form-select" style="width: 80px"
+                    @change="getPetList()"></b-form-select>
             </b-col>
             <b-col cols="12" class="mt-1">
                 <b-pagination pills v-model="page" :total-rows="total" :per-page="size" align="center">
@@ -99,6 +103,7 @@ import instance from "../../../../config/axios";
 import Encabezado from "../../../../views/components/Encabezado.vue";
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
 import getStatusses from "../../../../kernel/data/modStatusses";
+import { statusses } from "../../../../kernel/data/mappingDictionaries";
 
 export default {
     data() {
@@ -189,17 +194,22 @@ export default {
         },
         getBadgeVariant(status) {
             switch (status) {
-                case 'Aceptada': return 'success';
-                case 'Rechazada': return 'danger';
-                case 'Pendiente': return 'warning';
+                case 'approved': return 'success';
+                case '': return 'danger';
+                case 'in_revision': return 'warning';
+                case 'adopted': return 'info';
+                case 'closed': return 'danger';
                 default: return 'secondary';
             }
         },
+        mapStatus(status) {
+            return statusses[status] || status;
+        }
     },
     mounted() {
         this.getCategories()
         this.getPetList()
-    },    
+    },
     watch: {
         page(previous, next) {
             if (previous !== next) {
