@@ -1,8 +1,8 @@
 <template>
     <b-container fluid>
         <b-row>
-            <Encabezado color="#F2F2F2" :imagenUrl="require('@/assets/imgs/mascotas_pet_list.png')"
-                titulo="Lista de mascotas" />
+            <Encabezado color="#E4E4E4" :imagenUrl="require('@/assets/imgs/mascotas_pet_list.png')"
+                titulo="Nuevas mascotas" />
         </b-row>
         <b-row align-h="end" class="px-4">
             <b-col cols="12" sm="6" md="3" lg="2" class="pt-3">
@@ -73,7 +73,7 @@
                         </div>
                         <div class="d-inline-block d-md-none">
                             <b-button pill size="sm" variant="outline-dark-blue" class="px-2 d-flex align-items-center"
-                                v-b-tooltip.hover.top="'Ver detalles'">
+                                v-b-tooltip.hover.left="'Ver detalles'">
                                 <b-icon icon="info-circle" font-scale="1"></b-icon>
                             </b-button>
                         </div>
@@ -86,7 +86,7 @@
                 <label for="perPage">Selecciona la cantidad de registros que deseas mostrar:</label>
                 <b-form-select :options="options" v-model="size" class="ms-3 my-3 form-select" style="width: 80px" @change="getPetList()"></b-form-select>
             </b-col>
-            <b-col cols="12" class="text-center">
+            <b-col cols="12" class="mt-1">
                 <b-pagination pills v-model="page" :total-rows="total" :per-page="size" align="center">
                 </b-pagination>
             </b-col>
