@@ -2,23 +2,33 @@
     <b-container fluid>
         <b-row>
             <Encabezado color="#ffc876" :imagenUrl="require('@/assets/imgs/dog.png')"
-                titulo="Lista de seguimiento de mascotas" />
+                titulo="Mis mascotas asignadas" />
         </b-row>
         <b-row align-h="end" class="px-4">
             <b-col cols="12" sm="6" md="4" lg="3" class="pt-0 pt-md-3">
                 <b-input-group class="mt-3">
-                    <b-form-select :options="categories" v-model="category" class="form-select"></b-form-select>
+                    <b-form-select v-model="payload.category" class="form-select">
+                        <option value="">Todas las categorías</option>
+                        <option v-for="category in categories" :key="category.id" :value="category.id">
+                            {{ category.name }}
+                        </option>
+                    </b-form-select>
                 </b-input-group>
             </b-col>
             <b-col cols="12" sm="6" md="4" lg="3" class="pt-0 pt-md-3">
                 <b-input-group class="mt-3">
-                    <b-form-select :options="statusses" v-model="status" class="form-select"></b-form-select>
+                    <b-form-select v-model="payload.status" class="form-select">
+                        <option value="">Todos los estados</option>
+                        <option v-for="status in statusses" :key="status.value" :value="status.value">
+                            {{ status.text }}
+                        </option>
+                    </b-form-select>
                 </b-input-group>
             </b-col>
             <b-col cols="12" md="4" lg="4" class="pt-0 pt-md-3">
                 <b-input-group class="mt-3">
                     <b-form-input type="text" placeholder="Buscar..." id="searchValue"
-                        v-model="searchValue"></b-form-input>
+                        v-model="payload.searchValue"></b-form-input>
                     <b-button variant="dark-gray" type="button" id="searchValue"
                         class="d-flex align-items-center justify-content-between">
                         <b-icon icon="search"></b-icon>
@@ -82,28 +92,25 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
+import instance from "../../../../config/axios";
+
 import Encabezado from "../../../../views/components/Encabezado.vue";
+import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
+import getStatusses from "../../../../kernel/data/statusses";
+
 export default {
     data() {
-        return {
-            searchValue: '',
-            category: '',
-            status: '',
+        return {    
             perPage: 5,
             currentPage: 1,
-            categories: [
-                { value: '', text: 'Todas las categorías' },
-                { value: 'Perro', text: 'Perro' },
-                { value: 'Gato', text: 'Gato' },
-                { value: 'Conejo', text: 'Conejo' },
-                { value: 'Pájaro', text: 'Pájaro' }
-            ],
-            statusses: [
-                { value: '', text: 'Todos los estados' },
-                { value: 'Aceptada', text: 'Aceptada' },
-                { value: 'Rechazada', text: 'Rechazada' },
-                { value: 'Pendiente', text: 'Pendiente' }
-            ],
+            categories: [],
+            statusses: getStatusses,
+            payload: {
+                category: '',
+                status: '',
+                searchValue: ''
+            },
             fields: [
                 { key: 'cancelRequest', label: '' },
                 { key: 'requests', label: 'Solicitudes' },
@@ -120,10 +127,34 @@ export default {
             ]
         }
     },
-    computed: {
-
-    },
     methods: {
+        async getCategories() {
+            try {
+                Swal.fire({
+                    title: 'Cargando...',
+                    text: 'Estamos cargando las categorías, espera un momento',
+                    imageUrl: gatoWalkingGif,
+                    imageWidth: 160,
+                    imageHeight: 160,
+                    showConfirmButton: false
+                })
+                const response = await instance.get(`/category/list`)
+                this.categories = response.data.data
+                Swal.close()
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error al cargar las categorías',
+                    icon: 'error',
+                    iconColor: '#A93D3D',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                }).then(() => {
+                    this.$router.push('/home')
+                })
+            }
+        },
         getBadgeVariant(status) {
             switch (status) {
                 case 'Aceptada': return 'success';
@@ -132,6 +163,9 @@ export default {
                 default: return 'secondary';
             }
         },
+    },
+    mounted() {
+        this.getCategories()
     },
     components: {
         Encabezado

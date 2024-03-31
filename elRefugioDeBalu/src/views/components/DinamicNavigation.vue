@@ -176,14 +176,14 @@ export default {
                 <b-nav v-else-if="role === 'MOD'" vertical class="my-2 px-3 text-center">
                     <b-button variant="outline-dark-secondary-orange" :to="'/petList'"
                         class="mt-3 d-flex align-items-center justify-content-center">
-                        Mis mascotas asignadas
-                        <i class="material-icons ms-2" style="font-size: larger;">favorite</i>
-                    </b-button>
-                    <b-button variant="outline-dark-secondary-orange" :to="'/petList'"
-                        class="mt-3 d-flex align-items-center justify-content-center">
                         Nuevas mascotas
                         <i class="material-icons ms-2" style="font-size: larger;">pets</i>
                     </b-button>
+                    <b-button variant="outline-dark-secondary-orange" :to="'/moderated/PetList'"
+                        class="mt-3 d-flex align-items-center justify-content-center">
+                        Mis mascotas asignadas
+                        <i class="material-icons ms-2" style="font-size: larger;">favorite</i>
+                    </b-button>                    
                 </b-nav>
                 <b-nav v-else-if="role === 'ADMIN'" vertical class="my-2 px-3 text-center">
                     <b-button variant="outline-dark-secondary-orange" :to="'/UsersList'"
