@@ -51,7 +51,10 @@
                 <b-table :fields="fields" :items="pets" label-sort-asc="" label-sort-desc="" no-sort-reset responsive
                     small striped hover class="text-center custom-scroll-style">
                     <template #cell(age)="data">
-                        <span>{{ data.item.age }} {{ data.item.ageUnit }}</span>
+                        <span>{{ data.item.age }} {{ mapAgeUnit((data.item.ageUnit).toString().toLowerCase()) }}</span>
+                    </template>
+                    <template #cell(size)="data">
+                        <span>{{ mapSize((data.item.size).toString().toLowerCase()) }}</span>
                     </template>
                     <template #cell(gender)="data">
                         <b-icon v-if="data.value === 'male'" icon="gender-male" variant="gender-male"
@@ -59,7 +62,7 @@
                         <b-icon v-else icon="gender-female" variant="gender-female" font-scale="1.4"></b-icon>
                     </template>
                     <template #cell(status)="data">
-                        <b-badge variant="warning">{{ data.value }}</b-badge>
+                        <b-badge variant="warning">{{ mapStatus((data.item.status).toString().toLowerCase()) }}</b-badge>
                     </template>
                     <template #cell(actions)>
                         <div class="d-none d-md-inline-block">
@@ -97,8 +100,9 @@ import instance from "../../../../config/axios";
 
 import Encabezado from "../../../../views/components/Encabezado.vue";
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
-import sizes from "../../../../kernel/data/sizes";
-import genders from "../../../../kernel/data/genders";
+import getSizes from "../../../../kernel/data/sizes";
+import getGenders from "../../../../kernel/data/genders";
+import { sizes, ageUnits, statusses } from "../../../../kernel/data/mappingDictionaries";
 
 export default {
     data() {
@@ -106,8 +110,8 @@ export default {
             size: 5,
             page: 1,
             total: 0,
-            genders: genders,
-            sizes: sizes,
+            genders: getGenders,
+            sizes: getSizes,
             options: [5, 10, 20, 50],
             payload: {
                 category: "",
@@ -192,14 +196,15 @@ export default {
                 })
             }
         },
-        getBadgeVariant(status) {
-            switch (status) {
-                case 'Aceptada': return 'success';
-                case 'Rechazada': return 'danger';
-                case 'Pendiente': return 'warning';
-                default: return 'secondary';
-            }
+        mapSize(size) {
+            return sizes[size] || size;
         },
+        mapAgeUnit(ageUnit) {
+            return ageUnits[ageUnit] || ageUnit;
+        },
+        mapStatus(status) {
+            return statusses[status] || status;
+        }
     },
     mounted() {
         this.getCategories()

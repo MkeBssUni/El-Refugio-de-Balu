@@ -22,5 +22,9 @@ const weightUnits = {
     pounds: 'lb'
 }
 
-export { sizes, lifeStages, ageUnits, weightUnits }
+const statusses = {
+    pending: 'Pendiente'
+}
+
+export { sizes, lifeStages, ageUnits, weightUnits, statusses }
 
