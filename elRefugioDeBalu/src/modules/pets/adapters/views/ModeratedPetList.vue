@@ -1,8 +1,7 @@
 <template>
     <b-container fluid>
         <b-row>
-            <Encabezado color="#ffc876" :imagenUrl="require('@/assets/imgs/dog.png')"
-                titulo="Mis mascotas asignadas" />
+            <Encabezado color="#ffc876" :imagenUrl="require('@/assets/imgs/dog.png')" titulo="Mis mascotas asignadas" />
         </b-row>
         <b-row align-h="end" class="px-4">
             <b-col cols="12" sm="6" md="4" lg="3" class="pt-0 pt-md-3">
@@ -39,8 +38,7 @@
         <b-row class="px-4 pt-4">
             <b-col cols="12">
                 <b-table :fields="fields" :items="pets" :filter="searchValue" label-sort-asc="" label-sort-desc=""
-                    no-sort-reset :per-page="perPage" :current-page="currentPage" responsive small striped hover
-                    class="text-center custom-scroll-style">
+                    no-sort-reset responsive small striped hover class="text-center custom-scroll-style">
                     <template #cell(cancelRequest)="data">
                         <b-icon v-if="data.value" icon="exclamation-circle" variant="danger" font-scale="1.3"
                             v-b-tooltip.hover.right="'Solicitud de cancelación'"></b-icon>
@@ -83,8 +81,7 @@
         </b-row>
         <b-row class="pt-4">
             <b-col cols="12">
-                <b-pagination pills v-model="currentPage" :total-rows="pets.length" :per-page="perPage"
-                    align="center">
+                <b-pagination pills v-model="page" :total-rows="total" :per-page="size" align="center">
                 </b-pagination>
             </b-col>
         </b-row>
@@ -101,15 +98,17 @@ import getStatusses from "../../../../kernel/data/statusses";
 
 export default {
     data() {
-        return {    
-            perPage: 5,
-            currentPage: 1,
+        return {
+            size: 5,
+            page: 1,
+            total: 0,
             categories: [],
             statusses: getStatusses,
             payload: {
-                category: '',
-                status: '',
-                searchValue: ''
+                user: localStorage.getItem("userId") ? localStorage.getItem("userId") : null,
+                category: "",
+                status: "",
+                searchValue: ""
             },
             fields: [
                 { key: 'cancelRequest', label: '' },
@@ -119,12 +118,7 @@ export default {
                 { key: 'status', label: 'Estado' },
                 { key: 'actions', label: 'Acciones' }
             ],
-            pets: [
-                { cancelRequest: false, category: 'Perro', name: 'Firulais', status: 'Aceptada', requests: 1 },
-                { cancelRequest: true, category: 'Gato', name: 'Michi', status: 'Rechazada', requests: 0 },
-                { cancelRequest: false, category: 'Conejo', name: 'Bugs Bunny', status: 'Pendiente', requests: 1 },
-                { cancelRequest: false, category: 'Pájaro', name: 'Piolín', status: 'Aceptada', requests: 5 }
-            ]
+            pets: []
         }
     },
     methods: {
@@ -155,6 +149,39 @@ export default {
                 })
             }
         },
+        async getPetList() {
+            try {
+                Swal.fire({
+                    title: 'Cargando...',
+                    text: 'Estamos cargando tus mascotas asignadas, espera un momento',
+                    imageUrl: gatoWalkingGif,
+                    imageWidth: 160,
+                    imageHeight: 160,
+                    showConfirmButton: false
+                })
+                const response = await instance.post(`/pet/moderated?page=${this.page - 1}&size=${this.size}`, {
+                    user: this.payload.user,
+                    category: this.payload.category === '' ? null : this.payload.category,
+                    status: this.payload.status == '' ? null : this.payload.status,
+                    searchValue: this.payload.searchValue
+                })
+                this.pets = response.data.data.content
+                this.total = response.data.data.totalElements
+                Swal.close()
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error al cargar tus mascotas asignadas',
+                    icon: 'error',
+                    iconColor: '#A93D3D',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                }).then(() => {
+                    this.$router.push('/home')
+                })
+            }
+        },
         getBadgeVariant(status) {
             switch (status) {
                 case 'Aceptada': return 'success';
@@ -166,6 +193,7 @@ export default {
     },
     mounted() {
         this.getCategories()
+        this.getPetList()
     },
     components: {
         Encabezado
