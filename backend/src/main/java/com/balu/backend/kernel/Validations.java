@@ -38,7 +38,7 @@ public class Validations {
         byte[] decodedBytes = Base64.getDecoder().decode(base64String.split(",")[1]);
 
         String header = base64String.split(",")[0];
-        return !header.equals(JPEG_HEADER) || !header.equals(PNG_HEADER);
+        return header.equals(JPEG_HEADER) || header.equals(PNG_HEADER);
     }
 
     public boolean isValidBooleanStatus(String str) {

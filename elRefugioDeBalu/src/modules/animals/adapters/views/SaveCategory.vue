@@ -100,15 +100,21 @@
 <script>
 import Swal from "sweetalert2";
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
+import instance from "../../../../config/axios";
+import { encrypt } from "../../../../kernel/hashFunctions";
 
 export default {
-  name: "SaveCategory",
   data() {
     return {
       SaveCategoryDto: {
         name: "",
         description: "",
-        image: null,
+        image: "",
+      },
+      SaveCategoryDtoEncrypted: {
+        name: "",
+        description: "",
+        image: "",
       },
       size: false,
       imageFile: null,
@@ -137,13 +143,71 @@ export default {
         this.size = true;
       }
     },
-    SaveCategory() {
-      Swal.fire({
-        title: "Acción realizada con exito",
-        icon: "success",
-        confirmButtonColor: "#118A95",
-      });
-      this.$emit("SavedCategory");
+    async SaveCategory() {
+      try {
+        this.SaveCategoryDtoEncrypted.name = await encrypt(this.SaveCategoryDto.name);
+        this.SaveCategoryDtoEncrypted.description = await encrypt(
+          this.SaveCategoryDto.description
+        );
+        this.SaveCategoryDtoEncrypted.image = await encrypt(this.SaveCategoryDto.image);
+        const response = await instance.post(
+          "/category/",
+          this.SaveCategoryDtoEncrypted
+        );
+        if (response.status == 201) {
+          Swal.fire({
+            title: "Acción realizada con éxito",
+            icon: "success",
+            confirmButtonColor: "#118A95",
+          });
+        this.$emit("SavedCategory");
+        }
+      } catch (error) {
+        const msg = error.response
+          ? error.response.data.message
+          : error.message;
+        switch (msg) {
+          case "DUPLICATE_RECORD":
+            Swal.fire({
+              title: "Ha ocurrido un error",
+              text: "Ya existe una categoría con ese nombre",
+              icon: "error",
+              confirmButtonColor: "#118A95",
+            });
+            break;
+          case "UNSUPPORTED_IMAGE_FORMAT":
+            Swal.fire({
+              title: "Ha ocurrido un error",
+              text: "El formato de la imagen no es válido",
+              icon: "error",
+              confirmButtonColor: "#118A95",
+            });
+            break;
+          case "MISSING_FIELDS":
+            Swal.fire({
+              title: "Ha ocurrido un error",
+              text: "Llene todos los campos marcados como obligatorios",
+              icon: "error",
+              confirmButtonColor: "#118A95",
+            });
+            break;
+          case "INVALID_FIELD":
+            Swal.fire({
+              title: "Ha ocurrido un error",
+              text: "Algunos campos no cumplen con el formato requerido",
+              icon: "error",
+              confirmButtonColor: "#118A95",
+            });
+            break;
+          default:
+            Swal.fire({
+              title: "Ha ocurrido un error",
+              text: "Intentelo de nuevo mas tarde " + error,
+              icon: "error",
+              confirmButtonColor: "#118A95",
+            });
+        }
+      }
     },
     ViewAlertConfirmationRegistrationCategory() {
       Swal.fire({
@@ -158,7 +222,7 @@ export default {
         if (result.isConfirmed) {
           Swal.fire({
             title: "Espera un momento...",
-            text: "Estamos enviando tu solicitud de adopción",
+            text: "Estamos realizando el registro",
             imageUrl: gatoWalkingGif,
             timer: 2000,
             timerProgressBar: true,
@@ -181,23 +245,17 @@ export default {
       );
     },
     ValidationSpecialCharactersName() {
-      const expresionRegular = /[<>{}' || \\ \/]/;
+      const expresionRegular = /[<>{}'||\\\/]/;
       return !expresionRegular.test(this.SaveCategoryDto.name);
     },
     UpdateStateInputCategoryName() {
       if (this.SaveCategoryDto.name.trim() === "") {
-        // Si el campo está vacío, el estado es null
         this.nameValidationState = null;
       } else {
-        // Si no está vacío, actualizamos el estado según la validación
         this.nameValidationState = this.ValidationSpecialCharactersName()
           ? true
           : false;
       }
-    },
-    ValidationSpecialCharactersName() {
-      const expresionRegular = /[<>{}' || \\ \/]/;
-      return !expresionRegular.test(this.SaveCategoryDto.name);
     },
     UpdateStateInputCategoryDescription() {
       if (this.SaveCategoryDto.description.trim() === "") {
@@ -210,7 +268,7 @@ export default {
       }
     },
     ValidationSpecialCharactersDescription() {
-      const expresionRegular = /[<>{}' || \\ \/]/;
+      const expresionRegular = /[<>{}'||\\\/]/;
       return !expresionRegular.test(this.SaveCategoryDto.description);
     },
   },
