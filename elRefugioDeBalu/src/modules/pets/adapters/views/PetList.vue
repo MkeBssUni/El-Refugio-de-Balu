@@ -37,8 +37,8 @@
             </b-col>
             <b-col cols="12" sm="6" md="3" class="pt-0 pt-md-3">
                 <b-input-group class="mt-3">
-                    <b-form-input type="text" placeholder="Buscar..." id="search"></b-form-input>
-                    <b-button variant="dark-gray" type="button" id="search"
+                    <b-form-input type="text" placeholder="Buscar..." id="searchValue" v-model="payload.searchValue"></b-form-input>
+                    <b-button variant="dark-gray" type="button" id="searchValue"
                         class="d-flex align-items-center justify-content-between">
                         <b-icon icon="search"></b-icon>
                     </b-button>
@@ -47,7 +47,7 @@
         </b-row>
         <b-row class="px-4 pt-4">
             <b-col cols="12">
-                <b-table :fields="fields" :items="filteredPets" :filter="search" label-sort-asc="" label-sort-desc=""
+                <b-table :fields="fields" :items="pets" label-sort-asc="" label-sort-desc=""
                     no-sort-reset :per-page="perPage" :current-page="currentPage" responsive small striped hover
                     class="text-center custom-scroll-style">
                     <template #cell(sex)="data">
@@ -119,31 +119,10 @@ export default {
                 { key: 'status', label: 'Estado', sortable: false },
                 { key: 'actions', label: 'Acciones', sortable: false }
             ],
-            pets: [
-                { category: 'Perro', name: 'Firulais', age: '3 años', size: 'Grande', sex: 'Macho', status: 'Aceptada' },
-                { category: 'Gato', name: 'Michi', age: '2 años', size: 'Mediano', sex: 'Hembra', status: 'Rechazada' },
-                { category: 'Perro', name: 'Rex', age: '1 año', size: 'Pequeño', sex: 'Macho', status: 'Pendiente' },
-                { category: 'Gato', name: 'Luna', age: '4 años', size: 'Mediano', sex: 'Hembra', status: 'Aceptada' },
-                { category: 'Perro', name: 'Buddy', age: '2 años', size: 'Grande', sex: 'Macho', status: 'Rechazada' },
-                { category: 'Gato', name: 'Whiskers', age: '3 años', size: 'Pequeño', sex: 'Macho', status: 'Pendiente' },
-                { category: 'Perro', name: 'Rocky', age: '5 años', size: 'Mediano', sex: 'Macho', status: 'Aceptada' },
-                { category: 'Gato', name: 'Mia', age: '1 año', size: 'Pequeño', sex: 'Hembra', status: 'Rechazada' },
-                { category: 'Perro', name: 'Max', age: '2 años', size: 'Grande', sex: 'Macho', status: 'Pendiente' },
-                { category: 'Gato', name: 'Smokey', age: '4 años', size: 'Mediano', sex: 'Macho', status: 'Aceptada' }
-            ]
+            pets: []
         }
     },
     computed: {
-        filteredPets() {
-            return this.pets.filter(pet => {
-                const categoryMatch = this.categoryFilter ? pet.category === this.categoryFilter : true;
-                const sizeMatch = this.sizeFilter ? pet.size === this.sizeFilter : true;
-                const genderMatch = this.genderFilter ? pet.sex === this.genderFilter : true;
-                const statusMatch = this.statusFilter ? pet.status === this.statusFilter : true;
-
-                return categoryMatch && sizeMatch && genderMatch && statusMatch;
-            });
-        }
     },
     methods: {
         async getCategories() {
@@ -173,6 +152,36 @@ export default {
                 })
             }
         },
+        async getPetList() {
+            try {
+                Swal.fire({
+                    title: 'Cargando...',
+                    text: 'Estamos cargando las nuevas publicaciones de mascotas, espera un momento',
+                    imageUrl: gatoWalkingGif,
+                    imageWidth: 160,
+                    imageHeight: 160,
+                    showConfirmButton: false
+                })
+                const response = await instance.get(`/pet/requests`,{
+                    category: this.payload.category != "" ? this.payload.category : null,
+                    searchValue: this.payload.searchValue
+                })
+                this.pets = response.data.data
+                Swal.close()
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error al cargar las nuevas publicaciones de mascotas',
+                    icon: 'error',
+                    iconColor: '#A93D3D',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                }).then(() => {
+                    this.$router.push('/home')
+                })
+            }
+        },
         getBadgeVariant(status) {
             switch (status) {
                 case 'Aceptada': return 'success';
@@ -184,6 +193,7 @@ export default {
     },
     mounted() {
         this.getCategories()
+        this.getPetList()
     },
     components: {
         Encabezado
