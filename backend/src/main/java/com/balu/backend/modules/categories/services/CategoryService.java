@@ -154,4 +154,41 @@ public class CategoryService {
         Page<ICategoryViewPaged> categoryPage= iCategoryRepository.findAllPaged(searchCategoryDto.getSearchCategoryValue(),searchCategoryDto.getSearchCategoryValue(),peageable);
         return new ResponseApi<>(categoryPage,HttpStatus.OK,false,"OK");
     }
+
+    @Transactional(readOnly = true)
+    public ResponseApi<List<CarouselCategoryDto>> carouselList(){
+        List<Category> list = iCategoryRepository.caroruselList();
+        if (list.isEmpty())
+            return new ResponseApi<>(
+                    HttpStatus.OK,
+                    false,
+                    ErrorMessages.NO_RECORDS.name()
+            );
+
+    List<CarouselCategoryDto> carouselCategoryDtoList =  list.stream().map(
+            category -> {
+                try {
+                    return  new CarouselCategoryDto(hashService.encrypt(category.getId()),category.getName(),category.getDescription(),category.getImage());
+                } catch (NoSuchAlgorithmException e) {
+                    throw new RuntimeException(e);
+                } catch (NoSuchPaddingException e) {
+                    throw new RuntimeException(e);
+                } catch (InvalidAlgorithmParameterException e) {
+                    throw new RuntimeException(e);
+                } catch (InvalidKeyException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalBlockSizeException e) {
+                    throw new RuntimeException(e);
+                } catch (BadPaddingException e) {
+                    throw new RuntimeException(e);
+                }
+            }).collect(Collectors.toList());
+    return  new ResponseApi<>(
+            carouselCategoryDtoList,
+            HttpStatus.OK,
+            false,
+            "ok"
+    );
+    }
+
 }
