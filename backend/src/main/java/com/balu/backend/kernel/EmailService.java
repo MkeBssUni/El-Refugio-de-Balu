@@ -67,7 +67,7 @@ public class EmailService {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
             helper.setTo(email);
-            helper.setSubject("¡Malas noticias! se finalizo"+namePet);
+            helper.setSubject("¡Malas noticias! se finalizo tu solicitud de "+namePet);
             helper.setText(EmailTemplates.finalizeAdoptionTemplate(namePet),true);
             javaMailSender.send(message);
         }catch (Exception e){

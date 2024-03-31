@@ -346,7 +346,7 @@ public class EmailTemplates {
                 "    body {\n" +
                 "      margin: 0;\n" +
                 "      padding: 0;\n" +
-                "      font-family: 'Baloo', Arial, 'Helvetica Neue', Helvetica, sans-serif !important;\n" +
+                "      font-family: 'Baloo'!important;\n" +
                 "    }\n" +
                 "\n" +
                 "    a[x-apple-data-detectors] {\n" +
@@ -465,62 +465,6 @@ public class EmailTemplates {
                 "                      </td>\n" +
                 "                    </tr>\n" +
                 "                  </table>\n" +
-                "                  <table class=\"button_block block-4\" width=\"100%\" border=\"0\" cellpadding=\"55\" cellspacing=\"0\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt;\">\n" +
-                "                    <tr>\n" +
-                "                      <td class=\"pad\">\n" +
-                "                        <div class=\"alignment\" align=\"center\">\n" +
-                "                          <!--[if mso]>\n" +
-                "                          <v:roundrect xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:w=\"urn:schemas-microsoft-com:office:word\" href=\"www.example.com\" style=\"height:48px;width:222px;v-text-anchor:middle;\" arcsize=\"114%\" strokeweight=\"0.75pt\" strokecolor=\"#FFDDA1\" fillcolor=\"#ff9900\">\n" +
-                "                            <w:anchorlock/>\n" +
-                "                            <v:textbox inset=\"0px,0px,0px,0px\">\n" +
-                "                              <center style=\"color:#f5f3fc; font-family:Arial, sans-serif; font-size:16px\">\n" +
-                "                          <![endif]-->\n" +
-                "                          <a href=\"www.example.com\" target=\"_blank\" style=\"text-decoration:none;display:inline-block;color:#f5f3fc;background-color:#ff9900;border-radius:50px;width:auto;border-top:1px solid #FFDDA1;font-weight:400;border-right:1px solid #FFDDA1;border-bottom:1px solid #FFDDA1;border-left:1px solid #FFDDA1;padding-top:5px;padding-bottom:5px;font-family:'Baloo', Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:16px;text-align:center;mso-border-alt:none;word-break:keep-all;\">\n" +
-                "                            <span style=\"padding-left:35px;padding-right:35px;font-size:16px;display:inline-block;letter-spacing:normal;\">\n" +
-                "                            </span>\n" +
-                "                          </a>\n" +
-                "                          <!--[if mso]></center></v:textbox></v:roundrect><![endif]-->\n" +
-                "                        </div>\n" +
-                "                      </td>\n" +
-                "                    </tr>\n" +
-                "                  </table>\n" +
-                "                </td>\n" +
-                "              </tr>\n" +
-                "              </tbody>\n" +
-                "            </table>\n" +
-                "          </td>\n" +
-                "        </tr>\n" +
-                "        </tbody>\n" +
-                "      </table>\n" +
-                "      <table class=\"row row-2\" align=\"center\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff;\">\n" +
-                "        <tbody>\n" +
-                "        <tr>\n" +
-                "          <td>\n" +
-                "            <table class=\"row-content stack\" align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; color: #000000; width: 680px; margin: 0 auto;\" width=\"680\">\n" +
-                "              <tbody>\n" +
-                "              <tr>\n" +
-                "                <td class=\"column column-1\" width=\"100%\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;\">\n" +
-                "                  <table class=\"icons_block block-1\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt;\">\n" +
-                "                    <tr>\n" +
-                "                      <td class=\"pad\" style=\"vertical-align: middle; color: #1e0e4b; font-family: 'Inter', sans-serif; font-size: 15px; padding-bottom: 5px; padding-top: 5px; text-align: center;\">\n" +
-                "                        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt;\">\n" +
-                "                          <tr>\n" +
-                "                            <td class=\"alignment\" style=\"vertical-align: middle; text-align: center;\">\n" +
-                "                              <!--[if vml]><table align=\"center\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"display:inline-block;padding-left:0px;padding-right:0px;mso-table-lspace: 0pt;mso-table-rspace: 0pt;\"><![endif]-->\n" +
-                "                            </td>\n" +
-                "                          </tr>\n" +
-                "                        </table>\n" +
-                "                      </td>\n" +
-                "                    </tr>\n" +
-                "                  </table>\n" +
-                "                </td>\n" +
-                "              </tr>\n" +
-                "              </tbody>\n" +
-                "            </table>\n" +
-                "          </td>\n" +
-                "        </tr>\n" +
-                "        </tbody>\n" +
-                "      </table>\n" +
                 "    </td>\n" +
                 "  </tr>\n" +
                 "  </tbody>\n" +
@@ -657,26 +601,14 @@ public class EmailTemplates {
                 "                                    <table class=\"heading_block block-2\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt;\">\n" +
                 "                                        <tr>\n" +
                 "                                            <td class=\"pad\" style=\"padding-bottom:10px;padding-left:10px;padding-right:10px;padding-top:50px;text-align:center;width:100%;\">\n" +
-                "                                                <h1 style=\"margin: 0; color: #f0f0f0; direction: ltr; font-family: 'Baloo', Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 40px; font-weight: normal; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 48px;\"><span class=\"tinyMce-placeholder\">¡Lo Sentimos!</span></h1>\n" +
+                "                                                <h1 style=\"margin: 0; color: #f0f0f0; direction: ltr; font-family: 'Baloo'; font-size: 40px; font-weight: normal; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 48px;\"><span class=\"tinyMce-placeholder\">¡Lo Sentimos!</span></h1>\n" +
                 "                                            </td>\n" +
                 "                                        </tr>\n" +
                 "                                    </table>\n" +
                 "                                    <table class=\"heading_block block-3\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt;\">\n" +
                 "                                        <tr>\n" +
                 "                                            <td class=\"pad\" style=\"padding-bottom:5px;padding-left:10px;padding-right:10px;text-align:center;width:100%;\">\n" +
-                "                                                <h1 style=\"margin: 0; color: #ffffff; direction: ltr; font-family: 'Baloo', Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 33px; font-weight: normal; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 39.6px;\"><span class=\"tinyMce-placeholder\">&nbsp;Su solicitud de adopción de "+namePet+" ha sido finalizada</span></h1>\n" +
-                "                                            </td>\n" +
-                "                                        </tr>\n" +
-                "                                    </table>\n" +
-                "                                    <table class=\"button_block block-4\" width=\"100%\" border=\"0\" cellpadding=\"55\" cellspacing=\"0\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt;\">\n" +
-                "                                        <tr>\n" +
-                "                                            <td class=\"pad\">\n" +
-                "                                                <div class=\"alignment\" align=\"center\"><!--[if mso]>\n" +
-                "                                                    <v:roundrect xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:w=\"urn:schemas-microsoft-com:office:word\" href=\"www.example.com\" style=\"height:48px;width:222px;v-text-anchor:middle;\" arcsize=\"114%\" strokeweight=\"0.75pt\" strokecolor=\"#FFDDA1\" fillcolor=\"#ff9900\">\n" +
-                "                                                        <w:anchorlock/>\n" +
-                "                                                        <v:textbox inset=\"0px,0px,0px,0px\">\n" +
-                "                                                            <center style=\"color:#f5f3fc; font-family:'Baloo', Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size:16px\">\n" +
-                "                                                    <![endif]--><a href=\"www.example.com\" target=\"_blank\" style=\"text-decoration:none;display:inline-block;color:#f5f3fc;background-color:#ff9900;border-radius:50px;width:auto;border-top:1px solid #FFDDA1;font-weight:400;border-right:1px solid #FFDDA1;border-bottom:1px solid #FFDDA1;border-left:1px solid #FFDDA1;padding-top:5px;padding-bottom:5px;font-family:'Baloo', Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:16px;text-align:center;mso-border-alt:none;word-break:keep-all;\"><span style=\"padding-left:35px;padding-right:35px;font-size:16px;display:inline-block;letter-spacing:normal;\"><span style=\"word-break: break-word; line-height: 32px;\">Ver más información</span></span></a><!--[if mso]></center></v:textbox></v:roundrect><![endif]--></div>\n" +
+                "                                                <h1 style=\"margin: 0; color: #ffffff; direction: ltr; font-family: 'Baloo'; font-size: 33px; font-weight: normal; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 39.6px;\"><span class=\"tinyMce-placeholder\">&nbsp;Su solicitud de adopción de "+namePet+" ha sido finalizada</span></h1>\n" +
                 "                                            </td>\n" +
                 "                                        </tr>\n" +
                 "                                    </table>\n" +
@@ -714,7 +646,7 @@ public class EmailTemplates {
                 "        body {\n" +
                 "            margin: 0;\n" +
                 "            padding: 0;\n" +
-                "            font-family: 'Baloo', Arial, 'Helvetica Neue', Helvetica, sans-serif !important;\n" +
+                "            font-family: 'Baloo' !important;\n" +
                 "        }\n" +
                 "\n" +
                 "        a[x-apple-data-detectors] {\n" +
@@ -798,17 +730,6 @@ public class EmailTemplates {
                 "                        <table class=\"row-content stack\" align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; background-color: #ee7240; width: 680px; margin: 0 auto;\" width=\"680\">\n" +
                 "                            <tbody>\n" +
                 "                            <tr>\n" +
-                "                                <td class=\"column column-1\" width=\"33.333333333333336%\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-left: 15px; padding-right: 15px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;\">\n" +
-                "                                    <table class=\"image_block block-1\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt;\">\n" +
-                "                                        <tr>\n" +
-                "                                            <td class=\"pad\" style=\"width:100%;padding-right:0px;padding-left:0px;\">\n" +
-                "                                                <div class=\"alignment\" align=\"right\" style=\"line-height:10px\">\n" +
-                "                                                    <div style=\"max-width: 78.667px;\"><a href=\"http://example.com\" target=\"_blank\" style=\"outline:none\" tabindex=\"-1\"><img src=\"https://1c21c8727b.imgdist.com/pub/bfra/y8he417t/cvn/utv/472/bf95ebca-b8e2-4f45-85c1-a2d359c60bd2.png\" style=\"display: block; height: auto; border: 0; width: 100%;\" width=\"78.667\" alt=\"El refugio de balu\" title=\"El refugio de balu\"></a></div>\n" +
-                "                                                </div>\n" +
-                "                                            </td>\n" +
-                "                                        </tr>\n" +
-                "                                    </table>\n" +
-                "                                </td>\n" +
                 "                                <td class=\"column column-2\" width=\"66.66666666666667%\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-left: 15px; padding-right: 15px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;\">\n" +
                 "                                    <table class=\"heading_block block-1\" width=\"100%\" border=\"0\" cellpadding=\"10\" cellspacing=\"0\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt;\">\n" +
                 "                                        <tr>\n" +
@@ -837,21 +758,7 @@ public class EmailTemplates {
                 "                                    <table class=\"heading_block block-2\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt;\">\n" +
                 "                                        <tr>\n" +
                 "                                            <td class=\"pad\" style=\"padding-top:25px;text-align:center;width:100%;\">\n" +
-                "                                                <h1 style=\"margin: 0; color: #f3f2f7; direction: ltr; font-family: 'Baloo', Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 29px; font-weight: 700; letter-spacing: normal; line-height: 150%; text-align: center; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 43.5px;\"><span class=\"tinyMce-placeholder\">Tienes "+countRequest+"solicitudes de adopción de "+namePet+" pendientes de revisión .</span></h1>\n" +
-                "                                            </td>\n" +
-                "                                        </tr>\n" +
-                "                                    </table>\n" +
-                "                                    <table class=\"button_block block-3\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt;\">\n" +
-                "                                        <tr>\n" +
-                "                                            <td class=\"pad\" style=\"padding-bottom:10px;padding-left:20px;padding-right:20px;padding-top:10px;text-align:left;\">\n" +
-                "                                                <div class=\"alignment\" align=\"left\"><!--[if mso]>\n" +
-                "                                                    <v:roundrect xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:w=\"urn:schemas-microsoft-com:office:word\" href=\"http://example.com\" style=\"height:52px;width:183px;v-text-anchor:middle;\" arcsize=\"97%\" stroke=\"false\" fillcolor=\"#e08f04\">\n" +
-                "                                                        <w:anchorlock/>\n" +
-                "                                                        <v:textbox inset=\"0px,0px,0px,0px\">\n" +
-                "                                                            <center style=\"color:#ffffff; font-family:Arial, sans-serif; font-size:14px\"> <!-- Change font size here -->\n" +
-                "                                                    <![endif]-->\n" +
-                "                                                    <!--[if mso]></center></v:textbox></v:roundrect><![endif]-->\n" +
-                "                                                </div>\n" +
+                "                                                <h1 style=\"margin: 0; color: #f3f2f7; direction: ltr; font-family: 'Baloo', Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 29px; font-weight: 700; letter-spacing: normal; line-height: 150%; text-align: center; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 43.5px;\"><span class=\"tinyMce-placeholder\">Tienes  <b>"+countRequest+ "</b>  solicitudes de adopción de "+namePet+" pendientes de revisión .</span></h1>\n" +
                 "                                            </td>\n" +
                 "                                        </tr>\n" +
                 "                                    </table>\n" +

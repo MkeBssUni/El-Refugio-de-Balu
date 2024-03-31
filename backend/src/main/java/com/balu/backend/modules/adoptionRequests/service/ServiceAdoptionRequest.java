@@ -18,7 +18,9 @@ import com.balu.backend.modules.homeSpecification.model.HomeSpecificationReposit
 import com.balu.backend.modules.logs.model.LogTypes;
 import com.balu.backend.modules.logs.service.LogService;
 import com.balu.backend.modules.pets.model.Pet;
+import com.balu.backend.modules.pets.model.dto.CompleteAdoptionDto;
 import com.balu.backend.modules.pets.model.repositories.IPetRepository;
+import com.balu.backend.modules.pets.service.PetService;
 import com.balu.backend.modules.roles.model.Roles;
 import com.balu.backend.modules.statusses.model.IStatusRepository;
 import com.balu.backend.modules.statusses.model.Status;
@@ -61,6 +63,7 @@ public class ServiceAdoptionRequest {
     private final EmailService emailService;
 
     private final IAddressRepository iAddressRepository;
+    private final PetService petService;
 
     @Transactional(readOnly = true)
     public ResponseApi<Optional<AdoptionRequest>> adoptionByUser(String idUser) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
@@ -155,6 +158,20 @@ public class ServiceAdoptionRequest {
             if (!optionalStatus.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
             Status status = optionalStatus.get();
 
+             if(dto.getReasonsForAdoption() != null){
+                 dto.getReasonsForAdoption().setPeopleAgreeToAdopt(hashService.encrypt(dto.getReasonsForAdoption().getPeopleAgreeToAdopt()));
+                 dto.getReasonsForAdoption().setAdditionalComments(hashService.encrypt(dto.getAdditional_information()));
+                 dto.getReasonsForAdoption().setHaveHadPets(hashService.encrypt(dto.getReasonsForAdoption().getHaveHadPets()));
+                 dto.getReasonsForAdoption().setWhereWillThePetBe(hashService.encrypt(dto.getReasonsForAdoption().getWhereWillThePetBe()));
+             }
+
+             if(dto.getPreviousExperiencieDto() != null){
+                 dto.getPreviousExperiencieDto().setLastPet(hashService.encrypt(dto.getPreviousExperiencieDto().getLastPet()));
+                 dto.getPreviousExperiencieDto().setWhatDidYouDoWhenThePetGotSick(hashService.encrypt(dto.getPreviousExperiencieDto().getWhatDidYouDoWhenThePetGotSick()));
+                 dto.getPreviousExperiencieDto().setWhatKindOfPetsHaveYouHadBefore(hashService.encrypt(dto.getPreviousExperiencieDto().getWhatKindOfPetsHaveYouHadBefore()));
+                 dto.getPreviousExperiencieDto().setWhatMemoriesDoYouHaveWithYourPet(hashService.encrypt(dto.getPreviousExperiencieDto().getWhatMemoriesDoYouHaveWithYourPet()));
+                 dto.setAdditional_information(hashService.encrypt(dto.getAdditional_information()));
+             }
 
             AdoptionRequest adoptionRequest = new AdoptionRequest(user,pet,status,parseJson(dto.getReasonsForAdoption()),parseJson(dto.getPreviousExperiencieDto()),dto.getAdditional_information());
             AdoptionRequest saveAdoption = iAdoptionRequestRepository.saveAndFlush(adoptionRequest);
@@ -177,6 +194,7 @@ public class ServiceAdoptionRequest {
             if(dto.getHomeImage() != null){
                 List<HomeImage> homeImages = new ArrayList<>();
                 for(String image : dto.getHomeImage()){
+                    if(validations.isInvalidImageLength(image)) return new  ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.IMAGE_NOT_SAVED.name());
                     HomeImage homeImage = new HomeImage(image.trim(),saveHomeSpecification);
                     HomeImage saveHomeImage = homeImageRepository.saveAndFlush(homeImage);
                     if(saveHomeImage != null) homeImages.add(saveHomeImage);
@@ -188,10 +206,11 @@ public class ServiceAdoptionRequest {
                     return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.IMAGE_NOT_SAVED.name());
                 }
             }
-            sendEmailModerador(userId,pet.getName());
+            sendEmailModerador(pet.getModerator().getId(),pet.getName());
             logService.saveLog("New adoption request registered: "+saveAdoption.getId(), LogTypes.INSERT,"ADOPTIONREQUEST | HOMESPECEFITACTION | HOMEIMAGES | ADRESSES");
             return new ResponseApi<>(HttpStatus.CREATED,false,"Adoption request saved successfully");
         }catch (Exception e){
+            System.out.println(e);
             return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name());
         }
     }
@@ -213,7 +232,6 @@ public class ServiceAdoptionRequest {
             Long idStatus = statusID.get().getId();
             Integer adoption = this.iAdoptionRequestRepository.changeStatusAdoptionRequest(idAdoption,idStatus);
             if(adoption == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.NOT_CHANGESTATUS_ADOPTIONREQUEST.name());
-            // servicio de pets cambio de estado
             Optional<Pet> optionalPet = petRepository.findById(adoptionRequest.getPet().getId());
             if (!optionalPet.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
             Pet pet = optionalPet.get();
@@ -228,7 +246,7 @@ public class ServiceAdoptionRequest {
                     emailService.finalizeAdoptionTemplate(hashService.decrypt(user.getUsername()),pet.getName());
                 }
             }
-            logService.saveLog("New adoption request registered: "+adoption, LogTypes.INSERT,"ADOPTIONREQUEST | PET");
+            logService.saveLog("Change status request adoption by: "+adoption, LogTypes.UPDATE,"ADOPTIONREQUEST | PET");
             return new ResponseApi<>(adoption,HttpStatus.OK,false,"Adoption request change status successfully");
         }catch (Exception e){
             return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name());
