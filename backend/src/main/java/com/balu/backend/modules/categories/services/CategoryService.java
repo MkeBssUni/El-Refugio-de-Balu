@@ -98,12 +98,13 @@ public class CategoryService {
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseApi<Integer> updateCategory(UpdateCategoryDto updateCategoryDto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        updateCategoryDto.setId(hashService.decrypt(updateCategoryDto.getId()));
         updateCategoryDto.setName(hashService.decrypt(updateCategoryDto.getName()));
         updateCategoryDto.setDescription(hashService.decrypt(updateCategoryDto.getDescription()));
         updateCategoryDto.setImage(hashService.decrypt(updateCategoryDto.getImage()));
         Long id;
         try {
-            id = Long.parseLong(hashService.decrypt(updateCategoryDto.getId()));
+            id = Long.parseLong(updateCategoryDto.getId());
         } catch (NumberFormatException e) {
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_ID.name());
         }
@@ -114,7 +115,7 @@ public class CategoryService {
             return new ResponseApi<>(HttpStatus.CONFLICT, true, ErrorMessages.DUPLICATE_RECORD.name());
         if (validations.isNotBlankString(updateCategoryDto.getName()) && validations.isNotBlankString(updateCategoryDto.getDescription()) && validations.isNotBlankString(updateCategoryDto.getImage()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
-        if (!validations.isValidBase64Image(updateCategoryDto.getImage()))
+        if (validations.isValidBase64Image(updateCategoryDto.getImage()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.UNSUPPORTED_IMAGE_FORMAT.name());
 
         Integer category = this.iCategoryRepository.updateCategory(id, updateCategoryDto.getName(), updateCategoryDto.getDescription(), updateCategoryDto.getImage());

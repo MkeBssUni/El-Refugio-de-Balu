@@ -470,7 +470,7 @@ export default {
       this.GetAllCategories();
     },
     HideCategoryModifyForm() {
-      this.ViewCategoryModifyForm("");
+      this.ViewCategoryModifyForm(null);
       this.GetAllCategories();
     },
     ViewCategoryModifyForm(category) {
