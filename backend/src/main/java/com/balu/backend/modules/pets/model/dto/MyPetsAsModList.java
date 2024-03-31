@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MyPetsAsModList {
     private String id;
-    private int comments;
+    private int requests;
     private String category;
     private String name;
     private String status;
