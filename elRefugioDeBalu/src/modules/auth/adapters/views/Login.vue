@@ -213,6 +213,91 @@ export default {
                 allowOutsideClick: false,
             });
         },
+        async sendCodePassword(){
+            Swal.fire({
+                title: "Restablecer contraseña",
+                text: "Ingresa el correo electrónico con el que te registraste, te enviaremos un código de verificación para restablecer tu contraseña",
+                input: "text",
+                inputAttributes: {
+                    autocapitalize: "off",
+                },
+                showCancelButton: true,
+                confirmButtonText: "Enviar código",
+                cancelButtonText: "Cancelar",
+                showLoaderOnConfirm: true,
+                preConfirm: async (email)=>{
+                    let encryptedEmail = await encrypt(email);
+                    try {
+                        Swal.showLoading();
+                        instance.patch("/person/send/confirmationCode", {username: encryptedEmail})
+                        Swal.fire({
+                            title: "Código enviado",
+                            text: "Hemos enviado un código de verificación a tu correo",
+                            icon: "success",
+                            showConfirmButton: true,
+                        }).then(()=>{
+                            Swal.fire({
+                                title: "Código de verificación",
+                                text: "Ingresa el código de verificación que te enviamos a tu correo",
+                                input: "text",
+                                showCancelButton: true,
+                                confirmButtonText: "Verificar",
+                                cancelButtonText: "Cancelar",
+                                preConfirm: async (code)=>{
+                                    let encryptedCode = await encrypt(code);
+                                    try {
+                                        Swal.showLoading();
+                                        instance.patch("/person/validate/code", {username: encryptedEmail, activationCode: encryptedCode})
+                                        Swal.fire({
+                                            title: "Código verificado",
+                                            text: "Ingresa tu nueva contraseña",
+                                            input: "password",
+                                            showCancelButton: true,
+                                            confirmButtonText: "Cambiar contraseña",
+                                            cancelButtonText: "Cancelar",
+                                            preConfirm: async (password)=>{
+                                                let encryptedPassword = await encrypt(password);
+                                                    let response = await instance.patch("/person/reset/password", {username: encryptedEmail, newPassword: encryptedPassword})
+                                                    if(response.status === 200){
+                                                        Swal.fire({
+                                                            title: "Contraseña cambiada",
+                                                            text: "Tu contraseña ha sido cambiada con éxito",
+                                                            icon: "success",
+                                                            showConfirmButton: true,
+                                                        });
+                                                    }else{
+                                                        Swal.fire({
+                                                            title: "Error",
+                                                            text: "Algo salió mal, por favor intenta de nuevo más tarde",
+                                                            icon: "error",
+                                                            showConfirmButton: true,
+                                                        });
+                                                    }
+                                            }
+                                        })
+                                    } catch (error) {
+                                        Swal.fire({
+                                            title: "Error",
+                                            text: "El código de verificación es incorrecto",
+                                            icon: "error",
+                                            showConfirmButton: true,
+                                        });
+                                    }
+                                }
+                            })
+                        })
+                    } catch (error) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Algo salió mal, por favor intenta de nuevo más tarde",
+                            icon: "error",
+                            showConfirmButton: true,
+                        });
+                    }
+                    
+                }
+            })
+        }
     }
 }
 </script>
@@ -247,6 +332,12 @@ export default {
                             </b-col>
                         </b-row>
 
+                        <b-row class="justify-content-center">
+                            <b-col class="d-flex justify-content-center align-items-center mt-3">
+                                <b-link @click="sendCodePassword" class="text-dark-blue text-decoration-none">
+                                    ¿No recuerdas tu contraseña? Resetear contraseña</b-link>
+                            </b-col>
+                        </b-row>
                         <b-row class="justify-content-center">
                             <b-col class="d-flex justify-content-center align-items-center mt-3">
                                 <b-link to="/selfRegistration" class="text-dark-blue text-decoration-none">
