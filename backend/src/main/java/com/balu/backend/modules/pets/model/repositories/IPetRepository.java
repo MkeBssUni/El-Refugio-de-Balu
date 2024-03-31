@@ -36,27 +36,13 @@ public interface IPetRepository extends JpaRepository<Pet,Long> {
             nativeQuery = true)
     Page<IPetRequestsView> findNewPetRequests(Long categoryId, String size, String gender, String searchValue, Pageable pageable);
 
-    @Query(value = "select p.id as id, lower(c.name) as category, p.name as name, p.breed as breed, lower(p.size) as size, lower(p.gender) as gender, p.age as age, lower(p.age_unit) as age_unit, lower(s.name) as status from pets p " +
-                        "inner join categories c on p.category_id = c.id inner join statusses s on p.status_id = s.id " +
-                        "where p.status_id = 2 and p.category_id = ?1 and (lower(c.name) like %?2% or lower(p.name) like %?2% or lower(p.breed) like %?2% or lower(p.size) like %?2% or lower(concat(p.age, ' ', p.age_unit)) like %?2% or lower(s.name) like %?2%)",
-            nativeQuery = true)
-    Page<IPetRequestsView> findNewPetRequestsByCategory(Long categoryId, String searchValue, Pageable pageable);
-
-    @Query(value = "select p.id as id, count(pc.id) as comments, lower(c.name) as category, p.name as name, lower(s.name) as status from pets p " +
+    @Query(value = "select p.id as id, count(a.id) as requests, c.name as category, p.name as name, lower(s.name) as status from pets p " +
                         "inner join categories c on p.category_id = c.id " +
                         "inner join statusses s on p.status_id = s.id " +
-                        "left join pet_comments pc on p.id = pc.pet_id " +
-                        "where p.user_moderator_id = ?1 and lower(s.name) like %?2% and lower(p.name) like %?3% " +
+                        "left join adoption_requests a on p.id = a.pet_id " +
+                        "where p.user_moderator_id = ?1 and (p.category_id = ?2 or ?2 is null) and lower(s.name) like %?3% and lower(p.name) like %?4% " +
                         "group by p.id", nativeQuery = true)
-    Page<IMyPetsAsModView> findMyPetsAsMod(Long userId, String status, String searchValue, Pageable pageable);
-
-    @Query(value = "select p.id as id, count(pc.id) as comments, lower(c.name) as category, p.name as name, lower(s.name) as status from pets p " +
-            "inner join categories c on p.category_id = c.id " +
-            "inner join statusses s on p.status_id = s.id " +
-            "left join pet_comments pc on p.id = pc.pet_id " +
-            "where p.user_moderator_id = ?1 and p.category_id = ?2 and lower(s.name) like %?3% and lower(p.name) like %?4% " +
-            "group by p.id", nativeQuery = true)
-    Page<IMyPetsAsModView> findMyPetsAsModByCategory(Long userId, Long categoryId, String status, String searchValue, Pageable pageable);
+    Page<IMyPetsAsModView> findMyPetsAsMod(Long userId, Long categoryId, String status, String searchValue, Pageable pageable);
 
     @Query(value = "select p.id as id, count(pc.id) as comments, p.name as name, concat(a.city, ', ', a.state) as location, lower(s.name) as status from pets p " +
                         "inner join addresses a on p.user_owner_id = a.user_id " +

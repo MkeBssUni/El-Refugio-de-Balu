@@ -2,7 +2,7 @@ package com.balu.backend.modules.pets.model.views;
 
 public interface IMyPetsAsModView {
     Long getId();
-    int getComments();
+    int getRequests();
     String getCategory();
     String getName();
     String getStatus();

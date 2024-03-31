@@ -251,18 +251,12 @@ public class PetService {
     public ResponseApi<?> findMyPetsAsMod(FindMyPetsAsModDto dto, Pageable pageable) {
         if (dto.getUser() == null || validations.isNotBlankString(dto.getUser().trim())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
 
-        if (dto.getStatus() == null) {
-            dto.setStatus("");
-        } else {
+        if (dto.getCategory() != null && validations.isNotBlankString(dto.getCategory().trim())) dto.setCategory(null);
+        if (dto.getStatus() != null && validations.isNotBlankString(dto.getStatus().trim())) dto.setStatus(null);
+        if (dto.getStatus() != null && !validations.isNotBlankString(dto.getStatus().trim()))
             if (validations.isInvalidEnum(dto.getStatus().toUpperCase().trim(), Statusses.class)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
-            dto.setStatus(dto.getStatus().toLowerCase().trim());
-        }
-
-        if (dto.getSearchValue() == null) {
-            dto.setSearchValue("");
-        } else {
-            dto.setSearchValue(dto.getSearchValue().toLowerCase().trim());
-        }
+        if (dto.getStatus() == null) dto.setStatus("");
+        if (dto.getSearchValue() == null) dto.setSearchValue("");
 
         Long userId = decryptId(dto.getUser());
         if (userId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
@@ -279,13 +273,13 @@ public class PetService {
             if (!optionalCategory.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
         }
 
-        Page<IMyPetsAsModView> myPetsAsMod = categoryId != null ? petRepository.findMyPetsAsModByCategory(userId, categoryId, dto.getStatus(), dto.getSearchValue(), pageable) : petRepository.findMyPetsAsMod(userId, dto.getStatus(), dto.getSearchValue(), pageable);
+        Page<IMyPetsAsModView> myPetsAsMod = petRepository.findMyPetsAsMod(userId, categoryId, dto.getStatus(), dto.getSearchValue(), pageable);
 
         Page<MyPetsAsModList> myPetsAsModList = myPetsAsMod.map(myPetAsMod -> {
             try {
                 return new MyPetsAsModList(
                         hashService.encrypt(myPetAsMod.getId()),
-                        myPetAsMod.getComments(),
+                        myPetAsMod.getRequests(),
                         myPetAsMod.getCategory(),
                         myPetAsMod.getName(),
                         myPetAsMod.getStatus()
