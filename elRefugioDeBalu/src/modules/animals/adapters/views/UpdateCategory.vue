@@ -68,9 +68,9 @@
               fluid
               thumbnail
             ></b-img>
-             <b-img
+            <b-img
               v-else
-              :src="this.categoryToModify.image"
+              :src="this.categoryToModify.categoryImage"
               class="categoryImage mt-2"
               fluid
               thumbnail
@@ -107,6 +107,8 @@
 <script>
 import Swal from "sweetalert2";
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
+import instance from "../../../../config/axios";
+import { encrypt } from "../../../../kernel/hashFunctions";
 
 export default {
   name: "UpdateCategory",
@@ -116,8 +118,15 @@ export default {
   data() {
     return {
       UpdateCategoryDto: {
-        name: this.categoryToModify.name,
-        description: this.categoryToModify.description,
+        id: this.categoryToModify.id,
+        name: this.categoryToModify.categoryName,
+        description: this.categoryToModify.categoryDescription,
+        image: this.categoryToModify.categoryImage,
+      },
+      UpdateCategoryDtoEncrypted: {
+        id: "",
+        name: "",
+        description: "",
         image: null,
       },
       size: false,
@@ -136,26 +145,78 @@ export default {
       }
       if (file.size > maxSize) {
         this.size = false;
-        this.UpdateCategoryDto
-        .image = null;
+        this.UpdateCategoryDto.image = null;
       } else {
         const reader = new FileReader();
         reader.onload = (e) => {
           const base64 = e?.target?.result;
-          this.UpdateCategoryDto
-          .image = base64;
+          this.UpdateCategoryDto.image = base64;
         };
         reader.readAsDataURL(file[0]);
         this.size = true;
       }
     },
-    UpdateCategory() {
-      Swal.fire({
-        title: "Acción realizada con exito",
-        icon: "success",
-        confirmButtonColor: "#118A95",
-      });
-      this.$emit("UpdateCategory");
+    async UpdateCategory() {
+      try {
+        this.UpdateCategoryDtoEncrypted.id= await encrypt(this.UpdateCategoryDto.id);
+        this.UpdateCategoryDtoEncrypted.name = await encrypt(this.UpdateCategoryDto.name);
+        this.UpdateCategoryDtoEncrypted.description = await encrypt(this.UpdateCategoryDto.description);
+        this.UpdateCategoryDtoEncrypted.image = await encrypt(this.UpdateCategoryDto.image);
+        const response = await instance.put("/category/",this.UpdateCategoryDtoEncrypted);
+        if (response.status == 200) {
+          Swal.fire({
+            title: "Acción realizada con éxito",
+            icon: "success",
+            confirmButtonColor: "#118A95",
+          });
+          this.$emit("UpdateCategory");
+        }
+      } catch (error) {
+        const msg = error.response
+          ? error.response.data.message
+          : error.message;
+        switch (msg) {
+          case "DUPLICATE_RECORD":
+            Swal.fire({
+              title: "Ha ocurrido un error",
+              text: "Ya existe una categoría con ese nombre",
+              icon: "error",
+              confirmButtonColor: "#118A95",
+            });
+            break;
+          case "UNSUPPORTED_IMAGE_FORMAT":
+            Swal.fire({
+              title: "Ha ocurrido un error",
+              text: "El formato de la imagen no es válido",
+              icon: "error",
+              confirmButtonColor: "#118A95",
+            });
+            break;
+          case "MISSING_FIELDS":
+            Swal.fire({
+              title: "Ha ocurrido un error",
+              text: "Llene todos los campos marcados como obligatorios",
+              icon: "error",
+              confirmButtonColor: "#118A95",
+            });
+            break;
+          case "INVALID_FIELD":
+            Swal.fire({
+              title: "Ha ocurrido un error",
+              text: "Algunos campos no cumplen con el formato requerido",
+              icon: "error",
+              confirmButtonColor: "#118A95",
+            });
+            break;
+          default:
+            Swal.fire({
+              title: "Ha ocurrido un error",
+              text: "Intentelo de nuevo mas tarde " + error,
+              icon: "error",
+              confirmButtonColor: "#118A95",
+            });
+        }
+      }
     },
     ViewAlertConfirmationRegistrationCategory() {
       Swal.fire({
@@ -185,46 +246,26 @@ export default {
     },
     ValidationFormCategoryModify() {
       return !(
-        this.UpdateCategoryDto
-        .name &&
-        this.UpdateCategoryDto
-        .description &&
-       ( this.UpdateCategoryDto
-        .image)&&
-        this.descriptionValidationState &&
-        this.nameValidationState
+        this.UpdateCategoryDto.name &&
+        this.UpdateCategoryDto.description &&
+        this.UpdateCategoryDto.image
       );
     },
     UpdateStateInputCategoryName() {
-      if (this.UpdateCategoryDto
-      .name.trim() === "") {
-        this.nameValidationState = null;
-      } else {
         this.nameValidationState = this.ValidationSpecialCharactersName()
-          ? true
-          : false;
-      }
     },
     ValidationSpecialCharactersName() {
-     const regex = /[<>{}'\\\/]/;
-      return !regex.test(this.UpdateCategoryDto
-      .name);
+      const regex = /[<>{}'\\\/]/;
+      return !regex.test(this.UpdateCategoryDto.name);
     },
     UpdateStateInputCategoryDescription() {
-      if (this.UpdateCategoryDto
-      .description.trim() === "") {
-        this.descriptionValidationState = null;
-      } else {
-        this.descriptionValidationState =
-          this.ValidationSpecialCharactersDescription() ? true : false;
-      }
+      this.descriptionValidationState =this.ValidationSpecialCharactersDescription() ? true : false;
     },
     ValidationSpecialCharactersDescription() {
       const regex = /[<>{}'\\\/]/;
-      return !regex.test(this.UpdateCategoryDto
-      .description);
+      return !regex.test(this.UpdateCategoryDto.description);
     },
-  },
+  }
 };
 </script>
 <style></style>
