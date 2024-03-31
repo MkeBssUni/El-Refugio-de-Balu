@@ -30,9 +30,9 @@ public interface IPetRepository extends JpaRepository<Pet,Long> {
     @Query(value = "select p.name as name, p.breed as breed, lower(c.name) as category, lower(concat(p.weight,' ',p.weight_unit)) as weight, lower(p.size) as size, lower(p.life_stage) as lifeStage, lower(concat(p.age,' ',p.age_unit)) as age, lower(gender) as gender from pets p inner join categories c on p.category_id = c.id where p.id = ?1", nativeQuery = true)
     Optional<IPetCredentialView> findCredentialById(Long id);
 
-    @Query(value = "select p.id as id, lower(c.name) as category, p.name as name, p.breed as breed, lower(p.size) as size, lower(p.gender) as gender, p.age as age, lower(p.age_unit) as ageUnit, lower(s.name) as status from pets p " +
+    @Query(value = "select p.id as id, c.name as category, p.name as name, p.breed as breed, lower(p.size) as size, lower(p.gender) as gender, p.age as age, lower(p.age_unit) as ageUnit, lower(s.name) as status from pets p " +
                         "inner join categories c on p.category_id = c.id inner join statusses s on p.status_id = s.id " +
-                        "where p.status_id = 2 and (c.id = ?1 or ?1 is null) and lower(p.size) like %?2% and (lower(p.gender) = ?3 or ?3 is null) and (lower(p.name) like %?4% or lower(p.breed) like %?4% or lower(concat(p.age, ' ', p.age_unit)) like %?4%)",
+                        "where p.status_id = 2 and (c.id = ?1 or ?1 is null) and lower(p.size) like %?2% and (lower(p.gender) = ?3 or ?3 is null) and (lower(p.name) like %?4% or lower(p.breed) like %?4%)",
             nativeQuery = true)
     Page<IPetRequestsView> findNewPetRequests(Long categoryId, String size, String gender, String searchValue, Pageable pageable);
 
