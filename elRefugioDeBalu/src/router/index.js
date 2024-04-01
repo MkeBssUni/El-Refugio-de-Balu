@@ -67,6 +67,14 @@ const routes = [
           import("../modules/pets/adapters/views/PetDetails.vue"),
       },
       {
+        path: "/newPet",
+        name: "newPet",
+        meta: { title: "Detalles de la mascota" },
+        props: true,
+        component: () =>
+          import("../modules/pets/adapters/views/NewPetDetails.vue"),
+      },
+      {
         path: "/favorites",
         name: "favorites",
         meta: {
