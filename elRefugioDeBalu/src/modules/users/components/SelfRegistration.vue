@@ -32,20 +32,59 @@
               <b-form-invalid-feedback :state="usernameValidation">Correo electrónico inválido</b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group class="my-3" label="Contraseña:" label-for="input-password" :state="passwordValidation">
-              <b-form-input id="input-password" class="bg-light shadow text-dark-gray-input"
-                v-model.trim="form.password" type="password"></b-form-input>
-              <b-form-invalid-feedback :state="passwordValidation">{{
-            passwordValidationMessage
-          }}</b-form-invalid-feedback>
-            </b-form-group>
-            <b-form-group class="my-3" label="Repetir Contraseña:" label-for="input-password-confirm" :state="passwordValidation">
-              <b-form-input id="input-password-confirm" class="bg-light shadow text-dark-gray-input"
-                v-model.trim="form.confirmPassword" type="password"></b-form-input>
-              <b-form-invalid-feedback :state="confirmPasswordValidation">{{
-            confirmPasswordValidationMessage
-          }}</b-form-invalid-feedback>
-            </b-form-group>
+           <b-form-group class="my-3" label="Contraseña:" label-for="input-password" :state="passwordValidation">
+  <b-input-group class="position-relative">
+    <b-form-input
+      id="input-password"
+      class="bg-light shadow text-dark-gray-input"
+      v-model.trim="form.password"
+      @input="validateInput('password')"
+      :type="showPassword ? 'text' : 'password'"
+    ></b-form-input>
+    <b-input-group-prepend>
+      <b-button
+        @click="togglePasswordVisibility('password')" 
+        variant="outline-secondary"
+        class="btn-eye rounded-right"
+      >
+        <b-icon
+          v-if="showPassword"
+          icon="eye-slash"
+          class="eye-icon"
+        ></b-icon>
+        <b-icon v-else icon="eye" class="eye-icon"></b-icon>
+      </b-button>
+    </b-input-group-prepend>
+  </b-input-group>
+  <b-form-invalid-feedback :state="passwordValidation">{{ passwordValidationMessage }}</b-form-invalid-feedback>
+</b-form-group>
+
+<!-- Repetir Contraseña -->
+<b-form-group class="my-3" label="Repetir Contraseña:" label-for="input-password-confirm" :state="confirmPasswordValidation">
+  <b-input-group class="position-relative">
+    <b-form-input
+      id="input-password-confirm"
+      class="bg-light shadow text-dark-gray-input"
+      v-model.trim="form.confirmPassword"
+      :type="showConfirmPassword ? 'text' : 'password'" 
+    ></b-form-input>
+    <b-input-group-prepend>
+      <b-button
+        @click="togglePasswordVisibility('confirmPassword')" 
+        variant="outline-secondary"
+        class="btn-eye rounded-right"
+      >
+        <b-icon
+          v-if="showConfirmPassword"
+          icon="eye-slash"
+          class="eye-icon"
+        ></b-icon>
+        <b-icon v-else icon="eye" class="eye-icon"></b-icon>
+      </b-button>
+    </b-input-group-prepend>
+  </b-input-group>
+  <b-form-invalid-feedback :state="confirmPasswordValidation">{{ confirmPasswordValidationMessage }}</b-form-invalid-feedback>
+</b-form-group>
 
             <b-form-group class="my-3" label="Número de teléfono:" label-for="input-phone">
               <b-form-input maxlength="10" class="bg-light shadow text-dark-gray-input" id="input-phone" type="number"
@@ -103,9 +142,18 @@ export default {
       confirmPasswordValidationMessage: "",
       phoneValidationMessage: "",
       passwordValidationMessage: "",
+      showPassword: false,
+    showConfirmPassword: false,
     };
   },
   methods: {
+  togglePasswordVisibility(field) {
+    if (field === 'password') {
+      this.showPassword = !this.showPassword;
+    } else if (field === 'confirmPassword') {
+      this.showConfirmPassword = !this.showConfirmPassword;
+    }
+  },
     disableButton() {
       return !(
         this.nameValidation === true &&
@@ -297,5 +345,16 @@ export default {
 
 .img-fluid {
   max-width: 100%;
+}
+.eye-icon {
+  font-size: 1rem;
+}
+
+.btn-eye {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  background-color: #ffffff;
+  border-color: #ffffff;
+  color: black;
 }
 </style>
