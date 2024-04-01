@@ -8,14 +8,14 @@
                     <hr class="divider my-0">
                     <b-row class="mt-4 d-flex justify-content-end">
                         <b-col cols="5" lg="4" xl="3">
-                            <b-button type="submit" variant="outline-dark-secondary-blue" to="/formAdoption"
+                            <b-button variant="outline-dark-secondary-blue" to="/formAdoption"
                                 class="me-3 d-flex align-items-center justify-content-between w-100">
                                 <span class="me-2">Solicitar adoptar</span>
                                 <b-icon icon="heart" font-scale="1.3"></b-icon>
                             </b-button>
                         </b-col>
                         <b-col cols="5" lg="4" xl="3">
-                            <b-button variant="outline-danger" @click="goBack"
+                            <b-button variant="outline-secondary-gray" @click="goBack"
                                 class="d-flex align-items-center justify-content-between w-100">
                                 <span class="me-2">Regresar</span>
                                 <b-icon icon="arrow-left-circle" font-scale="1.3"></b-icon>
@@ -29,7 +29,7 @@
                     <hr class="divider my-0">
                     <b-row class="mt-4 d-flex justify-content-end">
                         <b-col cols="12" sm="6">
-                            <b-button type="submit" variant="outline-dark-secondary-blue" to="/formAdoption"
+                            <b-button variant="outline-dark-secondary-blue" to="/formAdoption"
                                 class="me-3 d-flex align-items-center justify-content-between w-100">
                                 <span class="me-2">Solicitar adoptar</span>
                                 <b-icon icon="heart" font-scale="1.3"></b-icon>
