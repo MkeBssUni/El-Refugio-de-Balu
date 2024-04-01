@@ -7,5 +7,6 @@ public enum LogTypes {
     LOGIN,
     BLOCK,
     FAILED_LOGIN,
-    UNBLOCK
+    UNBLOCK,
+    CHANGE_STATUS
 }
