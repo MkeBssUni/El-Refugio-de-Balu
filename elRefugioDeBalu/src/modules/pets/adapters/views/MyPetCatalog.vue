@@ -67,6 +67,12 @@
                 </b-card>
             </b-col>
         </b-row>
+        <b-row class="pt-2">
+            <b-col cols="12">
+                <b-pagination pills v-model="page" :total-rows="total" :per-page="size" align="center">
+                </b-pagination>
+            </b-col>
+        </b-row>
     </b-container>
 </template>
 
@@ -81,6 +87,8 @@ import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
 export default {
     data() {
         return {
+            size: 8,
+            page: 1,
             total: 0,
             form: {
                 user: localStorage.getItem("userId") ? localStorage.getItem("userId") : null,
@@ -102,7 +110,7 @@ export default {
                     imageHeight: 160,
                     showConfirmButton: false
                 })
-                const response = await instance.post(`/pet/owned`, {
+                const response = await instance.post(`/pet/owned?page=${this.page - 1}&size=${this.size}`, {
                     user: this.form.user,
                     status: this.form.status != "" ? this.form.status : null,
                     searchValue: this.form.searchValue
@@ -140,7 +148,14 @@ export default {
     },
     mounted() {
         this.getMyPets();
-    }
+    },    
+    watch: {
+        page(previous, next) {
+            if (previous !== next) {
+                this.getMyPets();
+            }
+        }
+    },
 }
 </script>
 
