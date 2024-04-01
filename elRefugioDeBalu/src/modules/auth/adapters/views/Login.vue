@@ -110,6 +110,7 @@ export default {
                 localStorage.setItem('userId', response.data.data.userId);
                 localStorage.setItem('token', await encrypt(response.data.data.token));
                 localStorage.setItem('role', await encrypt(response.data.data.role.name));
+                localStorage.setItem('profileCompleted', await encrypt(response.data.data.profileCompleted));
 
                 Swal.fire({
                     icon: 'success',

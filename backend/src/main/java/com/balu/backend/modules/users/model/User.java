@@ -38,6 +38,8 @@ public class User {
     private LocalDateTime lastAccess;
     @Column(columnDefinition = "BOOL default false")
     private boolean blocked;
+    @Column(columnDefinition = "BOOL default false")
+    private boolean profileCompleted;
     @Column(columnDefinition = "TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime blockedAt;
