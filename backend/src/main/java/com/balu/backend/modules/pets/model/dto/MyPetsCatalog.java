@@ -9,6 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MyPetsCatalog {
     String id;
+    String image;
     int comments;
     String name;
     String location;
