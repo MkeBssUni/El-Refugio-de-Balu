@@ -13,5 +13,6 @@ public class SignedDto {
     private String tokenType;
     private String userId;
     private Role role;
+    private boolean profileCompleted;
 
 }
