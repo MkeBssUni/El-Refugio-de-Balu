@@ -102,6 +102,7 @@ public class CategoryService {
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseApi<Integer> updateCategory(UpdateCategoryDto updateCategoryDto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        updateCategoryDto.setUserId(hashService.decrypt(updateCategoryDto.getUserId()));
         updateCategoryDto.setId(hashService.decrypt(updateCategoryDto.getId()));
         updateCategoryDto.setName(hashService.decrypt(updateCategoryDto.getName()));
         updateCategoryDto.setDescription(hashService.decrypt(updateCategoryDto.getDescription()));
@@ -123,6 +124,7 @@ public class CategoryService {
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.UNSUPPORTED_IMAGE_FORMAT.name());
 
         Integer category = this.iCategoryRepository.updateCategory(id, updateCategoryDto.getName(), updateCategoryDto.getDescription(), updateCategoryDto.getImage());
+        logService.saveLog("Update of category "+category +" for user with id: " + updateCategoryDto.getUserId(), LogTypes.UPDATE, "CATEGORIES");
         return new ResponseApi<>(
                 category,
                 HttpStatus.OK,
