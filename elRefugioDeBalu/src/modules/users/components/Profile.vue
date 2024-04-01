@@ -1,116 +1,398 @@
 <template>
   <b-container
     fluid
-    class="d-flex justify-content-center align-items-center h-100 bg-blueC"
+    class="d-flex justify-content-center align-items-center h-100"
   >
     <div class="container-fluid mx-auto" style="width: 100%; margin: 50px 0">
       <div class="card encabezadoColorform text-center">
         <h4 style="margin-left: 2rem; color: white">Perfil</h4>
       </div>
-      <b-card-group deck>
+      <b-card-group
+        style="
+          box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
+            rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+            rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+        "
+      >
         <b-card class="contentform" img-alt="Card image">
           <b-container>
-            <div class="clearfix">
-              <!-- obtén la imagen de: information.profilePicture, es un base 64 -->
-              <b-img
-                left
-                alt="profilePic"
-                src="https://img.freepik.com/foto-gratis/retrato-hombre-blanco-aislado_53876-40306.jpg?t=st=1710875960~exp=1710879560~hmac=70796c11c06ff737b58e2f82fd3ab45b89ae7d6525c374b0c92aac9ea0514887&w=900"
-                class="mb-4"
-                style="max-width: 400px; margin-top: 70px"
-              ></b-img>
-              <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
+            <div class="row">
+              <b-col cols="2" md="2" lg="2" style="margin-right: 95px">
+                <b-img
+                  alt="profilePic"
+                  src="https://img.freepik.com/foto-gratis/retrato-hombre-blanco-aislado_53876-40306.jpg?t=st=1710875960~exp=1710879560~hmac=70796c11c06ff737b58e2f82fd3ab45b89ae7d6525c374b0c92aac9ea0514887&w=900"
+                  class="mb-4"
+                  style="max-width: 300px; margin-top: 60px"
+                ></b-img>
+              </b-col>
+              <b-col cols="9" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
                 <b-row>
                   <b-col cols="10" md="8" lg="6">
                     <b-card
-                      class="py-2 card-shadow card encabezadoColorform2 text-center"
+                      bg-variant="dark-secondary-orange"
+                      class="py-2 card-shadow relative-position form-card-title"
                       no-body
                     >
                       <div class="d-flex align-items-center ms-3 ms-md-4">
-                        <i class="material-icons me-2" style="font-size: 1.5rem">pets</i>
-                        <h4 class="mb-0" style="color: white">Información personal</h4>
+                        <i
+                          class="material-icons me-2"
+                          style="font-size: 1.5rem; color: white"
+                          >pets</i
+                        >
+
+                        <h4 class="mb-0" style="color: white">
+                          Información personal
+                        </h4>
                       </div>
                     </b-card>
                   </b-col>
                 </b-row>
-                <b-row >  
+                <b-row>
                   <b-col cols="12">
-                    <b-card bg-variant="dark-gray" class="card-shadow col-md-12">
-                      <b-container>
-                        <div class="row">
-                          <div class="col-md-4">
+                    <b-card
+                      bg-variant="card-content-secondary-orange"
+                      class="card-shadow form-card-content"
+                    >
+                      <b-card-body>
+                        <b-row>
+                          <b-col cols="12" md="4">
                             <b-form-group label="Nombre" label-align="left">
-                              <b-input v-model="information.name" :readonly="!editing"></b-input>
+                              <b-input
+                                v-model="information.name"
+                                :readonly="!editing"
+                              ></b-input>
                             </b-form-group>
-                          </div>
-                          <div class="col-md-4">
+                          </b-col>
+                          <b-col cols="12" md="4">
                             <b-form-group label="Apellido" label-align="left">
-                              <b-input v-model="information.lastName" :readonly="!editing"></b-input>
+                              <b-input
+                                v-model="information.lastName"
+                                :readonly="!editing"
+                              ></b-input>
                             </b-form-group>
-                          </div>
-                          <div class="col-md-4">
-                            <b-form-group label="Segundo apellido" label-align="left">
-                              <b-input v-model="information.surName" :readonly="!editing"></b-input>
+                          </b-col>
+                          <b-col cols="12" md="4">
+                            <b-form-group
+                              label="Segundo apellido"
+                              label-align="left"
+                            >
+                              <b-input
+                                v-model="information.surName"
+                                :readonly="!editing"
+                              ></b-input>
                             </b-form-group>
+                          </b-col>
+                          <b-col cols="12" md="4">
+                            <b-form-group
+                              label="Teléfono"
+                              label-align="left"
+                              :state="phoneNumberValidation"
+                            >
+                              <b-input
+                                v-model="information.phoneNumber"
+                                type="tel"
+                                pattern="[0-9]*"
+                              ></b-input>
+                              <b-form-invalid-feedback
+                                :state="phoneNumberValidation"
+                                >Ingresa solo números</b-form-invalid-feedback
+                              >
+                            </b-form-group>
+                          </b-col>
+                          <b-col cols="12" md="4">
+                            <b-form-group
+                              label="Correo electrónico"
+                              label-align="left"
+                              :state="secondaryEmailValidation"
+                            >
+                              <b-input
+                                v-model="information.user.username"
+                                type="email"
+                              ></b-input>
+                              <b-form-invalid-feedback
+                                :state="secondaryEmailValidation"
+                                >Correo electrónico
+                                inválido</b-form-invalid-feedback
+                              >
+                            </b-form-group>
+                          </b-col>
+                          <div class="d-flex justify-content-end mt-3">
+                            <b-button
+                              @click="submitForm"
+                              variant="outline-light"
+                              >{{ editing ? "Guardar" : "Modificar" }}
+                              <b-icon
+                                icon="person-circle"
+                                font-scale="1.3"
+                              ></b-icon
+                            ></b-button>
                           </div>
+                        </b-row>
+                      </b-card-body>
+                    </b-card>
+                  </b-col>
+                </b-row>
+              </b-col>
+            </div>
+          </b-container>
+
+          <b-container>
+            <div class="row">
+              <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
+                <b-row>
+                  <b-col cols="10" md="8" lg="6">
+                    <b-card
+                      bg-variant="card-header-orange"
+                      class="py-2 card-shadow relative-position form-card-title"
+                      no-body
+                    >
+                      <div class="d-flex align-items-center ms-3 ms-md-4">
+                        <i
+                          class="material-icons me-2"
+                          style="font-size: 1.5rem; color: white"
+                          >home</i
+                        >
+                        <h4 class="mb-0" style="color: white">
+                          Domicilio actual
+                        </h4>
+                      </div>
+                    </b-card>
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <b-col cols="12">
+                    <b-card
+                      bg-variant="card-content-orange"
+                      class="card-shadow form-card-content"
+                    >
+                      <b-col
+                        cols="12"
+                        class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5"
+                      >
+                        <b-row>
+                          <b-col cols="12" md="4">
+                            <b-form-group label="País" label-align="left">
+                              <b-input v-model="country"></b-input>
+                            </b-form-group>
+                          </b-col>
+                          <b-col cols="12" md="4">
+                            <b-form-group label="Calle" label-align="left">
+                              <b-input v-model="street"></b-input>
+                            </b-form-group>
+                          </b-col>
+                          <b-col cols="12" md="4">
+                            <b-form-group label="Colonia" label-align="left">
+                              <b-input v-model="colony"></b-input>
+                            </b-form-group>
+                          </b-col>
+                        </b-row>
+                        <b-row>
+                          <b-col cols="12" md="4">
+                            <b-form-group label="Ciudad" label-align="left">
+                              <b-input v-model="city"></b-input>
+                            </b-form-group>
+                          </b-col>
+                          <b-col cols="12" md="4">
+                            <b-form-group label="Estado" label-align="left">
+                              <b-input v-model="state"></b-input>
+                            </b-form-group>
+                          </b-col>
+                          <b-col cols="12" md="4">
+                            <b-form-group
+                              label="Código Postal"
+                              label-align="left"
+                              :state="postalCodeValidation"
+                            >
+                              <b-input v-model="postalCode"></b-input>
+                              <b-form-invalid-feedback
+                                :state="postalCodeValidation"
+                              >
+                                {{ postalCodeValidationMessage }}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                        </b-row>
+                        <b-row>
+                          <b-col cols="12">
+                            <b-form-group
+                              label="Referencia de dirección"
+                              label-align="left"
+                            >
+                              <b-input
+                                v-model="addressReference"
+                                type="textarea"
+                              ></b-input>
+                            </b-form-group>
+                          </b-col>
+                        </b-row>
+                        <b-row>
+                          <b-col cols="12" md="4">
+                            <b-form-group
+                              label="Número exterior"
+                              label-align="left"
+                              :state="exteriorNumberValidation"
+                            >
+                              <b-input v-model="exteriorNumber"></b-input>
+                              <b-form-invalid-feedback
+                                :state="exteriorNumberValidation"
+                              >
+                                Ingresa solo números
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                          <b-col cols="12" md="4">
+                            <b-form-group
+                              label="Número interior"
+                              label-align="left"
+                            >
+                              <b-input v-model="interiorNumber"></b-input>
+                            </b-form-group>
+                          </b-col>
+                        </b-row>
+                        <div class="d-flex justify-content-end mt-3">
+                          <b-button
+                            @click="submitNewAddress"
+                            variant="outline-light"
+                          >
+                            {{ editing ? "Guardar" : "Modificar" }}
+                            <b-icon icon="home" font-scale="1.3"></b-icon>
+                          </b-button>
                         </div>
-                        <div class="row">
-                          <div class="col-md-4">
-                            <b-form-group label="Teléfono" label-align="left" :state="phoneNumberValidation">
-                              <b-input v-model="information.phoneNumber" type="tel"></b-input>
-                              <b-form-invalid-feedback :state="phoneNumberValidation">Ingresa solo números</b-form-invalid-feedback>
-                            </b-form-group>
-                          </div>
-                          <div class="col-md-4">
-                            <b-form-group label="Correo electrónico" label-align="left" :state="secondaryEmailValidation">
-                              <b-input v-model="information.user.username" type="email"></b-input>
-                              <b-form-invalid-feedback :state="secondaryEmailValidation">Correo electrónico inválido</b-form-invalid-feedback>
-                            </b-form-group>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-8 container d-flex justify-content-end mt-3">
-                            <b-button @click="submitForm" class="btn1">{{ editing ? "Guardar" : "Modificar" }}</b-button>
-                          </div>
-                        </div>
-                      </b-container>
+                      </b-col>
                     </b-card>
                   </b-col>
                 </b-row>
                 <div class="d-flex justify-content-end mt-3">
-                  <b-button v-b-toggle.sidebar-right class="btn1">Cambiar contraseña</b-button>
-                </div>
+  <b-button
+  @click="submitNewAddress"
+  variant="outline-light"
+  :disabled="!domicilioCompleto"
+>
+  {{ editing ? "Guardar" : "Modificar" }}
+  <b-icon icon="home" font-scale="1.3"></b-icon>
+</b-button>
+
+</div>
               </b-col>
+              <div class="d-flex justify-content-end mt-3">
+                <b-button v-b-toggle.sidebar-right class="btn1"
+                  ><span class="me-2">Cambiar contraseña</span>
+                  <b-icon
+                    icon="
+lock-fill"
+                    font-scale="1.3"
+                  ></b-icon
+                ></b-button>
+              </div>
             </div>
           </b-container>
         </b-card>
       </b-card-group>
+
       <!-- Sidebar -->
-      <b-sidebar id="sidebar-right" right shadow>
-        <div class="px-3 py-2">
-          <div class="d-flex align-items-center mb-3 text-dark-secondary-blue">
-            <i class="material-icons me-2 text-dark-secondary-blue" style="font-size: 1.5rem">pets</i>
-            <h4 class="mb-0 text-dark-secondary-blue">Cambio de contraseña</h4>
+      <b-sidebar id="sidebar-right" right shadow no-header>
+        <template #default="{ hide }">
+          <div class="px-3 py-2">
+            <div
+              class="d-flex align-items-center mb-3 text-dark-secondary-blue"
+            >
+              <b-button class="closeButton me-3" @click="hide">
+                <b-icon icon="x" font-scale="1.8" class="text-dark"></b-icon>
+              </b-button>
+              <span class="text-dark-secondary-blue" style="font-size: 1.3rem"
+                >Cambio de contraseña</span
+              >
+            </div>
+            <b-form-group label="Cambio de contraseña actual">
+              <b-input-group>
+                <b-input
+                  v-model="currentPassword"
+                  :type="showPasswordCurrent ? 'text' : 'password'"
+                  class="w-75"
+                ></b-input>
+                <b-button
+                  @click="togglePasswordVisibility('currentPassword')"
+                  variant="outline-secondary"
+                  class="btn-eye rounded-right"
+                >
+                  <b-icon
+                    v-if="!showPasswordCurrent"
+                    icon="eye"
+                    class="eye-icon"
+                  ></b-icon>
+                  <b-icon v-else icon="eye-slash" class="eye-icon"></b-icon>
+                </b-button>
+              </b-input-group>
+            </b-form-group>
+
+            <b-form-group label="Nueva contraseña" :state="passwordValidation">
+              <b-input-group>
+                <b-input
+                  v-model="newPassword"
+                  :type="showPasswordNew ? 'text' : 'password'"
+                  class="w-75"
+                ></b-input>
+                <b-button
+                  @click="togglePasswordVisibility('newPassword')"
+                  variant="outline-secondary"
+                  class="btn-eye rounded-right"
+                >
+                  <b-icon
+                    v-if="!showPasswordNew"
+                    icon="eye"
+                    class="eye-icon"
+                  ></b-icon>
+                  <b-icon v-else icon="eye-slash" class="eye-icon"></b-icon>
+                </b-button>
+              </b-input-group>
+              <b-form-invalid-feedback :state="passwordValidation">{{
+                passwordValidationMessage
+              }}</b-form-invalid-feedback>
+            </b-form-group>
+
+            <b-form-group label="Confirmar contraseña">
+              <b-input-group>
+                <b-input
+                  v-model="confirmPassword"
+                  :type="showPasswordConfirm ? 'text' : 'password'"
+                  class="w-75"
+                ></b-input>
+                <b-button
+                  @click="togglePasswordVisibility('confirmPassword')"
+                  variant="outline-secondary"
+                  class="btn-eye rounded-right"
+                >
+                  <b-icon
+                    v-if="!showPasswordConfirm"
+                    icon="eye"
+                    class="eye-icon"
+                  ></b-icon>
+                  <b-icon v-else icon="eye-slash" class="eye-icon"></b-icon>
+                </b-button>
+              </b-input-group>
+              <b-form-invalid-feedback :state="confirmPasswordValidation">{{
+                confirmPasswordValidationMessage
+              }}</b-form-invalid-feedback>
+            </b-form-group>
+            <div class="mt-3 text-right">
+              <b-button
+                @click="changePassword"
+                variant="outline-success"
+                class="mr-4"
+                >Modificar</b-button
+              >
+              <div class="mt-5" style="position: absolute; bottom: 0; right: 0">
+                <img
+                  src="../../../assets//imgs/gatocontra.png"
+                  width="240"
+                  alt="gato"
+                  fluid
+                  style="margin-left: 10px"
+                />
+              </div>
+            </div>
           </div>
-          <b-form-group label="Cambio de contraseña actual">
-            <b-form-input v-model="currentPassword" type="password"></b-form-input>
-          </b-form-group>
-          <b-form-group label="Nueva contraseña" :state="passwordValidation">
-            <b-form-input v-model="newPassword" type="password"></b-form-input>
-            <b-form-invalid-feedback :state="passwordValidation">{{ passwordValidationMessage }}</b-form-invalid-feedback>
-          </b-form-group>
-          <b-form-group label="Confirmar contraseña">
-            <b-form-input v-model="confirmPassword" type="password"></b-form-input>
-            <b-form-invalid-feedback :state="confirmPasswordValidation">{{ confirmPasswordValidationMessage }}</b-form-invalid-feedback>
-          </b-form-group>
-          <div class="mt-3 text-right">
-            <b-button @click="changePassword" variant="outline-success" class="mr-2">Modificar</b-button>
-            <b-button @click="$bvModal.hide('sidebar-right')" variant="outline-danger">Cancelar</b-button>
-          </div>
-            <div class="mt-5" style="position: absolute; bottom: 0; right: 0;">
-        <img src="../../../assets//imgs/gatocontra.png" width="200" alt="gato" fluid  style="margin-left: 10px;">
-      </div>
-        </div>
+        </template>
       </b-sidebar>
     </div>
   </b-container>
@@ -125,13 +407,16 @@ export default {
   name: "FormStyle",
   data() {
     return {
+      showPasswordCurrent: false,
+      showPasswordNew: false,
+      showPasswordConfirm: false,
       userId: null,
-      name: "Andrea",
-      lastName: "Díaz",
-      surName: "Zagal",
-      phoneNumber: "123456789",
-      secondaryPhoneNumber: "987654321",
-      secondaryEmail: "andrea@gmail.com",
+      name: "",
+      lastName: "",
+      surName: "",
+      phoneNumber: "",
+      secondaryPhoneNumber: "",
+      secondaryEmail: "",
       editing: false,
       currentPassword: "",
       newPassword: "",
@@ -142,45 +427,128 @@ export default {
       passwordValidationMessage: "",
       confirmPasswordValidation: null,
       confirmPasswordValidationMessage: "",
-      information:{}
+      information: {},
+      country: "",
+      street: "",
+      colony: "",
+      city: "",
+      state: "",
+      postalCode: "",
+      addressReference: "",
+      exteriorNumber: "",
+      interiorNumber: "",
+      postalCodeValidation: null,
+      postalCodeValidationMessage: "",
     };
   },
   mounted() {
     this.getDetails();
   },
+  computed: {
+  domicilioCompleto() {
+    return (
+      this.country &&
+      this.street &&
+      this.colony &&
+      this.city &&
+      this.state &&
+      this.postalCode &&
+      this.addressReference &&
+      this.exteriorNumber
+    );
+  },
+},
+
   methods: {
-    async getDetails(){
+    togglePasswordVisibility(field) {
+      switch (field) {
+        case "currentPassword":
+          this.showPasswordCurrent = !this.showPasswordCurrent;
+          break;
+        case "newPassword":
+          this.showPasswordNew = !this.showPasswordNew;
+          break;
+        case "confirmPassword":
+          this.showPasswordConfirm = !this.showPasswordConfirm;
+          break;
+        default:
+          break;
+      }
+    },
+    async getDetails() {
       swal.fire({
         title: "Espera un momento...",
         text: "Estamos cargando tus datos",
         imageUrl: gatoWalkingGif,
-        imageWidth: 160, 
+        imageWidth: 160,
         imageHeight: 160,
         showConfirmButton: false,
       });
       try {
-        const response = await instance.post("/person/details",{
-        userId:  localStorage.getItem("userId")
-        })
-        this.information = response.data.data;
-        this.information.phoneNumber = await decrypt(this.information.phoneNumber);
-        this.information.user.username = await decrypt(this.information.user.username);
-        swal.close();
-
-      } catch (error) {
-        swal.fire({
-          title: "Error",
-          text: "No se pudieron cargar tus datos",
-          icon: "error",
-          showConfirmButton: false,
-          timer: 1500,
-        }).then(() => {
-          this.$router.go(-1);
+        const response = await instance.post("/person/details", {
+          userId: localStorage.getItem("userId"),
         });
+        this.information = response.data.data;
+        this.information.phoneNumber = await decrypt(
+          this.information.phoneNumber
+        );
+        this.information.user.username = await decrypt(
+          this.information.user.username
+        );
+        swal.close();
+      } catch (error) {
+        swal
+          .fire({
+            title: "Error",
+            text: "No se pudieron cargar tus datos",
+            icon: "error",
+            showConfirmButton: false,
+            timer: 1500,
+          })
+          .then(() => {
+            this.$router.go(-1);
+          });
       }
     },
     toggleSidebar() {
       this.$bvModal.show("sidebar-1");
+    },
+    async submitNewAddress() {
+      try {
+        // Validación de código postal (solo números y de longitud 5)
+        const postalCodeRegex = /^[0-9]{5}$/;
+        if (!this.postalCode.match(postalCodeRegex)) {
+          this.postalCodeValidation = false;
+          this.postalCodeValidationMessage =
+            "Por favor ingresa un código postal válido (5 dígitos numéricos)";
+          return;
+        }
+
+        // Lógica para enviar la dirección
+        const response = await instance.post("/api/address", {
+          country: this.country,
+          street: this.street,
+          colony: this.colony,
+          city: this.city,
+          state: this.state,
+          postalCode: this.postalCode,
+          addressReference: this.addressReference,
+          exteriorNumber: this.exteriorNumber,
+          interiorNumber: this.interiorNumber,
+        });
+        swal.fire({
+          title: "Domicilio agregado con éxito",
+          icon: "success",
+        });
+      } catch (error) {
+        this.postalCodeValidation = false;
+        this.postalCodeValidationMessage = error.message;
+        swal.fire({
+          title: "Error al agregar domicilio",
+          text: error.message,
+          icon: "error",
+        });
+      }
     },
     submitForm() {
       swal
@@ -209,15 +577,19 @@ export default {
           }
         });
     },
-    changePassword() {
-    },
+    changePassword() {},
   },
   watch: {
     phoneNumber(newVal) {
-      this.phoneNumberValidation = /^[0-9]{10}$/.test(newVal.trim()) ? true : false;
+      this.phoneNumberValidation = /^[0-9]{10}$/.test(newVal.trim())
+        ? true
+        : false;
     },
     secondaryEmail(newVal) {
-      this.secondaryEmailValidation = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(newVal.trim()) ? true : false;
+      this.secondaryEmailValidation =
+        /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(newVal.trim())
+          ? true
+          : false;
     },
     newPassword(newVal) {
       this.passwordValidation =
@@ -227,13 +599,19 @@ export default {
         if (!/(?=.*\d)/.test(newVal))
           missingRequirements.push("debe contener al menos un número (0-9)");
         if (!/(?=.*[a-z])/.test(newVal))
-          missingRequirements.push("debe contener al menos una letra minúscula (a-z)");
+          missingRequirements.push(
+            "debe contener al menos una letra minúscula (a-z)"
+          );
         if (!/(?=.*[A-Z])/.test(newVal))
-          missingRequirements.push("debe contener al menos una letra mayúscula (A-Z)");
+          missingRequirements.push(
+            "debe contener al menos una letra mayúscula (A-Z)"
+          );
         if (/\s/.test(newVal))
           missingRequirements.push("no debe contener espacios en blanco");
         if (newVal.length < 8)
-          missingRequirements.push("debe tener una longitud mínima de 8 caracteres");
+          missingRequirements.push(
+            "debe tener una longitud mínima de 8 caracteres"
+          );
         this.passwordValidationMessage =
           "La contraseña " + missingRequirements.join(", ") + ".";
       } else {
@@ -254,27 +632,19 @@ export default {
 </script>
 
 <style>
-.bg-blueC {
-  background-color: #118a95;
-}
 .encabezadoColorform {
   width: 50%;
-  background-color: #5ebfc5;
-  box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(255, 255, 255, 0.05) 0px 0.25em 1em;
+  background-color: #4db8c0;
+  box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
+    rgba(255, 255, 255, 0.05) 0px 0.25em 1em;
   position: relative;
   z-index: 2;
   color: #ffffff;
 }
-.encabezadoColorform2 {
-  width: 50%;
-  background-color: #5ebfc5;
-  box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(255, 255, 255, 0.05) 0px 0.25em 1em;
-  position: relative;
-  z-index: 2;
-  color: #ffffff;
-}
+
 .contentform {
-  box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+  box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
+    rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
   margin-top: -30px;
   position: relative;
   z-index: 1;
@@ -289,24 +659,24 @@ export default {
   border-radius: 60px;
   text-align: center;
 }
-.card.encabezadoColorform2 {
-  margin: 0 auto;
-  width: 95%;
-  height: 40px;
-  padding: 15px;
-  border-radius: 60px;
-  text-align: center;
-}
-.container {
-  text-align: right;
-  margin-top: 20px;
-}
+
 .btn1 {
   padding: 10px 20px;
-  color: white;
+  font-size: 20px;
+  border-radius: 10px;
+  background-color: #4db8c0;
+  color: #fff;
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: #ff9900;
+}
+.eye-icon {
+  font-size: 1rem;
+}
+
+.btn-eye {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  background-color: #ffffff;
+  border-color: rgb(207, 203, 203);
+  color: black;
 }
 </style>
