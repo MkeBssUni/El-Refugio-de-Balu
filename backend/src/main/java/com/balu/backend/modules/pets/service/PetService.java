@@ -190,12 +190,13 @@ public class PetService {
         User user = optionalUser.get();
         if (!user.getRole().getName().equals(Roles.GENERAL)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ROLE.name());
 
-        Page<IMyPetsView> myPets = petRepository.findMyPetsByOwner(userId, dto.getStatus(), dto.getSearchValue(), pageable);
+        Page<IMyPetsView> myPets = petRepository.findMyPetsAsOwner(userId, dto.getStatus(), dto.getSearchValue(), pageable);
 
         Page<MyPetsCatalog> myPetsCatalog = myPets.map(myPet -> {
             try {
                 return new MyPetsCatalog(
                         hashService.encrypt(myPet.getId()),
+                        myPet.getImage(),
                         myPet.getComments(),
                         myPet.getName(),
                         myPet.getLocation(),

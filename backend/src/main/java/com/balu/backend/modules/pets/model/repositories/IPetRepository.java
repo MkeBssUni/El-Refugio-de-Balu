@@ -44,13 +44,13 @@ public interface IPetRepository extends JpaRepository<Pet,Long> {
                         "group by p.id", nativeQuery = true)
     Page<IMyPetsAsModView> findMyPetsAsMod(Long userId, Long categoryId, String status, String searchValue, Pageable pageable);
 
-    @Query(value = "select p.id as id, count(pc.id) as comments, p.name as name, concat(a.city, ', ', a.state) as location, lower(s.name) as status from pets p " +
+    @Query(value = "select p.id as id, p.main_image as image, count(pc.id) as comments, p.name as name, concat(a.city, ', ', a.state) as location, lower(s.name) as status from pets p " +
                         "inner join addresses a on p.user_owner_id = a.user_id " +
                         "inner join statusses s on p.status_id = s.id " +
                         "left join pet_comments pc on p.id = pc.pet_id " +
                         "where p.user_owner_id = ?1 and lower(s.name) like %?2% and (lower(p.name) like %?3% or lower(a.city) like %?3% or lower(a.state) like %?3%) " +
                         "group by p.id", nativeQuery = true)
-    Page<IMyPetsView> findMyPetsByOwner(Long ownerId, String status, String searchValue, Pageable pageable);
+    Page<IMyPetsView> findMyPetsAsOwner(Long ownerId, String status, String searchValue, Pageable pageable);
 
     boolean existsByIdAndOwner(Long id, User owner);
 
