@@ -37,74 +37,12 @@
                 </b-jumbotron>
             </b-col>
         </b-row>
-        <b-row class="mb px-0 justify-content-center">
+        <b-row class=" px-0 justify-content-center">
             <b-col class="ps-0" cols="11" sm="11" md="5" lg="5" xl="5">
-                <Banner class="" />
+                <Banner />
             </b-col>
-            <b-col class="my-0 px-0 pb-4 pt-3" cols="11" sm="11" md="5" lg="5" xl="5">
-                <div id="carouselExampleIndicators" class="carousel pb-5 mb-0 slide h-100">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <div class="my-5 mx-5" id="12">
-                                <b-row>
-                                    <b-col class="pb-3">
-                                        <h2>Conoce a nuestros amigos...</h2>
-                                    </b-col>
-                                </b-row>
-                                <b-row class="d-flex justify-content-center align-items-center text-center">
-                                    <b-col class="" cols="11" sm="11" md="5" lg="5" xl="5">
-                                        <img src="../assets/imgs/tortugaJulia.jpg" class="imageFriends" alt="">
-                                    </b-col>
-                                    <b-col class="text-start ps-5" cols="11" sm="11" md="7" lg="7" xl="7">
-                                        <div class="mt-3">
-
-                                            <h4>Yo soy Julia</h4>
-                                            <h5>Una tortuga orejas rojas...</h5>
-                                            <p>Tlapan,CDMX</p>
-                                        </div>
-                                        <b-button pill variant="outline-danger">Adoptame <i
-                                                class="material-icons">pets</i></b-button>
-                                    </b-col>
-                                </b-row>
-                            </div>
-                        </div>
-                        <div class="carousel-item active">
-                            <div class="my-5 mx-5" id="12">
-                                <b-row>
-                                    <b-col class="pb-3">
-                                        <h2>Conoce a nuestros amigos...</h2>
-                                    </b-col>
-                                </b-row>
-                                <b-row class="d-flex justify-content-center align-items-center text-center">
-                                    <b-col class="" cols="11" sm="11" md="5" lg="5" xl="5">
-                                        <img src="../assets/imgs/iguanaOmar.jpeg" class="imageFriends" alt="">
-                                    </b-col>
-                                    <b-col class="text-start ps-5" cols="11" sm="11" md="7" lg="7" xl="7">
-                                        <div class="mt-3">
-
-                                            <h4>Yo soy Omar</h4>
-                                            <h5>Una iguana adulta</h5>
-                                            <p>Guerrero, chilpancingo</p>
-                                        </div>
-                                        <b-button pill variant="outline-danger">Adoptame <i
-                                                class="material-icons">pets</i></b-button>
-                                    </b-col>
-                                </b-row>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
-                        data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
-                        data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-
+            <b-col class="mb px-0" cols="11" sm="11" md="5" lg="5" xl="5">
+                <CategoriesCarousel/>
             </b-col>
         </b-row>
         <b-row class="justify-content-center mt-3">
@@ -126,13 +64,15 @@
 import CarouselGalery from '../HomePageComponents/Carrorusel.vue'
 import Banner from '../HomePageComponents/Banner.vue'
 import FooterBaluVue from '../views/FooterBalu.vue'
+import CategoriesCarousel from './CategoriesCarousel.vue'
 export default {
     components: {
         CarouselGalery,
         Banner,
-        FooterBaluVue
+        FooterBaluVue,
+        CategoriesCarousel
     }
 }
 </script>
 
-<style></style>divc
+<style></style>

@@ -272,3 +272,38 @@ height: 310px !important;
 .form-card-content {
   margin-top: -20px;
 }
+.blue{
+  background-color: #118A95;
+  color:#fff;
+  position: relative;
+  left: 0px;
+  border-radius: 0.8px;
+  overflow: hidden;
+}
+
+.carousel-item img{
+  height: 655px !important;
+  object-fit: cover !important;
+}
+
+/* Estilos para dispositivos pequeños (small) */
+@media (max-width: 576px) {
+  .carousel-item img {
+    height: 240px !important;
+    object-fit: cover !important;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 960px) {
+  .carousel-item img {
+    height: 205px !important;
+    object-fit: cover !important;
+  }
+}
+@media (min-width: 992px){
+  .carousel-item img {
+    height: 655px !important;
+    object-fit: cover !important;
+  }
+}
+
