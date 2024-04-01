@@ -8,6 +8,8 @@
       />
     </div>
     <b-container fluid>
+      <Overlay v-if="loading" />
+      <!-- lo importamos dento del container, independiente de donde lo coloquemos, se vera sobre toda la pantalla siempre -->
       <div class="mt-3">
         <b-row
           class="justify-content-end"
@@ -26,7 +28,6 @@
               cols="12"
               sm="12"
               md="1"
-              pill
               class="py-1 w-100 d-flex align-items-center justify-content-center"
               variant="outline-danger"
               @click="ViewCategoryRegistrationForm()"
@@ -43,7 +44,7 @@
               md="2"
               lg="2"
               xl="2"
-              class="form-control selectCategories rounded-pill"
+              class="form-control selectCategories"
               :options="options"
             ></b-form-select>
           </b-col>
@@ -54,9 +55,12 @@
                 id="searchInput"
                 type="search"
                 placeholder="Buscar..."
-                class="searchInput rounded-pill"
+                class="searchInput"
                 v-model="search"
               ></b-form-input>
+              <b-input-group-append>
+                <b-button class="button-search"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+              </b-input-group-append>
             </b-input-group>
           </b-col>
         </b-row>
@@ -287,147 +291,19 @@ import UpdateCategory from "./UpdateCategory.vue";
 import FishLoading from "../../../../assets/imgs/peces.gif";
 import Swal from "sweetalert2";
 import instance from "../../../../config/axios";
-import { decrypt, encrypt } from '../../../../kernel/hashFunctions';
-
+import { decrypt, encrypt } from "../../../../kernel/hashFunctions";
+import Overlay from "../../../../utils/Overlay.vue";
 export default {
   name: "AnimalCategories",
   components: {
     Encabezado,
     SaveCategory,
     UpdateCategory,
+    Overlay,
   },
   data() {
     return {
-      AnimalsList: [
-        {
-          id: 1,
-          name: "tortugas",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: true,
-        },
-        {
-          id: 2,
-          name: "fatos",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: true,
-        },
-        {
-          id: 3,
-          name: "perros",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: false,
-        },
-        {
-          id: 4,
-          name: "aaaa",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: false,
-        },
-        {
-          id: 5,
-          name: "bbbbbbb",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: false,
-        },
-        {
-          id: 6,
-          name: "ccccc",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: true,
-        },
-        {
-          id: 7,
-          name: "ddddd",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: true,
-        },
-        {
-          id: 8,
-          name: "tortugas",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: true,
-        },
-        {
-          id: 9,
-          name: "tortuga",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: false,
-        },
-        {
-          id: 10,
-          name: "tortuga",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: false,
-        },
-        {
-          id: 11,
-          name: "tortuga",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: true,
-        },
-        {
-          id: 12,
-          name: "tortuga",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: true,
-        },
-        {
-          id: 13,
-          name: "tortuga",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: true,
-        },
-        {
-          id: 14,
-          name: "tortuga",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: false,
-        },
-        {
-          id: 15,
-          name: "tortuga",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: false,
-        },
-        {
-          id: 16,
-          name: "tortuga",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: true,
-        },
-      ],
+      AnimalsList: [],
       search: null,
       options: [
         { value: null, text: "Todos" },
@@ -442,11 +318,14 @@ export default {
       updateCategoryForm: true,
       categoryToModify: null,
       searchCategoryValueDto: "",
-      changeStatusDto:{
-          id: 0,
-          status:false,
-          userId:localStorage.getItem('userId')
-        }
+      changeStatusDto: {
+        id: 0,
+        status: false,
+        userId: localStorage.getItem("userId"),
+      },
+      empty: true,
+      loading: true,
+      //establecemos en true el overlay, para que desde que se abre la pagina sea lo primero que se vea
     };
   },
   methods: {
@@ -454,6 +333,8 @@ export default {
       this.saveCategoryForm = !this.saveCategoryForm;
     },
     async GetAllCategories() {
+      this.loading = true;
+      //cada que recargamos, lo volvemos a establecer en true
       try {
         const response = await instance.post("/category/paged", {
           searchCategoryValue: this.searchCategoryValueDto,
@@ -462,6 +343,9 @@ export default {
         this.AnimalsList = response.data.data.content;
         this.perPage = response.data.pageSize;
         this.currentPage = response.data.pageNumber;
+
+        this.loading = false;
+        //si la peticion se hace con exito,seteamos el loading en false para que se deje de ver el overlay,
       } catch (error) {
         console.error("Error al obtener categorías:", error);
       }
@@ -507,37 +391,40 @@ export default {
     },
     async ChangeCategoryStatus(category) {
       try {
-      
-        this.changeStatusDto.id= await encrypt(category.id),
-        this.changeStatusDto.status= await encrypt(category.categoryStatus)
-        const response = await instance.patch("/category/", this.changeStatusDto);
+        (this.changeStatusDto.id = await encrypt(category.id)),
+          (this.changeStatusDto.status = await encrypt(
+            category.categoryStatus
+          ));
+        const response = await instance.patch(
+          "/category/",
+          this.changeStatusDto
+        );
         if (response.status == 200) {
           Swal.fire({
             title: "Acción realizada con exito",
             icon: "success",
             confirmButtonColor: "#118A95",
           });
-          this.GetAllCategories(); 
-        }else{
+          this.GetAllCategories();
+        } else {
           Swal.fire({
             title: "Ha sucedido un error",
-            text:"Inténtelo de nuevo más tarde",
+            text: "Inténtelo de nuevo más tarde",
             icon: "error",
             confirmButtonColor: "#118A95",
           });
-          this.GetAllCategories(); 
-        
+          this.GetAllCategories();
         }
       } catch (error) {
         Swal.fire({
-            title: "Ha sucedido un error",
-            text:"codigo de error: "+error.code,
-            icon: "error",
-            confirmButtonColor: "#118A95",
-          });
-          this.GetAllCategories(); 
-        }
+          title: "Ha sucedido un error",
+          text: "codigo de error: " + error.code,
+          icon: "error",
+          confirmButtonColor: "#118A95",
+        });
+        this.GetAllCategories();
       }
+    },
   },
   mounted() {
     this.GetAllCategories();
