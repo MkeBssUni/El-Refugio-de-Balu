@@ -102,7 +102,7 @@
                 </b-col>
             </b-row>
         </b-container>
-        <Modal :comments="comments" :petId="selectedPetId" :canComment="canComment" @comment-added="loadComments()" />
+        <Modal :comments="comments" :petId="selectedPetId" :canComment="canComment" :cancelRequest="selectedPetCancelRequest" @comment-added="loadComments()" />
     </div>
 </template>
 
@@ -141,8 +141,9 @@ export default {
             ],
             pets: [],
             selectedPetId: "",
+            selectedPetCancelRequest: "",
             comments: [],
-            canComment: false
+            canComment: false            
         }
     },
     methods: {
@@ -229,8 +230,8 @@ export default {
                     showConfirmButton: false
                 })
                 this.selectedPetId = petId                
-                this.canComment = ['in_revision', 'approved'].includes(this.pets.find(pet => pet.id === petId).status);
-                console.log(this.canComment)
+                this.selectedPetCancelRequest = this.pets.find(pet => pet.id === petId).cancelRequest;
+                this.canComment = ['in_revision', 'approved'].includes(this.pets.find(pet => pet.id === petId).status);                
                 const response = await instance.post(`/pet/comment/all`, {
                     pet: petId,
                     user: this.payload.user
