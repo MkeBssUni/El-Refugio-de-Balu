@@ -36,10 +36,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -330,7 +327,7 @@ public class PetService {
             if (!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
             User user = optionalUser.get();
             if (!user.getRole().getName().equals(Roles.GENERAL)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ROLE.name());
-            if (user.getAddress() == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_USER.name());
+            //if (user.getAddress() == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_USER.name());
 
             Optional<Status> optionalStatus = statusRepository.findByName(Statusses.PENDING);
             Status status = optionalStatus.get();
@@ -673,7 +670,7 @@ public class PetService {
 
         if (validations.isInvalidName(name) || validations.isInvalidName(breed)) return "invalid format";
         if (validations.isInvalidMinAndMaxLength(name.trim(), 3, 30) || validations.isInvalidMinAndMaxLength(breed.trim(), 3, 50) || validations.isInvalidMinAndMaxLength(description.trim(), 100, 1500)) return "invalid length";
-        if (observations != null && validations.isInvalidMinAndMaxLength(observations.trim(), 50, 500)) return "invalid length";
+        if (!Objects.equals(observations, "") && validations.isInvalidMinAndMaxLength(observations.trim(), 50, 500)) return "invalid length";
         if (age < 0 || weight < 0) return "invalid field";
 
         if(characteristics.length > 20) return "invalid length";
@@ -715,7 +712,7 @@ public class PetService {
             }
         }
 
-        if (validations.isInvalidImage(mainImage) || validations.isInvalidImageLength(mainImage)) return "invalid image";
+        if (validations.isInvalidImage(mainImage)) return "invalid image";
         if (images != null) {
             if (images.length > 4) return "invalid length";
             HashSet<String> imagesSet = new HashSet<>();

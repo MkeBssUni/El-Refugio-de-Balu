@@ -52,7 +52,7 @@ public class Pet {
     private String specialCares;
     @Column(columnDefinition = "text", nullable = false)
     private String characteristics;
-    @Column(columnDefinition = "text", nullable = false)
+    @Column(columnDefinition = "LONGTEXT", nullable = false)
     private String mainImage;
     @Column(columnDefinition = "varchar(500)")
     private String cancelReason;
