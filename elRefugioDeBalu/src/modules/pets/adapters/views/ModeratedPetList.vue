@@ -102,7 +102,7 @@
                 </b-col>
             </b-row>
         </b-container>
-        <Modal :comments="comments" :petId="selectedPetId" @comment-added="loadComments()" />
+        <Modal :comments="comments" :petId="selectedPetId" :canComment="canComment" @comment-added="loadComments()" />
     </div>
 </template>
 
@@ -139,9 +139,10 @@ export default {
                 { key: 'status', label: 'Estado' },
                 { key: 'actions', label: 'Acciones' }
             ],
-            pets: [],  
-            selectedPetId: "",          
-            comments: []
+            pets: [],
+            selectedPetId: "",
+            comments: [],
+            canComment: false
         }
     },
     methods: {
@@ -208,7 +209,6 @@ export default {
         getBadgeVariant(status) {
             switch (status) {
                 case 'approved': return 'success';
-                case '': return 'danger';
                 case 'in_revision': return 'warning';
                 case 'adopted': return 'info';
                 case 'closed': return 'danger';
@@ -228,12 +228,14 @@ export default {
                     imageHeight: 160,
                     showConfirmButton: false
                 })
-                this.selectedPetId = petId
+                this.selectedPetId = petId                
+                this.canComment = ['in_revision', 'approved'].includes(this.pets.find(pet => pet.id === petId).status);
+                console.log(this.canComment)
                 const response = await instance.post(`/pet/comment/all`, {
                     pet: petId,
                     user: this.payload.user
-                })                
-                this.comments = response.data.data                
+                })
+                this.comments = response.data.data
                 Swal.close()
                 this.$bvModal.show('commentsModal')
             } catch (error) {
