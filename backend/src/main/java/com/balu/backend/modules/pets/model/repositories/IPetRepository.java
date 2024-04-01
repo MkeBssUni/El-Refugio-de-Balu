@@ -36,7 +36,7 @@ public interface IPetRepository extends JpaRepository<Pet,Long> {
             nativeQuery = true)
     Page<IPetRequestsView> findNewPetRequests(Long categoryId, String size, String gender, String searchValue, Pageable pageable);
 
-    @Query(value = "select p.id as id, (p.cancel_reason is not null) as cancelRequest, count(a.id) as requests, count(a.id) as requests, c.name as category, p.name as name, lower(s.name) as status from pets p " +
+    @Query(value = "select p.id as id, p.cancel_reason as cancelRequest, count(a.id) as requests, count(a.id) as requests, c.name as category, p.name as name, lower(s.name) as status from pets p " +
                         "inner join categories c on p.category_id = c.id " +
                         "inner join statusses s on p.status_id = s.id " +
                         "left join adoption_requests a on p.id = a.pet_id " +

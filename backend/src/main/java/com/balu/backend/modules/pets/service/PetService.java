@@ -279,7 +279,7 @@ public class PetService {
             try {
                 return new MyPetsAsModList(
                         hashService.encrypt(myPetAsMod.getId()),
-                        myPetAsMod.getCancelRequest() == 1 ? true : false,
+                        myPetAsMod.getCancelRequest(),
                         myPetAsMod.getRequests(),
                         myPetAsMod.getCategory(),
                         myPetAsMod.getName(),
