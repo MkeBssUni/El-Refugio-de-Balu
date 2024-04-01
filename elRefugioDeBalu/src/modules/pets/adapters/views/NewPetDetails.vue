@@ -8,7 +8,7 @@
                     <hr class="divider my-0">
                     <b-row class="mt-4 d-flex justify-content-end">
                         <b-col cols="6" xl="3">
-                            <b-button variant="outline-success"
+                            <b-button variant="outline-success" @click="selectPet()"
                                 class="me-3 d-flex align-items-center justify-content-between w-100">
                                 <span class="me-2">Dar seguimiento</span>
                                 <b-icon icon="check-circle" font-scale="1.3"></b-icon>
@@ -43,7 +43,7 @@
                     <hr class="divider my-0">
                     <b-row class="mt-4 d-flex justify-content-end">
                         <b-col cols="12" sm="6">
-                            <b-button variant="outline-success"
+                            <b-button variant="outline-success" @click="selectPet()"
                                 class="me-3 d-flex align-items-center justify-content-between w-100">
                                 <span class="me-2">Dar seguimiento</span>
                                 <b-icon icon="check-circle" font-scale="1.3"></b-icon>
@@ -95,7 +95,7 @@ export default {
     },
     data() {
         return {
-            pet: {}
+            pet: {},
         }
     },
     methods: {
@@ -151,6 +151,47 @@ export default {
         },
         goBack() {
             this.$router.go(-1);
+        },
+        async selectPet() {
+            try {
+                Swal.fire({
+                    title: 'Cargando...',
+                    text: 'Te estamos asignando la mascota, espera un momento',
+                    imageUrl: gatoWalkingGif,
+                    imageWidth: 160,
+                    imageHeight: 160,
+                    showConfirmButton: false
+                })
+                await instance.post(`/pet/select`, { 
+                    pet: this.petId,
+                    user: localStorage.getItem('userId'),
+                    status: 'approved'
+                });
+                Swal.fire({
+                    title: 'Mascota asignada',
+                    text: 'Te hemos asignado la mascota exitosamente',
+                    icon: 'success',
+                    iconColor: '#4CAF50',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                }).then(() => {
+                    this.$router.push('/moderated/petList')
+                })
+            } catch (error) {
+                console.log(error.response.data.message)
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error al asignar la mascota',
+                    icon: 'error',
+                    iconColor: '#A93D3D',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                }).then(() => {
+                    this.$router.push('/petList')
+                })            
+            }
         }
     },
     mounted() {
