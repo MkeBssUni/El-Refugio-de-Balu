@@ -249,7 +249,7 @@ export default {
                     timerProgressBar: true,
                     showConfirmButton: false
                 }).then(() => {
-                    this.$router.push('/home')
+                    this.$bvModal.hide('commentsModal')
                 })
             }
         },
