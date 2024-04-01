@@ -1,5 +1,6 @@
 package com.balu.backend.modules.adresses.model.model;
 
+import com.balu.backend.modules.adresses.model.model.dto.SaveAddressDto;
 import com.balu.backend.modules.homeSpecification.model.HomeSpecification;
 import com.balu.backend.modules.users.model.User;
 import jakarta.persistence.*;
@@ -35,10 +36,16 @@ public class Address {
     @JoinColumn(name ="home_specification_id", referencedColumnName = "id")
     private HomeSpecification homeSpecification;
 
-    public Address(Long id, HomeSpecification homeSpecification) {
-        this.id = id;
-        this.homeSpecification = homeSpecification;
+    public void save (SaveAddressDto dto){
+        country = dto.getCountry();
+        street = dto.getStreet();
+        colony = dto.getColony();
+        city = dto.getCity();
+        state= dto.getState();
+        postalCode = dto.getPostalCode();
+        addressReference = dto.getAddressReference();
+        exteriorNumber = dto.getExteriorNumber();
+        interiorNumber = dto.getInteriorNumber();
+        user=dto.getUser();
     }
-
-
 }
