@@ -5,7 +5,7 @@
             <b-button size="sm" variant="light" @click="close()" class="ms-auto">
                 <b-icon icon="x" font-scale="1.8" class="text-dark"></b-icon>
             </b-button>
-        </template>
+        </template>        
         <b-row v-for="comment in comments" :key="comment.id" class="my-3">
             <b-col cols="12" v-if="sessionRole == comment.userRole" class="text-end">
                 <span class="text-dark comment">
@@ -24,34 +24,68 @@
         </b-row>
         <b-row class="text-center">
             <b-col>
-                <span v-show="comments.length == 0" class="text-dark-gray-input">Esta mascota no tiene comentarios</span>
+                <span v-show="comments.length == 0" class="text-dark-gray-input">Esta mascota no tiene
+                    comentarios</span>
             </b-col>
         </b-row>
         <template #modal-footer>
             <b-form class="d-flex align-items-start">
-                <b-form-textarea id="textarea" v-model="newComment" placeholder="Escribe un comentario..." rows="2"
-                    max-rows="3" class="mb-2"></b-form-textarea>
-                <b-button size="sm" variant="outline-dark-blue" class="ms-3 d-flex align-items-center">
-                    <span class="me-2">Enviar</span>
-                    <b-icon icon="cursor" font-scale="1.5"></b-icon>
+                <div>
+                    <b-form-textarea ref="textarea" id="textarea" v-model.trim="form.comment"
+                        placeholder="Escribe un comentario..." rows="2" max-rows="3" class="mb-2"
+                        @input="validateForm()" :class="{ 'is-invalid': showErrors.comment }"></b-form-textarea>
+                    <b-form-invalid-feedback v-if="showErrors.comment">
+                        {{ errorMessages.comment }}
+                    </b-form-invalid-feedback>
+                </div>
+                <b-button size="sm" variant="outline-dark-blue" class="ms-3 d-flex align-items-center"
+                    @click="addComment()" :disabled="isLoading">
+                    <template v-if="isLoading">
+                        <b-spinner small></b-spinner>
+                        <span class="ms-2">Cargando...</span>
+                    </template>
+                    <template v-else>
+                        <span class="me-2">Enviar</span>
+                        <b-icon icon="cursor" font-scale="1.5"></b-icon>
+                    </template>
                 </b-button>
+
             </b-form>
         </template>
     </b-modal>
 </template>
 
 <script>
+import Swal from "sweetalert2";
 import { decrypt } from '../../../../kernel/hashFunctions';
+import instance from "../../../../config/axios";
 
 export default {
     props: {
-        comments: Array,
-        required: true
+        comments: {
+            type: Array,
+            required: true
+        },
+        petId: {
+            type: String,
+            required: true
+        }
     },
     data() {
         return {
             sessionRole: "",
-            newComment: ""
+            userId: localStorage.getItem('userId') ? localStorage.getItem('userId') : "",
+            isLoading: false,
+            form: {
+                comment: "",
+                isValid: false
+            },
+            errorMessages: {
+                comment: ""
+            },
+            showErrors: {
+                comment: false
+            }
         }
     },
     methods: {
@@ -59,8 +93,65 @@ export default {
             const sessionRole = await decrypt(localStorage.getItem('role'));
             this.sessionRole = sessionRole.toString().toLowerCase();
         },
+        validateForm() {
+            if (this.form.comment == "") {
+                this.errorMessages.comment = "Campo obligatorio";
+                this.showErrors.comment = true;
+                this.form.isValid = false;
+            } else if (this.form.comment.length < 2 || this.form.comment.length > 500) {
+                this.errorMessages.comment = "El comentario debe tener entre 2 y 500 caracteres";
+                this.showErrors.comment = true;
+                this.form.isValid = false;
+            } else {
+                this.errorMessages.comment = "";
+                this.showErrors.comment = false;
+                this.form.isValid = true;
+            }
+        },
+        async addComment() {
+            this.validateForm()
+            if (this.form.isValid) {
+                this.isLoading = true;
+                try {
+                    await instance.post(`/pet/comment`, {
+                        comment: this.form.comment,
+                        user: this.userId,
+                        pet: this.petId
+                    })
+                    Swal.fire({
+                        title: 'Comentario enviado',
+                        text: 'Tu comentario ha sido enviado correctamente.',
+                        icon: 'success',
+                        iconColor: '#4CAF50',
+                        timer: 3000,
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    }).then(() => {
+                        this.isLoading = false;
+                        this.resetForm();
+                        this.$emit('comment-added');
+                    })
+                } catch (error) {
+                    console.log(error.response.data.message)
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Ocurrió un error al enviar el comentario, por favor intenta más tarde.',
+                        icon: 'error',
+                        iconColor: '#A93D3D',
+                        timer: 3000,
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    }).then(() => {
+                        this.isLoading = false;
+                    })
+                }
+            }
+        },
         resetForm() {
-            this.newComment = ""
+            this.form.comment = "";
+            this.form.isValid = false;
+            this.errorMessages.comment = "";
+            this.showErrors.comment = false;
         }
     },
     mounted() {
@@ -70,12 +161,16 @@ export default {
 </script>
 
 <style scoped>
-.card {
-    width: 90%;
-}
-
 form {
     width: 100%;
+}
+
+form div {
+    width: 80%;
+}
+
+.card {
+    width: 90%;
 }
 
 .comment {
