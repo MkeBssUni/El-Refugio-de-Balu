@@ -262,26 +262,11 @@
                     </b-card>
                   </b-col>
                 </b-row>
-                <div class="d-flex justify-content-end mt-3">
-  <b-button
-  @click="submitNewAddress"
-  variant="outline-light"
-  :disabled="!domicilioCompleto"
->
-  {{ editing ? "Guardar" : "Modificar" }}
-  <b-icon icon="home" font-scale="1.3"></b-icon>
-</b-button>
-
-</div>
               </b-col>
               <div class="d-flex justify-content-end mt-3">
                 <b-button v-b-toggle.sidebar-right class="btn1"
                   ><span class="me-2">Cambiar contraseña</span>
-                  <b-icon
-                    icon="
-lock-fill"
-                    font-scale="1.3"
-                  ></b-icon
+                  <b-icon icon="lock-fill" font-scale="1.3"></b-icon
                 ></b-button>
               </div>
             </div>
@@ -445,19 +430,19 @@ export default {
     this.getDetails();
   },
   computed: {
-  domicilioCompleto() {
-    return (
-      this.country &&
-      this.street &&
-      this.colony &&
-      this.city &&
-      this.state &&
-      this.postalCode &&
-      this.addressReference &&
-      this.exteriorNumber
-    );
+    domicilioCompleto() {
+      return (
+        this.country &&
+        this.street &&
+        this.colony &&
+        this.city &&
+        this.state &&
+        this.postalCode &&
+        this.addressReference &&
+        this.exteriorNumber
+      );
+    },
   },
-},
 
   methods: {
     togglePasswordVisibility(field) {
@@ -515,7 +500,6 @@ export default {
     },
     async submitNewAddress() {
       try {
-        // Validación de código postal (solo números y de longitud 5)
         const postalCodeRegex = /^[0-9]{5}$/;
         if (!this.postalCode.match(postalCodeRegex)) {
           this.postalCodeValidation = false;
@@ -523,9 +507,7 @@ export default {
             "Por favor ingresa un código postal válido (5 dígitos numéricos)";
           return;
         }
-
-        // Lógica para enviar la dirección
-        const response = await instance.post("/api/address", {
+        const response = await instance.post("/api/address/", {
           country: this.country,
           street: this.street,
           colony: this.colony,
@@ -535,6 +517,7 @@ export default {
           addressReference: this.addressReference,
           exteriorNumber: this.exteriorNumber,
           interiorNumber: this.interiorNumber,
+          userId: localStorage.getItem("userId"),
         });
         swal.fire({
           title: "Domicilio agregado con éxito",
