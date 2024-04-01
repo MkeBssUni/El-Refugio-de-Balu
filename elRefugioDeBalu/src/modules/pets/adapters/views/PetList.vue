@@ -62,11 +62,12 @@
                         <b-icon v-else icon="gender-female" variant="gender-female" font-scale="1.4"></b-icon>
                     </template>
                     <template #cell(status)="data">
-                        <b-badge variant="warning">{{ mapStatus((data.item.status).toString().toLowerCase()) }}</b-badge>
+                        <b-badge variant="warning">{{ mapStatus((data.item.status).toString().toLowerCase())
+                            }}</b-badge>
                     </template>
-                    <template #cell(actions)>
+                    <template #cell(actions)="data">
                         <div class="d-none d-md-inline-block">
-                            <b-button pill size="sm" variant="outline-dark-blue" class="px-3 d-flex align-items-center">
+                            <b-button pill size="sm" variant="outline-dark-blue" class="px-3 d-flex align-items-center" @click="getDetails(data.item.id)">
                                 <span>Ver detalles</span>
                                 <b-icon icon="info-circle" font-scale="1" class="ms-1"></b-icon>
                             </b-button>
@@ -84,7 +85,8 @@
         <b-row class="px-4">
             <b-col cols="12" class="d-flex align-items-center">
                 <label for="perPage">Selecciona la cantidad de registros que deseas mostrar:</label>
-                <b-form-select :options="options" v-model="size" class="ms-3 my-3 form-select" style="width: 80px" @change="getPetList()"></b-form-select>
+                <b-form-select :options="options" v-model="size" class="ms-3 my-3 form-select" style="width: 80px"
+                    @change="getPetList()"></b-form-select>
             </b-col>
             <b-col cols="12" class="mt-1">
                 <b-pagination pills v-model="page" :total-rows="total" :per-page="size" align="center">
@@ -204,6 +206,10 @@ export default {
         },
         mapStatus(status) {
             return statusses[status] || status;
+        },
+        getDetails(petId) {
+            this.$router.push({ name: 'newPet', params: { petId: petId } });
+            localStorage.setItem('petId', petId);
         }
     },
     mounted() {
