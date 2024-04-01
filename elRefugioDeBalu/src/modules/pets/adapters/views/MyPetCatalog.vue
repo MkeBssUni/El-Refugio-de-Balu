@@ -83,7 +83,7 @@ export default {
         return {
             total: 0,
             form: {
-                user: "maAenU2uRx2BsEDrfomJKw==",
+                user: localStorage.getItem("userId") ? localStorage.getItem("userId") : null,
                 status: "",
                 searchValue: ""
             },
