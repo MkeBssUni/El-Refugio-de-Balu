@@ -115,6 +115,7 @@ export default {
         name: "",
         description: "",
         image: "",
+        userId:localStorage.getItem('userId')
       },
       size: false,
       imageFile: null,

@@ -8,6 +8,8 @@ import com.balu.backend.modules.categories.model.ICategoryRepository;
 import com.balu.backend.modules.categories.model.ICategoryViewPaged;
 import com.balu.backend.modules.categories.model.dto.*;
 import com.balu.backend.modules.hash.service.HashService;
+import com.balu.backend.modules.logs.model.LogTypes;
+import com.balu.backend.modules.logs.service.LogService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +35,8 @@ public class CategoryService {
     private final ICategoryRepository iCategoryRepository;
     private final HashService hashService;
     private final Validations validations = new Validations();
+
+    private final LogService logService;
 
     @Transactional(readOnly = true)
     public ResponseApi<List<GetCategoryListDto>> getListCategories() {
@@ -73,11 +77,10 @@ public class CategoryService {
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseApi<Category> saveCategory(SaveCategoryDto saveCategoryDto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-
+        saveCategoryDto.setUserId(hashService.decrypt(saveCategoryDto.getUserId()));
         saveCategoryDto.setName(hashService.decrypt(saveCategoryDto.getName()));
         saveCategoryDto.setDescription(hashService.decrypt(saveCategoryDto.getDescription()));
         saveCategoryDto.setImage(hashService.decrypt(saveCategoryDto.getImage()));
-
         if (saveCategoryDto.getName() == null && saveCategoryDto.getDescription() == null && saveCategoryDto.getImage() == null)
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
         if (!(this.iCategoryRepository.findByName(saveCategoryDto.getName()) == null))
@@ -88,6 +91,7 @@ public class CategoryService {
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.UNSUPPORTED_IMAGE_FORMAT.name());
         LocalDateTime Date = LocalDateTime.now();
         Category newCategory = this.iCategoryRepository.saveAndFlush(new Category(0l, saveCategoryDto.getName(), saveCategoryDto.getDescription(), saveCategoryDto.getImage(), Date, true, null));
+        logService.saveLog("Registration of new category "+newCategory.getId() +" in the system for user with id: " + saveCategoryDto.getUserId(), LogTypes.INSERT, "CATEGORIES");
         return new ResponseApi<>(
                 newCategory,
                 HttpStatus.CREATED,
