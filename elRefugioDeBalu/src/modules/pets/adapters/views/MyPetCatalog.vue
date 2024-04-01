@@ -56,7 +56,7 @@
                     <b-card-body class="text-center">
                         <b-card-title>{{ pet.name }}</b-card-title>
                         <b-card-sub-title>{{ pet.location }}</b-card-sub-title>
-                        <b-badge :variant="getBadgeVariant(pet.status)" class="mt-2">{{ pet.status }}</b-badge>
+                        <b-badge :variant="getBadgeVariant(pet.status)" class="mt-2">{{mapStatus((pet.status).toString().toLowerCase()) }}</b-badge>
                         <div class="d-flex justify-content-center">
                             <b-button pill variant="outline-dark-blue"
                                 class="mt-3 px-5 d-flex align-items-center justify-content-center" to="/petDetails">
@@ -74,6 +74,7 @@
 import Swal from "sweetalert2";
 import instance from "../../../../config/axios";
 import getStatusses from "../../../../kernel/data/userStatusses";
+import { statusses } from "../../../../kernel/data/mappingDictionaries";
 
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
 
@@ -124,11 +125,15 @@ export default {
                 })
             }
         },
+        mapStatus(status) {
+            return statusses[status] || status;
+        },
         getBadgeVariant(status) {
             switch (status) {
-                case 'Aceptada': return 'success';
-                case 'Rechazada': return 'danger';
-                case 'Pendiente': return 'warning';
+                case 'approved': return 'success';
+                case 'in_revision': return 'warning';
+                case 'adopted': return 'info';
+                case 'closed': return 'danger';                
                 default: return 'secondary';
             }
         },
