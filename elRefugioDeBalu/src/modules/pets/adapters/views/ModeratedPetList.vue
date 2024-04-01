@@ -102,7 +102,7 @@
                 </b-col>
             </b-row>
         </b-container>
-        <Modal :comments="comments" />
+        <Modal :comments="comments" :petId="selectedPetId" @comment-added="loadComments()" />
     </div>
 </template>
 
@@ -139,7 +139,8 @@ export default {
                 { key: 'status', label: 'Estado' },
                 { key: 'actions', label: 'Acciones' }
             ],
-            pets: [],
+            pets: [],  
+            selectedPetId: "",          
             comments: []
         }
     },
@@ -227,11 +228,12 @@ export default {
                     imageHeight: 160,
                     showConfirmButton: false
                 })
+                this.selectedPetId = petId
                 const response = await instance.post(`/pet/comment/all`, {
                     pet: petId,
                     user: this.payload.user
-                })
-                this.comments = response.data.data
+                })                
+                this.comments = response.data.data                
                 Swal.close()
                 this.$bvModal.show('commentsModal')
             } catch (error) {
@@ -247,6 +249,9 @@ export default {
                     this.$router.push('/home')
                 })
             }
+        },
+        async loadComments() {
+            this.getComments(this.selectedPetId)
         }
     },
     mounted() {
