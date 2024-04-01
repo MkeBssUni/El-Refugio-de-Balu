@@ -11,451 +11,472 @@
           <form @submit="submitAdoptionForm">
             <!-- incio de fotos de casa -->
             <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
-          <b-row>
-            <b-col cols="10" md="8" lg="6">
-              <b-card
-                bg-variant="card-header-orange"
-                class="py-2 card-shadow"
-                no-body
-              >
-                <div class="d-flex align-items-center ms-3 ms-md-4">
-                  <i class="material-icons me-2" style="font-size: 1.5rem"
-                    >pets</i
+              <b-row>
+                <b-col cols="10" md="8" lg="6">
+                  <b-card
+                    bg-variant="card-header-orange"
+                    class="py-2 card-shadow"
+                    no-body
                   >
-                  <h4 class="mb-0 mt-1">  Lugar de residencia</h4>
-                </div>
-              </b-card>
+                    <div class="d-flex align-items-center ms-3 ms-md-4">
+                      <i class="material-icons me-2" style="font-size: 1.5rem"
+                        >pets</i
+                      >
+                      <h4 class="mb-0 mt-1">Lugar de residencia</h4>
+                    </div>
+                  </b-card>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col cols="12">
+                  <b-card bg-variant="card-content-orange" class="card-shadow">
+                    <b-card-body>
+                      <b-row>
+                        <b-col
+                          cols="12"
+                          sm="12"
+                          md="4"
+                          lg="4"
+                          class="text-center"
+                        >
+                          <label>Lugar en la que dormirá la mascota</label>
+                          <br />
+                          <img
+                            v-if="adoptionInfo.placeToSleep === null"
+                            src="@/assets/imgs/imageSearch.png"
+                            alt="imagen"
+                          />
+                          <img
+                            v-if="adoptionInfo.placeToSleep !== null"
+                            :src="base64ToImage(adoptionInfo.placeToSleep)"
+                            alt="imagen"
+                            class="tam-img my-1"
+                          />
+                          <input
+                            type="file"
+                            accept="image/*"
+                            class="input-img"
+                            @change="
+                              handleFileInputChange($event, 'placeToSleep')
+                            "
+                          />
+                        </b-col>
+                        <b-col
+                          cols="12"
+                          sm="12"
+                          md="4"
+                          lg="4"
+                          class="text-center"
+                        >
+                          <label
+                            >Lugar en el que vivirá la mascota (casa)</label
+                          >
+                          <br />
+                          <img
+                            v-if="adoptionInfo.placeToLive === null"
+                            src="@/assets/imgs/imageSearch.png"
+                            alt="imagen"
+                            style="font-size: 100px; vertical-align: middle"
+                          />
+                          <img
+                            v-if="adoptionInfo.placeToLive !== null"
+                            :src="base64ToImage(adoptionInfo.placeToLive)"
+                            alt="imagen"
+                            class="tam-img my-1"
+                          />
+                          <input
+                            type="file"
+                            accept="image/*"
+                            class="input-img"
+                            @change="
+                              handleFileInputChange($event, 'placeToLive')
+                            "
+                          />
+                        </b-col>
+                        <b-col
+                          cols="12"
+                          sm="12"
+                          md="4"
+                          lg="4"
+                          class="text-center"
+                        >
+                          <label
+                            >Lugar en el que jugará la mascota (casa)</label
+                          >
+                          <br />
+                          <img
+                            v-if="adoptionInfo.placeToPlay === null"
+                            src="@/assets/imgs/imageSearch.png"
+                            alt="imagen"
+                            style="font-size: 100px; vertical-align: middle"
+                          />
+                          <img
+                            v-if="adoptionInfo.placeToPlay !== null"
+                            :src="base64ToImage(adoptionInfo.placeToPlay)"
+                            alt="imagen"
+                            class="tam-img my-1"
+                          />
+                          <input
+                            type="file"
+                            accept="image/*"
+                            class="input-img"
+                            @change="
+                              handleFileInputChange($event, 'placeToPlay')
+                            "
+                          />
+                        </b-col>
+                      </b-row>
+                    </b-card-body>
+                  </b-card>
+                </b-col>
+              </b-row>
             </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12">
-              <b-card bg-variant="card-content-orange" class="card-shadow">
-                <b-card-body>
-                  <b-row>
-                      <b-col
-                        cols="12"
-                        sm="12"
-                        md="4"
-                        lg="4"
-                        class="text-center"
-                      >
-                        <label>Lugar en la que dormirá la mascota</label>
-                        <br />
-                        <img
-                          v-if="adoptionInfo.placeToSleep === null"
-                          src="@/assets/imgs/imageSearch.png"
-                          alt="imagen"
-                        />
-                        <img
-                          v-if="adoptionInfo.placeToSleep !== null"
-                          :src="base64ToImage(adoptionInfo.placeToSleep)"
-                          alt="imagen"
-                          class="tam-img my-1"
-                        />
-                        <input
-                          type="file"
-                          accept="image/*"
-                          class="input-img"
-                          @change="
-                            handleFileInputChange($event, 'placeToSleep')
-                          "
-                        />
-                      </b-col>
-                      <b-col
-                        cols="12"
-                        sm="12"
-                        md="4"
-                        lg="4"
-                        class="text-center"
-                      >
-                        <label>Lugar en el que vivirá la mascota (casa)</label>
-                        <br />
-                        <img
-                          v-if="adoptionInfo.placeToLive === null"
-                          src="@/assets/imgs/imageSearch.png"
-                          alt="imagen"
-                          style="font-size: 100px; vertical-align: middle"
-                        />
-                        <img
-                          v-if="adoptionInfo.placeToLive !== null"
-                          :src="base64ToImage(adoptionInfo.placeToLive)"
-                          alt="imagen"
-                          class="tam-img my-1"
-                        />
-                        <input
-                          type="file"
-                          accept="image/*"
-                          class="input-img"
-                          @change="handleFileInputChange($event, 'placeToLive')"
-                        />
-                      </b-col>
-                      <b-col
-                        cols="12"
-                        sm="12"
-                        md="4"
-                        lg="4"
-                        class="text-center"
-                      >
-                        <label>Lugar en el que jugará la mascota (casa)</label>
-                        <br />
-                        <img
-                          v-if="adoptionInfo.placeToPlay === null"
-                          src="@/assets/imgs/imageSearch.png"
-                          alt="imagen"
-                          style="font-size: 100px; vertical-align: middle"
-                        />
-                        <img
-                          v-if="adoptionInfo.placeToPlay !== null"
-                          :src="base64ToImage(adoptionInfo.placeToPlay)"
-                          alt="imagen"
-                          class="tam-img my-1"
-                        />
-                        <input
-                          type="file"
-                          accept="image/*"
-                          class="input-img"
-                          @change="handleFileInputChange($event, 'placeToPlay')"
-                        />
-                      </b-col>
-                    </b-row>
-                </b-card-body>
-              </b-card>
-            </b-col>
-          </b-row>
-        </b-col>
             <!-- fin de fotos de casa -->
             <!-- incio de motivos de adopcion -->
             <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
-          <b-row>
-            <b-col cols="10" md="8" lg="6">
-              <b-card
-                bg-variant="card-header-secondary-orange"
-                class="py-2 card-shadow"
-                no-body
-              >
-                <div class="d-flex align-items-center ms-3 ms-md-4">
-                  <i class="material-icons me-2" style="font-size: 1.5rem"
-                    >pets</i
+              <b-row>
+                <b-col cols="10" md="8" lg="6">
+                  <b-card
+                    bg-variant="card-header-secondary-orange"
+                    class="py-2 card-shadow"
+                    no-body
                   >
-                  <h4 class="mb-0 mt-1">Motivos de adopción</h4>
-                </div>
-              </b-card>
+                    <div class="d-flex align-items-center ms-3 ms-md-4">
+                      <i class="material-icons me-2" style="font-size: 1.5rem"
+                        >pets</i
+                      >
+                      <h4 class="mb-0 mt-1">Motivos de adopción</h4>
+                    </div>
+                  </b-card>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col cols="12">
+                  <b-card
+                    bg-variant="card-content-secondary-orange"
+                    class="card-shadow"
+                  >
+                    <b-card-body>
+                      <b-container>
+                        <b-row>
+                          <b-col cols="12" sm="12" md="6" lg="6">
+                            <b-form-group
+                              class="mb-2"
+                              id="input-group-1"
+                              label="¿Tienes o has tenido otros animales de compañia?"
+                              label-for="input-1"
+                            >
+                              <b-form-input
+                                id="haveHadPets"
+                                v-model="adoptionInfo.haveHadPets"
+                                rows="3"
+                                aria-describedby="haveHadPets-live-feedback"
+                                minlength="10"
+                                maxlength="100"
+                                :state="validation.haveHadPets"
+                                @input="ValidateHaveHadPets"
+                              ></b-form-input>
+                              <b-form-invalid-feedback
+                                id="haveHadPets-live-feedback"
+                                tooltip
+                              >
+                                {{ error.haveHadPets }}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                          <b-col cols="12" sm="12" md="6" lg="6">
+                            <b-form-group
+                              class="mb-2"
+                              id="input-group-1"
+                              label="¿En que parte de la casa lo planeas tener?"
+                              label-for="input-1"
+                            >
+                              <b-form-input
+                                id="input-1"
+                                v-model="adoptionInfo.whereWillThePetBe"
+                                rows="3"
+                                aria-describedby="whereWillThePetBe-live-feedback"
+                                minlength="10"
+                                maxlength="100"
+                                :state="validation.whereWillThePetBe"
+                                @input="validatewherewill"
+                              ></b-form-input>
+                              <b-form-invalid-feedback
+                                id="whereWillThePetBe-live-feedback"
+                                tooltip
+                              >
+                                {{ error.whereWillThePetBe }}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                        </b-row>
+                        <b-row>
+                          <b-col cols="12" sm="12" md="6" lg="6">
+                            <b-form-group
+                              class="mb-2"
+                              id="input-group-1"
+                              label="¿Las personas con quien vives están de acuerdo en adoptar?"
+                              label-for="input-1"
+                            >
+                              <b-form-input
+                                id="input-1"
+                                v-model="adoptionInfo.peopleAgreeToAdopt"
+                                :state="validation.peopleAgreeToAdopt"
+                                @input="validatePeopleAgreeToAdopt"
+                                minlegt="10"
+                                maxlength="100"
+                                aria-describedby="peopleAgreeToAdopt-live-feedback"
+                                rows="3"
+                              ></b-form-input>
+                              <b-form-invalid-feedback
+                                id="peopleAgreeToAdopt-live-feedback"
+                                tooltip
+                              >
+                                {{ error.peopleAgreeToAdopt }}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                          <b-col cols="12" sm="12" md="6" lg="6">
+                            <b-form-group
+                              class="mb-2"
+                              id="input-group-1"
+                              label="Comentarios adicionales"
+                              label-for="input-1"
+                            >
+                              <b-form-input
+                                id="input-1"
+                                v-model="adoptionInfo.additionalComments"
+                                rows="3"
+                                minlegt="10"
+                                maxlength="100"
+                                aria-describedby="additionalComments-live-feedback"
+                                :state="validation.additionalComments"
+                                @input="validateAdditionalComments"
+                              ></b-form-input>
+                              <b-form-invalid-feedback
+                                id="additionalComments-live-feedback"
+                                tooltip
+                              >
+                                {{ error.additionalComments }}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                        </b-row>
+                      </b-container>
+                    </b-card-body>
+                  </b-card>
+                </b-col>
+              </b-row>
             </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12">
-              <b-card bg-variant="card-content-secondary-orange" class="card-shadow">
-                <b-card-body>
-                  <b-container>
-                    <b-row>
-                      <b-col cols="12" sm="12" md="6" lg="6">
-                        <b-form-group
-                          class="mb-2"
-                          id="input-group-1"
-                          label="¿Tienes o has tenido otros animales de compañia?"
-                          label-for="input-1"
-                        >
-                          <b-form-input
-                            id="haveHadPets"
-                            v-model="adoptionInfo.haveHadPets"
-                            rows="3"
-                            aria-describedby="haveHadPets-live-feedback"
-                            minlength="10"
-                            maxlength="100"
-                            :state="validation.haveHadPets"
-                            @input="ValidateHaveHadPets"
-                          ></b-form-input>
-                          <b-form-invalid-feedback
-                            id="haveHadPets-live-feedback"
-                            tooltip
-                          >
-                            {{ error.haveHadPets }}
-                          </b-form-invalid-feedback>
-                        </b-form-group>
-                      </b-col>
-                      <b-col cols="12" sm="12" md="6" lg="6">
-                        <b-form-group
-                          class="mb-2"
-                          id="input-group-1"
-                          label="¿En que parte de la casa lo planeas tener?"
-                          label-for="input-1"
-                        >
-                          <b-form-input
-                            id="input-1"
-                            v-model="adoptionInfo.whereWillThePetBe"
-                            rows="3"
-                            aria-describedby="whereWillThePetBe-live-feedback"
-                            minlength="10"
-                            maxlength="100"
-                            :state="validation.whereWillThePetBe"
-                            @input="validatewherewill"
-                          ></b-form-input>
-                          <b-form-invalid-feedback
-                            id="whereWillThePetBe-live-feedback"
-                            tooltip
-                          >
-                            {{ error.whereWillThePetBe }}
-                          </b-form-invalid-feedback>
-                        </b-form-group>
-                      </b-col>
-                    </b-row>
-                    <b-row>
-                      <b-col cols="12" sm="12" md="6" lg="6">
-                        <b-form-group
-                          class="mb-2"
-                          id="input-group-1"
-                          label="¿Las personas con quien vives están de acuerdo en adoptar?"
-                          label-for="input-1"
-                        >
-                          <b-form-input
-                            id="input-1"
-                            v-model="adoptionInfo.peopleAgreeToAdopt"
-                            :state="validation.peopleAgreeToAdopt"
-                            @input="validatePeopleAgreeToAdopt"
-                            minlegt="10"
-                            maxlength="100"
-                            aria-describedby="peopleAgreeToAdopt-live-feedback"
-                            rows="3"
-                          ></b-form-input>
-                          <b-form-invalid-feedback
-                            id="peopleAgreeToAdopt-live-feedback"
-                            tooltip
-                          >
-                            {{ error.peopleAgreeToAdopt }}
-                          </b-form-invalid-feedback>
-                        </b-form-group>
-                      </b-col>
-                      <b-col cols="12" sm="12" md="6" lg="6">
-                        <b-form-group
-                          class="mb-2"
-                          id="input-group-1"
-                          label="Comentarios adicionales"
-                          label-for="input-1"
-                        >
-                          <b-form-input
-                            id="input-1"
-                            v-model="adoptionInfo.additionalComments"
-                            rows="3"
-                            minlegt="10"
-                            maxlength="100"
-                            aria-describedby="additionalComments-live-feedback"
-                            :state="validation.additionalComments"
-                            @input="validateAdditionalComments"
-                          ></b-form-input>
-                          <b-form-invalid-feedback
-                            id="additionalComments-live-feedback"
-                            tooltip
-                          >
-                            {{ error.additionalComments }}
-                          </b-form-invalid-feedback>
-                        </b-form-group>
-                      </b-col>
-                    </b-row>
-                  </b-container>
-                </b-card-body>
-              </b-card>
-            </b-col>
-          </b-row>
-        </b-col>
-       
+
             <!-- fin de motivos de adopcion -->
 
             <!-- incio de experiencias previas -->
             <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
-          <b-row>
-            <b-col cols="10" md="8" lg="6">
-              <b-card
-                bg-variant="card-header-blue"
-                class="py-2 card-shadow"
-                no-body
-              >
-                <div class="d-flex align-items-center ms-3 ms-md-4">
-                  <i class="material-icons me-2" style="font-size: 1.5rem"
-                    >pets</i
+              <b-row>
+                <b-col cols="10" md="8" lg="6">
+                  <b-card
+                    bg-variant="card-header-blue"
+                    class="py-2 card-shadow"
+                    no-body
                   >
-                  <h4 class="mb-0 mt-1">Experencia Previa</h4>
-                </div>
-              </b-card>
+                    <div class="d-flex align-items-center ms-3 ms-md-4">
+                      <i class="material-icons me-2" style="font-size: 1.5rem"
+                        >pets</i
+                      >
+                      <h4 class="mb-0 mt-1">Experencia Previa</h4>
+                    </div>
+                  </b-card>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col cols="12">
+                  <b-card bg-variant="card-content-blue" class="card-shadow">
+                    <b-card-body>
+                      <b-container>
+                        <b-row>
+                          <b-col cols="12" sm="12" md="6" lg="6">
+                            <b-form-group
+                              class="mb-2"
+                              id="input-group-1"
+                              label="¿Cuál fue tu ultima mascota?"
+                              label-for="input-1"
+                            >
+                              <b-form-input
+                                id="input-1"
+                                v-model="adoptionInfo.lastPet"
+                                @input="validateLastPet"
+                                :state="validation.lastPet"
+                                aria-describedby="lastPet-live-feedback"
+                                minlegth="10"
+                                maxlength="100"
+                                rows="3"
+                              ></b-form-input>
+                              <b-form-invalid-feedback
+                                id="lastPet-live-feedback"
+                                tooltip
+                              >
+                                {{ error.lastPet }}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                          <b-col cols="12" sm="12" md="6" lg="6">
+                            <b-form-group
+                              class="mb-2"
+                              id="input-group-1"
+                              label="¿Cuando se enfermaba la mascota que hacias?"
+                              label-for="input-1"
+                            >
+                              <b-form-input
+                                id="input-1"
+                                v-model="
+                                  adoptionInfo.whatDidYouDoWhenThePetGotSick
+                                "
+                                @input="validateWhatDidYouDoWhenThePetGotSick"
+                                :state="
+                                  validation.whatDidYouDoWhenThePetGotSick
+                                "
+                                aria-describedby="whatDidYouDoWhenThePetGotSick-live-feedback"
+                                minlegth="10"
+                                maxlength="100"
+                                rows="3"
+                              ></b-form-input>
+                              <b-form-invalid-feedback
+                                id="whatDidYouDoWhenThePetGotSick-live-feedback"
+                                tooltip
+                              >
+                                {{ error.whatDidYouDoWhenThePetGotSick }}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                        </b-row>
+                        <b-row>
+                          <b-col cols="12" sm="12" md="6" lg="6">
+                            <b-form-group
+                              class="mb-2"
+                              id="input-group-1"
+                              label="¿Qué tipo de mascotas haz tenido antes?"
+                              label-for="input-1"
+                            >
+                              <b-form-input
+                                v-model="
+                                  adoptionInfo.whatKindOfPetsHaveYouHadBefore
+                                "
+                                :state="
+                                  validation.whatKindOfPetsHaveYouHadBefore
+                                "
+                                @input="validateWhatKindOfPetsHaveYouHadBefore"
+                                aria-describedby="whatKindOfPetsHaveYouHadBefore-live-feedback"
+                                minlegth="10"
+                                maxlength="100"
+                                id="input-1"
+                                rows="3"
+                              ></b-form-input>
+                              <b-form-invalid-feedback
+                                id="whatKindOfPetsHaveYouHadBefore-live-feedback"
+                                tooltip
+                              >
+                                {{ error.whatKindOfPetsHaveYouHadBefore }}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                          <b-col cols="12" sm="12" md="6" lg="6">
+                            <b-form-group
+                              class="mb-2"
+                              id="input-group-1"
+                              label="¿Qué recuerdos tienes con tu mascota?"
+                              label-for="input-1"
+                            >
+                              <b-form-input
+                                v-model="
+                                  adoptionInfo.whatMemoriesDoYouHaveWithYourPet
+                                "
+                                :state="
+                                  validation.whatMemoriesDoYouHaveWithYourPet
+                                "
+                                @input="
+                                  validateWhatMemoriesDoYouHaveWithYourPet
+                                "
+                                aria-describedby="whatMemoriesDoYouHaveWithYourPet-live-feedback"
+                                minlegth="10"
+                                maxlength="100"
+                                id="input-1"
+                                rows="3"
+                              ></b-form-input>
+                              <b-form-invalid-feedback
+                                id="whatMemoriesDoYouHaveWithYourPet-live-feedback"
+                                tooltip
+                              >
+                                {{ error.whatMemoriesDoYouHaveWithYourPet }}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                        </b-row>
+                      </b-container>
+                    </b-card-body>
+                  </b-card>
+                </b-col>
+              </b-row>
             </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12">
-              <b-card bg-variant="card-content-blue" class="card-shadow">
-                <b-card-body>
-                  <b-container>
-                    <b-row>
-                      <b-col cols="12" sm="12" md="6" lg="6">
-                        <b-form-group
-                          class="mb-2"
-                          id="input-group-1"
-                          label="¿Cuál fue tu ultima mascota?"
-                          label-for="input-1"
-                        >
-                          <b-form-input
-                            id="input-1"
-                            v-model="adoptionInfo.lastPet"
-                            @input="validateLastPet"
-                            :state="validation.lastPet"
-                            aria-describedby="lastPet-live-feedback"
-                            minlegth="10"
-                            maxlength="100"
-                            rows="3"
-                          ></b-form-input>
-                          <b-form-invalid-feedback
-                            id="lastPet-live-feedback"
-                            tooltip
-                          >
-                            {{ error.lastPet }}
-                          </b-form-invalid-feedback>
-                        </b-form-group>
-                      </b-col>
-                      <b-col cols="12" sm="12" md="6" lg="6">
-                        <b-form-group
-                          class="mb-2"
-                          id="input-group-1"
-                          label="¿Cuando se enfermaba la mascota que hacias?"
-                          label-for="input-1"
-                        >
-                          <b-form-input
-                            id="input-1"
-                            v-model="adoptionInfo.whatDidYouDoWhenThePetGotSick"
-                            @input="validateWhatDidYouDoWhenThePetGotSick"
-                            :state="validation.whatDidYouDoWhenThePetGotSick"
-                            aria-describedby="whatDidYouDoWhenThePetGotSick-live-feedback"
-                            minlegth="10"
-                            maxlength="100"
-                            rows="3"
-                          ></b-form-input>
-                          <b-form-invalid-feedback
-                            id="whatDidYouDoWhenThePetGotSick-live-feedback"
-                            tooltip
-                          >
-                            {{ error.whatDidYouDoWhenThePetGotSick }}
-                          </b-form-invalid-feedback>
-                        </b-form-group>
-                      </b-col>
-                    </b-row>
-                    <b-row>
-                      <b-col cols="12" sm="12" md="6" lg="6">
-                        <b-form-group
-                          class="mb-2"
-                          id="input-group-1"
-                          label="¿Qué tipo de mascotas haz tenido antes?"
-                          label-for="input-1"
-                        >
-                          <b-form-input
-                            v-model="
-                              adoptionInfo.whatKindOfPetsHaveYouHadBefore
-                            "
-                            :state="validation.whatKindOfPetsHaveYouHadBefore"
-                            @input="validateWhatKindOfPetsHaveYouHadBefore"
-                            aria-describedby="whatKindOfPetsHaveYouHadBefore-live-feedback"
-                            minlegth="10"
-                            maxlength="100"
-                            id="input-1"
-                            rows="3"
-                          ></b-form-input>
-                          <b-form-invalid-feedback
-                            id="whatKindOfPetsHaveYouHadBefore-live-feedback"
-                            tooltip
-                          >
-                            {{ error.whatKindOfPetsHaveYouHadBefore }}
-                          </b-form-invalid-feedback>
-                        </b-form-group>
-                      </b-col>
-                      <b-col cols="12" sm="12" md="6" lg="6">
-                        <b-form-group
-                          class="mb-2"
-                          id="input-group-1"
-                          label="¿Qué recuerdos tienes con tu mascota?"
-                          label-for="input-1"
-                        >
-                          <b-form-input
-                            v-model="
-                              adoptionInfo.whatMemoriesDoYouHaveWithYourPet
-                            "
-                            :state="validation.whatMemoriesDoYouHaveWithYourPet"
-                            @input="validateWhatMemoriesDoYouHaveWithYourPet"
-                            aria-describedby="whatMemoriesDoYouHaveWithYourPet-live-feedback"
-                            minlegth="10"
-                            maxlength="100"
-                            id="input-1"
-                            rows="3"
-                          ></b-form-input>
-                          <b-form-invalid-feedback
-                            id="whatMemoriesDoYouHaveWithYourPet-live-feedback"
-                            tooltip
-                          >
-                            {{ error.whatMemoriesDoYouHaveWithYourPet }}
-                          </b-form-invalid-feedback>
-                        </b-form-group>
-                      </b-col>
-                    </b-row>
-                  </b-container>
-                </b-card-body>
-              </b-card>
-            </b-col>
-          </b-row>
-        </b-col>
             <!-- fin de experiencias previas -->
 
             <!-- incio de info personal -->
             <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
-          <b-row>
-            <b-col cols="10" md="8" lg="6">
-              <b-card
-                bg-variant="card-header-orange"
-                class="py-2 card-shadow"
-                no-body
-              >
-                <div class="d-flex align-items-center ms-3 ms-md-4">
-                  <i class="material-icons me-2" style="font-size: 1.5rem"
-                    >pets</i
+              <b-row>
+                <b-col cols="10" md="8" lg="6">
+                  <b-card
+                    bg-variant="card-header-orange"
+                    class="py-2 card-shadow"
+                    no-body
                   >
-                  <h4 class="mb-0 mt-1">Información Adicional</h4>
-                </div>
-              </b-card>
+                    <div class="d-flex align-items-center ms-3 ms-md-4">
+                      <i class="material-icons me-2" style="font-size: 1.5rem"
+                        >pets</i
+                      >
+                      <h4 class="mb-0 mt-1">Información Adicional</h4>
+                    </div>
+                  </b-card>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col cols="12">
+                  <b-card bg-variant="card-content-orange" class="card-shadow">
+                    <b-card-body>
+                      <b-container>
+                        <b-row>
+                          <b-col cols="12" sm="12" md="12" lg="12">
+                            <b-form-group
+                              class="mb-2"
+                              id="input-group-1"
+                              label="¿Desea agregar más información a su solicitud de adopción?"
+                              label-for="input-1"
+                            >
+                              <b-form-textarea
+                                id="input-1"
+                                v-model="adoptionInfo.additionalInfo"
+                                rows="3"
+                                @input="validateAdditionalInfo"
+                                :state="validation.additionalInfo"
+                                aria-describedby="additionalInfo-live-feedback"
+                                minlegth="10"
+                                maxlength="100"
+                              ></b-form-textarea>
+                              <b-form-invalid-feedback
+                                id="additionalInfo-live-feedback"
+                                tooltip
+                              >
+                                {{ error.additionalInfo }}
+                              </b-form-invalid-feedback>
+                            </b-form-group>
+                          </b-col>
+                        </b-row>
+                      </b-container>
+                    </b-card-body>
+                  </b-card>
+                </b-col>
+              </b-row>
             </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12">
-              <b-card bg-variant="card-content-orange" class="card-shadow">
-                <b-card-body>
-                  <b-container>
-                    <b-row>
-                      <b-col cols="12" sm="12" md="12" lg="12">
-                        <b-form-group
-                          class="mb-2"
-                          id="input-group-1"
-                          label="¿Desea agregar más información a su solicitud de adopción?"
-                          label-for="input-1"
-                        >
-                          <b-form-textarea
-                            id="input-1"
-                            v-model="adoptionInfo.additionalInfo"
-                            rows="3"
-                            @input="validateAdditionalInfo"
-                            :state="validation.additionalInfo"
-                            aria-describedby="additionalInfo-live-feedback"
-                            minlegth="10"
-                            maxlength="100"
-                          ></b-form-textarea>
-                          <b-form-invalid-feedback
-                            id="additionalInfo-live-feedback"
-                            tooltip
-                          >
-                            {{ error.additionalInfo }}
-                          </b-form-invalid-feedback>
-                        </b-form-group>
-                      </b-col>
-                    </b-row>
-                  </b-container>
-                </b-card-body>
-              </b-card>
-            </b-col>
-          </b-row>
-        </b-col>
-        
+
             <!-- fin de info personal -->
             <div class="container-fluid d-flex justify-content-end">
               <b-button
@@ -509,6 +530,29 @@ export default {
         whatKindOfPetsHaveYouHadBefore: null,
         whatMemoriesDoYouHaveWithYourPet: null,
         additionalInfo: null,
+      },
+      adoptionRequestSave: {
+        user: null,
+        pet: null,
+        reasonsForAdoption: {
+          peopleAgreeToAdopt: null,
+          haveHadPets: null,
+          whereWillThePetBe: null,
+          additionalComments: null,
+        },
+        previousExperiencieDto: {
+          whatDidYouDoWhenThePetGotSick: null,
+          whatKindOfPetsHaveYouHadBefore: null,
+          whatMemoriesDoYouHaveWithYourPet: null,
+          lastPet: null,
+        },
+        additional_information: null,
+        homeImage: [null],
+        homeSpecification: {
+          type: null,
+          outdoorArea: false,
+          numberOfResidents: 0,
+        },
       },
       validation: {
         haveHadPets: null,
@@ -847,7 +891,7 @@ export default {
       reader.readAsDataURL(file);
     },
     makeToast(text) {
-      console.log("makeToast"	, text)
+      console.log("makeToast", text);
       const Toast = swal.mixin({
         toast: true,
         position: "top-end",
