@@ -126,13 +126,14 @@ const routes = [
       {
         path: "/viewAplicationAdoptionRequest",
         name: "viewAplicationAdoptionRequest",
+        props: true,
         meta: {
           title: "Detalles de solicitud de adopción",
           requiresAuth: true,
           role: [rolesAvailable.general, rolesAvailable.mod],
         },
         component: () =>
-          import("../modules/adoptions/adapters/views/ViewAplication.vue"),
+          import("../modules/adoptions/adapters/views/ViewAplicationAdoptionRequest.vue"),
       },
       {
         path: "/login",
