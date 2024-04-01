@@ -9,8 +9,9 @@
                 <b-row class="d-flex justify-content-center">
                     <b-col cols="12" sm="6" md="12" lg="5">
                         <b-input-group>
-                            <b-form-input type="text" placeholder="Buscar..." id="search"></b-form-input>
-                            <b-button variant="dark-gray" type="button" id="search"
+                            <b-form-input type="text" placeholder="Buscar..." id="searchValue"
+                                v-model.trim="form.searchValue" @keyup.enter="getMyPets()"></b-form-input>
+                            <b-button variant="dark-gray" type="button" id="searchValue" @click="getMyPets()"
                                 class="d-flex align-items-center justify-content-between">
                                 <b-icon icon="search"></b-icon>
                             </b-button>
@@ -18,7 +19,12 @@
                     </b-col>
                     <b-col cols="12" sm="6" md="12" lg="4" class="mt-3 mt-sm-0 mt-md-3 mt-lg-0">
                         <b-input-group>
-                            <b-form-select :options="status" v-model="form.status" class="form-select"></b-form-select>
+                            <b-form-select v-model="form.status" class="form-select" @change="getMyPets()">
+                                <option value="">Todos los estados</option>
+                                <option v-for="status in statusses" :key="status.value" :value="status.value">
+                                    {{ status.text }}
+                                </option>
+                            </b-form-select>
                         </b-input-group>
                     </b-col>
                     <b-col cols="12" sm="6" md="12" lg="3" class="d-flex justify-content-center mt-3 mt-lg-0">
@@ -67,6 +73,7 @@
 <script>
 import Swal from "sweetalert2";
 import instance from "../../../../config/axios";
+import getStatusses from "../../../../kernel/data/userStatusses";
 
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
 
@@ -76,15 +83,10 @@ export default {
             total: 0,
             form: {
                 user: "maAenU2uRx2BsEDrfomJKw==",
-                status: null,
+                status: "",
                 searchValue: ""
             },
-            status: [
-                { value: '', text: 'Todos los estados' },
-                { value: 'Aceptada', text: 'Aceptada' },
-                { value: 'Rechazada', text: 'Rechazada' },
-                { value: 'Pendiente', text: 'Pendiente' }
-            ],
+            statusses: getStatusses,
             pets: []
         }
     },
@@ -101,10 +103,10 @@ export default {
                 })
                 const response = await instance.post(`/pet/owned`, {
                     user: this.form.user,
-                    status: this.form.status,
+                    status: this.form.status != "" ? this.form.status : null,
                     searchValue: this.form.searchValue
                 })
-                this.pets = response.data.data.content                
+                this.pets = response.data.data.content
                 this.total = response.data.data.totalElements
                 Swal.close()
             } catch (error) {
