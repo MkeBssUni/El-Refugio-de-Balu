@@ -11,4 +11,5 @@ public class SaveCategoryDto {
     private String name;
     private String description;
     private String image;
+    private String userId;
 }
