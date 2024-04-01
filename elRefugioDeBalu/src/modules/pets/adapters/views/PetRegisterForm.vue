@@ -145,7 +145,7 @@
                                                 <b-col cols="12" sm="5" xl="4">
                                                     <b-form-group label="Selecciona su etapa:" label-for="stage"
                                                         class="mt-3">
-                                                        <b-form-select id="stage" v-model.trim="form.stage"
+                                                        <b-form-select id="stage" v-model.trim="form.stage" @input="validateInput('stage')" @click="validateInput('stage')"
                                                             class="form-select">
                                                             <option value="default" disabled>Etapa...</option>
                                                             <option v-for="stage in stages" :key="stage.id"
@@ -153,6 +153,8 @@
                                                                 {{ stage.text }}
                                                             </option>
                                                         </b-form-select>
+                                                        <b-form-invalid-feedback v-if="showErrors.stage"
+                                                        >{{ errorsMessages.stage }}</b-form-invalid-feedback>
                                                     </b-form-group>
                                                 </b-col>
                                                 <b-col cols="12" sm="7" xl="8">
@@ -372,8 +374,10 @@
                                         <b-col cols="12" class="mt-3">
                                             <b-form-group label="Describe a la mascota y cuenta su historia:"
                                                 label-for="description">
-                                                <b-form-textarea id="description" v-model.trim="form.description"
+                                                <b-form-textarea id="description" v-model.trim="form.description" @input="validateInput('description')" @focus="validateInput('description')"
                                                     placeholder="Descripción e historia..."></b-form-textarea>
+                                                    <b-form-invalid-feedback v-if="showErrors.description"
+                                                    >{{ errorsMessages.description }}</b-form-invalid-feedback>
                                             </b-form-group>
                                         </b-col>
                                     </b-row>
@@ -385,7 +389,7 @@
                 <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
                     <b-row class="px-5 px-sm-0 d-flex justify-content-end">
                         <b-col cols="12" sm="6" md="5" lg="4" xl="3">
-                            <b-button type="submit" variant="outline-dark-secondary-blue"
+                            <b-button variant="outline-dark-secondary-blue" @click="prepareSave"
                                 class="d-flex align-items-center justify-content-between w-100">
                                 <span class="me-2">Publicar</span>
                                 <b-icon icon="arrow-up-right-circle" font-scale="1.3"></b-icon>
@@ -408,6 +412,9 @@
 <script>
 import { isInvalidName } from '../../../../kernel/validations';
 import Encabezado from "../../../../views/components/Encabezado.vue";
+import Swal from 'sweetalert2';
+import instance from '../../../../config/axios';
+import { encrypt } from '../../../../kernel/hashFunctions';
 export default {
     data() {
         return {
@@ -439,6 +446,7 @@ export default {
                 care: [],
                 description: "",
             },
+            formPet:{},
             isValidForm: false,
             showErrors:{
                 name: false,
@@ -454,6 +462,8 @@ export default {
                 tempAllergy: false,
                 comments: false,
                 characteristics: false,
+                stage: false,
+                description: false,
             },
             errorsMessages:{
                 name: '',
@@ -469,6 +479,8 @@ export default {
                 tempAllergy: '',
                 comments: '',
                 characteristics: '',
+                stage: '',
+                description: '',
             },
             categories: [
                 { id: 1, name: "Perro" },
@@ -477,27 +489,27 @@ export default {
                 { id: 4, name: "Pájaro" },
             ],
             sizes: [
-                { value: "Pequeño", text: "Pequeño" },
-                { value: "Mediano", text: "Mediano" },
-                { value: "Grande", text: "Grande" },
+                { value: "SMALL", text: "Pequeño" },
+                { value: "MEDIUM", text: "Mediano" },
+                { value: "BIG", text: "Grande" },
             ],
             ageUnits: [
-                { value: "meses", text: "Meses" },
-                { value: "años", text: "Años" },
+                { value: "MONTHS", text: "Meses" },
+                { value: "YEARS", text: "Años" },
             ],
             stages: [
-                { value: "Cachorro", text: "Cachorro" },
-                { value: "Joven", text: "Joven" },
-                { value: "Adulto", text: "Adulto" },
-                { value: "Senior", text: "Senior" },
+                { value: "BABY", text: "Cachorro" },
+                { value: "YOUNG", text: "Joven" },
+                { value: "ADULT", text: "Adulto" },
+                { value: "SENIO", text: "Senior" },
             ],
             weightTypes: [
-                { value: "kg", text: "Kilogramos" },
-                { value: "g", text: "Gramos" },
+                { value: "KILOGRAMS", text: "Kilogramos" },
+                { value: "GRAMS", text: "Gramos" },
             ],
             sexes: [
-                { value: "Macho", text: "Macho" },
-                { value: "Hembra", text: "Hembra" },
+                { value: "MALE", text: "Macho" },
+                { value: "FEMALE", text: "Hembra" },
             ],
         };
     },
@@ -772,7 +784,114 @@ export default {
                         input.classList.add('is-valid');
                     }
                     break;
+
+                case 'stage':
+                    input = document.getElementById('stage');
+                    if(this.form.stage == 'default'){
+                        this.showErrors.stage = true;
+                        this.errorsMessages.stage = 'La etapa de la mascota es requerida';
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.showErrors.stage = false;
+                        this.errorsMessages.stage = '';
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+
+                case 'description':
+                    input = document.getElementById('description');
+                    if(this.form.description.length < 100 || this.form.description.length > 1500){
+                        this.showErrors.description = true;
+                        this.errorsMessages.description = 'La descripción de la mascota no es válida, ingresa al menos 100 caracteres y máximo 1500';
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.showErrors.description = false;
+                        this.errorsMessages.description = '';
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
             }
+        },
+        async prepareSave(){
+            this.validateInput('name');
+            this.validateInput('sex');
+            this.validateInput('breed');
+            this.validateInput('age');
+            this.validateInput('ageUnit');
+            this.validateInput('weight');
+            this.validateInput('weightType');
+            this.validateInput('stage');
+            this.validateInput('size');
+            this.validateInput('species');
+            this.validateInput('description');
+
+            if(this.form.mainImage == null){
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'La imagen principal de la mascota es requerida',
+                    toast: true,
+                    position: 'bottom-end',
+                    timer: 2000,
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    timerProgressBar: true,
+                });
+            }
+
+            Swal.fire({
+                title: '¿Estás seguro de publicar la mascota?',
+                text: "La solicitud deberá ser aprobada por un moderador antes de ser publicada",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, publicar',
+                cancelButtonText: 'Cancelar',
+            }).then(async (result)=>{
+                if(result.isConfirmed){
+                    Swal.showLoading();
+                    const reader = new FileReader();
+                    reader.readAsDataURL(this.form.mainImage);
+                    reader.onloadend = () => {
+                        this.formPet ={
+                        name: this.form.name,
+                        gender: this.form.sex,
+                        breed: this.form.breed,
+                        age: this.form.age,
+                        ageUnit: this.form.ageUnit,
+                        lifeStage: this.form.stage,
+                        weight: this.form.weight,
+                        weightUnit: this.form.weightType,
+                        size: this.form.size,
+                        description: this.form.description,
+                        characteristics: this.form.characteristics,
+                        specialCares: this.form.care,
+                        mainImage: reader.result,
+                        images: this.form.additionalImages,
+                        vaccinated: this.form.isVaccinated,
+                        sterilized: this.form.isSterilised,
+                        dewormed: this.form.isDewormed,
+                        microchip: this.form.microchip,
+                        observations: this.form.comments,
+                        diseases: this.form.diseases,
+                        allergies: this.form.allergies,
+                        category: this.form.category,
+                        owner: localStorage.getItem('userId'),
+                        }
+                        console.log(this.formPet)
+                        this.addPet(this.formPet);
+                    }
+                }
+            })
+        },
+        async addPet(){
+            this.formPet.category = await encrypt(this.formPet.category);
+
+            let response = await instance.post('/pet/save', this.formPet);
+            console.log(response);
         }
     },
     components: {
