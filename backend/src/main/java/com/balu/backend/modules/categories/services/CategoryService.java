@@ -144,7 +144,10 @@ public class CategoryService {
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
         Long id = Long.parseLong(hashService.decrypt(changeStatusCategoryDto.getId()));
         Boolean status = Boolean.parseBoolean(hashService.decrypt(changeStatusCategoryDto.getStatus()));
+        String userId = hashService.decrypt(changeStatusCategoryDto.getUserId());
         Integer category = this.iCategoryRepository.changeStatusCategory(id, !status);
+        logService.saveLog("ChangeStatus of category "+id +" for user with id: " + userId, LogTypes.UPDATE, "CATEGORIES");
+        //No me dejo usar el enumerador de CHANGE_STATUS
         return new ResponseApi<>(
                 category,
                 HttpStatus.OK,

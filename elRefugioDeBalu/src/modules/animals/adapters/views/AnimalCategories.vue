@@ -444,7 +444,8 @@ export default {
       searchCategoryValueDto: "",
       changeStatusDto:{
           id: 0,
-          status:false
+          status:false,
+          userId:localStorage.getItem('userId')
         }
     };
   },
