@@ -1,12 +1,11 @@
 package com.balu.backend.modules.adoptionRequests.service;
 
-import com.balu.backend.kernel.EmailService;
-import com.balu.backend.kernel.ErrorMessages;
-import com.balu.backend.kernel.ResponseApi;
-import com.balu.backend.kernel.Validations;
+import com.balu.backend.kernel.*;
 import com.balu.backend.modules.adoptionRequests.model.AdoptionRequest;
 import com.balu.backend.modules.adoptionRequests.model.IAdoptionRequestRepository;
+import com.balu.backend.modules.adoptionRequests.model.IAdoptionRequestViewPaged;
 import com.balu.backend.modules.adoptionRequests.model.dto.ChangeStatusAdoptionRequestDto;
+import com.balu.backend.modules.adoptionRequests.model.dto.GetAdoptionRequestDto;
 import com.balu.backend.modules.adoptionRequests.model.dto.SaveAdoptionRequestDto;
 import com.balu.backend.modules.adresses.model.model.Address;
 import com.balu.backend.modules.adresses.model.model.IAddressRepository;
@@ -30,6 +29,8 @@ import com.balu.backend.modules.users.model.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,12 +66,33 @@ public class ServiceAdoptionRequest {
     private final IAddressRepository iAddressRepository;
     private final PetService petService;
 
+
     @Transactional(readOnly = true)
-    public ResponseApi<Optional<AdoptionRequest>> adoptionByUser(String idUser) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        if(idUser == null) {
+    public ResponseApi<Page<IAdoptionRequestViewPaged>> adoptionByUserPaged(GetAdoptionRequestDto dto, Pageable pageable) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        if (dto.getSearchValue() != null) {
+            dto.setSearchValue(dto.getSearchValue().toLowerCase());
+        }
+        if(dto.getIdUser() == null) {
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
         }
-        Optional<AdoptionRequest> adoptionRequestOptional = iAdoptionRequestRepository.findByUser_Id(Long.parseLong(hashService.decrypt(idUser)));
+        Page<IAdoptionRequestViewPaged> page = iAdoptionRequestRepository.findAllPaged(Long.parseLong(hashService.decrypt(dto.getIdUser())), dto.getSearchValue(), pageable);
+        if (!page.getContent().isEmpty()) {
+            IAdoptionRequestViewPaged firstEntry = page.getContent().get(0);
+            System.out.println("PetName de la primera entrada: " + firstEntry.getId());
+        } else {
+            System.out.println("La lista de contenidos está vacía. No se pueden obtener los detalles de la primera entrada.");
+        }
+        return new ResponseApi<>(page,HttpStatus.OK,false,"OK");
+    }
+
+
+
+    @Transactional(readOnly = true)
+    public ResponseApi<Optional<AdoptionRequest>> adoptionByModerador(String idPet) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        if(idPet == null) {
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
+        }
+        Optional<AdoptionRequest> adoptionRequestOptional = iAdoptionRequestRepository.findByPet_Id(Long.parseLong(hashService.decrypt(idPet)));
         if (adoptionRequestOptional.isPresent()) {
             return new ResponseApi<>(adoptionRequestOptional,HttpStatus.OK, false, "Success");
         } else {
@@ -79,11 +101,11 @@ public class ServiceAdoptionRequest {
     }
 
     @Transactional(readOnly = true)
-    public ResponseApi<Optional<AdoptionRequest>> adoptionByModerador(String idPet) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        if(idPet == null) {
+    public ResponseApi<Optional<AdoptionRequest>> findByIdAdoption(String idAdoption) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        if(idAdoption == null) {
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
         }
-        Optional<AdoptionRequest> adoptionRequestOptional = iAdoptionRequestRepository.findByPet_Id(Long.parseLong(hashService.decrypt(idPet)));
+        Optional<AdoptionRequest> adoptionRequestOptional = iAdoptionRequestRepository.findById(Long.parseLong(hashService.decrypt(idAdoption)));
         if (adoptionRequestOptional.isPresent()) {
             return new ResponseApi<>(adoptionRequestOptional,HttpStatus.OK, false, "Success");
         } else {

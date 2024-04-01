@@ -16,4 +16,5 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class GetAdoptionRequestDto {
     private String idUser;
+    private String searchValue;
 }
