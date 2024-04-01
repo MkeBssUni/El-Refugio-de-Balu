@@ -19,19 +19,21 @@ public class UserDetailsImpl implements UserDetails {
     private final Role role;
     private final boolean blocked;
     private final GrantedAuthority authority;
+    private final boolean profileCompleted;
 
-    public UserDetailsImpl(String username, String password, LocalDateTime lastAccess, Role role, boolean blocked,  GrantedAuthority authority) {
+    public UserDetailsImpl(String username, String password, LocalDateTime lastAccess, Role role, boolean blocked,  GrantedAuthority authority, boolean profileCompleted) {
         this.username = username;
         this.password = password;
         this.lastAccess = lastAccess;
         this.role = role;
         this.blocked = blocked;
         this.authority = authority;
+        this.profileCompleted = profileCompleted;
     }
 
     public static UserDetailsImpl build(User user){
         Set<GrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority(user.getRole().getName().name()));
-        return new UserDetailsImpl(user.getUsername(), user.getPassword(), user.getLastAccess(), user.getRole(), user.isBlocked(), authorities.stream().findFirst().get());
+        return new UserDetailsImpl(user.getUsername(), user.getPassword(), user.getLastAccess(), user.getRole(), user.isBlocked(), authorities.stream().findFirst().get(), user.isProfileCompleted());
     }
 
     @Override
@@ -62,4 +64,5 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {return !blocked;}
+    public boolean isProfileCompleted() {return profileCompleted;}
 }

@@ -2,9 +2,19 @@
 import Swal from 'sweetalert2';
 import instance from '../../../../config/axios';
 import { decrypt, encrypt } from '../../../../kernel/hashFunctions';
+import { BButton, BInputGroup, BFormInput, BIcon } from "bootstrap-vue";
+import loginI from "../../../../assets/imgs/loginI.jpg";
 export default {
     data() {
         return {
+      loginI: loginI,
+      showPassword: false,
+      components: {
+        BButton,
+        BInputGroup,
+        BFormInput,
+        BIcon,
+      },
             form: {
                 username: '',
                 password: '',
@@ -31,6 +41,15 @@ export default {
         }
     },
     methods: {
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword;
+      const inputPassword = document.getElementById("input-password");
+      if (this.showPassword) {
+        inputPassword.type = "text";
+      } else {
+        inputPassword.type = "password";
+      }
+    },
         validateInput(validateInput) {
             let input;
             switch (validateInput) {
@@ -91,6 +110,7 @@ export default {
                 localStorage.setItem('userId', response.data.data.userId);
                 localStorage.setItem('token', await encrypt(response.data.data.token));
                 localStorage.setItem('role', await encrypt(response.data.data.role.name));
+                localStorage.setItem('profileCompleted', await encrypt(response.data.data.profileCompleted));
 
                 Swal.fire({
                     icon: 'success',
@@ -305,7 +325,7 @@ export default {
 <template>
     <b-container fluid class="bg-blue">
         <b-row align-v="center">
-            <b-col cols="5" class="px-5">
+            <b-col cols="6" class="px-5">
                 <b-card class="shadow bg-orange">
                     <img src="../../../../assets/imgs/logo blanco.png" class="img-fluid d-block mx-auto"
                         alt="Responsive image" width="30%">
@@ -318,16 +338,40 @@ export default {
                                 }}</b-form-invalid-feedback>
                         </b-form-group>
 
-                        <b-form-group class="my-3 text-white" label="Contraseña:" label-for="input-password">
-                            <b-form-input id="input-password" class="bg-light shadow text-dark-gray-input"
-                                v-model.trim="form.password" @input="validateInput('password')"
-                                type="password"></b-form-input>
-                            <b-form-invalid-feedback v-if="showErrors.password">{{ errors.password
-                                }}</b-form-invalid-feedback>
+                        <b-form-group class="my-3 text-white"
+              label="Contraseña:"
+              label-for="input-password"
+            >
+              <b-input-group class="position-relative">
+                <b-form-input
+                  id="input-password"
+                  class="bg-light shadow text-dark-gray-input"
+                  v-model.trim="form.password"
+                  @input="validateInput('password')"
+                  type="password"
+                ></b-form-input>
+                <b-input-group-prepend>
+                  <b-button
+                    @click="togglePasswordVisibility"
+                    variant="outline-secondary"
+                    class="btn-eye rounded-right"
+                  >
+                    <b-icon
+                      v-if="showPassword"
+                      icon="eye-slash"
+                      class="eye-icon"
+                    ></b-icon>
+                    <b-icon v-else icon="eye" class="eye-icon"></b-icon>
+                  </b-button>
+                </b-input-group-prepend>
+              </b-input-group>
+              <b-form-invalid-feedback v-if="showErrors.password">{{
+                errors.password
+              }}</b-form-invalid-feedback>
                         </b-form-group>
                         <b-row class="justify-content-center">
                             <b-col class="d-flex justify-content-center align-items-center mt-3">
-                                <b-button lass="bg-dark-secondary-orange text-white mx-5" @click="login()"
+                                <b-button class="bg-dark-secondary-orange text-white mx-5" @click="login()"
                                     :disabled="!form.isValid">Iniciar sesión</b-button>
                             </b-col>
                         </b-row>
@@ -353,11 +397,11 @@ export default {
                     </b-form>
                 </b-card>
             </b-col>
-            <b-col cols="7" class="text-center">
-                <b-img
-                    src="https://img.freepik.com/foto-gratis/ai-generado-perro-labrador-retriever_23-2150686788.jpg?w=740&t=st=1707087667~exp=1707088267~hmac=fef11794c20b1e6d8d9dea1a348eb8e50c293ef7c414c3bb0ec333617e044beb"
-                    fluid left rounded class="img"></b-img>
-            </b-col>
+      <b-col cols="6" class="text-center">
+        <b-img
+          :src="loginI" fluid left rounded class="img mx-auto" style="max-height: 570px;"
+        ></b-img>
+      </b-col>
         </b-row>
     </b-container>
 </template>
@@ -367,5 +411,17 @@ export default {
     height: 90vh;
     width: 100%;
     object-fit: cover;
+}
+
+.eye-icon {
+  font-size: 1rem;
+}
+
+.btn-eye {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+   background-color: #ffffff;
+  border-color: #ffffff;
+  color: black;
 }
 </style>

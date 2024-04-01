@@ -8,6 +8,8 @@ import com.balu.backend.modules.categories.model.ICategoryRepository;
 import com.balu.backend.modules.categories.model.ICategoryViewPaged;
 import com.balu.backend.modules.categories.model.dto.*;
 import com.balu.backend.modules.hash.service.HashService;
+import com.balu.backend.modules.logs.model.LogTypes;
+import com.balu.backend.modules.logs.service.LogService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +35,8 @@ public class CategoryService {
     private final ICategoryRepository iCategoryRepository;
     private final HashService hashService;
     private final Validations validations = new Validations();
+
+    private final LogService logService;
 
     @Transactional(readOnly = true)
     public ResponseApi<List<GetCategoryListDto>> getListCategories() {
@@ -73,11 +77,10 @@ public class CategoryService {
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseApi<Category> saveCategory(SaveCategoryDto saveCategoryDto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-
+        saveCategoryDto.setUserId(hashService.decrypt(saveCategoryDto.getUserId()));
         saveCategoryDto.setName(hashService.decrypt(saveCategoryDto.getName()));
         saveCategoryDto.setDescription(hashService.decrypt(saveCategoryDto.getDescription()));
         saveCategoryDto.setImage(hashService.decrypt(saveCategoryDto.getImage()));
-
         if (saveCategoryDto.getName() == null && saveCategoryDto.getDescription() == null && saveCategoryDto.getImage() == null)
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
         if (!(this.iCategoryRepository.findByName(saveCategoryDto.getName()) == null))
@@ -88,6 +91,7 @@ public class CategoryService {
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.UNSUPPORTED_IMAGE_FORMAT.name());
         LocalDateTime Date = LocalDateTime.now();
         Category newCategory = this.iCategoryRepository.saveAndFlush(new Category(0l, saveCategoryDto.getName(), saveCategoryDto.getDescription(), saveCategoryDto.getImage(), Date, true, null));
+        logService.saveLog("Registration of new category "+newCategory.getId() +" in the system for user with id: " + saveCategoryDto.getUserId(), LogTypes.INSERT, "CATEGORIES");
         return new ResponseApi<>(
                 newCategory,
                 HttpStatus.CREATED,
@@ -98,12 +102,14 @@ public class CategoryService {
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseApi<Integer> updateCategory(UpdateCategoryDto updateCategoryDto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        updateCategoryDto.setUserId(hashService.decrypt(updateCategoryDto.getUserId()));
+        updateCategoryDto.setId(hashService.decrypt(updateCategoryDto.getId()));
         updateCategoryDto.setName(hashService.decrypt(updateCategoryDto.getName()));
         updateCategoryDto.setDescription(hashService.decrypt(updateCategoryDto.getDescription()));
         updateCategoryDto.setImage(hashService.decrypt(updateCategoryDto.getImage()));
         Long id;
         try {
-            id = Long.parseLong(hashService.decrypt(updateCategoryDto.getId()));
+            id = Long.parseLong(updateCategoryDto.getId());
         } catch (NumberFormatException e) {
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_ID.name());
         }
@@ -114,10 +120,11 @@ public class CategoryService {
             return new ResponseApi<>(HttpStatus.CONFLICT, true, ErrorMessages.DUPLICATE_RECORD.name());
         if (validations.isNotBlankString(updateCategoryDto.getName()) && validations.isNotBlankString(updateCategoryDto.getDescription()) && validations.isNotBlankString(updateCategoryDto.getImage()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
-        if (!validations.isValidBase64Image(updateCategoryDto.getImage()))
+        if (validations.isValidBase64Image(updateCategoryDto.getImage()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.UNSUPPORTED_IMAGE_FORMAT.name());
 
         Integer category = this.iCategoryRepository.updateCategory(id, updateCategoryDto.getName(), updateCategoryDto.getDescription(), updateCategoryDto.getImage());
+        logService.saveLog("Update of category "+category +" for user with id: " + updateCategoryDto.getUserId(), LogTypes.UPDATE, "CATEGORIES");
         return new ResponseApi<>(
                 category,
                 HttpStatus.OK,
@@ -137,7 +144,10 @@ public class CategoryService {
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
         Long id = Long.parseLong(hashService.decrypt(changeStatusCategoryDto.getId()));
         Boolean status = Boolean.parseBoolean(hashService.decrypt(changeStatusCategoryDto.getStatus()));
+        String userId = hashService.decrypt(changeStatusCategoryDto.getUserId());
         Integer category = this.iCategoryRepository.changeStatusCategory(id, !status);
+        logService.saveLog("ChangeStatus of category "+id +" for user with id: " + userId, LogTypes.UPDATE, "CATEGORIES");
+        //No me dejo usar el enumerador de CHANGE_STATUS
         return new ResponseApi<>(
                 category,
                 HttpStatus.OK,
@@ -153,4 +163,41 @@ public class CategoryService {
         Page<ICategoryViewPaged> categoryPage= iCategoryRepository.findAllPaged(searchCategoryDto.getSearchCategoryValue(),searchCategoryDto.getSearchCategoryValue(),peageable);
         return new ResponseApi<>(categoryPage,HttpStatus.OK,false,"OK");
     }
+
+    @Transactional(readOnly = true)
+    public ResponseApi<List<CarouselCategoryDto>> carouselList(){
+        List<Category> list = iCategoryRepository.caroruselList();
+        if (list.isEmpty())
+            return new ResponseApi<>(
+                    HttpStatus.OK,
+                    false,
+                    ErrorMessages.NO_RECORDS.name()
+            );
+
+    List<CarouselCategoryDto> carouselCategoryDtoList =  list.stream().map(
+            category -> {
+                try {
+                    return  new CarouselCategoryDto(hashService.encrypt(category.getId()),category.getName(),category.getDescription(),category.getImage());
+                } catch (NoSuchAlgorithmException e) {
+                    throw new RuntimeException(e);
+                } catch (NoSuchPaddingException e) {
+                    throw new RuntimeException(e);
+                } catch (InvalidAlgorithmParameterException e) {
+                    throw new RuntimeException(e);
+                } catch (InvalidKeyException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalBlockSizeException e) {
+                    throw new RuntimeException(e);
+                } catch (BadPaddingException e) {
+                    throw new RuntimeException(e);
+                }
+            }).collect(Collectors.toList());
+    return  new ResponseApi<>(
+            carouselCategoryDtoList,
+            HttpStatus.OK,
+            false,
+            "ok"
+    );
+    }
+
 }

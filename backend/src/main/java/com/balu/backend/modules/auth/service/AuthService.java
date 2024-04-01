@@ -61,7 +61,7 @@ public class AuthService {
             String token = jwtProvider.generateToken(auth);
 
             String PREFIX = "Bearer";
-            SignedDto signedDto = new SignedDto(token, PREFIX,hashService.encrypt(user.getId()),user.getRole());
+            SignedDto signedDto = new SignedDto(token, PREFIX,hashService.encrypt(user.getId()),user.getRole(),user.isProfileCompleted());
 
             signedDto.setUserId(hashService.encrypt(user.getId()));
 

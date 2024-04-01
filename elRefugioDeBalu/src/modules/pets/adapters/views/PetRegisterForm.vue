@@ -72,15 +72,17 @@
                                         <b-col cols="12" lg="7" xl="8" class="d-flex align-items-center">
                                             <b-row>
                                                 <b-col cols="12" sm="7" xl="8" class="mt-3 mt-xl-0">
-                                                    <b-form-group label="Ingresa el nombre de la mascota:"
+                                                    <b-form-group label="Ingresa el nombre de la mascota:" 
                                                         label-for="name">
-                                                        <b-form-input id="name" v-model.trim="form.name"
+                                                        <b-form-input id="name" v-model.trim="form.name" @input="validateInput('name')" @focus="validateInput('name')"
                                                             placeholder="Nombre..."></b-form-input>
+                                                            <b-form-invalid-feedback v-if="showErrors.name"
+                                                            >{{ errorsMessages.name }}</b-form-invalid-feedback>
                                                     </b-form-group>
                                                 </b-col>
                                                 <b-col cols="12" sm="5" xl="4" class="mt-3 mt-xl-0">
                                                     <b-form-group label="Selecciona su especie:" label-for="category">
-                                                        <b-form-select id="category" v-model.trim="form.category"
+                                                        <b-form-select id="category" v-model.trim="form.category" @input="validateInput('species')" @click="validateInput('species')" 
                                                             class="form-select">
                                                             <option value="0" disabled>Especie...</option>
                                                             <option v-for="category in categories" :key="category.id"
@@ -88,18 +90,22 @@
                                                                 {{ category.name }}
                                                             </option>
                                                         </b-form-select>
+                                                        <b-form-invalid-feedback v-if="showErrors.species"
+                                                            >{{ errorsMessages.species }}</b-form-invalid-feedback>
                                                     </b-form-group>
                                                 </b-col>
                                                 <b-col cols="12" sm="7" xl="8" class="mt-3">
                                                     <b-form-group label="Ingresa la raza de la mascota:"
                                                         label-for="breed">
-                                                        <b-form-input id="breed" v-model.trim="form.breed"
+                                                        <b-form-input id="breed" v-model.trim="form.breed" @input="validateInput('breed')" @focus="validateInput('breed')"
                                                             placeholder="Raza..."></b-form-input>
+                                                            <b-form-invalid-feedback v-if="showErrors.breed"
+                                                            >{{ errorsMessages.breed }}</b-form-invalid-feedback>
                                                     </b-form-group>
                                                 </b-col>
                                                 <b-col cols="12" sm="5" xl="4" class="mt-3">
                                                     <b-form-group label="Selecciona su tamaño:" label-for="size">
-                                                        <b-form-select id="size" v-model.trim="form.size"
+                                                        <b-form-select id="size" v-model.trim="form.size" @input="validateInput('size')" @click="validateInput('size')"
                                                             class="form-select">
                                                             <option value="default" disabled>Tamaño...</option>
                                                             <option v-for="size in sizes" :key="size.id"
@@ -107,6 +113,8 @@
                                                                 {{ size.text }}
                                                             </option>
                                                         </b-form-select>
+                                                        <b-form-invalid-feedback v-if="showErrors.size"
+                                                            >{{ errorsMessages.size }}</b-form-invalid-feedback>
                                                     </b-form-group>
                                                 </b-col>
                                                 <b-col cols="12" sm="7" xl="8">
@@ -114,18 +122,22 @@
                                                         class="mt-3">
                                                         <b-row>
                                                             <b-col cols="8" sm="7" xl="8">
-                                                                <b-form-input id="age" v-model.trim="form.age"
+                                                                <b-form-input id="age" v-model.trim="form.age" @input="validateInput('age')" @focus="validateInput('age')"
                                                                     placeholder="Edad..." type="number"></b-form-input>
+                                                                    <b-form-invalid-feedback v-if="showErrors.age"
+                                                                    >{{ errorsMessages.age }}</b-form-invalid-feedback>
                                                             </b-col>
                                                             <b-col cols="4" sm="5" xl="4">
-                                                                <b-form-select v-model="form.ageType"
+                                                                <b-form-select id="ageUnit" v-model="form.ageUnit" @input="validateInput('ageUnit')" @click="validateInput('ageUnit')"
                                                                     class="form-select">
                                                                     <option value="default" disabled>Unidad</option>
-                                                                    <option v-for="ageType in ageTypes"
-                                                                        :key="ageType.value" :value="ageType.value">
-                                                                        {{ ageType.text }}
+                                                                    <option v-for="ageUnit in ageUnits"
+                                                                        :key="ageUnit.value" :value="ageUnit.value">
+                                                                        {{ ageUnit.text }}
                                                                     </option>
                                                                 </b-form-select>
+                                                                <b-form-invalid-feedback v-if="showErrors.ageUnit"
+                                                                >{{ errorsMessages.ageUnit }}</b-form-invalid-feedback>
                                                             </b-col>
                                                         </b-row>
                                                     </b-form-group>
@@ -133,7 +145,7 @@
                                                 <b-col cols="12" sm="5" xl="4">
                                                     <b-form-group label="Selecciona su etapa:" label-for="stage"
                                                         class="mt-3">
-                                                        <b-form-select id="stage" v-model.trim="form.stage"
+                                                        <b-form-select id="stage" v-model.trim="form.stage" @input="validateInput('stage')" @click="validateInput('stage')"
                                                             class="form-select">
                                                             <option value="default" disabled>Etapa...</option>
                                                             <option v-for="stage in stages" :key="stage.id"
@@ -141,6 +153,8 @@
                                                                 {{ stage.text }}
                                                             </option>
                                                         </b-form-select>
+                                                        <b-form-invalid-feedback v-if="showErrors.stage"
+                                                        >{{ errorsMessages.stage }}</b-form-invalid-feedback>
                                                     </b-form-group>
                                                 </b-col>
                                                 <b-col cols="12" sm="7" xl="8">
@@ -148,11 +162,13 @@
                                                         label-for="weight" class="mt-3">
                                                         <b-row>
                                                             <b-col cols="8" sm="7" xl="8">
-                                                                <b-form-input id="weight" v-model.trim="form.weight"
+                                                                <b-form-input id="weight" v-model.trim="form.weight" @input="validateInput('weight')" @focus="validateInput('weight')"
                                                                     placeholder="Peso..." type="number"></b-form-input>
+                                                                    <b-form-invalid-feedback v-if="showErrors.weight"
+                                                                    >{{ errorsMessages.weight }}</b-form-invalid-feedback>
                                                             </b-col>
                                                             <b-col cols="4" sm="5" xl="4">
-                                                                <b-form-select v-model="form.weightType"
+                                                                <b-form-select v-model="form.weightType" id="weightType" @input="validateInput('weightType')" @click="validateInput('weightType')"
                                                                     class="form-select">
                                                                     <option value="default" disabled>Unidad</option>
                                                                     <option v-for="weightType in weightTypes"
@@ -168,13 +184,15 @@
                                                 <b-col cols="12" sm="5" xl="4">
                                                     <b-form-group label="Selecciona su sexo:" label-for="sex"
                                                         class="mt-3">
-                                                        <b-form-select id="sex" v-model="form.sex" class="form-select">
+                                                        <b-form-select id="sex" v-model="form.sex" class="form-select" @input="validateInput('gender')" @click="validateInput('gender')">
                                                             <option value="default" disabled>Sexo...</option>
                                                             <option v-for="sex in sexes" :key="sex.id"
                                                                 :value="sex.value">
                                                                 {{ sex.text }}
                                                             </option>
                                                         </b-form-select>
+                                                        <b-form-invalid-feedback v-if="showErrors.gender"
+                                                        >{{errorsMessages.gender}}</b-form-invalid-feedback>
                                                     </b-form-group>
                                                 </b-col>
                                             </b-row>
@@ -249,8 +267,10 @@
                                             <b-form-group label="Escribe las enfermedades de la mascota (si aplica):"
                                                 label-for="diseases">
                                                 <b-form-input id="diseases" v-model.trim="tempDisease"
-                                                    placeholder="Enfermedad o padecimiento..."
+                                                    placeholder="Enfermedad o padecimiento..." @input="validateInput('tempDisease')"
                                                     @keyup.enter="addDisease()"></b-form-input>
+                                                    <b-form-invalid-feedback v-if="showErrors.tempDisease"
+                                                    >{{ errorsMessages.tempDisease }}</b-form-invalid-feedback>
                                                 <div class="px-3 pb-2 mx-2 badge-container">
                                                     <b-badge v-for="(disease, index) in form.diseases" :key="index"
                                                         class="me-2 mt-2 d-inline-flex align-items-center justify-content-between"
@@ -265,8 +285,10 @@
                                         <b-col cols="12" md="6" class="mt-3">
                                             <b-form-group label="Escribe las alergias de la mascota (si aplica):"
                                                 label-for="allergies">
-                                                <b-form-input id="allergies" v-model.trim="tempAllergy"
+                                                <b-form-input id="allergies" v-model.trim="tempAllergy" @input="validateInput('tempAllergy')"
                                                     placeholder="Alergia..." @keyup.enter="addAllergy()"></b-form-input>
+                                                    <b-form-invalid-feedback v-if="showErrors.tempAllergy"
+                                                    >{{ errorsMessages.tempAllergy }}</b-form-invalid-feedback>
                                                 <div class="px-3 pb-2 mx-2 badge-container">
                                                     <b-badge v-for="(allergy, index) in form.allergies" :key="index"
                                                         class="me-2 mt-2 d-inline-flex align-items-center justify-content-between"
@@ -282,8 +304,10 @@
                                             <b-form-group
                                                 label="Escribe comentarios adicionales sobre la salud de la mascota (si aplica):"
                                                 label-for="comments">
-                                                <b-form-textarea id="comments" v-model.trim="form.comments"
+                                                <b-form-textarea id="comments" v-model.trim="form.comments" @input="validateInput('comments')"
                                                     placeholder="Comentarios adicionales..."></b-form-textarea>
+                                                <b-form-invalid-feedback v-if="showErrors.comments"
+                                                >{{ errorsMessages.comments }}</b-form-invalid-feedback>
                                             </b-form-group>
                                         </b-col>
                                     </b-row>
@@ -313,9 +337,11 @@
                                             <b-form-group label="Escribe las características de la mascota:"
                                                 label-for="characteristics"
                                                 description="Describe la personalidad y el físico de la mascota con adjetivos calificativos">
-                                                <b-form-input id="characteristics" v-model.trim="tempCharacteristic"
+                                                <b-form-input id="characteristics" v-model.trim="tempCharacteristic" @input="validateInput('characteristics')" @focus="validateInput('characteristics')"
                                                     placeholder="Características..."
                                                     @keyup.enter="addCharacteristic()"></b-form-input>
+                                                    <b-form-invalid-feedback v-if="showErrors.characteristics"
+                                                    >{{ errorsMessages.characteristics }}</b-form-invalid-feedback>
                                                 <div class="px-3 pb-2 mx-2 badge-container">
                                                     <b-badge v-for="(characteristic, index) in form.characteristics"
                                                         :key="index"
@@ -348,8 +374,10 @@
                                         <b-col cols="12" class="mt-3">
                                             <b-form-group label="Describe a la mascota y cuenta su historia:"
                                                 label-for="description">
-                                                <b-form-textarea id="description" v-model.trim="form.description"
+                                                <b-form-textarea id="description" v-model.trim="form.description" @input="validateInput('description')" @focus="validateInput('description')"
                                                     placeholder="Descripción e historia..."></b-form-textarea>
+                                                    <b-form-invalid-feedback v-if="showErrors.description"
+                                                    >{{ errorsMessages.description }}</b-form-invalid-feedback>
                                             </b-form-group>
                                         </b-col>
                                     </b-row>
@@ -361,7 +389,7 @@
                 <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
                     <b-row class="px-5 px-sm-0 d-flex justify-content-end">
                         <b-col cols="12" sm="6" md="5" lg="4" xl="3">
-                            <b-button type="submit" variant="outline-dark-secondary-blue"
+                            <b-button variant="outline-dark-secondary-blue" @click="prepareSave"
                                 class="d-flex align-items-center justify-content-between w-100">
                                 <span class="me-2">Publicar</span>
                                 <b-icon icon="arrow-up-right-circle" font-scale="1.3"></b-icon>
@@ -382,7 +410,11 @@
 </template>
 
 <script>
+import { isInvalidName } from '../../../../kernel/validations';
 import Encabezado from "../../../../views/components/Encabezado.vue";
+import Swal from 'sweetalert2';
+import instance from '../../../../config/axios';
+import { encrypt } from '../../../../kernel/hashFunctions';
 export default {
     data() {
         return {
@@ -398,7 +430,7 @@ export default {
                 breed: "",
                 size: "default",
                 age: null,
-                ageType: "default",
+                ageUnit: "default",
                 stage: "default",
                 weight: null,
                 weightType: "default",
@@ -414,6 +446,42 @@ export default {
                 care: [],
                 description: "",
             },
+            formPet:{},
+            isValidForm: false,
+            showErrors:{
+                name: false,
+                species: false,
+                breed: false,
+                size: false,
+                age: false,
+                ageUnit: false,
+                weight: false,
+                weightType: false,
+                gender: false,
+                tempDisease: false,
+                tempAllergy: false,
+                comments: false,
+                characteristics: false,
+                stage: false,
+                description: false,
+            },
+            errorsMessages:{
+                name: '',
+                species: '',
+                breed: '',
+                size: '',
+                age: '',
+                ageUnit: '',
+                weight: '',
+                weightType: '',
+                gender: '',
+                tempDisease: '',
+                tempAllergy: '',
+                comments: '',
+                characteristics: '',
+                stage: '',
+                description: '',
+            },
             categories: [
                 { id: 1, name: "Perro" },
                 { id: 2, name: "Gato" },
@@ -421,27 +489,27 @@ export default {
                 { id: 4, name: "Pájaro" },
             ],
             sizes: [
-                { value: "Pequeño", text: "Pequeño" },
-                { value: "Mediano", text: "Mediano" },
-                { value: "Grande", text: "Grande" },
+                { value: "SMALL", text: "Pequeño" },
+                { value: "MEDIUM", text: "Mediano" },
+                { value: "BIG", text: "Grande" },
             ],
-            ageTypes: [
-                { value: "meses", text: "Meses" },
-                { value: "años", text: "Años" },
+            ageUnits: [
+                { value: "MONTHS", text: "Meses" },
+                { value: "YEARS", text: "Años" },
             ],
             stages: [
-                { value: "Cachorro", text: "Cachorro" },
-                { value: "Joven", text: "Joven" },
-                { value: "Adulto", text: "Adulto" },
-                { value: "Senior", text: "Senior" },
+                { value: "BABY", text: "Cachorro" },
+                { value: "YOUNG", text: "Joven" },
+                { value: "ADULT", text: "Adulto" },
+                { value: "SENIO", text: "Senior" },
             ],
             weightTypes: [
-                { value: "kg", text: "Kilogramos" },
-                { value: "g", text: "Gramos" },
+                { value: "KILOGRAMS", text: "Kilogramos" },
+                { value: "GRAMS", text: "Gramos" },
             ],
             sexes: [
-                { value: "Macho", text: "Macho" },
-                { value: "Hembra", text: "Hembra" },
+                { value: "MALE", text: "Macho" },
+                { value: "FEMALE", text: "Hembra" },
             ],
         };
     },
@@ -496,6 +564,7 @@ export default {
             if (this.tempCharacteristic) {
                 this.form.characteristics.push(this.tempCharacteristic);
                 this.tempCharacteristic = '';
+                this.validateInput('characteristics');
             }
         },
         addCare() {
@@ -506,6 +575,7 @@ export default {
         },
         removeCharacteristic(index) {
             this.form.characteristics.splice(index, 1);
+            this.validateInput('characteristics');
         },
         removeCare(index) {
             this.form.care.splice(index, 1);
@@ -513,6 +583,316 @@ export default {
         goBack() {
             this.$router.go(-1);
         },
+        validateInput(validateInput){
+            console.log(this.form)
+            let input;
+            switch(validateInput){
+                case 'name':
+                    input = document.getElementById('name');
+                    if(this.form.name == ''){
+                        this.showErrors.name = true;
+                        this.errorsMessages.name = 'El nombre de la mascota es requerido';
+                        input.classList.add('is-invalid');
+                    } else if(isInvalidName(this.form.name)){
+                        this.showErrors.name = true;
+                        this.errorsMessages.name = 'El nombre de la mascota no es válido, ingresa solo letras';
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.showErrors.name = false;
+                        this.errorsMessages.name = '';
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+
+                case 'species':
+                    input = document.getElementById('category');
+                    if(this.form.category == 0){
+                        this.showErrors.species = true;
+                        this.errorsMessages.species = 'La especie de la mascota es requerida';
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.showErrors.species = false;
+                        this.errorsMessages.species = '';
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+
+                case 'breed':
+                    input = document.getElementById('breed');
+                    if(this.form.breed == ''){
+                        this.showErrors.breed = true;
+                        this.errorsMessages.breed = 'La raza de la mascota es requerida';
+                        input.classList.add('is-invalid');
+                    } else if(isInvalidName(this.form.breed)){
+                        this.showErrors.breed = true;
+                        this.errorsMessages.breed = 'La raza de la mascota no es válida, ingresa solo letras';
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.showErrors.breed = false;
+                        this.errorsMessages.breed = '';
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+                case 'size':
+                    input = document.getElementById('size');
+                    if(this.form.size == 'default'){
+                        this.showErrors.size = true;
+                        this.errorsMessages.size = 'El tamaño de la mascota es requerido';
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.showErrors.size = false;
+                        this.errorsMessages.size = '';
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+                case 'age':
+                    input = document.getElementById('age');
+                    if(this.form.age == null){
+                        this.showErrors.age = true;
+                        this.errorsMessages.age = 'La edad de la mascota es requerida';
+                        input.classList.add('is-invalid');
+                    }else if(this.form.age < 0 || this.form.age == 0){
+                        this.showErrors.age = true;
+                        this.errorsMessages.age = 'La edad de la mascota no es válida, ingresa un número mayor a 0';
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.showErrors.age = false;
+                        this.errorsMessages.age = '';
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+                case 'ageUnit':
+                    input = document.getElementById('ageUnit');
+                    if(this.form.ageUnit == 'default'){
+                        this.showErrors.ageUnit = true;
+                        this.errorsMessages.ageUnit = 'La unidad de la edad de la mascota es requerida';
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.showErrors.ageUnit = false;
+                        this.errorsMessages.ageUnit = '';
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+                case 'weight':
+                    input = document.getElementById('weight');
+                    if(this.form.weight == null){
+                        this.showErrors.weight = true;
+                        this.errorsMessages.weight = 'El peso de la mascota es requerido';
+                        input.classList.add('is-invalid');
+                    }else if(this.form.weight < 0 || this.form.weight == 0){
+                        this.showErrors.weight = true;
+                        this.errorsMessages.weight = 'El peso de la mascota no es válido, ingresa un número mayor a 0';
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.showErrors.weight = false;
+                        this.errorsMessages.weight = '';
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+
+                case 'weightType':
+                    input = document.getElementById('weightType');
+                    if(this.form.weightType == 'default'){
+                        this.showErrors.weightType = true;
+                        this.errorsMessages.weightType = 'La unidad de peso de la mascota es requerida';
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.showErrors.weightType = false;
+                        this.errorsMessages.weightType = '';
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+
+                case 'gender':
+                    input = document.getElementById('sex')
+                    if(this.form.sex == 'default'){
+                        input.classList.add('is-invalid');
+                        this.showErrors.gender = true;
+                        this.errorsMessages.gender = 'El sexo de la mascota es requerido';
+                    }else{
+                        this.showErrors.gender = false;
+                        this.errorsMessages.gender = '';
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+
+                case 'tempDisease':
+                    input = document.getElementById('diseases');
+                    if(this.tempDisease.length < 3){
+                        this.showErrors.tempDisease = true;
+                        this.errorsMessages.tempDisease = 'La enfermedad de la mascota no es válida, ingresa al menos 3 caracteres';
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.showErrors.tempDisease = false;
+                        this.errorsMessages.tempDisease = '';
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+
+                case 'tempAllergy':
+                    input = document.getElementById('allergies');
+                    if(this.tempAllergy.length < 3){
+                        this.showErrors.tempAllergy = true;
+                        this.errorsMessages.tempAllergy = 'La alergia de la mascota no es válida, ingresa al menos 3 caracteres';
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.showErrors.tempAllergy = false;
+                        this.errorsMessages.tempAllergy = '';
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+                
+                case 'comments':
+                    input = document.getElementById('comments');
+                    if(this.form.comments.length < 50 || this.form.comments.length > 500){
+                        this.showErrors.comments = true;
+                        this.errorsMessages.comments = 'Los comentarios adicionales de la mascota no son válidos, ingresa al menos 50 caracteres y máximo 500';
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.showErrors.comments = false;
+                        this.errorsMessages.comments = '';
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+                
+                case 'characteristics':
+                    input = document.getElementById('characteristics');
+                    if(this.form.characteristics.length < 2){
+                        this.showErrors.characteristics = true;
+                        this.errorsMessages.characteristics = 'Las características de la mascota no son válidas, ingresa al menos 3 características';
+                        input.classList.add('is-invalid');
+                    }else if(this.tempCharacteristic.length < 3){
+                        this.showErrors.characteristics = true;
+                        this.errorsMessages.characteristics = 'Las características de la mascota no son válidas, ingresa al menos 3 caracteres';
+                        input.classList.add('is-invalid');
+                    } else{
+                        this.showErrors.characteristics = false;
+                        this.errorsMessages.characteristics = '';
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+
+                case 'stage':
+                    input = document.getElementById('stage');
+                    if(this.form.stage == 'default'){
+                        this.showErrors.stage = true;
+                        this.errorsMessages.stage = 'La etapa de la mascota es requerida';
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.showErrors.stage = false;
+                        this.errorsMessages.stage = '';
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+
+                case 'description':
+                    input = document.getElementById('description');
+                    if(this.form.description.length < 100 || this.form.description.length > 1500){
+                        this.showErrors.description = true;
+                        this.errorsMessages.description = 'La descripción de la mascota no es válida, ingresa al menos 100 caracteres y máximo 1500';
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.showErrors.description = false;
+                        this.errorsMessages.description = '';
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+            }
+        },
+        async prepareSave(){
+            this.validateInput('name');
+            this.validateInput('sex');
+            this.validateInput('breed');
+            this.validateInput('age');
+            this.validateInput('ageUnit');
+            this.validateInput('weight');
+            this.validateInput('weightType');
+            this.validateInput('stage');
+            this.validateInput('size');
+            this.validateInput('species');
+            this.validateInput('description');
+
+            if(this.form.mainImage == null){
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'La imagen principal de la mascota es requerida',
+                    toast: true,
+                    position: 'bottom-end',
+                    timer: 2000,
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    timerProgressBar: true,
+                });
+            }
+
+            Swal.fire({
+                title: '¿Estás seguro de publicar la mascota?',
+                text: "La solicitud deberá ser aprobada por un moderador antes de ser publicada",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, publicar',
+                cancelButtonText: 'Cancelar',
+            }).then(async (result)=>{
+                if(result.isConfirmed){
+                    Swal.showLoading();
+                    const reader = new FileReader();
+                    reader.readAsDataURL(this.form.mainImage);
+                    reader.onloadend = () => {
+                        this.formPet ={
+                        name: this.form.name,
+                        gender: this.form.sex,
+                        breed: this.form.breed,
+                        age: this.form.age,
+                        ageUnit: this.form.ageUnit,
+                        lifeStage: this.form.stage,
+                        weight: this.form.weight,
+                        weightUnit: this.form.weightType,
+                        size: this.form.size,
+                        description: this.form.description,
+                        characteristics: this.form.characteristics,
+                        specialCares: this.form.care,
+                        mainImage: reader.result,
+                        images: this.form.additionalImages,
+                        vaccinated: this.form.isVaccinated,
+                        sterilized: this.form.isSterilised,
+                        dewormed: this.form.isDewormed,
+                        microchip: this.form.microchip,
+                        observations: this.form.comments,
+                        diseases: this.form.diseases,
+                        allergies: this.form.allergies,
+                        category: this.form.category,
+                        owner: localStorage.getItem('userId'),
+                        }
+                        console.log(this.formPet)
+                        this.addPet(this.formPet);
+                    }
+                }
+            })
+        },
+        async addPet(){
+            this.formPet.category = await encrypt(this.formPet.category);
+
+            let response = await instance.post('/pet/save', this.formPet);
+            console.log(response);
+        }
     },
     components: {
         Encabezado,

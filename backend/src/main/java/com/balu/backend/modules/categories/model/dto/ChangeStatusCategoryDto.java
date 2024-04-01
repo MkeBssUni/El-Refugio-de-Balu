@@ -10,6 +10,7 @@ import lombok.Setter;
 public class ChangeStatusCategoryDto {
     private String id;
     private String status;
+    private String userId;
 
 
 }

@@ -36,7 +36,8 @@ public class MainSecurity {
             "/api/person/send/confirmationCode",
             "/api/person/validate/code",
             "/api/pet/catalog",
-            "/api/pet/details"
+            "/api/pet/details",
+            "/api/category/carousel"
 
     };
 

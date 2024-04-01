@@ -1,111 +1,49 @@
 <template>
   <div>
     <div class="AnimalHeader">
-      <Encabezado
-        color="#E84E0F"
-        :imagenUrl="require('../../../../assets/imgs/mascotas5.png')"
-        titulo="Categorias de animales"
-      />
+      <Encabezado color="#E84E0F" :imagenUrl="require('../../../../assets/imgs/mascotas5.png')"
+        titulo="Categorias de animales" />
     </div>
     <b-container fluid>
+      <Overlay v-if="loading" />
       <div class="mt-3">
-        <b-row
-          class="justify-content-end"
-          v-if="saveCategoryForm && updateCategoryForm"
-        >
-          <b-col
-            cols="12"
-            sm="12"
-            md="3"
-            lg="2"
-            xl="2"
-            class="d-flex justify-content-end my-2"
-          >
-            <b-button
-              as="col"
-              cols="12"
-              sm="12"
-              md="1"
-              pill
-              class="py-1 w-100 d-flex align-items-center justify-content-center"
-              variant="outline-danger"
-              @click="ViewCategoryRegistrationForm()"
-            >
+        <b-row class="justify-content-end" v-if="saveCategoryForm && updateCategoryForm">
+          <b-col cols="12" sm="12" md="3" lg="2" xl="2" class="d-flex justify-content-end my-2">
+            <b-button as="col" cols="12" sm="12" md="1"
+              class="py-1 w-100 d-flex align-items-center justify-content-center" variant="outline-danger"
+              @click="ViewCategoryRegistrationForm()">
               Registrar <i class="material-icons ms-3">add_circle</i>
             </b-button>
           </b-col>
           <b-col cols="12" sm="12" md="4 " lg="3" xl="3" class="my-2">
-            <b-form-select
-              v-model="selected"
-              as="col"
-              cols="12"
-              sm="12"
-              md="2"
-              lg="2"
-              xl="2"
-              class="form-control selectCategories rounded-pill"
-              :options="options"
-            ></b-form-select>
+            <b-form-select v-model="selected" as="col" cols="12" sm="12" md="2" lg="2" xl="2"
+              class="form-control selectCategories" :options="options"></b-form-select>
           </b-col>
           <b-col cols="12" sm="12" md="4 " lg="3" xl="3" class="my-2">
             <b-input-group>
-              <b-form-input
-                as
-                id="searchInput"
-                type="search"
-                placeholder="Buscar..."
-                class="searchInput rounded-pill"
-                v-model="search"
-              ></b-form-input>
+              <b-form-input as id="searchInput" type="search" placeholder="Buscar..." class="searchInput"
+                v-model="search"></b-form-input>
+              <b-input-group-append>
+                <b-button class="button-search"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+              </b-input-group-append>
             </b-input-group>
           </b-col>
         </b-row>
         <b-row class="justify-content-end" v-else>
-          <b-col
-            cols="12"
-            sm="12"
-            md="3"
-            lg="2"
-            xl="2"
-            class="d-flex justify-content-end my-2"
-          >
-            <b-button
-              as="col"
-              cols="12"
-              sm="12"
-              md="1"
-              pill
-              class="py-1 w-100 d-flex align-items-center justify-content-center"
-              disabled
-              variant="outline-danger"
-            >
+          <b-col cols="12" sm="12" md="3" lg="2" xl="2" class="d-flex justify-content-end my-2">
+            <b-button as="col" cols="12" sm="12" md="1" pill
+              class="py-1 w-100 d-flex align-items-center justify-content-center" disabled variant="outline-danger">
               Registrar <i class="material-icons ms-3">add_circle</i>
             </b-button>
           </b-col>
           <b-col cols="12" sm="12" md="4 " lg="3" xl="3" class="my-2">
-            <b-form-select
-              v-model="selected"
-              as="col"
-              cols="12"
-              sm="12"
-              md="2"
-              lg="2"
-              xl="2"
-              class="form-control selectCategories rounded-pill"
-              disabled
-            ></b-form-select>
+            <b-form-select v-model="selected" as="col" cols="12" sm="12" md="2" lg="2" xl="2"
+              class="form-control selectCategories rounded-pill" disabled></b-form-select>
           </b-col>
           <b-col cols="12" sm="12" md="4 " lg="3" xl="3" class="my-2">
             <b-input-group>
-              <b-form-input
-                as
-                id="searchInput"
-                type="search"
-                disabled
-                placeholder="Buscar..."
-                class="searchInput rounded-pill"
-                v-model="search"
-              ></b-form-input>
+              <b-form-input as id="searchInput" type="search" disabled placeholder="Buscar..."
+                class="searchInput rounded-pill" v-model="search"></b-form-input>
             </b-input-group>
           </b-col>
         </b-row>
@@ -116,164 +54,68 @@
         </b-row>
         <b-row class="mt-2" v-if="!updateCategoryForm">
           <b-col>
-            <updateCategory
-              :categoryToModify="categoryToModify"
-              @UpdateCategory="HideCategoryModifyForm()"
-            />
+            <updateCategory :categoryToModify="categoryToModify" @UpdateCategory="HideCategoryModifyForm()" />
           </b-col>
         </b-row>
       </div>
       <div class="animalCategories mt-3">
         <b-row class="mx-3 justify-content-center">
-          <b-col
-            class="mt-3"
-            cols="12"
-            sm="12"
-            md="4 "
-            lg="3"
-            xl="3"
-            v-for="animal in AnimalsList"
-            :key="animal.id"
-          >
-            <b-card
-              :title="animal.categoryName"
-              :img-src="animal.categoryImage"
-              img-alt="Image"
-              img-top
-              tag="article"
-              class="mb-2 card-img-top-animals"
-            >
+          <b-col class="mt-3" cols="12" sm="12" md="4 " lg="3" xl="3" v-for="animal in animalsList" :key="animal.id">
+            <b-card :title="animal.categoryName" :img-src="animal.categoryImage" img-alt="Image" img-top tag="article"
+              class="mb-2 card-img-top-animals">
               <b-card-body class="py-0 justify-content-center">
                 <b-row v-if="saveCategoryForm && updateCategoryForm">
-                  <b-col
-                    class="my-2 mx-2 justify-content-center px-1"
-                    cols="12"
-                    sm="12"
-                    md="12"
-                    lg="12"
-                    xl="5"
-                  >
-                    <b-button
-                      pill
+                  <b-col class="my-2 mx-2 justify-content-center px-1" cols="12" sm="12" md="12" lg="12" xl="5">
+                    <b-button pill
                       class="d-flex align-items-center justify-content-center btn-outline-dark-orange-secondary w-100 px-0"
-                      style="font-size: 0.8rem"
-                      @click="ViewCategoryModifyForm(animal)"
-                    >
+                      style="font-size: 0.8rem" @click="ViewCategoryModifyForm(animal)">
                       Modificar
-                      <i class="material-icons ms-2" style="font-size: 0.8rem"
-                        >border_color</i
-                      >
+                      <i class="material-icons ms-2" style="font-size: 0.8rem">border_color</i>
                     </b-button>
                   </b-col>
-                  <b-col
-                    class="my-2 mx-2 justify-content-center px-0"
-                    cols="12"
-                    sm="12"
-                    md="12"
-                    lg="12"
-                    xl="5"
-                  >
-                    <b-button
-                      v-if="animal.categoryStatus"
-                      pill
-                      variant="outline-success"
-                      class="d-flex align-items-center justify-content-center w-100 px-0"
-                      v-b-tooltip.hover
-                      title="Esta categoria es visible para los usuarios"
-                      style="font-size: 0.8rem"
-                      @click="ViewAlertConfirmationChangeCategoryStatus(animal)"
-                      >Habilitada
-                      <i class="material-icons ms-2" style="font-size: 1rem"
-                        >done</i
-                      ></b-button
-                    >
-                    <b-button
-                      v-else
-                      pill
-                      variant="outline-danger"
-                      style="font-size: 0.8rem"
-                      class="d-flex align-items-center justify-content-center w-100 px-0"
-                      v-b-tooltip.hover
+                  <b-col class="my-2 mx-2 justify-content-center px-0" cols="12" sm="12" md="12" lg="12" xl="5">
+                    <b-button v-if="animal.categoryStatus" pill variant="outline-success"
+                      class="d-flex align-items-center justify-content-center w-100 px-0" v-b-tooltip.hover
+                      title="Esta categoria es visible para los usuarios" style="font-size: 0.8rem"
+                      @click="ViewAlertConfirmationChangeCategoryStatus(animal)">Habilitada
+                      <i class="material-icons ms-2" style="font-size: 1rem">done</i></b-button>
+                    <b-button v-else pill variant="outline-danger" style="font-size: 0.8rem"
+                      class="d-flex align-items-center justify-content-center w-100 px-0" v-b-tooltip.hover
                       title="Esta categoria no es visible para los usuarios"
-                      @click="ViewAlertConfirmationChangeCategoryStatus(animal)"
-                      >Deshabilitada
-                      <i class="material-icons ms-2" style="font-size: 1rem"
-                        >close</i
-                      ></b-button
-                    >
+                      @click="ViewAlertConfirmationChangeCategoryStatus(animal)">Deshabilitada
+                      <i class="material-icons ms-2" style="font-size: 1rem">close</i></b-button>
                   </b-col>
                 </b-row>
                 <b-row v-else>
-                  <b-col
-                    class="my-2 mx-2 justify-content-center px-1"
-                    cols="12"
-                    sm="12"
-                    md="12"
-                    lg="12"
-                    xl="5"
-                  >
-                    <b-button
-                      pill
+                  <b-col class="my-2 mx-2 justify-content-center px-1" cols="12" sm="12" md="12" lg="12" xl="5">
+                    <b-button pill
                       class="d-flex align-items-center justify-content-center btn-outline-dark-orange-secondary w-100 px-0"
-                      style="font-size: 0.8rem"
-                      disabled
-                    >
+                      style="font-size: 0.8rem" disabled>
                       Modificar
-                      <i class="material-icons ms-2" style="font-size: 0.8rem"
-                        >border_color</i
-                      >
+                      <i class="material-icons ms-2" style="font-size: 0.8rem">border_color</i>
                     </b-button>
                   </b-col>
-                  <b-col
-                    class="my-2 mx-2 justify-content-center px-0"
-                    cols="12"
-                    sm="12"
-                    md="12"
-                    lg="12"
-                    xl="5"
-                  >
-                    <b-button
-                      v-if="animal.status"
-                      disabled
-                      pill
-                      variant="outline-success"
-                      class="d-flex align-items-center justify-content-center w-100 px-0"
-                      v-b-tooltip.hover
-                      title="Esta categoria es visible para los usuarios"
-                      style="font-size: 0.8rem"
-                      >Habilitada
-                      <i class="material-icons ms-2" style="font-size: 1rem"
-                        >done</i
-                      ></b-button
-                    >
-                    <b-button
-                      v-else
-                      disabled
-                      pill
-                      variant="outline-danger"
-                      style="font-size: 0.8rem"
-                      class="d-flex align-items-center justify-content-center w-100 px-0"
-                      v-b-tooltip.hover
-                      title="Esta categoria no es visible para los usuarios"
-                      >Deshabilitada
-                      <i class="material-icons ms-2" style="font-size: 1rem"
-                        >close</i
-                      ></b-button
-                    >
+                  <b-col class="my-2 mx-2 justify-content-center px-0" cols="12" sm="12" md="12" lg="12" xl="5">
+                    <b-button v-if="animal.status" disabled pill variant="outline-success"
+                      class="d-flex align-items-center justify-content-center w-100 px-0" v-b-tooltip.hover
+                      title="Esta categoria es visible para los usuarios" style="font-size: 0.8rem">Habilitada
+                      <i class="material-icons ms-2" style="font-size: 1rem">done</i></b-button>
+                    <b-button v-else disabled pill variant="outline-danger" style="font-size: 0.8rem"
+                      class="d-flex align-items-center justify-content-center w-100 px-0" v-b-tooltip.hover
+                      title="Esta categoria no es visible para los usuarios">Deshabilitada
+                      <i class="material-icons ms-2" style="font-size: 1rem">close</i></b-button>
                   </b-col>
                 </b-row>
               </b-card-body>
             </b-card>
           </b-col>
         </b-row>
-        <div class="mt-3 d-flex justify-content-center">
-          <b-pagination
-            pills
-            v-model="currentPage"
-            :total-rows="rows"
-            :per-page="perPage"
-          ></b-pagination>
-        </div>
+        <b-row class="pt-2">
+          <b-col cols="12">
+            <b-pagination pills v-model="page" :total-rows="total" :per-page="size" align="center">
+            </b-pagination>
+          </b-col>
+        </b-row>
       </div>
     </b-container>
   </div>
@@ -287,165 +129,41 @@ import UpdateCategory from "./UpdateCategory.vue";
 import FishLoading from "../../../../assets/imgs/peces.gif";
 import Swal from "sweetalert2";
 import instance from "../../../../config/axios";
-import { decrypt, encrypt } from '../../../../kernel/hashFunctions';
-
+import { decrypt, encrypt } from "../../../../kernel/hashFunctions";
+import Overlay from "../../../../utils/Overlay.vue";
 export default {
   name: "AnimalCategories",
   components: {
     Encabezado,
     SaveCategory,
     UpdateCategory,
+    Overlay,
   },
   data() {
     return {
-      AnimalsList: [
-        {
-          id: 1,
-          name: "tortugas",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: true,
-        },
-        {
-          id: 2,
-          name: "fatos",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: true,
-        },
-        {
-          id: 3,
-          name: "perros",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: false,
-        },
-        {
-          id: 4,
-          name: "aaaa",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: false,
-        },
-        {
-          id: 5,
-          name: "bbbbbbb",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: false,
-        },
-        {
-          id: 6,
-          name: "ccccc",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: true,
-        },
-        {
-          id: 7,
-          name: "ddddd",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: true,
-        },
-        {
-          id: 8,
-          name: "tortugas",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: true,
-        },
-        {
-          id: 9,
-          name: "tortuga",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: false,
-        },
-        {
-          id: 10,
-          name: "tortuga",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: false,
-        },
-        {
-          id: 11,
-          name: "tortuga",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: true,
-        },
-        {
-          id: 12,
-          name: "tortuga",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: true,
-        },
-        {
-          id: 13,
-          name: "tortuga",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: true,
-        },
-        {
-          id: 14,
-          name: "tortuga",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: false,
-        },
-        {
-          id: 15,
-          name: "tortuga",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: false,
-        },
-        {
-          id: 16,
-          name: "tortuga",
-          estado: "Activo",
-          description: "las tortuhas son aminales semi-acuaticos",
-          image: tortugas,
-          status: true,
-        },
-      ],
+      animalsList: [],
       search: null,
       options: [
         { value: null, text: "Todos" },
         { value: true, text: "Activos" },
         { value: false, text: "Inactivos" },
       ],
+      optionsNum: [1, 4, 8, 16, 24],
       selected: null,
-      currentPage: 1,
-      perPage: 8,
-      rows: 1,
+      page: 1,
+      total: 0,
+      size: 8,
       saveCategoryForm: true,
       updateCategoryForm: true,
       categoryToModify: null,
       searchCategoryValueDto: "",
-      changeStatusDto:{
-          id: 0,
-          status:false
-        }
+      changeStatusDto: {
+        id: 0,
+        status: false,
+        userId: localStorage.getItem("userId"),
+      },
+      empty: true,
+      loading: true,
     };
   },
   methods: {
@@ -453,16 +171,28 @@ export default {
       this.saveCategoryForm = !this.saveCategoryForm;
     },
     async GetAllCategories() {
+      this.loading = true;
       try {
-        const response = await instance.post("/category/paged", {
+        const pageSize = 8; // Establece el tamaño de página que prefieras
+        const response = await instance.post(`/category/paged?page=${this.page - 1}&size=${pageSize}`, {
           searchCategoryValue: this.searchCategoryValueDto,
         });
-        this.rows = response.data.totalPages;
-        this.AnimalsList = response.data.data.content;
-        this.perPage = response.data.pageSize;
-        this.currentPage = response.data.pageNumber;
+
+        this.animalsList = response.data.data.content;
+        this.total = response.data.data.totalElements;
+        this.size = pageSize; // Asegúrate de que esto coincida con el tamaño de página solicitado
+        console.log("Total elements:", this.total);
+
+        this.loading = false;
       } catch (error) {
-        console.error("Error al obtener categorías:", error);
+        Swal.fire({
+          title: "Ha sucedido un error",
+          text: "Inténtelo de nuevo más tarde",
+          icon: "error",
+          confirmButtonColor: "#118A95",
+        }).then(() => {
+          this.$router.push("/");
+        });
       }
     },
     HideCategoryRegistrationForm() {
@@ -470,7 +200,7 @@ export default {
       this.GetAllCategories();
     },
     HideCategoryModifyForm() {
-      this.ViewCategoryModifyForm("");
+      this.ViewCategoryModifyForm(null);
       this.GetAllCategories();
     },
     ViewCategoryModifyForm(category) {
@@ -506,40 +236,50 @@ export default {
     },
     async ChangeCategoryStatus(category) {
       try {
-      
-        this.changeStatusDto.id= await encrypt(category.id),
-        this.changeStatusDto.status= await encrypt(category.categoryStatus)
-        const response = await instance.patch("/category/", this.changeStatusDto);
+        (this.changeStatusDto.id = await encrypt(category.id)),
+          (this.changeStatusDto.status = await encrypt(
+            category.categoryStatus
+          ));
+        const response = await instance.patch(
+          "/category/",
+          this.changeStatusDto
+        );
         if (response.status == 200) {
           Swal.fire({
             title: "Acción realizada con exito",
             icon: "success",
             confirmButtonColor: "#118A95",
           });
-          this.GetAllCategories(); 
-        }else{
+          this.GetAllCategories();
+        } else {
           Swal.fire({
             title: "Ha sucedido un error",
-            text:"Inténtelo de nuevo más tarde",
+            text: "Inténtelo de nuevo más tarde",
             icon: "error",
             confirmButtonColor: "#118A95",
           });
-          this.GetAllCategories(); 
-        
+          this.GetAllCategories();
         }
       } catch (error) {
         Swal.fire({
-            title: "Ha sucedido un error",
-            text:"codigo de error: "+error.code,
-            icon: "error",
-            confirmButtonColor: "#118A95",
-          });
-          this.GetAllCategories(); 
-        }
+          title: "Ha sucedido un error",
+          text: "codigo de error: " + error.code,
+          icon: "error",
+          confirmButtonColor: "#118A95",
+        });
+        this.GetAllCategories();
       }
+    },
   },
   mounted() {
     this.GetAllCategories();
+  },
+  watch: {
+    page(previous, next) {
+      if (previous !== next) {
+        this.GetAllCategories();
+      }
+    }
   },
 };
 </script>
