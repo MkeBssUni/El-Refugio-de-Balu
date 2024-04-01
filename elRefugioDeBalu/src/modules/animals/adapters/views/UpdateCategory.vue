@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mt-2">
     <div class="card encabezadoColorform">
       <h4 class="mt-2" style="margin-left: 2rem">
         <i
@@ -12,7 +12,7 @@
     </div>
     <b-card-group deck>
       <b-card class="contentform">
-        <b-row>
+        <b-row class="mt-4">
           <b-col>
             <b-form-group label="Categoria">
               <b-form-input

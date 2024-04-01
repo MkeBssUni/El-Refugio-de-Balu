@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="mt-2">
     <div class="card encabezadoColorform">
-      <h4 class="mt-2" style="margin-left: 2rem">
+      <h4 class="mt-2" style="margin-left: 1rem">
         <i
           class="material-icons ms-2"
           style="font-size: larger; vertical-align: middle"
@@ -10,9 +10,8 @@
         Registro de categoria
       </h4>
     </div>
-    <b-card-group deck>
       <b-card class="contentform">
-        <b-row>
+        <b-row class="mt-4">
           <b-col>
             <b-form-group label="Categoria">
               <b-form-input
@@ -93,7 +92,6 @@
           </b-col>
         </b-row>
       </b-card>
-    </b-card-group>
   </div>
 </template>
 
