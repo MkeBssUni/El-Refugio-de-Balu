@@ -257,7 +257,7 @@
 
 <script>
 export default {
-  name: "ViewAplicationRequest",
+  name: "ViewAplicationRequestMod",
 };
 </script>
 

@@ -76,13 +76,20 @@ public class ServiceAdoptionRequest {
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
         }
         Page<IAdoptionRequestViewPaged> page = iAdoptionRequestRepository.findAllPaged(Long.parseLong(hashService.decrypt(dto.getIdUser())), dto.getSearchValue(), pageable);
-        if (!page.getContent().isEmpty()) {
-            IAdoptionRequestViewPaged firstEntry = page.getContent().get(0);
-            System.out.println("PetName de la primera entrada: " + firstEntry.getId());
-        } else {
-            System.out.println("La lista de contenidos está vacía. No se pueden obtener los detalles de la primera entrada.");
-        }
         return new ResponseApi<>(page,HttpStatus.OK,false,"OK");
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseApi<Optional<AdoptionRequest>> findByIdAdoption(String idAdoption) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        if(idAdoption == null) {
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
+        }
+        Optional<AdoptionRequest> adoptionRequestOptional = iAdoptionRequestRepository.findById(Long.parseLong(hashService.decrypt(idAdoption)));
+        if (adoptionRequestOptional.isPresent()) {
+            return new ResponseApi<>(adoptionRequestOptional,HttpStatus.OK, false, "Success");
+        } else {
+            return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.NO_RECORDS.name());
+        }
     }
 
 
@@ -93,19 +100,6 @@ public class ServiceAdoptionRequest {
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
         }
         Optional<AdoptionRequest> adoptionRequestOptional = iAdoptionRequestRepository.findByPet_Id(Long.parseLong(hashService.decrypt(idPet)));
-        if (adoptionRequestOptional.isPresent()) {
-            return new ResponseApi<>(adoptionRequestOptional,HttpStatus.OK, false, "Success");
-        } else {
-            return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.NO_RECORDS.name());
-        }
-    }
-
-    @Transactional(readOnly = true)
-    public ResponseApi<Optional<AdoptionRequest>> findByIdAdoption(String idAdoption) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        if(idAdoption == null) {
-            return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
-        }
-        Optional<AdoptionRequest> adoptionRequestOptional = iAdoptionRequestRepository.findById(Long.parseLong(hashService.decrypt(idAdoption)));
         if (adoptionRequestOptional.isPresent()) {
             return new ResponseApi<>(adoptionRequestOptional,HttpStatus.OK, false, "Success");
         } else {

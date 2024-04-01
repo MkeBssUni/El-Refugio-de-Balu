@@ -500,6 +500,11 @@
         </b-row>
       </b-container>
     </div>
+    <b-modal v-model="homeSpecification" title="Especificaciones de Hogar">
+      <form>
+        
+      </form>
+    </b-modal>
   </div>
 </template>
 
@@ -517,6 +522,7 @@ export default {
   },
   data() {
     return {
+      homeSpecification: false,
       adoptionInfo: {
         placeToSleep: null,
         placeToLive: null,

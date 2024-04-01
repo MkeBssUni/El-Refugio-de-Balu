@@ -24,7 +24,7 @@ public interface IAdoptionRequestRepository  extends JpaRepository<AdoptionReque
     Page<IAdoptionRequestViewPaged> findAllPaged(@Param("idUser") Long idUser, @Param("namePet") String namePet, Pageable pageable);
 
 
-    Optional<AdoptionRequest> findById(Long idAdoption);
+
     Long countByUser_IdAndStatus_Id(Long idUser, Long statusId);
 
     Optional<AdoptionRequest> findByUser_IdAndPet_Id(Long userId, Long petId);

@@ -2,15 +2,10 @@ package com.balu.backend.modules.adoptionRequests.controller;
 
 import com.balu.backend.kernel.ErrorMessages;
 import com.balu.backend.kernel.ResponseApi;
-import com.balu.backend.kernel.SearchDto;
 import com.balu.backend.modules.adoptionRequests.model.AdoptionRequest;
 import com.balu.backend.modules.adoptionRequests.model.IAdoptionRequestViewPaged;
-import com.balu.backend.modules.adoptionRequests.model.dto.ChangeStatusAdoptionRequestDto;
-import com.balu.backend.modules.adoptionRequests.model.dto.GetAdoptionRequestDto;
-import com.balu.backend.modules.adoptionRequests.model.dto.GetByModeradorDto;
-import com.balu.backend.modules.adoptionRequests.model.dto.SaveAdoptionRequestDto;
+import com.balu.backend.modules.adoptionRequests.model.dto.*;
 import com.balu.backend.modules.adoptionRequests.service.ServiceAdoptionRequest;
-import com.balu.backend.modules.people.model.IPersonViewPaged;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,6 +40,16 @@ public class AdoptionRequestController {
     public ResponseEntity<ResponseApi<Optional<AdoptionRequest>>> getByPetId(@RequestBody GetByModeradorDto dto)throws Exception{
         try {
             ResponseApi<Optional<AdoptionRequest>> response = serviceAdoptionRequest.adoptionByModerador(dto.getPetId());
+            return new ResponseEntity<>(response,response.getStatus());
+        }catch (Exception e){
+            return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/getAdoption")
+    public ResponseEntity<ResponseApi<Optional<AdoptionRequest>>> getByAdoption(@RequestBody GetByIdAdoptionRequestDto dto)throws Exception{
+        try {
+            ResponseApi<Optional<AdoptionRequest>> response = serviceAdoptionRequest.findByIdAdoption(dto.getIdAdoption());
             return new ResponseEntity<>(response,response.getStatus());
         }catch (Exception e){
             return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
