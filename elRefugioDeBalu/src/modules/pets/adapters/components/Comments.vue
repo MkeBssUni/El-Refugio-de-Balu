@@ -5,7 +5,7 @@
             <b-button size="sm" variant="light" @click="close()" class="ms-auto">
                 <b-icon icon="x" font-scale="1.8" class="text-dark"></b-icon>
             </b-button>
-        </template>        
+        </template>
         <b-row v-for="comment in comments" :key="comment.id" class="my-3">
             <b-col cols="12" v-if="sessionRole == comment.userRole" class="text-end">
                 <span class="text-dark comment">
@@ -29,7 +29,7 @@
             </b-col>
         </b-row>
         <template #modal-footer>
-            <b-form class="d-flex align-items-start">
+            <b-form class="d-flex align-items-start" v-if="canComment">
                 <div>
                     <b-form-textarea ref="textarea" id="textarea" v-model.trim="form.comment"
                         placeholder="Escribe un comentario..." rows="2" max-rows="3" class="mb-2"
@@ -49,8 +49,8 @@
                         <b-icon icon="cursor" font-scale="1.5"></b-icon>
                     </template>
                 </b-button>
-
             </b-form>
+            <div v-else></div>
         </template>
     </b-modal>
 </template>
@@ -68,6 +68,10 @@ export default {
         },
         petId: {
             type: String,
+            required: true
+        },
+        canComment: {
+            type: Boolean,
             required: true
         }
     },
