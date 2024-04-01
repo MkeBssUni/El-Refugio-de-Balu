@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MyPetsAsModList {
     private String id;
-    private boolean cancelRequest;
+    private String cancelRequest;
     private int requests;
     private String category;
     private String name;
