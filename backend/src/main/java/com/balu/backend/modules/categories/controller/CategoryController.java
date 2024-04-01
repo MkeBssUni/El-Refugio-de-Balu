@@ -7,6 +7,7 @@ import com.balu.backend.modules.categories.model.Category;
 import com.balu.backend.modules.categories.model.ICategoryViewPaged;
 import com.balu.backend.modules.categories.model.dto.*;
 import com.balu.backend.modules.categories.services.CategoryService;
+import com.balu.backend.modules.people.model.IPersonViewPaged;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -73,15 +74,15 @@ public class CategoryController {
         }
     }
     @PostMapping ("/paged")
-    public ResponseEntity<ResponseApi<Page<ICategoryViewPaged>>> getCategoryPaged(
+    public ResponseEntity<ResponseApi<Page<ICategoryViewPaged>>> getPage(
             @RequestParam(defaultValue = "0", required = false) int page,
             @RequestParam(defaultValue = "8", required = false) int size,
             @RequestParam(defaultValue = "id", required = false) String sort,
             @RequestParam(defaultValue = "asc", required = false) String direction,
-            @RequestBody SearchCategoryDto searchCategoryDto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        Pageable pageable =PageRequest.of(page,size, Sort.by(Sort.Direction.fromString(direction),sort));
-        ResponseApi<Page<ICategoryViewPaged>> responseApi = categoryService.getPaged(searchCategoryDto,pageable);
-        return new ResponseEntity<>(responseApi,responseApi.getStatus());
+            @RequestBody SearchCategoryDto dto) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort));
+        ResponseApi<Page<ICategoryViewPaged>> responseApi = categoryService.getPaged(dto, pageable);
+        return new ResponseEntity<>(responseApi, responseApi.getStatus());
     }
 
     @GetMapping("/carousel")

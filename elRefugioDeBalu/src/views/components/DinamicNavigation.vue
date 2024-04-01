@@ -192,7 +192,7 @@ export default {
                         Gestión de usuarios
                         <i class="material-icons ms-2" style="font-size: larger;">person</i>
                     </b-button>
-                    <b-button variant="outline-dark-secondary-orange" :to="'/'"
+                    <b-button variant="outline-dark-secondary-orange" :to="'/animalCategories'"
                         class="mt-3 d-flex align-items-center justify-content-center">
                         Gestión de categorías
                         <i class="material-icons ms-2" style="font-size: larger;">dashboard</i>
