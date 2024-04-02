@@ -25,8 +25,8 @@ public class PersonController {
     private final PersonService personService;
 
     @PostMapping("/publicRegister")
-    public ResponseEntity<ResponseApi<Person>> publicRegister(@RequestBody PublicRegisterDto dto) throws Exception {
-        ResponseApi<Person> response = personService.publicRegister(dto);
+    public ResponseEntity<ResponseApi<?>> publicRegister(@RequestBody PublicRegisterDto dto) throws Exception {
+        ResponseApi<?> response = personService.publicRegister(dto);
         return new ResponseEntity<>(response, response.getStatus());
     }
     @PostMapping("/")
