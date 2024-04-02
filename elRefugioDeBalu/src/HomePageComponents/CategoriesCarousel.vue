@@ -1,7 +1,7 @@
 <template>
-  <div class="blue mt-3">
+  <div class="blue mt-3 border">
     <h3 class="mt-3 mx-3">Las mascotas que puedes encontrar con nosotros...</h3>
-    <div v-if='!enpty'>
+    <div v-if="!enpty">
       <b-carousel
         class="carousel-img"
         v-model="slide"
@@ -18,9 +18,15 @@
         ></b-carousel-slide>
       </b-carousel>
     </div>
-    <div v-else class="carousel-img class mx-2 my-5">
-     <h4 class="mt-5">Parece que no hay categorías registradas</h4>
-     <p class="mt-3 mb-5 pb-5">Parece que no hay categorías registradas aún...</p>
+    <div v-else class="class mx-2 my-5 text-center h-100">
+      <h4 class="mt-5">Parece que no hay categorías registradas</h4>
+      <h6 class="mt-4">
+        Parece que no hay categorías registradas aún...
+      </h6>
+      <small class="mt-5">
+        Mientras los administradores arreglan esto, mira un conejo.
+      </small>
+      <img class="imgNotCategories mt-4" src="https://cdn-icons-png.flaticon.com/512/7441/7441511.png" alt="Cargando..." />
     </div>
   </div>
 </template>
@@ -34,7 +40,7 @@ export default {
       slide: 0,
       sliding: null,
       categories: [],
-      enpty:null,
+      enpty: null,
     };
   },
   methods: {
@@ -45,15 +51,16 @@ export default {
       this.sliding = false;
     },
     async GetCategoriesForTheCarousel() {
-  try {
-    const response = await instance.get("/category/carousel");
-    this.categories = response.data.data;
-    this.enpty= this.categories== null
-  } catch (error) {
-    console.error("Error al obtener categorías:", error);
-  }
-},
-
+      this.enpty = false;
+      try {
+        const response = await instance.get("/category/carousel");
+        this.categories = response.data.data;
+        this.enpty = this.categories.length === 0;
+      } catch (error) {
+        this.enpty = true;
+      }
+      console.log(this.enpty);
+    },
   },
   mounted() {
     this.GetCategoriesForTheCarousel();
