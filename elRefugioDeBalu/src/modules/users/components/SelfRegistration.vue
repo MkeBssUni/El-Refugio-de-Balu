@@ -38,7 +38,6 @@
       id="input-password"
       class="bg-light shadow text-dark-gray-input"
       v-model.trim="form.password"
-      @input="validateInput('password')"
       :type="showPassword ? 'text' : 'password'"
     ></b-form-input>
     <b-input-group-prepend>
