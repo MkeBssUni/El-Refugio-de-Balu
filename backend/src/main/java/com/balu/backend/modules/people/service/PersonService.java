@@ -81,7 +81,8 @@ public class PersonService {
         }else{
             emailService.sendEmailNewAccount(dto.getUsername(),activationCode);
         }
-        return new ResponseApi<>(iPersonRepository.saveAndFlush(person), HttpStatus.CREATED, false,"OK");
+        iPersonRepository.saveAndFlush(person);
+        return new ResponseApi<>(HttpStatus.CREATED, false,"OK");
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
