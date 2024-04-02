@@ -48,35 +48,59 @@
                   class="my-2 information-pet"
                 >
                   <b-card-body>
-                    <b-card-title> Sr. Bigotes </b-card-title>
+                    <b-card-title> {{ credentialPet.name }} </b-card-title>
                     <hr class="my-line" />
                     <b-row>
                       <b-col cols="12" sm="12" lg="8" md="8" xl="8">
                         <b-card-text>
-                          <b>Raza:</b> Neva Masquerade
+                          <b>Raza:</b> &nbsp;{{ credentialPet.breed }}
                         </b-card-text>
                       </b-col>
                     </b-row>
                     <b-row>
                       <b-col cols="12" sm="12" lg="6" md="6" xl="6">
-                        <b-card-text> <b>Especie:</b> Gato </b-card-text>
+                        <b-card-text>
+                          <b>Especie:</b>&nbsp; {{ credentialPet.category }}
+                        </b-card-text>
                       </b-col>
                       <b-col cols="12" sm="12" lg="6" md="6" xl="6">
-                        <b-card-text> <b>Peso:</b> 3kg </b-card-text>
+                        <b-card-text>
+                          <b>Peso:</b>&nbsp;
+                          {{ getAgeNumber(credentialPet.weight) }} {{
+                            mapweightUnits(getAgeUnit(credentialPet.weight))
+                          }}
+                          
+                        </b-card-text>
                       </b-col>
                     </b-row>
                     <b-row>
                       <b-col cols="12" sm="12" lg="6" md="6" xl="6">
-                        <b-card-text> <b>Tamaño:</b> Mediano </b-card-text>
+                        <b-card-text>
+                          <b>Tamaño:</b>&nbsp;
+                          {{
+                            mapSize(credentialPet.size.toString().toLowerCase())
+                          }}
+                        </b-card-text>
                       </b-col>
                       <b-col cols="12" sm="12" lg="6" md="6" xl="6">
-                        <b-card-text> <b>Etapa:</b> Joven </b-card-text>
+                        <b-card-text>
+                          <b>Etapa:</b> &nbsp;
+                          {{
+                            maplifeStages(
+                              credentialPet.lifeStage.toString().toLowerCase()
+                            )
+                          }}
+                        </b-card-text>
                       </b-col>
                       <b-col cols="12" sm="12" lg="6" md="6" xl="6">
-                        <b-card-text> <b>Edad:</b> 8 meses </b-card-text>
+                        <b-card-text>
+                          <b>Edad:</b>&nbsp;{{ getAgeNumber(credentialPet.age) }} {{
+                            mapageUnits(getAgeUnit(credentialPet.age))
+                          }}</b-card-text
+                        >
                       </b-col>
                       <b-col cols="12" sm="12" lg="6" md="6" xl="6">
-                        <b-card-text> <b>Género:</b> Macho </b-card-text>
+                        <b-card-text> <b>Género:</b>&nbsp; {{ mapGender(credentialPet.gender.toString().toLowerCase()) }} </b-card-text>
                       </b-col>
                     </b-row>
                   </b-card-body>
@@ -149,7 +173,11 @@
               <b-col cols="12" sm="12" lg="6" md="6" xl="6">
                 <b-card-text>
                   <b>Comentarios adicionales</b>
-                  {{ requestAdoption.reasons_for_adoption.additionalComments ?  requestAdoption.reasons_for_adoption.additionalComments:"No se registraron comentarios adicionales" }}
+                  {{
+                    requestAdoption.reasons_for_adoption.additionalComments
+                      ? requestAdoption.reasons_for_adoption.additionalComments
+                      : "No se registraron comentarios adicionales"
+                  }}
                 </b-card-text>
               </b-col>
             </b-row>
@@ -168,7 +196,10 @@
               <b-col cols="12" sm="12" lg="6" md="6" xl="6">
                 <b-card-text>
                   <b>¿Cuando se enfermaba la mascota que hacias?</b>
-                  {{ requestAdoption.previous_experience.whatDidYouDoWhenThePetGotSick }}
+                  {{
+                    requestAdoption.previous_experience
+                      .whatDidYouDoWhenThePetGotSick
+                  }}
                 </b-card-text>
               </b-col>
             </b-row>
@@ -176,13 +207,22 @@
               <b-col cols="12" sm="12" lg="6" md="6" xl="6">
                 <b-card-text>
                   <b>¿Qué tipo de mascotas haz tenido antes?</b>
-                 {{ requestAdoption.previous_experience.whatKindOfPetsHaveYouHadBefore }}
+                  {{
+                    requestAdoption.previous_experience
+                      .whatKindOfPetsHaveYouHadBefore
+                  }}
                 </b-card-text>
               </b-col>
               <b-col cols="12" sm="12" lg="6" md="6" xl="6">
                 <b-card-text>
                   <b>¿Qué recuerdos tienes con tu mascota?</b>
-                  {{ requestAdoption.previous_experience.whatMemoriesDoYouHaveWithYourPet ? requestAdoption.previous_experience.whatMemoriesDoYouHaveWithYourPet:"No se registraron recuerdos"}}
+                  {{
+                    requestAdoption.previous_experience
+                      .whatMemoriesDoYouHaveWithYourPet
+                      ? requestAdoption.previous_experience
+                          .whatMemoriesDoYouHaveWithYourPet
+                      : "No se registraron recuerdos"
+                  }}
                 </b-card-text>
               </b-col>
             </b-row>
@@ -194,7 +234,11 @@
             <b-row>
               <b-col cols="12" sm="12" lg="12" md="12" xl="12">
                 <b-card-text>
-                  {{ requestAdoption.additional_information ? requestAdoption.additional_information:"No se registró información adicional" }}
+                  {{
+                    requestAdoption.additional_information
+                      ? requestAdoption.additional_information
+                      : "No se registró información adicional"
+                  }}
                 </b-card-text>
               </b-col>
             </b-row>
@@ -205,17 +249,20 @@
         <b-button
           type="submit"
           variant="outline-dark-secondary-blue pill"
-          class="mt-3  mx-4"
+          class="mt-3 mx-4"
           @click="goBack"
         >
-          Regresar
+          <b-icon icon="box-arrow-left"></b-icon> &nbsp; Regresar
         </b-button>
         <b-button
           type="submit"
-          variant="outline-danger pills"
+          variant="outline-danger"
           class="mt-3"
+          @click="closedRequestAdoption"
+          :disabled="requestAdoption.status.name !== 'PENDING'"
         >
-          Cancelar solicitud
+          <b-icon icon="clipboard-x"></b-icon>
+          &nbsp;Cancelar solicitud
         </b-button>
       </div>
     </b-card>
@@ -226,7 +273,14 @@
 import Swal from "sweetalert2";
 import perroChato from "@/assets/imgs/perroChato1.gif";
 import instance from "../../../../config/axios";
-import { decrypt } from "../../../../kernel/hashFunctions";
+import { decrypt, encrypt } from "../../../../kernel/hashFunctions";
+import {
+  sizes,
+  weightUnits,
+  lifeStages,
+  ageUnits,
+  gender
+} from "../../../../kernel/data/mappingDictionaries";
 
 export default {
   name: "viewAplicationAdoptionRequest",
@@ -234,14 +288,46 @@ export default {
     return {
       requestAdoption: {},
       infoStatus: "",
+      credentialPet: {},
     };
   },
   mounted() {
     this.getAdoption();
   },
   methods: {
+    getAgeUnit(age) {
+      const matches = age.match(/^(\d+)\s*(\w+)$/);
+      if (matches && matches.length === 3) {
+        return matches[2].toLowerCase();
+      } else {
+        return "";
+      }
+    },
+    getAgeNumber(age) {
+      const matches = age.match(/^(\d+)\s*(\w+)$/);
+      if (matches && matches.length === 3) {
+        return matches[1]; // Devuelve solo el número
+      } else {
+        return ""; // Opción de manejo de errores si el formato no es válido
+      }
+    },
     goBack() {
       this.$router.go(-1);
+    },
+    mapSize(size) {
+      return sizes[size] || size;
+    },
+    maplifeStages(stage) {
+      return lifeStages[stage] || stage;
+    },
+    mapweightUnits(weightUnit) {
+      return weightUnits[weightUnit] || weightUnit;
+    },
+    mapGender(genderpet){
+      return gender[genderpet] || genderpet;
+    },
+    mapageUnits(ageUnit) {
+      return ageUnits[ageUnit] || ageUnit;
     },
     getDate(date) {
       const formattedDate = new Date(date);
@@ -277,6 +363,37 @@ export default {
         default:
           return "SIN DATOS";
       }
+    },
+    base64ToImage(base64String) {
+      if (!base64String) {
+        console.error("base64String es nulo o indefinido");
+        return null;
+      }
+      // Extraer el tipo de la imagen desde la cadena Base64
+      const type = base64String.substring(
+        "data:image/".length,
+        base64String.indexOf(";base64")
+      );
+
+      // Crear un blob desde la cadena Base64
+      const byteCharacters = atob(base64String.split(",")[1]);
+      const byteArrays = [];
+      for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+        const slice = byteCharacters.slice(offset, offset + 512);
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+          byteNumbers[i] = slice.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+      }
+      const blob = new Blob(byteArrays, { type: type });
+
+      // Crear una URL para la imagen
+      const url = URL.createObjectURL(blob);
+
+      // Retornar la URL de la imagen
+      return url;
     },
     async getAdoption() {
       try {
@@ -335,8 +452,7 @@ export default {
         this.requestAdoption.additional_information = await decrypt(
           this.requestAdoption.additional_information
         );
-        console.log(this.requestAdoption);
-
+        this.getCredentialPet();
         Swal.close();
       } catch (error) {
         Swal.fire({
@@ -351,6 +467,80 @@ export default {
           }
         });
       }
+    },
+    async getCredentialPet() {
+      try {
+        let idPet = await encrypt(this.requestAdoption.pet.id);
+        const response = await instance.post("/pet/credential", {
+          id: idPet,
+        });
+        this.credentialPet = response.data.data;
+      } catch (error) {
+        Swal.fire({
+          title: "Error",
+          text: "Ocurrió un error al cargar la solicitud",
+          icon: "error",
+          iconColor: "#FF0000",
+          showConfirmButton: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.$router.push("/home");
+          }
+        });
+      }
+    },
+    async closedRequestAdoption() {
+      Swal.fire({
+        title: "¿Estás seguro de cancelar la solicitud de adopción?",
+        text: "Una vez enviada no podrá ser modificada",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si, enviar",
+        cancelButtonText: "Cancelar",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: "Espera un momento...",
+            text: "Estamos enviando tu solicitud",
+            imageUrl: perroChato,
+            timer: 2000,
+            timerProgressBar: true,
+            imageWidth: 160, // Ancho de la imagen
+            imageHeight: 160, // Altura de la imagen
+            showConfirmButton: false,
+          }).then(() => {
+            let response = instance.put("/adoption/changeStatusClosed", {
+              idAdoption: localStorage.getItem("adoptionId"),
+            });
+            if (!response.error) {
+              Swal.fire({
+                title: "Solicitud cancelada",
+                text: "Tu solicitud ha sido cancelada",
+                icon: "success",
+                showConfirmButton: true,
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  this.$router.push("/myAplicationAdoption");
+                }
+              });
+            } else {
+              Swal.fire({
+                title: "Error",
+                text: "Ocurrió un error al cancelar la solicitud",
+                icon: "error",
+                iconColor: "#FF0000",
+                showConfirmButton: true,
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  this.$router.push("/home");
+                }
+              });
+            }
+          });
+        }
+      });
     },
   },
 };
@@ -410,6 +600,4 @@ export default {
 .homePhotos:hover {
   transform: scale(1.1); /* Aumenta el tamaño de la imagen al 110% */
 }
-
-
 </style>
