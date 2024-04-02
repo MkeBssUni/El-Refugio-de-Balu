@@ -1,5 +1,6 @@
 package com.balu.backend.modules.adresses.model.model.dto;
 
+import com.balu.backend.modules.users.model.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,7 @@ public class SaveAddressDto {
     private String addressReference;
     private String exteriorNumber;
     private String interiorNumber;
-    private Long userId;
-    private Long homeSpecificationId;
+    private String userId;
+    private String homeSpecificationId;
+    private User user;
 }

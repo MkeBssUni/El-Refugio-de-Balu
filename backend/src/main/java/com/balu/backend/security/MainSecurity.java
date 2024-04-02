@@ -37,7 +37,8 @@ public class MainSecurity {
             "/api/person/validate/code",
             "/api/pet/catalog",
             "/api/pet/details",
-            "/api/category/carousel"
+            "/api/category/carousel",
+            "/api/address/"
 
     };
 

@@ -3,8 +3,11 @@ package com.balu.backend.modules.adresses.model.services;
 import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.modules.adresses.model.model.Address;
 import com.balu.backend.modules.adresses.model.model.IAddressRepository;
+import com.balu.backend.modules.adresses.model.model.dto.SaveAddressDto;
 import com.balu.backend.modules.adresses.model.model.dto.UpdateAddressDto;
 import com.balu.backend.modules.hash.service.HashService;
+import com.balu.backend.modules.users.model.IUserRepository;
+import com.balu.backend.modules.users.model.User;
 import io.micrometer.common.util.StringUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AddressService {
     private final IAddressRepository addressRepository;
     private final HashService hashService;
+    private final IUserRepository userRepository;
 
     @Transactional(readOnly = true)
     public ResponseApi<List<Address>> getAllAddresses() {
@@ -46,14 +50,49 @@ public class AddressService {
     }
 
     @Transactional(rollbackFor = {NoSuchAlgorithmException.class, NoSuchPaddingException.class, InvalidAlgorithmParameterException.class, InvalidKeyException.class, IllegalBlockSizeException.class, BadPaddingException.class})
-    public ResponseApi<Address> saveAddress(@RequestBody Address address) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+    public ResponseApi<Address> saveAddress(SaveAddressDto address) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         if (StringUtils.isEmpty(address.getCountry()) || StringUtils.isEmpty(address.getStreet()) || StringUtils.isEmpty(address.getColony()) || StringUtils.isEmpty(address.getCity()) || StringUtils.isEmpty(address.getState()) || StringUtils.isEmpty(address.getPostalCode()) || StringUtils.isEmpty(address.getAddressReference()) || StringUtils.isEmpty(address.getExteriorNumber()) || StringUtils.isEmpty(address.getInteriorNumber())) {
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
         }
+        /*long userId = Long.parseLong(hashService.decrypt(address.getUserId()));
+        User user = userRepository.getById(userId);
+        System.out.println(user.getId()+" "+user.getUsername());
 
-        Address encryptedAddress = encryptAddressFields(address);
-        Address savedAddress = addressRepository.save(encryptedAddress);
-        return new ResponseApi<>(savedAddress, HttpStatus.CREATED, false, "Address saved successfully");
+        Address encryptedAddress = new Address
+                (0L,
+                hashService.decrypt(address.getCountry()),
+                hashService.decrypt(address.getStreet()),
+                hashService.decrypt(address.getColony()),
+                        hashService.decrypt(address.getCity()),
+                        hashService.decrypt(address.getStreet()),
+                        hashService.decrypt(address.getPostalCode()),
+                        hashService.decrypt(address.getAddressReference()),
+                        hashService.decrypt(address.getExteriorNumber()),
+                        hashService.decrypt(address.getInteriorNumber()),
+                        user,
+                        null
+                );
+         */
+        Long userId= Long.parseLong(address.getUserId());
+        Address address1 = new Address();
+        Optional<User> optionalUser = userRepository.findById(Long.valueOf(address.getUserId()));
+        if(optionalUser.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND,true, ErrorMessages.NOT_FOUND.name());
+        address.setUser(optionalUser.get());
+        address1.save(address);
+//        Address encryptedAddress= new Address();
+//        encryptedAddress.setCountry(address.getCountry());
+//        encryptedAddress.setStreet(address.getStreet());
+//        encryptedAddress.setColony(address.getColony());
+//        encryptedAddress.setCity(address.getPostalCode());
+//        encryptedAddress.setState(address.getState());
+//        encryptedAddress.setPostalCode(address.getPostalCode());
+//        encryptedAddress.setAddressReference(address.getAddressReference());
+//        encryptedAddress.setExteriorNumber(address.getExteriorNumber());
+//        encryptedAddress.setExteriorNumber(address.getExteriorNumber());
+//        encryptedAddress.setUser(user);
+        //Address savedAddress = addressRepository.save(encryptedAddress);
+        addressRepository.saveAndFlush(address1);
+        return new ResponseApi<>(HttpStatus.CREATED, false, "Address saved successfully");
     }
 
     @Transactional(rollbackFor = {NoSuchAlgorithmException.class, NoSuchPaddingException.class, InvalidAlgorithmParameterException.class, InvalidKeyException.class, IllegalBlockSizeException.class, BadPaddingException.class})

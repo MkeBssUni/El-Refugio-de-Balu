@@ -3,6 +3,7 @@ package com.balu.backend.modules.adresses.model.controller;
 import com.balu.backend.kernel.ErrorMessages;
 import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.modules.adresses.model.model.Address;
+import com.balu.backend.modules.adresses.model.model.dto.SaveAddressDto;
 import com.balu.backend.modules.adresses.model.model.dto.UpdateAddressDto;
 import com.balu.backend.modules.adresses.model.services.AddressService;
 import lombok.AllArgsConstructor;
@@ -23,11 +24,13 @@ public class AddressController { private final AddressService addressService;
     }
 
     @PostMapping("/")
-    public ResponseEntity<ResponseApi<Address>> saveAddress(@RequestBody Address address) {
+    public ResponseEntity<ResponseApi<Address>> saveAddress(@RequestBody SaveAddressDto saveAddressDto) {
         try {
-            ResponseApi<Address> responseApi = addressService.saveAddress(address);
+
+            ResponseApi<Address> responseApi = addressService.saveAddress(saveAddressDto);
             return new ResponseEntity<>(responseApi, responseApi.getStatus());
         } catch (Exception e) {
+            System.out.println(e);
             return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
