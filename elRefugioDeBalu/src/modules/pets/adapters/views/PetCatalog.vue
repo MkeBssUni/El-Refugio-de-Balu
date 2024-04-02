@@ -87,13 +87,14 @@
                 </b-card>
             </b-col>
         </b-row>
-        <b-row class="px-5 mb-5">
+        <TransitionGroup name="roll" tag="div" class="row px-5 mb-5">
             <b-col v-for="pet in pets" :key="pet.id" cols="12" sm="6" lg="4" xl="3" class="mt-3">
                 <b-card :key="pet.id" :img-src="pet.image" class="pet-card" no-body>
                     <b-row class="transparent absolute-position">
                         <b-col cols="12" class="d-flex justify-content-end">
                             <b-button variant="dark-gray" class="m-2 py-2 d-flex align-items-center" pill
-                                @mouseover="hoverIn(pet.id)" @mouseleave="hoverOut(pet.id)" @click="addOrRemoveFavoritePet(pet)"
+                                @mouseover="hoverIn(pet.id)" @mouseleave="hoverOut(pet.id)"
+                                @click="addOrRemoveFavoritePet(pet)"
                                 v-b-tooltip.hover.left="pet.favorite ? 'Eliminar de favoritas' : 'Marcar como favorita'">
                                 <b-icon :icon="getIcon(pet)"
                                     :class="{ 'text-danger': shouldHighlight(pet), 'mt-1': true }"
@@ -113,7 +114,7 @@
                     </b-card-body>
                 </b-card>
             </b-col>
-        </b-row>
+        </TransitionGroup>
         <b-row class="pt-2">
             <b-col cols="12">
                 <b-pagination pills v-model="page" :total-rows="total" :per-page="size" align="center">

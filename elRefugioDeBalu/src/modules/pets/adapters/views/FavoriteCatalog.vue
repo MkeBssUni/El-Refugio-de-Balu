@@ -18,7 +18,7 @@
             </b-col>
         </b-row>
         <hr class="mt-4">
-        <b-row class="mb-5">
+        <TransitionGroup name="roll" tag="div" class="row mb-5">        
             <b-col v-for="pet in pets" :key="pet.id" cols="12" sm="6" lg="4" xl="3" class="mt-3">
                 <b-card :key="pet.id" :img-src="pet.image" class="pet-card" no-body>
                     <b-row class="transparent absolute-position">
@@ -46,7 +46,7 @@
             <b-col v-show="total == 0">
                 <h5 class="text-center mt-3">No has marcado mascotas como tus favoritas</h5>
             </b-col>
-        </b-row>
+        </TransitionGroup>
         <b-row class="pt-2">
             <b-col cols="12">
                 <b-pagination pills v-model="page" :total-rows="total" :per-page="size" align="center">
