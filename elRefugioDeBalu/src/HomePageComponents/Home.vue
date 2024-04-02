@@ -37,7 +37,7 @@
                 </b-jumbotron>
             </b-col>
         </b-row>
-        <b-row class=" px-0 justify-content-center">
+        <b-row class=" px-0 justify-content-center border">
             <b-col class="ps-0" cols="11" sm="11" md="5" lg="5" xl="5">
                 <Banner />
             </b-col>
