@@ -1,5 +1,5 @@
 <template>
-  <div class="blue mt-3 border">
+  <div class="blue mt-3 p-2">
     <h3 class="mt-3 mx-3">Las mascotas que puedes encontrar con nosotros...</h3>
     <div v-if="!enpty">
       <b-carousel
@@ -18,8 +18,8 @@
         ></b-carousel-slide>
       </b-carousel>
     </div>
-    <div v-else class="class mx-2 my-5 text-center h-100">
-      <h4 class="mt-5">Parece que no hay categorías registradas</h4>
+    <div v-else class="class mx-2 my-5 text-center w-100 h-100">
+      <h4 class="mt-3">No hay categorías registradas</h4>
       <h6 class="mt-4">
         Parece que no hay categorías registradas aún...
       </h6>
