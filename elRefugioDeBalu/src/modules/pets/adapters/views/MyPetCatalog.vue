@@ -39,7 +39,7 @@
                 </b-col>
             </b-row>
             <hr class="mt-4">
-            <b-row class="mb-5">
+            <TransitionGroup name="roll" tag="div" class="row mb-5">
                 <b-col v-for="pet in pets" :key="pet.id" cols="12" sm="6" lg="4" xl="3" class="mt-3">
                     <b-card :key="pet.id" :img-src="pet.image" class="pet-card" no-body>
                         <b-row v-if="pet.comments > 0" class="transparent absolute-position">
@@ -69,7 +69,7 @@
                         </b-card-body>
                     </b-card>
                 </b-col>
-            </b-row>
+            </TransitionGroup>
             <b-row class="pt-2">
                 <b-col cols="12">
                     <b-pagination pills v-model="page" :total-rows="total" :per-page="size" align="center">
@@ -166,7 +166,7 @@ export default {
                     imageHeight: 160,
                     showConfirmButton: false
                 })
-                this.selectedPetId = pet.id                                
+                this.selectedPetId = pet.id
                 this.canComment = ['in_revision', 'approved'].includes(pet.status);
                 const response = await instance.post(`/pet/comment/all`, {
                     pet: pet.id,
@@ -189,7 +189,7 @@ export default {
                 })
             }
         },
-        async loadComments() {            
+        async loadComments() {
             const pet = this.pets.find(pet => pet.id === this.selectedPetId);
             if (pet) {
                 await this.getComments(pet);
