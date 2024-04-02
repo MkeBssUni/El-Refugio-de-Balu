@@ -30,5 +30,10 @@ const statusses = {
     in_revision: 'En revisión',
 }
 
-export { sizes, lifeStages, ageUnits, weightUnits, statusses }
+const gender ={
+    female: 'Hembra',
+    male: 'Macho'
+}
+
+export { sizes, lifeStages, ageUnits, weightUnits, statusses,gender }
 

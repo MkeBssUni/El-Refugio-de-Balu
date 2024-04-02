@@ -68,5 +68,11 @@ public class AdoptionRequestController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
+    @PutMapping("/changeStatusClosed")
+    public ResponseEntity<ResponseApi<?>> changeStatusGeneral (@RequestBody GetByIdAdoptionRequestDto dto){
+        ResponseApi<?> response = serviceAdoptionRequest.changeStatusBygeneral(dto);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
 
 }

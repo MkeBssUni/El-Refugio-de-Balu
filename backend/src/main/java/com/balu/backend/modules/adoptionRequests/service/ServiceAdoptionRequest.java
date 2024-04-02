@@ -6,6 +6,7 @@ import com.balu.backend.modules.adoptionRequests.model.IAdoptionRequestRepositor
 import com.balu.backend.modules.adoptionRequests.model.IAdoptionRequestViewPaged;
 import com.balu.backend.modules.adoptionRequests.model.dto.ChangeStatusAdoptionRequestDto;
 import com.balu.backend.modules.adoptionRequests.model.dto.GetAdoptionRequestDto;
+import com.balu.backend.modules.adoptionRequests.model.dto.GetByIdAdoptionRequestDto;
 import com.balu.backend.modules.adoptionRequests.model.dto.SaveAdoptionRequestDto;
 import com.balu.backend.modules.adresses.model.model.Address;
 import com.balu.backend.modules.adresses.model.model.IAddressRepository;
@@ -232,6 +233,30 @@ public class ServiceAdoptionRequest {
     }
 
     @Transactional(rollbackFor = {SQLException.class,Exception.class})
+    public ResponseApi<?> changeStatusBygeneral(GetByIdAdoptionRequestDto dto){
+        try{
+            if(dto.getIdAdoption() == null || validations.isNotBlankString(dto.getIdAdoption()))
+                return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.MISSING_FIELDS.name());
+            Long idAdoption = decryptId(dto.getIdAdoption());
+            Optional<AdoptionRequest> optional = iAdoptionRequestRepository.findById(idAdoption);
+            if(!optional.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.NOT_FOUND.name());
+            Optional<Status> optionalStatus = statusRepository.findByName(Statusses.CLOSED);
+            if (!optionalStatus.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+            Status status = optionalStatus.get();
+            Long idStatus = status.getId();
+            Integer adoption = this.iAdoptionRequestRepository.changeStatusAdoptionRequest(idAdoption,idStatus);
+            if(adoption == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.NOT_CHANGESTATUS_ADOPTIONREQUEST.name());
+            if(adoption != null){
+                logService.saveLog("Change status request adoption by:"+idAdoption, LogTypes.UPDATE,"ADOPTIONREQUEST");
+            }
+            return new ResponseApi<>(adoption,HttpStatus.OK,false,"Adoption request change status successfully");
+        }catch (Exception e){
+            System.out.println(e);
+            return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name());
+        }
+    }
+
+    @Transactional(rollbackFor = {SQLException.class,Exception.class})
     public ResponseApi<?> changeStatus(ChangeStatusAdoptionRequestDto dto){
         try{
             if(dto.getAdoptionId() == null || validations.isNotBlankString(dto.getAdoptionId())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.MISSING_FIELDS.name());
@@ -262,7 +287,7 @@ public class ServiceAdoptionRequest {
                     emailService.finalizeAdoptionTemplate(hashService.decrypt(user.getUsername()),pet.getName());
                 }
             }
-            logService.saveLog("Change status request adoption by: "+adoption, LogTypes.UPDATE,"ADOPTIONREQUEST | PET");
+            logService.saveLog("Change status request adoption by: "+adoption, LogTypes.CHANGE_STATUS,"ADOPTIONREQUEST");
             return new ResponseApi<>(adoption,HttpStatus.OK,false,"Adoption request change status successfully");
         }catch (Exception e){
             return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name());
