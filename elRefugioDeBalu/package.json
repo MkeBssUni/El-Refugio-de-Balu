@@ -16,7 +16,8 @@
     "vue-axios": "^3.5.2",
     "vue-router": "^2.8.1",
     "vue-sweetalert2": "^5.0.5",
-    "@asika32764/vue-animate": "^3.0.2"
+    "@asika32764/vue-animate": "^3.0.2",
+    "friendly-challenge": "^0.9.14"
   },
   "devDependencies": {
     "@vitejs/plugin-legacy": "^2.0.0",

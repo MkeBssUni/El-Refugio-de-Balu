@@ -11,9 +11,11 @@ import com.balu.backend.modules.users.model.IUserRepository;
 import com.balu.backend.modules.users.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.sql.SQLException;
 import java.util.Optional;
@@ -66,6 +68,10 @@ public class InitialConfig implements CommandLineRunner {
             String finalUsername = username;
             optionalRole.ifPresent(role1 -> iUserRepository.saveAndFlush(new User(finalUsername, passwordEncoder.encode(password), role1)));
         }
+    }
+    @Bean
+    public RestTemplate restTemplate(){
+        return new RestTemplate();
     }
 }
 
