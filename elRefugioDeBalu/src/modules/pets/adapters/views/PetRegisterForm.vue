@@ -72,8 +72,10 @@
                                         <b-col cols="12" lg="7" xl="8" class="d-flex align-items-center">
                                             <b-row>
                                                 <b-col cols="12" sm="7" xl="8" class="mt-3 mt-xl-0">
-                                                    <b-form-group label="Ingresa el nombre de la mascota:" 
-                                                        label-for="name">
+                                                    <b-form-group label-for="name">
+                                                        <label slot="label">
+                                                            Ingresa el nombre de la mascota: <span class="required-asterisk">*</span>
+                                                        </label>
                                                         <b-form-input id="name" v-model.trim="form.name" @input="validateInput('name')" @focus="validateInput('name')"
                                                             placeholder="Nombre..."></b-form-input>
                                                             <b-form-invalid-feedback v-if="showErrors.name"
@@ -81,7 +83,10 @@
                                                     </b-form-group>
                                                 </b-col>
                                                 <b-col cols="12" sm="5" xl="4" class="mt-3 mt-xl-0">
-                                                    <b-form-group label="Selecciona su especie:" label-for="category">
+                                                    <b-form-group label-for="category">
+                                                        <label slot="label">
+                                                            Selecciona su especie: <span class="required-asterisk">*</span>
+                                                        </label>
                                                         <b-form-select id="category" v-model.trim="form.category" @input="validateInput('species')" @click="validateInput('species')" 
                                                             class="form-select">
                                                             <option value="0" disabled>Especie...</option>
@@ -95,8 +100,10 @@
                                                     </b-form-group>
                                                 </b-col>
                                                 <b-col cols="12" sm="7" xl="8" class="mt-3">
-                                                    <b-form-group label="Ingresa la raza de la mascota:"
-                                                        label-for="breed">
+                                                    <b-form-group label-for="breed">
+                                                        <label slot="label">
+                                                            Ingresa la raza de la mascota: <span class="required-asterisk">*</span>
+                                                        </label>
                                                         <b-form-input id="breed" v-model.trim="form.breed" @input="validateInput('breed')" @focus="validateInput('breed')"
                                                             placeholder="Raza..."></b-form-input>
                                                             <b-form-invalid-feedback v-if="showErrors.breed"
@@ -104,7 +111,10 @@
                                                     </b-form-group>
                                                 </b-col>
                                                 <b-col cols="12" sm="5" xl="4" class="mt-3">
-                                                    <b-form-group label="Selecciona su tamaño:" label-for="size">
+                                                    <b-form-group label-for="size">
+                                                        <label slot="label">
+                                                            Selecciona su tamaño: <span class="required-asterisk">*</span>
+                                                        </label>
                                                         <b-form-select id="size" v-model.trim="form.size" @input="validateInput('size')" @click="validateInput('size')"
                                                             class="form-select">
                                                             <option value="default" disabled>Tamaño...</option>
@@ -118,8 +128,10 @@
                                                     </b-form-group>
                                                 </b-col>
                                                 <b-col cols="12" sm="7" xl="8">
-                                                    <b-form-group label="Ingresa la edad de la mascota:" label-for="age"
-                                                        class="mt-3">
+                                                    <b-form-group label-for="age" class="mt-3">
+                                                        <label slot="label">
+                                                            Ingresa la edad de la mascota: <span class="required-asterisk">*</span>
+                                                        </label>
                                                         <b-row>
                                                             <b-col cols="8" sm="7" xl="8">
                                                                 <b-form-input id="age" v-model.trim="form.age" @input="validateInput('age')" @focus="validateInput('age')"
@@ -143,8 +155,10 @@
                                                     </b-form-group>
                                                 </b-col>
                                                 <b-col cols="12" sm="5" xl="4">
-                                                    <b-form-group label="Selecciona su etapa:" label-for="stage"
-                                                        class="mt-3">
+                                                    <b-form-group label-for="stage" class="mt-3">
+                                                        <label slot="label">
+                                                            Selecciona su etapa: <span class="required-asterisk">*</span>
+                                                        </label>
                                                         <b-form-select id="stage" v-model.trim="form.stage" @input="validateInput('stage')" @click="validateInput('stage')"
                                                             class="form-select">
                                                             <option value="default" disabled>Etapa...</option>
@@ -158,8 +172,10 @@
                                                     </b-form-group>
                                                 </b-col>
                                                 <b-col cols="12" sm="7" xl="8">
-                                                    <b-form-group label="Ingresa el peso de la mascota:"
-                                                        label-for="weight" class="mt-3">
+                                                    <b-form-group label-for="weight" class="mt-3">
+                                                        <label slot="label">
+                                                            Ingresa el peso de la mascota: <span class="required-asterisk">*</span>
+                                                        </label>
                                                         <b-row>
                                                             <b-col cols="8" sm="7" xl="8">
                                                                 <b-form-input id="weight" v-model.trim="form.weight" @input="validateInput('weight')" @focus="validateInput('weight')"
@@ -182,8 +198,10 @@
                                                     </b-form-group>
                                                 </b-col>
                                                 <b-col cols="12" sm="5" xl="4">
-                                                    <b-form-group label="Selecciona su sexo:" label-for="sex"
-                                                        class="mt-3">
+                                                    <b-form-group label-for="sex" class="mt-3">
+                                                        <label slot="label">
+                                                            Selecciona su sexo: <span class="required-asterisk">*</span>
+                                                        </label>
                                                         <b-form-select id="sex" v-model="form.sex" class="form-select" @input="validateInput('gender')" @click="validateInput('gender')">
                                                             <option value="default" disabled>Sexo...</option>
                                                             <option v-for="sex in sexes" :key="sex.id"
@@ -319,7 +337,7 @@
                 <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
                     <b-row>
                         <b-col cols="10" md="8" lg="6">
-                            <b-card bg-variant="card-header-secondary-orange"
+                            <b-card bg-variant="card-header-orange"
                                 class="py-2 card-shadow relative-position form-card-title" no-body>
                                 <div class="d-flex align-items-center ms-3 ms-md-4">
                                     <i class="material-icons me-2" style="font-size: 1.5rem">pets</i>
@@ -330,13 +348,16 @@
                     </b-row>
                     <b-row>
                         <b-col cols="12">
-                            <b-card bg-variant="card-content-secondary-orange" class="card-shadow form-card-content">
+                            <b-card bg-variant="card-content-orange" class="card-shadow form-card-content">
                                 <b-card-body>
                                     <b-row>
                                         <b-col cols="12" md="6">
-                                            <b-form-group label="Escribe las características de la mascota:"
+                                            <b-form-group
                                                 label-for="characteristics"
                                                 description="Describe la personalidad y el físico de la mascota con adjetivos calificativos">
+                                                <label slot="label">
+                                                            Escribe las características de la mascota: <span class="required-asterisk">*</span>
+                                                        </label>
                                                 <b-form-input id="characteristics" v-model.trim="tempCharacteristic" @input="validateInput('characteristics')" @focus="validateInput('characteristics')"
                                                     placeholder="Características..."
                                                     @keyup.enter="addCharacteristic()"></b-form-input>
@@ -372,9 +393,11 @@
                                             </b-form-group>
                                         </b-col>
                                         <b-col cols="12" class="mt-3">
-                                            <b-form-group label="Describe a la mascota y cuenta su historia:"
-                                                label-for="description">
-                                                <b-form-textarea id="description" v-model.trim="form.description" @input="validateInput('description')" @focus="validateInput('description')"
+                                            <b-form-group label-for="description">
+                                                <label slot="label">
+                                                            Describe a la mascota y cuenta su historia: <span class="required-asterisk">*</span>
+                                                        </label>
+                                                <b-form-textarea id="description" v-model.trim="form.description" @input="validateInput('description')" @focus="validateInput('description')" rows="5"
                                                     placeholder="Descripción e historia..."></b-form-textarea>
                                                     <b-form-invalid-feedback v-if="showErrors.description"
                                                     >{{ errorsMessages.description }}</b-form-invalid-feedback>
@@ -826,7 +849,7 @@ export default {
             this.validateInput('size');
             this.validateInput('species');
             this.validateInput('description');
-
+            console.log("image",    this.form.mainImage)
             if(this.form.mainImage == null){
                 Swal.fire({
                     icon: 'error',
@@ -839,8 +862,25 @@ export default {
                     showConfirmButton: false,
                     timerProgressBar: true,
                 });
+                return;
             }
-
+            if(this.showErrors.name || this.showErrors.species || this.showErrors.breed || this.showErrors.size || this.showErrors.age || this.showErrors.ageUnit || this.showErrors.weight || this.showErrors.weightType
+            || this.showErrors.gender || this.showErrors.tempDisease || this.showErrors.tempAllergy || this.showErrors.comments || this.showErrors.characteristics || this.showErrors.stage || this.showErrors.description){
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'Hay errores en el formulario, por favor revisa los campos',
+                    toast: true,
+                    position: 'bottom-end',
+                    timer: 2000,
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    timerProgressBar: true,
+                }).then(()=>{
+                    return;
+                });
+            }
+                
             Swal.fire({
                 title: '¿Estás seguro de publicar la mascota?',
                 text: "La solicitud deberá ser aprobada por un moderador antes de ser publicada",
@@ -881,11 +921,10 @@ export default {
                         category: this.form.category,
                         owner: localStorage.getItem('userId'),
                         }
-                        console.log(this.formPet)
                         this.addPet(this.formPet);
                     }
                 }
-            })
+            });
         },
         async addPet(){
             this.formPet.category = await encrypt(this.formPet.category);
