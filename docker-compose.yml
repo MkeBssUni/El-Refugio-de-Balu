@@ -30,7 +30,6 @@ services:
     networks:
       - balunet
     environment:
-      - MYSQL_ROOT_USER=baluroot
       - MYSQL_DATABASE=refugio_balu
       - MYSQL_USER=balu
       - MYSQL_PASSWORD=s2nd0b4lu
