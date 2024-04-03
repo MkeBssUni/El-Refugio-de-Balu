@@ -32,64 +32,49 @@
               <b-form-invalid-feedback :state="usernameValidation">Correo electrónico inválido</b-form-invalid-feedback>
             </b-form-group>
 
-           <b-form-group class="my-3" label="Contraseña:" label-for="input-password" :state="passwordValidation">
-  <b-input-group class="position-relative">
-    <b-form-input
-      id="input-password"
-      class="bg-light shadow text-dark-gray-input"
-      v-model.trim="form.password"
-      :type="showPassword ? 'text' : 'password'"
-    ></b-form-input>
-    <b-input-group-prepend>
-      <b-button
-        @click="togglePasswordVisibility('password')" 
-        variant="outline-secondary"
-        class="btn-eye rounded-right"
-      >
-        <b-icon
-          v-if="showPassword"
-          icon="eye-slash"
-          class="eye-icon"
-        ></b-icon>
-        <b-icon v-else icon="eye" class="eye-icon"></b-icon>
-      </b-button>
-    </b-input-group-prepend>
-  </b-input-group>
-  <b-form-invalid-feedback :state="passwordValidation">{{ passwordValidationMessage }}</b-form-invalid-feedback>
-</b-form-group>
+            <b-form-group class="my-3" label="Contraseña:" label-for="input-password" :state="passwordValidation">
+              <b-input-group class="position-relative">
+                <b-form-input id="input-password" class="bg-light shadow text-dark-gray-input"
+                  v-model.trim="form.password" :type="showPassword ? 'text' : 'password'"></b-form-input>
+                <b-input-group-prepend>
+                  <b-button @click="togglePasswordVisibility('password')" variant="outline-secondary"
+                    class="btn-eye rounded-right">
+                    <b-icon v-if="showPassword" icon="eye-slash" class="eye-icon"></b-icon>
+                    <b-icon v-else icon="eye" class="eye-icon"></b-icon>
+                  </b-button>
+                </b-input-group-prepend>
+              </b-input-group>
+              <b-form-invalid-feedback :state="passwordValidation">{{ passwordValidationMessage
+                }}</b-form-invalid-feedback>
+            </b-form-group>
 
-<!-- Repetir Contraseña -->
-<b-form-group class="my-3" label="Repetir Contraseña:" label-for="input-password-confirm" :state="confirmPasswordValidation">
-  <b-input-group class="position-relative">
-    <b-form-input
-      id="input-password-confirm"
-      class="bg-light shadow text-dark-gray-input"
-      v-model.trim="form.confirmPassword"
-      :type="showConfirmPassword ? 'text' : 'password'" 
-    ></b-form-input>
-    <b-input-group-prepend>
-      <b-button
-        @click="togglePasswordVisibility('confirmPassword')" 
-        variant="outline-secondary"
-        class="btn-eye rounded-right"
-      >
-        <b-icon
-          v-if="showConfirmPassword"
-          icon="eye-slash"
-          class="eye-icon"
-        ></b-icon>
-        <b-icon v-else icon="eye" class="eye-icon"></b-icon>
-      </b-button>
-    </b-input-group-prepend>
-  </b-input-group>
-  <b-form-invalid-feedback :state="confirmPasswordValidation">{{ confirmPasswordValidationMessage }}</b-form-invalid-feedback>
-</b-form-group>
+            <!-- Repetir Contraseña -->
+            <b-form-group class="my-3" label="Repetir Contraseña:" label-for="input-password-confirm"
+              :state="confirmPasswordValidation">
+              <b-input-group class="position-relative">
+                <b-form-input id="input-password-confirm" class="bg-light shadow text-dark-gray-input"
+                  v-model.trim="form.confirmPassword" :type="showConfirmPassword ? 'text' : 'password'"></b-form-input>
+                <b-input-group-prepend>
+                  <b-button @click="togglePasswordVisibility('confirmPassword')" variant="outline-secondary"
+                    class="btn-eye rounded-right">
+                    <b-icon v-if="showConfirmPassword" icon="eye-slash" class="eye-icon"></b-icon>
+                    <b-icon v-else icon="eye" class="eye-icon"></b-icon>
+                  </b-button>
+                </b-input-group-prepend>
+              </b-input-group>
+              <b-form-invalid-feedback :state="confirmPasswordValidation">{{ confirmPasswordValidationMessage
+                }}</b-form-invalid-feedback>
+            </b-form-group>
 
             <b-form-group class="my-3" label="Número de teléfono:" label-for="input-phone">
               <b-form-input maxlength="10" class="bg-light shadow text-dark-gray-input" id="input-phone" type="number"
                 v-model.trim="form.phoneNumber"></b-form-input>
               <b-form-invalid-feedback :state="phoneValidation">{{ phoneValidationMessage }}</b-form-invalid-feedback>
             </b-form-group>
+            <b-row class="d-flex justify-content-center">
+              <div class="frc-captcha" ref="container" data-sitekey="FCMH277K7PN4HR59" data-lang="es">
+            </div>
+            </b-row>
             <b-row class="justify-content-center">
               <b-col class="d-flex justify-content-center align-items-center mt-3">
                 <b-button class="bg-dark-secondary-orange text-white mx-5" type="submit"
@@ -111,9 +96,16 @@ import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
 import selfRegistrationImage from "@/assets/imgs/SelfRegistration.jpg";
 import { encrypt } from '../../../kernel/hashFunctions';
 import instance from "../../../config/axios";
+import { WidgetInstance } from "friendly-challenge";
+import { ref } from "vue";
+
+const widget = ref();
+
 export default {
   data() {
     return {
+      widget: ref(),
+      validCaptcha: false,
       selfRegistrationImage: selfRegistrationImage,
       form: {
         name: "",
@@ -142,17 +134,42 @@ export default {
       phoneValidationMessage: "",
       passwordValidationMessage: "",
       showPassword: false,
-    showConfirmPassword: false,
+      showConfirmPassword: false,
     };
   },
   methods: {
-  togglePasswordVisibility(field) {
-    if (field === 'password') {
-      this.showPassword = !this.showPassword;
-    } else if (field === 'confirmPassword') {
-      this.showConfirmPassword = !this.showConfirmPassword;
-    }
-  },
+    async doneCallback(solution) {
+      let response = await this.verifyCaptcha(solution);
+      this.validCaptcha = response.success;
+    },
+
+    errorCallback(err) {
+      swal.fire({
+        title: "Error",
+        text: "Ocurrió un error al verificar el captcha, por favor intenta de nuevo",
+        icon: "error",
+        showConfirmButton: true,
+      });
+    },
+    async verifyCaptcha(solution) {
+      return instance.post("/captcha/verify", { solution: solution })
+        .then(response => response.data)
+        .catch(error => {
+          swal.fire({
+            title: "Error",
+            text: "Ocurrió un error al verificar el captcha, por favor intenta de nuevo",
+            icon: "error",
+            showConfirmButton: true,
+          });
+        });
+    },
+    togglePasswordVisibility(field) {
+      if (field === 'password') {
+        this.showPassword = !this.showPassword;
+      } else if (field === 'confirmPassword') {
+        this.showConfirmPassword = !this.showConfirmPassword;
+      }
+    },
     disableButton() {
       return !(
         this.nameValidation === true &&
@@ -160,76 +177,77 @@ export default {
         this.usernameValidation === true &&
         this.passwordValidation === true &&
         this.phoneValidation === true &&
-        this.confirmPasswordValidation === true
+        this.confirmPasswordValidation === true &&
+        this.validCaptcha === true
       );
     },
-    async activateAccount(){
+    async activateAccount() {
       swal.fire({
-            title: "Código de verificación",
-            text: "Ingresa el código de verificación que te enviamos a tu correo",
-            input: "text",
-            showCancelButton: true,
-            confirmButtonText: "Verificar",
-            cancelButtonText: "Cancelar",
-            showDenyButton: true,
-            denyButtonText: "Reenviar código",
-            showLoaderOnConfirm: true,
-            preDeny: async ()=>{
-              return instance.patch("/person/send/newCode", { username: this.encryptedForm.username })
-              .then((response) => {
-                if (response.status === 200) {
-                  swal.fire({
-                    title: "Código reenviado",
-                    text: "Hemos enviado un nuevo código de verificación a tu correo",
-                    icon: "success",
-                    showConfirmButton: true,
-                  }).then(() => {
-                    this.activateAccount();
-                  });
-                } else {
-                  swal.fire({
-                    title: "Error",
-                    text: "Algo salió mal, por favor intenta de nuevo más tarde",
-                    icon: "error",
-                    showConfirmButton: true,
-                  });
-                }
-              })
-            },
-            preConfirm: async (code) => {
-              let encryptedCode = await encrypt(code);
-              return instance.patch("/person/activate/account", { activationCode: encryptedCode, username: this.encryptedForm.username })
-                .then((response) => {
-                  if (response.status === 200) {
-                    swal.fire({
-                      title: "Cuenta verificada",
-                      text: "Tu cuenta ha sido verificada con éxito, ahora puedes iniciar sesión",
-                      icon: "success",
-                      showConfirmButton: true,
-                    });
-                    this.$router.push("/login");
-                  } else {
-                    swal.fire({
-                      title: "Error",
-                      text: "El código de verificación es incorrecto",
-                      icon: "error",
-                      showConfirmButton: true,
-                    });
-                  }
-                })
-                .catch((error) => {
-                  swal.fire({
-                    title: "Error",
-                    text: "Algo salió mal, por favor intenta de nuevo más tarde",
-                    icon: "error",
-                    showConfirmButton: true,
-                  }).then(() => {
-                    this.activateAccount();
-                  });
+        title: "Código de verificación",
+        text: "Ingresa el código de verificación que te enviamos a tu correo",
+        input: "text",
+        showCancelButton: true,
+        confirmButtonText: "Verificar",
+        cancelButtonText: "Cancelar",
+        showDenyButton: true,
+        denyButtonText: "Reenviar código",
+        showLoaderOnConfirm: true,
+        preDeny: async () => {
+          return instance.patch("/person/send/newCode", { username: this.encryptedForm.username })
+            .then((response) => {
+              if (response.status === 200) {
+                swal.fire({
+                  title: "Código reenviado",
+                  text: "Hemos enviado un nuevo código de verificación a tu correo",
+                  icon: "success",
+                  showConfirmButton: true,
+                }).then(() => {
+                  this.activateAccount();
                 });
-            },
-            allowOutsideClick: false, 
-          });
+              } else {
+                swal.fire({
+                  title: "Error",
+                  text: "Algo salió mal, por favor intenta de nuevo más tarde",
+                  icon: "error",
+                  showConfirmButton: true,
+                });
+              }
+            })
+        },
+        preConfirm: async (code) => {
+          let encryptedCode = await encrypt(code);
+          return instance.patch("/person/activate/account", { activationCode: encryptedCode, username: this.encryptedForm.username })
+            .then((response) => {
+              if (response.status === 200) {
+                swal.fire({
+                  title: "Cuenta verificada",
+                  text: "Tu cuenta ha sido verificada con éxito, ahora puedes iniciar sesión",
+                  icon: "success",
+                  showConfirmButton: true,
+                });
+                this.$router.push("/login");
+              } else {
+                swal.fire({
+                  title: "Error",
+                  text: "El código de verificación es incorrecto",
+                  icon: "error",
+                  showConfirmButton: true,
+                });
+              }
+            })
+            .catch((error) => {
+              swal.fire({
+                title: "Error",
+                text: "Algo salió mal, por favor intenta de nuevo más tarde",
+                icon: "error",
+                showConfirmButton: true,
+              }).then(() => {
+                this.activateAccount();
+              });
+            });
+        },
+        allowOutsideClick: false,
+      });
     },
     async sendForm() {
       this.encryptedForm.password = await encrypt(this.form.password);
@@ -328,12 +346,26 @@ export default {
       if (newVal !== this.form.password) {
         this.confirmPasswordValidation = false;
         this.confirmPasswordValidationMessage = "Las contraseñas no coinciden";
-      }else{
+      } else {
         this.confirmPasswordValidation = true;
-        this.confirmPasswordValidationMessage =""
+        this.confirmPasswordValidationMessage = ""
       }
     },
   },
+  mounted() {
+    if (this.$refs.container) {
+      widget.value = new WidgetInstance(this.$refs.container, {
+        startMode: "auto",
+        doneCallback: this.doneCallback,
+        errorCallback: this.errorCallback
+      });
+    }
+  },
+  beforeDestroy() {
+    if (this.widget) {
+      this.widget.destroy();
+    }
+  }
 };
 </script>
 
@@ -345,6 +377,7 @@ export default {
 .img-fluid {
   max-width: 100%;
 }
+
 .eye-icon {
   font-size: 1rem;
 }
