@@ -178,3 +178,6 @@ $theme-colors: (
 .custom-file-input:lang(en) ~ .custom-file-label::after {
   content: 'Cargar';
 }
+.required-asterisk {
+  color: red;
+}

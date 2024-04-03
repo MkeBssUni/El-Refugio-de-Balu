@@ -7,32 +7,47 @@
             width="30%" />
           <h3 class="text-center text-white">Crear Cuenta</h3>
           <b-form class="px-5" @submit.prevent="submitForm">
-            <b-form-group class="my-3" label="Nombre:" label-for="input-name" :state="nameValidation">
+            <b-form-group class="my-3" label-for="input-name" :state="nameValidation">
+              <label slot="label">
+                Nombre: <span class="required-asterisk">*</span>
+              </label>
               <b-form-input class="bg-light shadow text-dark-gray-input" id="input-name"
                 v-model.trim="form.name"></b-form-input>
               <b-form-invalid-feedback :state="nameValidation">El nombre debe contener solo
                 letras</b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group class="my-3" label="Apellido Paterno:" label-for="input-lastname" :state="lastnameValidation">
+            <b-form-group class="my-3" label-for="input-lastname" :state="lastnameValidation">
+              <label slot="label">
+                Apellido Paterno: <span class="required-asterisk">*</span>
+              </label>
               <b-form-input class="bg-light shadow text-dark-gray-input" id="input-lastname"
                 v-model.trim="form.lastname"></b-form-input>
               <b-form-invalid-feedback :state="lastnameValidation">El apellido debe contener solo
                 letras</b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group class="my-3" label="Apellido Materno:" label-for="input-surname">
+            <b-form-group class="my-3" label-for="input-surname">
+              <label slot="label">
+                Apellido Materno: <span class="required-asterisk">*</span>
+              </label>
               <b-form-input class="bg-light shadow text-dark-gray-input" id="input-surname"
                 v-model.trim="form.surname"></b-form-input>
             </b-form-group>
 
-            <b-form-group class="my-3" label="Correo electrónico:" label-for="input-email" :state="usernameValidation">
+            <b-form-group class="my-3" label-for="input-email" :state="usernameValidation">
+              <label slot="label">
+                Correo Electrónico: <span class="required-asterisk">*</span>
+              </label>
               <b-form-input class="bg-light shadow text-dark-gray-input" id="input-email" v-model.trim="form.username"
                 type="email"></b-form-input>
               <b-form-invalid-feedback :state="usernameValidation">Correo electrónico inválido</b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group class="my-3" label="Contraseña:" label-for="input-password" :state="passwordValidation">
+            <b-form-group class="my-3" label-for="input-password" :state="passwordValidation">
+              <label slot="label">
+                Contraseña: <span class="required-asterisk">*</span>
+              </label>
               <b-input-group class="position-relative">
                 <b-form-input id="input-password" class="bg-light shadow text-dark-gray-input"
                   v-model.trim="form.password" :type="showPassword ? 'text' : 'password'"></b-form-input>
@@ -48,9 +63,11 @@
                 }}</b-form-invalid-feedback>
             </b-form-group>
 
-            <!-- Repetir Contraseña -->
-            <b-form-group class="my-3" label="Repetir Contraseña:" label-for="input-password-confirm"
+            <b-form-group class="my-3" label-for="input-password-confirm"
               :state="confirmPasswordValidation">
+              <label slot="label">
+                Repetir Contraseña: <span class="required-asterisk">*</span>
+              </label>
               <b-input-group class="position-relative">
                 <b-form-input id="input-password-confirm" class="bg-light shadow text-dark-gray-input"
                   v-model.trim="form.confirmPassword" :type="showConfirmPassword ? 'text' : 'password'"></b-form-input>
@@ -66,14 +83,17 @@
                 }}</b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group class="my-3" label="Número de teléfono:" label-for="input-phone">
+            <b-form-group class="my-3" label-for="input-phone">
+              <label slot="label">
+                Número de Teléfono: <span class="required-asterisk">*</span>
+              </label>
               <b-form-input maxlength="10" class="bg-light shadow text-dark-gray-input" id="input-phone" type="number"
                 v-model.trim="form.phoneNumber"></b-form-input>
               <b-form-invalid-feedback :state="phoneValidation">{{ phoneValidationMessage }}</b-form-invalid-feedback>
             </b-form-group>
             <b-row class="d-flex justify-content-center">
               <div class="frc-captcha" ref="container" data-sitekey="FCMH277K7PN4HR59" data-lang="es">
-            </div>
+              </div>
             </b-row>
             <b-row class="justify-content-center">
               <b-col class="d-flex justify-content-center align-items-center mt-3">
