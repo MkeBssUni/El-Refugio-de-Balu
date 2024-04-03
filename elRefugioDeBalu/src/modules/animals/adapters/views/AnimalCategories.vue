@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="AnimalHeader">
+    <div class="AnimalHeader" id="categorias">
       <Encabezado
         color="#E84E0F"
-        :imagenUrl="require('../../../../assets/imgs/mascotas5.png')"
-        titulo="Categorias de animales"
+        :imagenUrl="require('../../../../assets/imgs/especies.png')"
+        titulo="Categorías de animales"
       />
     </div>
     <b-container fluid>
@@ -45,6 +45,7 @@
               xl="2"
               class="form-control selectCategories"
               :options="options"
+              @change="FilterCategories()"
             ></b-form-select>
           </b-col>
           <b-col cols="12" sm="12" md="4 " lg="3" xl="3" class="my-2">
@@ -55,10 +56,12 @@
                 type="search"
                 placeholder="Buscar..."
                 class="searchInput"
-                v-model="search"
+                v-model="searchCategoryValueDto"
+                @input="GetAllCategories()"
               ></b-form-input>
               <b-input-group-append>
                 <b-button class="button-search"
+                @click="GetAllCategories()"
                   ><b-icon icon="search" aria-hidden="true"></b-icon
                 ></b-button>
               </b-input-group-append>
@@ -108,12 +111,13 @@
                 disabled
                 placeholder="Buscar..."
                 class="searchInput"
-                v-model="search"
+                v-model="searchCategoryValueDto"
+                @input="GetAllCategories()"
               ></b-form-input>
             </b-input-group>
           </b-col>
         </b-row>
-        <b-row class="mt-2" v-if="!saveCategoryForm">
+        <b-row class="mt-2" v-if="!saveCategoryForm" id="saveCategoryForm">
           <b-col>
             <saveCategory @SavedCategory="HideCategoryRegistrationForm()" />
           </b-col>
@@ -121,25 +125,25 @@
         <b-row class="mt-2" v-if="!updateCategoryForm">
           <b-col>
             <updateCategory
+              ref="updateCategoryForm"
               :categoryToModify="categoryToModify"
               @UpdateCategory="HideCategoryModifyForm()"
             />
           </b-col>
         </b-row>
       </div>
-      <div class="animalCategories mt-3">
-        <b-row class="mx-3 justify-content-center">
-          <b-col
-            class="mt-3"
-            cols="12"
-            sm="12"
-            md="4 "
-            lg="3"
-            xl="3"
-            v-for="animal in animalsList"
-            :key="animal.id"
-          >
-            <TransitionGroup name="roll" tag="div" class="">
+      <div v-if="empty" class="animalCategories mt-3">
+        <b-row class="">
+          <TransitionGroup name="roll" tag="div" class="row mx-3 mt-3">
+            <b-col
+              cols="12"
+              sm="12"
+              md="4 "
+              lg="3"
+              xl="3"
+              v-for="animal in animalsList"
+              :key="animal.id"
+            >
               <b-card
                 :title="animal.categoryName"
                 :img-src="animal.categoryImage"
@@ -273,8 +277,8 @@
                   </b-row>
                 </b-card-body>
               </b-card>
-            </TransitionGroup>
-          </b-col>
+            </b-col>
+          </TransitionGroup>
         </b-row>
         <b-row class="pt-2">
           <b-col cols="12">
@@ -289,19 +293,27 @@
           </b-col>
         </b-row>
       </div>
+      <div v-else class="animalCategories my-3">
+        <div class="content py">
+          <img
+            src="../../../../assets/imgs/perroSinRegistros.png"
+            alt="Cargando..."
+          />
+          <h4 class="mt-3 pb-3">Parece que no hay registros de categorías</h4>
+        </div>
+      </div>
     </b-container>
   </div>
 </template>
 
 <script>
 import Encabezado from "../../../../views/components/Encabezado.vue";
-import tortugas from "../../../../assets/imgs/tortugas1.jpeg";
 import SaveCategory from "./SaveCategory.vue";
 import UpdateCategory from "./UpdateCategory.vue";
 import FishLoading from "../../../../assets/imgs/peces.gif";
 import Swal from "sweetalert2";
 import instance from "../../../../config/axios";
-import { decrypt, encrypt } from "../../../../kernel/hashFunctions";
+import { encrypt } from "../../../../kernel/hashFunctions";
 import Overlay from "../../../../utils/Overlay.vue";
 export default {
   name: "AnimalCategories",
@@ -336,16 +348,29 @@ export default {
       },
       empty: true,
       loading: true,
+      lastScrollPosition: 0,
+      originalAnimalsList: [],
     };
   },
   methods: {
     ViewCategoryRegistrationForm() {
       this.saveCategoryForm = !this.saveCategoryForm;
+      this.$nextTick(() => {
+        const formElement = document.getElementById("saveCategoryForm");
+        if (formElement) {
+          const offset = -100; // Puedes ajustar el valor según tus necesidades
+          const targetPosition =
+            formElement.getBoundingClientRect().top +
+            window.pageYOffset +
+            offset;
+          window.scrollTo({ top: targetPosition, behavior: "smooth" });
+        }
+      });
     },
     async GetAllCategories() {
       this.loading = true;
       try {
-        const pageSize = 8; // Establece el tamaño de página que prefieras
+        const pageSize = 8;
         const response = await instance.post(
           `/category/paged?page=${this.page - 1}&size=${pageSize}`,
           {
@@ -353,11 +378,11 @@ export default {
           }
         );
 
+        this.originalAnimalsList = response.data.data.content;
         this.animalsList = response.data.data.content;
+        this.empty = this.animalsList.length > 0;
         this.total = response.data.data.totalElements;
-        this.size = pageSize; // Asegúrate de que esto coincida con el tamaño de página solicitado
-        console.log("Total elements:", this.total);
-
+        this.size = pageSize;
         this.loading = false;
       } catch (error) {
         Swal.fire({
@@ -373,14 +398,35 @@ export default {
     HideCategoryRegistrationForm() {
       this.ViewCategoryRegistrationForm();
       this.GetAllCategories();
+      const categoriasElement = document.getElementById("categorias");
+      if (categoriasElement) {
+        categoriasElement.scrollIntoView({ behavior: "smooth" });
+      }
     },
     HideCategoryModifyForm() {
       this.ViewCategoryModifyForm(null);
       this.GetAllCategories();
+      const categoriasElement = document.getElementById("categorias");
+      if (categoriasElement) {
+        categoriasElement.scrollIntoView({ behavior: "smooth" });
+      }
     },
     ViewCategoryModifyForm(category) {
       this.categoryToModify = category;
       this.updateCategoryForm = !this.updateCategoryForm;
+      this.$nextTick(() => {
+        if (
+          this.$refs.updateCategoryForm &&
+          this.$refs.updateCategoryForm.$el
+        ) {
+          const offset = -100; // Puedes ajustar el valor según tus necesidades
+          const targetPosition =
+            this.$refs.updateCategoryForm.$el.getBoundingClientRect().top +
+            window.pageYOffset +
+            offset;
+          window.scrollTo({ top: targetPosition, behavior: "smooth" });
+        }
+      });
     },
     async ViewAlertConfirmationChangeCategoryStatus(category) {
       Swal.fire({
@@ -445,6 +491,22 @@ export default {
         this.GetAllCategories();
       }
     },
+    FilterCategories() {
+    this.loading = true;
+    const originalList = [...this.originalAnimalsList]; // Crear una copia de la lista original
+
+    const filteredList = originalList.filter(animal => {
+      if (this.selected === null) {
+        return true; 
+      } else {
+        return animal.categoryStatus === this.selected; // Filtrar según el estado seleccionado
+      }
+    });
+
+    this.animalsList = filteredList;
+
+    this.loading = false;
+  }
   },
   mounted() {
     this.GetAllCategories();
