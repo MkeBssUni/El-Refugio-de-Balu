@@ -100,7 +100,7 @@ public class PetController {
     }
 
     @PostMapping("/comment")
-    public ResponseEntity<ResponseApi<?>> comment(@RequestBody CommentPetDto dto) {
+    public ResponseEntity<ResponseApi<?>> comment(@RequestBody CommentPetDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         ResponseApi<?> response = petService.comment(dto);
         return ResponseEntity.status(response.getStatus()).body(response);
     }

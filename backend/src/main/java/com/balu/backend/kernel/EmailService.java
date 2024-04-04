@@ -100,5 +100,17 @@ public class EmailService {
             e.printStackTrace();
         }
     }
+    public void sendNotificationNewComment(String email, String namePet){
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+            helper.setTo(email);
+            helper.setSubject("¡Nuevo comentario!");
+            helper.setText(EmailTemplates.newComment(namePet),true);
+            javaMailSender.send(message);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
 }
