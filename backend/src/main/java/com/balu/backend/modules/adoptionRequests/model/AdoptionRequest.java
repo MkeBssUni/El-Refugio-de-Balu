@@ -1,8 +1,10 @@
 package com.balu.backend.modules.adoptionRequests.model;
 
+import com.balu.backend.modules.adoptionRequestImage.model.AdoptionRequestImage;
 import com.balu.backend.modules.pets.model.Pet;
 import com.balu.backend.modules.statusses.model.Status;
 import com.balu.backend.modules.users.model.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -30,6 +33,11 @@ public class AdoptionRequest {
     @JoinColumn(name = "pet_id", referencedColumnName = "id")
     @JsonIncludeProperties({"id", "username"})
     private Pet pet;
+
+    @OneToMany(mappedBy = "adoptionRequest")
+    @JsonIncludeProperties({"id", "image"})
+    private List<AdoptionRequestImage> requestImages;
+
     @ManyToOne
     @JoinColumn(name = "status_id", referencedColumnName = "id")
     private Status status;

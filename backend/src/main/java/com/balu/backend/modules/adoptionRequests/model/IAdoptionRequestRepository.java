@@ -1,8 +1,5 @@
 package com.balu.backend.modules.adoptionRequests.model;
 
-import com.balu.backend.modules.adoptionRequests.model.dto.GetAdoptionRequestDto;
-import com.balu.backend.modules.pets.model.Pet;
-import com.balu.backend.modules.users.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

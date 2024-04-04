@@ -1,6 +1,8 @@
 package com.balu.backend.modules.adoptionRequests.service;
 
 import com.balu.backend.kernel.*;
+import com.balu.backend.modules.adoptionRequestImage.model.AdoptionRequestImage;
+import com.balu.backend.modules.adoptionRequestImage.model.AdoptionRequestImagesRepository;
 import com.balu.backend.modules.adoptionRequests.model.AdoptionRequest;
 import com.balu.backend.modules.adoptionRequests.model.IAdoptionRequestRepository;
 import com.balu.backend.modules.adoptionRequests.model.IAdoptionRequestViewPaged;
@@ -8,19 +10,11 @@ import com.balu.backend.modules.adoptionRequests.model.dto.ChangeStatusAdoptionR
 import com.balu.backend.modules.adoptionRequests.model.dto.GetAdoptionRequestDto;
 import com.balu.backend.modules.adoptionRequests.model.dto.GetByIdAdoptionRequestDto;
 import com.balu.backend.modules.adoptionRequests.model.dto.SaveAdoptionRequestDto;
-import com.balu.backend.modules.adresses.model.model.Address;
-import com.balu.backend.modules.adresses.model.model.IAddressRepository;
 import com.balu.backend.modules.hash.service.HashService;
-import com.balu.backend.modules.homeSpecification.model.HomeImage;
-import com.balu.backend.modules.homeSpecification.model.HomeImageRepository;
-import com.balu.backend.modules.homeSpecification.model.HomeSpecification;
-import com.balu.backend.modules.homeSpecification.model.HomeSpecificationRepository;
 import com.balu.backend.modules.logs.model.LogTypes;
 import com.balu.backend.modules.logs.service.LogService;
 import com.balu.backend.modules.pets.model.Pet;
-import com.balu.backend.modules.pets.model.dto.CompleteAdoptionDto;
 import com.balu.backend.modules.pets.model.repositories.IPetRepository;
-import com.balu.backend.modules.pets.service.PetService;
 import com.balu.backend.modules.roles.model.Roles;
 import com.balu.backend.modules.statusses.model.IStatusRepository;
 import com.balu.backend.modules.statusses.model.Status;
@@ -59,13 +53,10 @@ public class ServiceAdoptionRequest {
     private final IUserRepository userRepository;
     private final IPetRepository petRepository;
     private final IStatusRepository statusRepository;
-    private final HomeSpecificationRepository homeSpecificationRepository;
-    private final HomeImageRepository homeImageRepository;
     private final LogService logService;
     private final EmailService emailService;
+    private final AdoptionRequestImagesRepository requestImagesRepository;
 
-    private final IAddressRepository iAddressRepository;
-    private final PetService petService;
 
 
     @Transactional(readOnly = true)
@@ -195,39 +186,24 @@ public class ServiceAdoptionRequest {
             if(saveAdoption == null) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.ADOPTIONREQUEST_NOT_SAVED.name());
 
 
-            HomeSpecification homeSpecification = new HomeSpecification(dto.getHomeSpecification().getType(),dto.getHomeSpecification().isOutdoorArea(),dto.getHomeSpecification().getNumberOfResidents());
-            HomeSpecification saveHomeSpecification = homeSpecificationRepository.saveAndFlush(homeSpecification);
-            if(saveHomeSpecification == null){
-                iAdoptionRequestRepository.delete(saveAdoption);
-                return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.HOMESPECIFICATION_NOT_SAVED.name());
-            }
-
-            Integer saveAdress = iAddressRepository.changeHomeSpeceficationAssign(user.getAddress().getId(),saveHomeSpecification.getId());
-            if(saveAdress == 0){
-                iAdoptionRequestRepository.delete(saveAdoption);
-                return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.HOMESPECIFICATION_NOT_SAVED.name());
-            }
-
-            if(dto.getHomeImage() != null){
-                List<HomeImage> homeImages = new ArrayList<>();
-                for(String image : dto.getHomeImage()){
-                    if(validations.isInvalidImageLength(image)) return new  ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.IMAGE_NOT_SAVED.name());
-                    HomeImage homeImage = new HomeImage(image.trim(),saveHomeSpecification);
-                    HomeImage saveHomeImage = homeImageRepository.saveAndFlush(homeImage);
-                    if(saveHomeImage != null) homeImages.add(saveHomeImage);
+            if(dto.getImageAdoption() != null){
+                List<AdoptionRequestImage>  adoptionRequestImages = new ArrayList<>();
+                for(String image : dto.getImageAdoption()){
+                    if(validations.isInvalidImageLength(image)) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.IMAGE_NOT_SAVED.name());
+                    AdoptionRequestImage requestImage = new AdoptionRequestImage(image.trim(),saveAdoption);
+                    AdoptionRequestImage saveImage = requestImagesRepository.saveAndFlush(requestImage);
+                    if(saveImage != null) adoptionRequestImages.add(saveImage);
                 }
-                if(homeImages.size() != dto.getHomeImage().length){
-                    homeSpecificationRepository.delete(saveHomeSpecification);
+                if(adoptionRequestImages.size() != dto.getHomeImage().length){
                     iAdoptionRequestRepository.delete(saveAdoption);
-                    for(HomeImage homeImage : homeImages) homeImageRepository.delete(homeImage);
+                    for(AdoptionRequestImage adoptionRequestImagede : adoptionRequestImages) requestImagesRepository.delete(adoptionRequestImagede);
                     return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.IMAGE_NOT_SAVED.name());
                 }
             }
             sendEmailModerador(pet.getModerator().getId(),pet.getName());
-            logService.saveLog("New adoption request registered: "+saveAdoption.getId(), LogTypes.INSERT,"ADOPTIONREQUEST | HOMESPECEFITACTION | HOMEIMAGES | ADRESSES");
+            logService.saveLog("New adoption request registered: "+saveAdoption.getId(), LogTypes.INSERT,"ADOPTIONREQUEST | ADOPTIONREQUESTIMAGES");
             return new ResponseApi<>(HttpStatus.CREATED,false,"Adoption request saved successfully");
         }catch (Exception e){
-            System.out.println(e);
             return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name());
         }
     }

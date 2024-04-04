@@ -119,7 +119,7 @@
                 >Lugar en la que dormira o descansara la mascota</b-card-text
               >
               <img
-                src="https://t2.ea.ltmcdn.com/es/posts/0/9/4/como_hacer_una_casa_para_perros_20490_orig.jpg"
+                :src="base64ToImage(requestAdoption.requestImages[0].image)"
                 class="homePhotos"
               />
             </b-card-body>
@@ -128,7 +128,7 @@
                 >Lugar en el que vivira la mascota (casa)</b-card-text
               >
               <img
-                src="https://t2.ea.ltmcdn.com/es/posts/0/9/4/como_hacer_una_casa_para_perros_20490_orig.jpg"
+              :src="base64ToImage(requestAdoption.requestImages[1].image)"
                 class="homePhotos"
               />
             </b-card-body>
@@ -137,7 +137,7 @@
                 >Lugar en el que jugará la mascota (casa)</b-card-text
               >
               <img
-                src="https://t2.ea.ltmcdn.com/es/posts/0/9/4/como_hacer_una_casa_para_perros_20490_orig.jpg"
+              :src="base64ToImage(requestAdoption.requestImages[2].image)"
                 class="homePhotos"
               />
             </b-card-body>
@@ -453,6 +453,7 @@ export default {
           this.requestAdoption.additional_information
         );
         this.getCredentialPet();
+        console.log(this.requestAdoption);
         Swal.close();
       } catch (error) {
         Swal.fire({
