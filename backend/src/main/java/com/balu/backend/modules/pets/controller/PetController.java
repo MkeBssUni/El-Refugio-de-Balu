@@ -82,7 +82,7 @@ public class PetController {
     }
 
     @PostMapping("/select")
-    public ResponseEntity<ResponseApi<?>> select(@RequestBody SelectPetDto dto) {
+    public ResponseEntity<ResponseApi<?>> select(@RequestBody SelectPetDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         ResponseApi<?> response = petService.select(dto);
         return ResponseEntity.status(response.getStatus()).body(response);
     }

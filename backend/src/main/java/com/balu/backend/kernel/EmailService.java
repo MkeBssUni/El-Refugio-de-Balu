@@ -124,5 +124,17 @@ public class EmailService {
             e.printStackTrace();
         }
     }
+    public void requestChangesOrAprove(String email, String message){
+        try{
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "utf-8");
+            helper.setTo(email);
+            helper.setSubject("Solicitud de cambios");
+            helper.setText(EmailTemplates.requestChangesOrAprove(message),true);
+            javaMailSender.send(mimeMessage);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
 }
