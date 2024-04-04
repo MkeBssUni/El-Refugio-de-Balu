@@ -124,7 +124,7 @@ public class PetController {
     }
 
     @PostMapping("/cancel")
-    public ResponseEntity<ResponseApi<?>> cancel(@RequestBody CancelDto dto) {
+    public ResponseEntity<ResponseApi<?>> cancel(@RequestBody CancelDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         ResponseApi<?> response = petService.cancel(dto);
         return ResponseEntity.status(response.getStatus()).body(response);
     }

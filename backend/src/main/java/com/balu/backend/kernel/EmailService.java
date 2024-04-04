@@ -88,25 +88,37 @@ public class EmailService {
         }
     }
 
-    public void sendPetRejectedTemplate(String email, String namePet){
+    public void sendPetRejectedTemplate(String email, String petName){
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
             helper.setTo(email);
             helper.setSubject("Mascota dada de baja");
-            helper.setText(EmailTemplates.PetRejectedTemplate(namePet),true);
+            helper.setText(EmailTemplates.PetRejectedTemplate(petName),true);
             javaMailSender.send(message);
         }catch (Exception e){
             e.printStackTrace();
         }
     }
-    public void sendNotificationNewComment(String email, String namePet){
+    public void sendNotificationNewComment(String email, String petName){
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
             helper.setTo(email);
             helper.setSubject("¡Nuevo comentario!");
-            helper.setText(EmailTemplates.newComment(namePet),true);
+            helper.setText(EmailTemplates.newComment(petName),true);
+            javaMailSender.send(message);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void sendPetDischargeRequest(String email, String petName){
+        try{
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+            helper.setTo(email);
+            helper.setSubject("Solicitud de baja");
+            helper.setText(EmailTemplates.requestPetDischarge(petName),true);
             javaMailSender.send(message);
         }catch (Exception e){
             e.printStackTrace();
