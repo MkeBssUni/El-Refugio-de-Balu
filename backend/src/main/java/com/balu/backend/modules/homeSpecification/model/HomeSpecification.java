@@ -2,6 +2,7 @@ package com.balu.backend.modules.homeSpecification.model;
 
 
 import com.balu.backend.modules.adresses.model.model.Address;
+import com.balu.backend.modules.homeSpecification.model.Dto.SaveHomeDetailsDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -37,4 +38,6 @@ public class HomeSpecification {
         this.outdoorArea = outdoorArea;
         this.numberOfResidents = numberOfResidents;
     }
+
+
 }

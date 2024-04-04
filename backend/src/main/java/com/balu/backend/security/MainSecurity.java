@@ -100,6 +100,7 @@ public class MainSecurity {
                         .requestMatchers("/api/adoption/changeStatus").hasAnyAuthority(Roles.MOD.name())
                         .requestMatchers("/api/adoption/changeStatusClosed").hasAnyAuthority(Roles.GENERAL.name())
                         .requestMatchers("/api/address").hasAnyAuthority( Roles.GENERAL.name())
+                        .requestMatchers("/api/homeSpecification").hasAnyAuthority( Roles.GENERAL.name())
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())
