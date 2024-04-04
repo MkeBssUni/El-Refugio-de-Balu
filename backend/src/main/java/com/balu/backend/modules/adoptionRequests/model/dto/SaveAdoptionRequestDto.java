@@ -22,7 +22,4 @@ public class SaveAdoptionRequestDto {
     private PreviousExperiencieDto previousExperiencieDto;
     private String additional_information;
     private String[] imageAdoption;
-    private String[] homeImage;
-    private HomeSpecification homeSpecification;
-
 }
