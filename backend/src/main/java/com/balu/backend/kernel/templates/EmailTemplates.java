@@ -1539,4 +1539,149 @@ public class EmailTemplates {
                 "\n" +
                 "</html>\n";
     }
+    public static String requestChangesOrAprove(String message){
+        return "<!DOCTYPE html>\n" +
+                "<html xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" lang=\"en\">\n" +
+                "\n" +
+                "<head>\n" +
+                "    <title></title>\n" +
+                "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
+                "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+                "    <link href=\"https://fonts.googleapis.com/css2?family=Baloo&display=swap\" rel=\"stylesheet\" type=\"text/css\">\n" +
+                "    <style>\n" +
+                "        * {\n" +
+                "            box-sizing: border-box;\n" +
+                "        }\n" +
+                "\n" +
+                "        body {\n" +
+                "            margin: 0;\n" +
+                "            padding: 0;\n" +
+                "        }\n" +
+                "\n" +
+                "        a[x-apple-data-detectors] {\n" +
+                "            color: inherit !important;\n" +
+                "            text-decoration: inherit !important;\n" +
+                "        }\n" +
+                "\n" +
+                "        #MessageViewBody a {\n" +
+                "            color: inherit;\n" +
+                "            text-decoration: none;\n" +
+                "        }\n" +
+                "\n" +
+                "        p {\n" +
+                "            line-height: inherit\n" +
+                "        }\n" +
+                "\n" +
+                "        .desktop_hide,\n" +
+                "        .desktop_hide table {\n" +
+                "            mso-hide: all;\n" +
+                "            display: none;\n" +
+                "            max-height: 0px;\n" +
+                "            overflow: hidden;\n" +
+                "        }\n" +
+                "\n" +
+                "        .image_block img+div {\n" +
+                "            display: none;\n" +
+                "        }\n" +
+                "\n" +
+                "        @media (max-width:660px) {\n" +
+                "            .image_block div.fullWidth {\n" +
+                "                max-width: 100% !important;\n" +
+                "            }\n" +
+                "\n" +
+                "            .mobile_hide {\n" +
+                "                display: none;\n" +
+                "            }\n" +
+                "\n" +
+                "            .row-content {\n" +
+                "                width: 100% !important;\n" +
+                "            }\n" +
+                "\n" +
+                "            .stack .column {\n" +
+                "                width: 100%;\n" +
+                "                display: block;\n" +
+                "            }\n" +
+                "\n" +
+                "            .mobile_hide {\n" +
+                "                min-height: 0;\n" +
+                "                max-height: 0;\n" +
+                "                max-width: 0;\n" +
+                "                overflow: hidden;\n" +
+                "                font-size: 0px;\n" +
+                "            }\n" +
+                "\n" +
+                "            .desktop_hide,\n" +
+                "            .desktop_hide table {\n" +
+                "                display: table !important;\n" +
+                "                max-height: none !important;\n" +
+                "            }\n" +
+                "        }\n" +
+                "\n" +
+                "        /* Estilos con la fuente Baloo */\n" +
+                "        body {\n" +
+                "            font-family: 'Baloo', sans-serif !important;\n" +
+                "        }\n" +
+                "\n" +
+                "        .button_block a {\n" +
+                "            font-family: 'Baloo', sans-serif !important;\n" +
+                "        }\n" +
+                "    </style>\n" +
+                "</head>\n" +
+                "\n" +
+                "<body style=\"background-color: #f0fffa; margin: 0; padding: 0; -webkit-text-size-adjust: none; text-size-adjust: none;\">\n" +
+                "<table class=\"nl-container\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #f0fffa;\">\n" +
+                "    <tbody>\n" +
+                "    <tr>\n" +
+                "        <td>\n" +
+                "            <table class=\"row row-1\" align=\"center\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #118a95;\">\n" +
+                "                <tbody>\n" +
+                "                <tr>\n" +
+                "                    <td>\n" +
+                "                        <table class=\"row-content stack\" align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #118a95; color: #000000; width: 640px; margin: 0 auto;\" width=\"640\">\n" +
+                "                            <tbody>\n" +
+                "                            <tr>\n" +
+                "                                <td class=\"column column-1\" width=\"100%\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 60px; padding-left: 30px; padding-right: 30px; padding-top: 30px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;\">\n" +
+                "                                    <table class=\"image_block block-1\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt;\">\n" +
+                "                                        <tr>\n" +
+                "                                            <td class=\"pad\" style=\"width:100%;padding-right:0px;padding-left:0px;\">\n" +
+                "                                                <div class=\"alignment\" align=\"center\" style=\"line-height:10px\">\n" +
+                "                                                    <div style=\"max-width: 116px;\"><a href=\"http://www.example.com/\" target=\"_blank\" style=\"outline:none\" tabindex=\"-1\"><img src=\"https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/y8he417t/og7/l0x/9x0/logo%20blanco.png\" style=\"display: block; height: auto; border: 0; width: 100%;\" width=\"116\" alt=\"logo\" title=\"logo\"></a></div>\n" +
+                "                                                </div>\n" +
+                "                                            </td>\n" +
+                "                                        </tr>\n" +
+                "                                    </table>\n" +
+                "                                    <table class=\"paragraph_block block-2\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;\">\n" +
+                "                                        <tr>\n" +
+                "                                            <td class=\"pad\" style=\"padding-top:40px;\">\n" +
+                "                                                <div style=\"color:#ffffff;direction:ltr;font-family:'Baloo', sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:150%;text-align:center;mso-line-height-alt:24px;\">\n" +
+                "                                                    <p style=\"margin: 0;\">"+message+"</p>\n" +
+                "                                                </div>\n" +
+                "                                            </td>\n" +
+                "                                        </tr>\n" +
+                "                                    </table>\n" +
+                "                                    <table class=\"image_block block-3\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt;\">\n" +
+                "                                        <tr>\n" +
+                "                                            <td class=\"pad\" style=\"padding-top:20px;width:100%;padding-right:0px;padding-left:0px;\">\n" +
+                "                                                <div class=\"alignment\" align=\"center\" style=\"line-height:10px\">\n" +
+                "                                                    <div class=\"fullWidth\" style=\"max-width: 464px;\"><a href=\"http://www.example.com/\" target=\"_blank\" style=\"outline:none\" tabindex=\"-1\"><img src=\"https://d1oco4z2z1fhwp.cloudfront.net/templates/default/6696/pet-store-main1__1_.png\" style=\"display: block; height: auto; border: 0; width: 100%;\" width=\"464\" alt=\"national pet day\" title=\"national pet day\"></a></div>\n" +
+                "                                                </div>\n" +
+                "                                            </td>\n" +
+                "                                        </tr>\n" +
+                "                                    </table>\n" +
+                "                                </td>\n" +
+                "                            </tr>\n" +
+                "                            </tbody>\n" +
+                "                        </table>\n" +
+                "                    </td>\n" +
+                "                </tr>\n" +
+                "                </tbody>\n" +
+                "            </table>\n" +
+                "        </td>\n" +
+                "    </tr>\n" +
+                "    </tbody>\n" +
+                "</table><!-- End -->\n" +
+                "</body>\n" +
+                "\n" +
+                "</html>\n";
+    }
 }

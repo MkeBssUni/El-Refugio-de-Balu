@@ -448,7 +448,7 @@ public class PetService {
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseApi<?> select(SelectPetDto dto) {
+    public ResponseApi<?> select(SelectPetDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         if (dto.getPet() == null || validations.isNotBlankString(dto.getPet().trim()) || dto.getUser() == null || validations.isNotBlankString(dto.getUser().trim()) || dto.getStatus() == null || validations.isNotBlankString(dto.getStatus().trim()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
 
@@ -478,6 +478,7 @@ public class PetService {
 
         if (dto.getStatus().equalsIgnoreCase(Statusses.APPROVED.name())) {
             logService.saveLog("Pet " + savedPet.getId() + " approved by " + user.getId(), LogTypes.UPDATE, "PETS");
+            emailService.requestChangesOrAprove(hashService.decrypt(savedPet.getOwner().getUsername()),"¡Felicidades! La publicación de "+savedPet.getName()+" ha sido aprobada y ya está disponible para adopción.");
             return new ResponseApi<>(HttpStatus.OK,false, "Pet approved successfully");
         } else {
             logService.saveLog("Pet " + savedPet.getId() + " sent to revision by " + user.getId(), LogTypes.UPDATE, "PETS");
