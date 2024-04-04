@@ -38,7 +38,8 @@ public class MainSecurity {
             "/api/pet/catalog",
             "/api/pet/details",
             "/api/category/carousel",
-            "/api/address/"
+            "/api/address/",
+            "/api/captcha/verify",
 
     };
 

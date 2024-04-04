@@ -9,7 +9,7 @@
                         <hr class="divider my-0">
                         <b-row class="mt-4 d-flex justify-content-end">
                             <b-col cols="6" xl="3">
-                                <b-button variant="outline-success" @click="selectPet()"
+                                <b-button variant="outline-success" @click="confirmSelectPet()"
                                     class="me-3 d-flex align-items-center justify-content-between w-100">
                                     <span class="me-2">Dar seguimiento</span>
                                     <b-icon icon="check-circle" font-scale="1.3"></b-icon>
@@ -23,7 +23,7 @@
                                 </b-button>
                             </b-col>
                             <b-col cols="6" xl="3" class="mt-3 mt-xl-0">
-                                <b-button variant="outline-danger" @click="closePet()"
+                                <b-button variant="outline-danger" @click="confirmClosePet()"
                                     class="me-3 d-flex align-items-center justify-content-between w-100">
                                     <span class="me-2">Finalizar</span>
                                     <b-icon icon="x-circle" font-scale="1.3"></b-icon>
@@ -44,7 +44,7 @@
                         <hr class="divider my-0">
                         <b-row class="mt-4 d-flex justify-content-end">
                             <b-col cols="12" sm="6">
-                                <b-button variant="outline-success" @click="selectPet()"
+                                <b-button variant="outline-success" @click="confirmSelectPet()"
                                     class="me-3 d-flex align-items-center justify-content-between w-100">
                                     <span class="me-2">Dar seguimiento</span>
                                     <b-icon icon="check-circle" font-scale="1.3"></b-icon>
@@ -58,7 +58,7 @@
                                 </b-button>
                             </b-col>
                             <b-col cols="12" sm="6" class="mt-3">
-                                <b-button variant="outline-danger" @click="closePet()"
+                                <b-button variant="outline-danger" @click="confirmClosePet()"
                                     class="me-3 d-flex align-items-center justify-content-between w-100">
                                     <span class="me-2">Finalizar</span>
                                     <b-icon icon="x-circle" font-scale="1.3"></b-icon>
@@ -150,7 +150,7 @@ export default {
                     timerProgressBar: true,
                     showConfirmButton: false
                 }).then(() => {
-                    this.$router.push('/pets')
+                    this.$router.push('/petList')
                 })
             }
         },
@@ -197,6 +197,23 @@ export default {
                 })
             }
         },
+        confirmSelectPet() {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Tendrás que darle seguimiento al proceso de adopción de esta mascota, ¿deseas continuar?',
+                icon: 'warning',
+                iconColor: '#FFA500',
+                showCancelButton: true,
+                confirmButtonColor: '#4CAF50',
+                cancelButtonColor: '#A93D3D',
+                confirmButtonText: 'Continuar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.selectPet();
+                }
+            })
+        },
         async closePet() {
             try {
                 Swal.fire({
@@ -223,7 +240,6 @@ export default {
                     this.$router.push('/petList')
                 })
             } catch (error) {
-                console.log(error.response.data.message)
                 Swal.fire({
                     title: 'Error',
                     text: 'Ocurrió un error al cerrar la publicación de la mascota',
@@ -237,13 +253,31 @@ export default {
                 })
             }
         },
+        confirmClosePet() {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Estás por finalizar definitivamente la publicación de esta mascota, ¿deseas continuar?',
+                icon: 'warning',
+                iconColor: '#FFA500',
+                showCancelButton: true,
+                confirmButtonColor: '#4CAF50',
+                cancelButtonColor: '#A93D3D',
+                confirmButtonText: 'Continuar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.closePet();
+                }
+            })
+        },
         showChangesModal() {
             this.$bvModal.show('changesModal');
-        },        
+        },
     },
     mounted() {
-        if (!this.petId && localStorage.getItem('petId')) this.petId = localStorage.getItem('petId');
-        this.getDetails();
+        if (!this.petId && sessionStorage.getItem('petId')) this.petId = sessionStorage.getItem('petId');
+        if (!this.petId && !sessionStorage.getItem('petId')) this.$router.push('/petList');
+        this.getDetails();        
     },
     components: {
         SmallContent,

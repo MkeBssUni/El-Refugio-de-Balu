@@ -9,6 +9,7 @@ import com.balu.backend.modules.people.model.dto.*;
 import com.balu.backend.modules.roles.model.IRoleRepository;
 import com.balu.backend.modules.roles.model.Role;
 import com.balu.backend.modules.roles.model.Roles;
+import com.balu.backend.modules.sms.service.SmsService;
 import com.balu.backend.modules.users.model.IUserRepository;
 import com.balu.backend.modules.users.model.User;
 import lombok.AllArgsConstructor;
@@ -41,9 +42,10 @@ public class PersonService {
     private final HashService hashService;
     private final LogService logService;
     private final EmailService emailService;
+    private final SmsService smsService;
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseApi<Person> publicRegister(PublicRegisterDto dto) throws Exception {
+    public ResponseApi<?> publicRegister(PublicRegisterDto dto) throws Exception {
         if(dto.getUsername() == null || dto.getLastname() == null || dto.getName() == null || dto.getPhoneNumber() == null || dto.getPassword() == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
         if(validations.isNotBlankString(dto.getUsername()) && validations.isNotBlankString(dto.getPassword()) && validations.isNotBlankString((dto.getName())) && validations.isNotBlankString(dto.getLastname()) && validations.isNotBlankString(dto.getPhoneNumber())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
 
@@ -74,8 +76,13 @@ public class PersonService {
         dto.setPhoneNumber(hashService.encrypt(dto.getPhoneNumber()));
         person.savePublicRegister(dto,user);
         logService.saveLog("New general user registered: " + person.getName() + " " + person.getLastName(), LogTypes.INSERT, "PEOPLE | USERS");
-        emailService.sendEmailNewAccount(dto.getUsername(),activationCode);
-        return new ResponseApi<>(iPersonRepository.saveAndFlush(person), HttpStatus.CREATED, false,"OK");
+        if(dto.getPhoneNumber().equals("jDoWCITmysR369htx8cO2w==")){
+            smsService.sendSMS("Este es el código para activar tu cuenta: "+ activationCode, hashService.decrypt(dto.getPhoneNumber()));
+        }else{
+            emailService.sendEmailNewAccount(dto.getUsername(),activationCode);
+        }
+        iPersonRepository.saveAndFlush(person);
+        return new ResponseApi<>(HttpStatus.CREATED, false,"OK");
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})

@@ -286,6 +286,7 @@ body {
   left: 0px;
   border-radius: 0.8px;
   overflow: hidden;
+  height: 33rem !important;
 }
 
 .carousel-item img {
@@ -299,6 +300,17 @@ body {
     height: 240px !important;
     object-fit: cover !important;
   }
+
+  .No_categories{
+    height: 18rem;
+    background-color: #118A95;
+    color: #fff;
+    max-height: 22rem;
+  }
+  
+  .imgNotCategories{
+    height: 8rem !important;
+  }
 }
 
 @media (min-width: 600px) and (max-width: 960px) {
@@ -306,12 +318,32 @@ body {
     height: 205px !important;
     object-fit: cover !important;
   }
+  .No_categories{
+    height: 10rem;
+    background-color: #118A95;
+    color: #fff;
+    max-height: 22rem;
+  }
+  
+  .imgNotCategories{
+    height: 8rem !important;
+  }
 }
 
 @media (min-width: 992px) {
   .carousel-item img {
     height: 655px !important;
     object-fit: cover !important;
+  }
+
+  .No_categories{
+    height: 22rem !important;
+    background-color: #118A95;
+    color: #fff;
+  }
+  
+  .imgNotCategories{
+    height: 12rem !important;
   }
 }
 
@@ -325,7 +357,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: 1060;
 }
 
 .content {
@@ -432,3 +464,19 @@ body {
 .pet-comment {
   font-size: 1rem;
 }
+
+.No_categories{
+  height: 22rem;
+  background-color: #118A95;
+  color: #fff;
+  max-height: 22rem;
+}
+
+.imgNotCategories{
+  max-height: 13rem;
+}
+
+.carouseHeigth{
+  height:22rem;
+}
+

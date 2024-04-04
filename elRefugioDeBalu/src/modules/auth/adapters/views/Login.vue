@@ -1,20 +1,20 @@
 <script>
 import Swal from 'sweetalert2';
 import instance from '../../../../config/axios';
-import { decrypt, encrypt } from '../../../../kernel/hashFunctions';
+import { encrypt } from '../../../../kernel/hashFunctions';
 import { BButton, BInputGroup, BFormInput, BIcon } from "bootstrap-vue";
 import loginI from "../../../../assets/imgs/loginI.jpg";
 export default {
     data() {
         return {
-      loginI: loginI,
-      showPassword: false,
-      components: {
-        BButton,
-        BInputGroup,
-        BFormInput,
-        BIcon,
-      },
+            loginI: loginI,
+            showPassword: false,
+            components: {
+                BButton,
+                BInputGroup,
+                BFormInput,
+                BIcon,
+            },
             form: {
                 username: '',
                 password: '',
@@ -41,15 +41,15 @@ export default {
         }
     },
     methods: {
-    togglePasswordVisibility() {
-      this.showPassword = !this.showPassword;
-      const inputPassword = document.getElementById("input-password");
-      if (this.showPassword) {
-        inputPassword.type = "text";
-      } else {
-        inputPassword.type = "password";
-      }
-    },
+        togglePasswordVisibility() {
+            this.showPassword = !this.showPassword;
+            const inputPassword = document.getElementById("input-password");
+            if (this.showPassword) {
+                inputPassword.type = "text";
+            } else {
+                inputPassword.type = "password";
+            }
+        },
         validateInput(validateInput) {
             let input;
             switch (validateInput) {
@@ -233,7 +233,7 @@ export default {
                 allowOutsideClick: false,
             });
         },
-        async sendCodePassword(){
+        async sendCodePassword() {
             Swal.fire({
                 title: "Restablecer contraseña",
                 text: "Ingresa el correo electrónico con el que te registraste, te enviaremos un código de verificación para restablecer tu contraseña",
@@ -245,17 +245,17 @@ export default {
                 confirmButtonText: "Enviar código",
                 cancelButtonText: "Cancelar",
                 showLoaderOnConfirm: true,
-                preConfirm: async (email)=>{
+                preConfirm: async (email) => {
                     let encryptedEmail = await encrypt(email);
                     try {
                         Swal.showLoading();
-                        instance.patch("/person/send/confirmationCode", {username: encryptedEmail})
+                        instance.patch("/person/send/confirmationCode", { username: encryptedEmail })
                         Swal.fire({
                             title: "Código enviado",
                             text: "Hemos enviado un código de verificación a tu correo",
                             icon: "success",
                             showConfirmButton: true,
-                        }).then(()=>{
+                        }).then(() => {
                             Swal.fire({
                                 title: "Código de verificación",
                                 text: "Ingresa el código de verificación que te enviamos a tu correo",
@@ -263,11 +263,11 @@ export default {
                                 showCancelButton: true,
                                 confirmButtonText: "Verificar",
                                 cancelButtonText: "Cancelar",
-                                preConfirm: async (code)=>{
+                                preConfirm: async (code) => {
                                     let encryptedCode = await encrypt(code);
                                     try {
                                         Swal.showLoading();
-                                        instance.patch("/person/validate/code", {username: encryptedEmail, activationCode: encryptedCode})
+                                        instance.patch("/person/validate/code", { username: encryptedEmail, activationCode: encryptedCode })
                                         Swal.fire({
                                             title: "Código verificado",
                                             text: "Ingresa tu nueva contraseña",
@@ -275,24 +275,24 @@ export default {
                                             showCancelButton: true,
                                             confirmButtonText: "Cambiar contraseña",
                                             cancelButtonText: "Cancelar",
-                                            preConfirm: async (password)=>{
+                                            preConfirm: async (password) => {
                                                 let encryptedPassword = await encrypt(password);
-                                                    let response = await instance.patch("/person/reset/password", {username: encryptedEmail, newPassword: encryptedPassword})
-                                                    if(response.status === 200){
-                                                        Swal.fire({
-                                                            title: "Contraseña cambiada",
-                                                            text: "Tu contraseña ha sido cambiada con éxito",
-                                                            icon: "success",
-                                                            showConfirmButton: true,
-                                                        });
-                                                    }else{
-                                                        Swal.fire({
-                                                            title: "Error",
-                                                            text: "Algo salió mal, por favor intenta de nuevo más tarde",
-                                                            icon: "error",
-                                                            showConfirmButton: true,
-                                                        });
-                                                    }
+                                                let response = await instance.patch("/person/reset/password", { username: encryptedEmail, newPassword: encryptedPassword })
+                                                if (response.status === 200) {
+                                                    Swal.fire({
+                                                        title: "Contraseña cambiada",
+                                                        text: "Tu contraseña ha sido cambiada con éxito",
+                                                        icon: "success",
+                                                        showConfirmButton: true,
+                                                    });
+                                                } else {
+                                                    Swal.fire({
+                                                        title: "Error",
+                                                        text: "Algo salió mal, por favor intenta de nuevo más tarde",
+                                                        icon: "error",
+                                                        showConfirmButton: true,
+                                                    });
+                                                }
                                             }
                                         })
                                     } catch (error) {
@@ -314,7 +314,7 @@ export default {
                             showConfirmButton: true,
                         });
                     }
-                    
+
                 }
             })
         }
@@ -330,7 +330,10 @@ export default {
                     <img src="../../../../assets/imgs/logo blanco.png" class="img-fluid d-block mx-auto"
                         alt="Responsive image" width="30%">
                     <b-form class="px-5">
-                        <b-form-group class="my-3 text-white" label="Correo electrónico:" label-for="input-email">
+                        <b-form-group class="my-3 text-white" label-for="input-email">
+                            <label slot="label">
+                                Correo Electrónico: <span class="required-asterisk">*</span>
+                            </label>
                             <b-form-input class="bg-light shadow text-dark-gray-input" id="input-email"
                                 v-model.trim="form.username" @input="validateInput('email')"
                                 type="email"></b-form-input>
@@ -338,36 +341,25 @@ export default {
                                 }}</b-form-invalid-feedback>
                         </b-form-group>
 
-                        <b-form-group class="my-3 text-white"
-              label="Contraseña:"
-              label-for="input-password"
-            >
-              <b-input-group class="position-relative">
-                <b-form-input
-                  id="input-password"
-                  class="bg-light shadow text-dark-gray-input"
-                  v-model.trim="form.password"
-                  @input="validateInput('password')"
-                  type="password"
-                ></b-form-input>
-                <b-input-group-prepend>
-                  <b-button
-                    @click="togglePasswordVisibility"
-                    variant="outline-secondary"
-                    class="btn-eye rounded-right"
-                  >
-                    <b-icon
-                      v-if="showPassword"
-                      icon="eye-slash"
-                      class="eye-icon"
-                    ></b-icon>
-                    <b-icon v-else icon="eye" class="eye-icon"></b-icon>
-                  </b-button>
-                </b-input-group-prepend>
-              </b-input-group>
-              <b-form-invalid-feedback v-if="showErrors.password">{{
-                errors.password
-              }}</b-form-invalid-feedback>
+                        <b-form-group class="my-3 text-white" label-for="input-password">
+                            <label slot="label">
+                                Contraseña: <span class="required-asterisk">*</span>
+                            </label>
+                            <b-input-group class="position-relative">
+                                <b-form-input id="input-password" class="bg-light shadow text-dark-gray-input"
+                                    v-model.trim="form.password" @input="validateInput('password')"
+                                    type="password"></b-form-input>
+                                <b-input-group-prepend>
+                                    <b-button @click="togglePasswordVisibility" variant="outline-secondary"
+                                        class="btn-eye rounded-right">
+                                        <b-icon v-if="showPassword" icon="eye-slash" class="eye-icon"></b-icon>
+                                        <b-icon v-else icon="eye" class="eye-icon"></b-icon>
+                                    </b-button>
+                                </b-input-group-prepend>
+                            </b-input-group>
+                            <b-form-invalid-feedback v-if="showErrors.password">{{
+                                    errors.password
+                                }}</b-form-invalid-feedback>
                         </b-form-group>
                         <b-row class="justify-content-center">
                             <b-col class="d-flex justify-content-center align-items-center mt-3">
@@ -397,11 +389,9 @@ export default {
                     </b-form>
                 </b-card>
             </b-col>
-      <b-col cols="6" class="text-center">
-        <b-img
-          :src="loginI" fluid left rounded class="img mx-auto" style="max-height: 570px;"
-        ></b-img>
-      </b-col>
+            <b-col cols="6" class="text-center">
+                <b-img :src="loginI" fluid left rounded class="img mx-auto" style="max-height: 570px;"></b-img>
+            </b-col>
         </b-row>
     </b-container>
 </template>
@@ -414,14 +404,14 @@ export default {
 }
 
 .eye-icon {
-  font-size: 1rem;
+    font-size: 1rem;
 }
 
 .btn-eye {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-   background-color: #ffffff;
-  border-color: #ffffff;
-  color: black;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    background-color: #ffffff;
+    border-color: #ffffff;
+    color: black;
 }
 </style>

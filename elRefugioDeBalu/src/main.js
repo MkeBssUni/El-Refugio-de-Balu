@@ -23,6 +23,8 @@ Vue.use(VueSweetalert2);
 //Axios
 Vue.use(VueAxios, axios)
 
+import '@asika32764/vue-animate/dist/vue-animate.css';
+
 new Vue({
   router,
   render: (h) => h(App)

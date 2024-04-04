@@ -3,14 +3,14 @@
         <b-row>
             <b-col cols="12">
                 <b-row class="px-sm-5">
-                    <b-col cols="12">
-                        <b-img :src="pet.mainImage" class="pet-main-img"
-                            alt="Imagen principal de la mascota" fluid center rounded></b-img>
-                    </b-col>
+                    <div @dragover.prevent @drop="dropImage">
+                        <b-img :src="pet.mainImage" class="pet-main-img" alt="Imagen principal de la mascota" fluid
+                            center rounded></b-img>
+                    </div>
                     <b-col v-for="(image, index) in pet.images" :key="index" cols="3" class="mt-3">
                         <div class="pet-additional-img-container">
                             <b-img :src="image" class="pet-additional-img" alt="Imagen adicional" fluid center
-                                @click="swapImage(image)"></b-img>
+                                draggable="true" @dragstart="dragStart(image)"></b-img>
                         </div>
                     </b-col>
                 </b-row>
@@ -43,23 +43,23 @@
                     </b-col>
                     <b-col cols="12" sm="6" class="d-flex">
                         <p class="me-2 pet-p">Tamaño:</p>
-                        <p class="text-dark-gray-input pet-p">{{ mapSize((pet.size).toString().toLowerCase()) }}
+                        <p class="text-dark-gray-input pet-p">{{ mapSize((pet.size)) }}
                         </p>
                     </b-col>
                     <b-col cols="12" sm="6" class="d-flex">
                         <p class="me-2 pet-p">Etapa:</p>
                         <p class="text-dark-gray-input pet-p">{{
-                            mapLifeStage((pet.lifeStage).toString().toLowerCase()) }}</p>
+                        mapLifeStage((pet.lifeStage)) }}</p>
                     </b-col>
                     <b-col cols="12" sm="6" class="d-flex">
                         <p class="me-2 pet-p">Edad</p>
                         <p class="text-dark-gray-input pet-p">{{ pet.age }} {{
-                            mapAgeUnit((pet.ageUnit).toString().toLowerCase()) }}</p>
+                        mapAgeUnit((pet.ageUnit)) }}</p>
                     </b-col>
                     <b-col cols="12" sm="6" class="d-flex">
                         <p class="me-2 pet-p">Peso</p>
                         <p class="text-dark-gray-input pet-p">{{ pet.weight }} {{
-                            mapWeightUnit((pet.weightUnit).toString().toLowerCase()) }}</p>
+                        mapWeightUnit((pet.weightUnit)) }}</p>
                     </b-col>
                 </b-row>
                 <hr class="divider my-0">
@@ -163,7 +163,21 @@ export default {
             required: true
         }
     },
+    data() {
+        return {
+            draggedImage: null
+        }
+    },
     methods: {
+        dragStart(image) {
+            this.draggedImage = image;
+        },
+        dropImage() {
+            if (this.draggedImage) {
+                this.swapImage(this.draggedImage);
+                this.draggedImage = null;
+            }
+        },
         mapSize(size) {
             return sizes[size] || size;
         },

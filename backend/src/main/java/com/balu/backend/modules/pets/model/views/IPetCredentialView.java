@@ -1,6 +1,7 @@
 package com.balu.backend.modules.pets.model.views;
 
 public interface IPetCredentialView {
+    String getImage();
     String getName();
     String getBreed();
     String getCategory();
