@@ -171,7 +171,7 @@
                             >
                               <b-form-input
                                 id="haveHadPets"
-                                v-model="adoptionInfo.haveHadPets"
+                                v-model="adoptionRequestSave.reasonsForAdoption.haveHadPets"
                                 rows="3"
                                 aria-describedby="haveHadPets-live-feedback"
                                 minlength="10"
@@ -181,7 +181,6 @@
                               ></b-form-input>
                               <b-form-invalid-feedback
                                 id="haveHadPets-live-feedback"
-                                
                               >
                                 {{ error.haveHadPets }}
                               </b-form-invalid-feedback>
@@ -196,7 +195,7 @@
                             >
                               <b-form-input
                                 id="input-1"
-                                v-model="adoptionInfo.whereWillThePetBe"
+                                v-model="adoptionRequestSave.reasonsForAdoption.whereWillThePetBe"
                                 rows="3"
                                 aria-describedby="whereWillThePetBe-live-feedback"
                                 minlength="10"
@@ -223,7 +222,7 @@
                             >
                               <b-form-input
                                 id="input-1"
-                                v-model="adoptionInfo.peopleAgreeToAdopt"
+                                v-model="adoptionRequestSave.reasonsForAdoption.peopleAgreeToAdopt"
                                 :state="validation.peopleAgreeToAdopt"
                                 @input="validatePeopleAgreeToAdopt"
                                 minlegt="10"
@@ -248,7 +247,7 @@
                             >
                               <b-form-input
                                 id="input-1"
-                                v-model="adoptionInfo.additionalComments"
+                                v-model="adoptionRequestSave.reasonsForAdoption.additionalComments"
                                 rows="3"
                                 minlegt="10"
                                 maxlength="100"
@@ -311,7 +310,7 @@
                             >
                               <b-form-input
                                 id="input-1"
-                                v-model="adoptionInfo.lastPet"
+                                v-model="adoptionRequestSave.previousExperiencieDto.lastPet"
                                 @input="validateLastPet"
                                 :state="validation.lastPet"
                                 aria-describedby="lastPet-live-feedback"
@@ -337,7 +336,7 @@
                               <b-form-input
                                 id="input-1"
                                 v-model="
-                                  adoptionInfo.whatDidYouDoWhenThePetGotSick
+                                adoptionRequestSave.previousExperiencieDto.whatDidYouDoWhenThePetGotSick
                                 "
                                 @input="validateWhatDidYouDoWhenThePetGotSick"
                                 :state="
@@ -367,7 +366,7 @@
                             >
                               <b-form-input
                                 v-model="
-                                  adoptionInfo.whatKindOfPetsHaveYouHadBefore
+                                adoptionRequestSave.previousExperiencieDto.whatKindOfPetsHaveYouHadBefore
                                 "
                                 :state="
                                   validation.whatKindOfPetsHaveYouHadBefore
@@ -396,7 +395,7 @@
                             >
                               <b-form-input
                                 v-model="
-                                  adoptionInfo.whatMemoriesDoYouHaveWithYourPet
+                                adoptionRequestSave.previousExperiencieDto.whatMemoriesDoYouHaveWithYourPet
                                 "
                                 :state="
                                   validation.whatMemoriesDoYouHaveWithYourPet
@@ -463,7 +462,7 @@
                             >
                               <b-form-textarea
                                 id="input-1"
-                                v-model="adoptionInfo.additionalInfo"
+                                v-model="adoptionRequestSave.additional_information"
                                 rows="3"
                                 @input="validateAdditionalInfo"
                                 :state="validation.additionalInfo"
@@ -515,7 +514,6 @@
 import Encabezado from "../../../../views/components/Encabezado.vue";
 import swal from "sweetalert2";
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
-import { encrypt } from "../../../../kernel/hashFunctions";
 
 const regex = /^[a-zA-Z.]+\s?[a-zA-Z.]*$/;
 
@@ -531,15 +529,6 @@ export default {
         placeToSleep: null,
         placeToLive: null,
         placeToPlay: null,
-        haveHadPets: null,
-        whereWillThePetBe: null,
-        peopleAgreeToAdopt: null,
-        additionalComments: null,
-        lastPet: null,
-        whatDidYouDoWhenThePetGotSick: null,
-        whatKindOfPetsHaveYouHadBefore: null,
-        whatMemoriesDoYouHaveWithYourPet: null,
-        additionalInfo: null,
       },
       adoptionRequestSave: {
         user: null,
@@ -588,18 +577,18 @@ export default {
   },
   methods: {
     ValidateHaveHadPets() {
-      if (!regex.test(this.adoptionInfo.haveHadPets)) {
+      if (!regex.test(this.adoptionRequestSave.reasonsForAdoption.haveHadPets)) {
         this.validation.haveHadPets = false;
         this.error.haveHadPets = "Solo se aceptan letras[Aa-Zz] y puntos[.]";
-      } else if (this.adoptionInfo.haveHadPets.length < 10) {
+      } else if (this.adoptionRequestSave.reasonsForAdoption.haveHadPets.length < 10) {
         this.validation.haveHadPets = false;
         this.error.haveHadPets =
           "La respuesta debe tener al menos 10 caracteres";
-      } else if (this.adoptionInfo.haveHadPets.length > 100) {
+      } else if (this.adoptionRequestSave.reasonsForAdoption.haveHadPets.length > 100) {
         this.validation.haveHadPets = false;
         this.error.haveHadPets =
           "La respuesta debe tener menos de 100 caracteres";
-      } else if (this.adoptionInfo.haveHadPets === null) {
+      } else if (this.adoptionRequestSave.reasonsForAdoption.haveHadPets === null) {
         this.validation.haveHadPets = false;
         this.error.haveHadPets = "Este campo es requerido";
       } else {
@@ -608,19 +597,19 @@ export default {
       }
     },
     validatewherewill() {
-      if (!regex.test(this.adoptionInfo.whereWillThePetBe)) {
+      if (!regex.test(this.adoptionRequestSave.reasonsForAdoption.whereWillThePetBe)) {
         this.validation.whereWillThePetBe = false;
         this.error.whereWillThePetBe =
           "Solo se aceptan letras[Aa-Zz] y puntos[.]";
-      } else if (this.adoptionInfo.whereWillThePetBe.length < 10) {
+      } else if (this.adoptionRequestSave.reasonsForAdoption.whereWillThePetBe.length < 10) {
         this.validation.whereWillThePetBe = false;
         this.error.whereWillThePetBe =
           "La respuesta debe tener al menos 10 caracteres";
-      } else if (this.adoptionInfo.whereWillThePetBe.length > 100) {
+      } else if (this.adoptionRequestSave.reasonsForAdoption.whereWillThePetBe.length > 100) {
         this.validation.whereWillThePetBe = false;
         this.error.whereWillThePetBe =
           "La respuesta debe tener menos de 100 caracteres";
-      } else if (this.adoptionInfo.whereWillThePetBe === null) {
+      } else if (this.adoptionRequestSave.reasonsForAdoption.whereWillThePetBe === null) {
         this.validation.whereWillThePetBe = false;
         this.error.whereWillThePetBe = "Este campo es requerido";
       } else {
@@ -629,19 +618,19 @@ export default {
       }
     },
     validatePeopleAgreeToAdopt() {
-      if (!regex.test(this.adoptionInfo.peopleAgreeToAdopt)) {
+      if (!regex.test(this.adoptionRequestSave.reasonsForAdoption.peopleAgreeToAdopt)) {
         this.validation.peopleAgreeToAdopt = false;
         this.error.peopleAgreeToAdopt =
           "Solo se aceptan letras[Aa-Zz] y puntos[.]";
-      } else if (this.adoptionInfo.peopleAgreeToAdopt.length < 10) {
+      } else if (this.adoptionRequestSave.reasonsForAdoption.peopleAgreeToAdopt.length < 10) {
         this.validation.peopleAgreeToAdopt = false;
         this.error.peopleAgreeToAdopt =
           "La respuesta debe tener al menos 10 caracteres";
-      } else if (this.adoptionInfo.peopleAgreeToAdopt.length > 100) {
+      } else if (this.adoptionRequestSave.reasonsForAdoption.peopleAgreeToAdopt.length > 100) {
         this.validation.peopleAgreeToAdopt = false;
         this.error.peopleAgreeToAdopt =
           "La respuesta debe tener menos de 100 caracteres";
-      } else if (this.adoptionInfo.peopleAgreeToAdopt === null) {
+      } else if (this.adoptionRequestSave.reasonsForAdoption.peopleAgreeToAdopt === null) {
         this.validation.peopleAgreeToAdopt = false;
         this.error.peopleAgreeToAdopt = "Este campo es requerido";
       } else {
@@ -650,19 +639,19 @@ export default {
       }
     },
     validateAdditionalComments() {
-      if (!regex.test(this.adoptionInfo.additionalComments)) {
+      if (!regex.test(this.adoptionRequestSave.reasonsForAdoption.additionalComments)) {
         this.validation.additionalComments = false;
         this.error.additionalComments =
           "Solo se aceptan letras[Aa-Zz] y puntos[.]";
-      } else if (this.adoptionInfo.additionalComments.length < 10) {
+      } else if (this.adoptionRequestSave.reasonsForAdoption.additionalComments.length < 10) {
         this.validation.additionalComments = false;
         this.error.additionalComments =
           "La respuesta debe tener al menos 10 caracteres";
-      } else if (this.adoptionInfo.additionalComments.length > 100) {
+      } else if (this.adoptionRequestSave.reasonsForAdoption.additionalComments.length > 100) {
         this.validation.additionalComments = false;
         this.error.additionalComments =
           "La respuesta debe tener menos de 100 caracteres";
-      } else if (this.adoptionInfo.additionalComments === null) {
+      } else if (this.adoptionRequestSave.reasonsForAdoption.additionalComments === null) {
         this.validation.additionalComments = false;
         this.error.additionalComments = "Este campo es requerido";
       } else {
@@ -671,17 +660,17 @@ export default {
       }
     },
     validateLastPet() {
-      if (!regex.test(this.adoptionInfo.lastPet)) {
+      if (!regex.test(this.adoptionRequestSave.reasonsForAdoption.lastPet)) {
         this.validation.lastPet = false;
         this.error.lastPet = "Solo se aceptan letras[Aa-Zz] y puntos[.]";
-      } else if (this.adoptionInfo.lastPet.length < 10) {
+      } else if (this.adoptionRequestSave.reasonsForAdoption.lastPet.length < 10) {
         this.validation.lastPet = false;
         this.error.lastPet = "La respuesta debe tener al menos 10 caracteres";
-      } else if (this.adoptionInfo.lastPet.length > 100) {
+      } else if (this.adoptionRequestSave.reasonsForAdoption.lastPet.length > 100) {
         this.validation.lastPet = false;
         this.error.lastPet = "La respuesta debe tener menos de 100 caracteres";
       } else if (this.adoptionInfo.lastPet === null) {
-        this.validation.lastPet = false;
+        this.validation.adoptionRequestSave.reasonsForAdoption = false;
         this.error.lastPet = "Este campo es requerido";
       } else {
         this.validation.lastPet = true;
@@ -689,19 +678,19 @@ export default {
       }
     },
     validateWhatDidYouDoWhenThePetGotSick() {
-      if (!regex.test(this.adoptionInfo.whatDidYouDoWhenThePetGotSick)) {
+      if (!regex.test(this.adoptionRequestSave.reasonsForAdoption.whatDidYouDoWhenThePetGotSick)) {
         this.validation.whatDidYouDoWhenThePetGotSick = false;
         this.error.whatDidYouDoWhenThePetGotSick =
           "Solo se aceptan letras[Aa-Zz] y puntos[.]";
-      } else if (this.adoptionInfo.whatDidYouDoWhenThePetGotSick.length < 10) {
+      } else if (this.adoptionRequestSave.reasonsForAdoption.whatDidYouDoWhenThePetGotSick.length < 10) {
         this.validation.whatDidYouDoWhenThePetGotSick = false;
         this.error.whatDidYouDoWhenThePetGotSick =
           "La respuesta debe tener al menos 10 caracteres";
-      } else if (this.adoptionInfo.whatDidYouDoWhenThePetGotSick.length > 100) {
+      } else if (this.adoptionRequestSave.reasonsForAdoption.whatDidYouDoWhenThePetGotSick.length > 100) {
         this.validation.whatDidYouDoWhenThePetGotSick = false;
         this.error.whatDidYouDoWhenThePetGotSick =
           "La respuesta debe tener menos de 100 caracteres";
-      } else if (this.adoptionInfo.whatDidYouDoWhenThePetGotSick === null) {
+      } else if (this.adoptionRequestSave.reasonsForAdoption.whatDidYouDoWhenThePetGotSick === null) {
         this.validation.whatDidYouDoWhenThePetGotSick = false;
         this.error.whatDidYouDoWhenThePetGotSick = "Este campo es requerido";
       } else {
@@ -710,21 +699,21 @@ export default {
       }
     },
     validateWhatKindOfPetsHaveYouHadBefore() {
-      if (!regex.test(this.adoptionInfo.whatKindOfPetsHaveYouHadBefore)) {
+      if (!regex.test(this.adoptionRequestSave.reasonsForAdoption.whatKindOfPetsHaveYouHadBefore)) {
         this.validation.whatKindOfPetsHaveYouHadBefore = false;
         this.error.whatKindOfPetsHaveYouHadBefore =
           "Solo se aceptan letras[Aa-Zz] y puntos[.]";
-      } else if (this.adoptionInfo.whatKindOfPetsHaveYouHadBefore.length < 10) {
+      } else if (this.adoptionRequestSave.reasonsForAdoption.whatKindOfPetsHaveYouHadBefore.length < 10) {
         this.validation.whatKindOfPetsHaveYouHadBefore = false;
         this.error.whatKindOfPetsHaveYouHadBefore =
           "La respuesta debe tener al menos 10 caracteres";
       } else if (
-        this.adoptionInfo.whatKindOfPetsHaveYouHadBefore.length > 100
+        this.adoptionRequestSave.reasonsForAdoption.whatKindOfPetsHaveYouHadBefore.length > 100
       ) {
         this.validation.whatKindOfPetsHaveYouHadBefore = false;
         this.error.whatKindOfPetsHaveYouHadBefore =
           "La respuesta debe tener menos de 100 caracteres";
-      } else if (this.adoptionInfo.whatKindOfPetsHaveYouHadBefore === null) {
+      } else if (this.adoptionRequestSave.reasonsForAdoption.whatKindOfPetsHaveYouHadBefore === null) {
         this.validation.whatKindOfPetsHaveYouHadBefore = false;
         this.error.whatKindOfPetsHaveYouHadBefore = "Este campo es requerido";
       } else {
@@ -733,23 +722,23 @@ export default {
       }
     },
     validateWhatMemoriesDoYouHaveWithYourPet() {
-      if (!regex.test(this.adoptionInfo.whatMemoriesDoYouHaveWithYourPet)) {
+      if (!regex.test(this.adoptionRequestSave.reasonsForAdoption.whatMemoriesDoYouHaveWithYourPet)) {
         this.validation.whatMemoriesDoYouHaveWithYourPet = false;
         this.error.whatMemoriesDoYouHaveWithYourPet =
           "Solo se aceptan letras[Aa-Zz] y puntos[.]";
       } else if (
-        this.adoptionInfo.whatMemoriesDoYouHaveWithYourPet.length < 10
+        this.adoptionRequestSave.reasonsForAdoption.whatMemoriesDoYouHaveWithYourPet.length < 10
       ) {
         this.validation.whatMemoriesDoYouHaveWithYourPet = false;
         this.error.whatMemoriesDoYouHaveWithYourPet =
           "La respuesta debe tener al menos 10 caracteres";
       } else if (
-        this.adoptionInfo.whatMemoriesDoYouHaveWithYourPet.length > 100
+        this.adoptionRequestSave.reasonsForAdoption.whatMemoriesDoYouHaveWithYourPet.length > 100
       ) {
         this.validation.whatMemoriesDoYouHaveWithYourPet = false;
         this.error.whatMemoriesDoYouHaveWithYourPet =
           "La respuesta debe tener menos de 100 caracteres";
-      } else if (this.adoptionInfo.whatMemoriesDoYouHaveWithYourPet === null) {
+      } else if (this.adoptionRequestSave.reasonsForAdoption.whatMemoriesDoYouHaveWithYourPet === null) {
         this.validation.whatMemoriesDoYouHaveWithYourPet = false;
         this.error.whatMemoriesDoYouHaveWithYourPet = "Este campo es requerido";
       } else {
@@ -758,18 +747,18 @@ export default {
       }
     },
     validateAdditionalInfo() {
-      if (!regex.test(this.adoptionInfo.additionalInfo)) {
+      if (!regex.test(this.adoptionRequestSave.additional_information)) {
         this.validation.additionalInfo = false;
         this.error.additionalInfo = "Solo se aceptan letras[Aa-Zz] y puntos[.]";
-      } else if (this.adoptionInfo.additionalInfo.length < 10) {
+      } else if (this.adoptionRequestSave.additional_information.length < 10) {
         this.validation.additionalInfo = false;
         this.error.additionalInfo =
           "La respuesta debe tener al menos 10 caracteres";
-      } else if (this.adoptionInfo.additionalInfo.length > 100) {
+      } else if (this.adoptionRequestSave.additional_information.length > 100) {
         this.validation.additionalInfo = false;
         this.error.additionalInfo =
           "La respuesta debe tener menos de 100 caracteres";
-      } else if (this.adoptionInfo.additionalInfo === null) {
+      } else if (this.adoptionRequestSave.additional_information === null) {
         this.validation.additionalInfo = false;
         this.error.additionalInfo = "Este campo es requerido";
       } else {
@@ -827,15 +816,15 @@ export default {
         this.adoptionInfo.placeToSleep === null ||
         this.adoptionInfo.placeToLive === null ||
         this.adoptionInfo.placeToPlay === null ||
-        this.adoptionInfo.haveHadPets === null ||
-        this.adoptionInfo.whereWillThePetBe === null ||
-        this.adoptionInfo.peopleAgreeToAdopt === null ||
-        this.adoptionInfo.additionalComments === null ||
-        this.adoptionInfo.lastPet === null ||
-        this.adoptionInfo.whatDidYouDoWhenThePetGotSick === null ||
-        this.adoptionInfo.whatKindOfPetsHaveYouHadBefore === null ||
-        this.adoptionInfo.whatMemoriesDoYouHaveWithYourPet === null ||
-        this.adoptionInfo.additionalInfo === null
+        this.adoptionRequestSave.reasonsForAdoption.haveHadPets === null ||
+        this.adoptionRequestSave.reasonsForAdoption.whereWillThePetBe === null ||
+        this.adoptionRequestSave.reasonsForAdoption.peopleAgreeToAdopt === null ||
+        this.adoptionRequestSave.reasonsForAdoption.additionalComments === null ||
+        this.adoptionRequestSave.previousExperiencieDto.lastPet === null ||
+        this.adoptionRequestSave.previousExperiencieDto.whatDidYouDoWhenThePetGotSick === null ||
+        this.adoptionRequestSave.previousExperiencieDto.whatKindOfPetsHaveYouHadBefore === null ||
+        this.adoptionRequestSave.previousExperiencieDto.whatMemoriesDoYouHaveWithYourPet === null ||
+        this.adoptionRequestSave.additional_information === null
       ) {
         return true;
       }
