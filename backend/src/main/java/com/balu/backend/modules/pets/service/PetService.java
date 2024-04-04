@@ -589,7 +589,7 @@ public class PetService {
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseApi<?> comment(CommentPetDto dto) {
+    public ResponseApi<?> comment(CommentPetDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         if (dto.getPet() == null || validations.isNotBlankString(dto.getPet().trim()) || dto.getUser() == null || validations.isNotBlankString(dto.getUser().trim()) || dto.getComment() == null || validations.isNotBlankString(dto.getComment().trim()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
 
@@ -616,6 +616,11 @@ public class PetService {
 
         logService.saveLog("Pet " + pet.getId() + " commented by " + user.getId(), LogTypes.INSERT, "COMMENTS");
 
+        if(user.getRole().getName().equals(Roles.MOD)){
+            emailService.sendNotificationNewComment(hashService.decrypt(pet.getOwner().getUsername()), pet.getName());
+        }else{
+            emailService.sendNotificationNewComment(hashService.decrypt(pet.getModerator().getUsername()), pet.getName());
+        }
         return new ResponseApi<>(HttpStatus.OK,false, "Comment saved successfully");
     }
 
