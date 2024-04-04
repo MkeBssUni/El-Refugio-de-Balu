@@ -7,21 +7,21 @@
                     <LargeContent :pet="pet" />
                     <hr class="divider my-0">
                     <b-row class="mt-4 d-flex justify-content-end">
-                        <b-col cols="6" xl="3">
+                        <b-col cols="4" lg="3" v-show="canEdit">
                             <b-button variant="outline-dark-orange"
                                 class="me-3 d-flex align-items-center justify-content-between w-100">
-                                <span class="me-2">Editar publicación</span>
+                                <span class="me-2">Editar</span>
                                 <b-icon icon="pencil" font-scale="1.3"></b-icon>
                             </b-button>
                         </b-col>
-                        <b-col cols="6" xl="3" class="mt-3 mt-xl-0">
+                        <b-col cols="4" lg="3" v-show="canCancel">
                             <b-button variant="outline-danger"
                                 class="me-3 d-flex align-items-center justify-content-between w-100">
-                                <span class="me-2">Cancelar publicación</span>
+                                <span class="me-2">Cancelar</span>
                                 <b-icon icon="x-circle" font-scale="1.3"></b-icon>
                             </b-button>
                         </b-col>
-                        <b-col cols="6" xl="3" class="mt-3 mt-xl-0">
+                        <b-col cols="4" lg="3">
                             <b-button variant="outline-secondary-gray" @click="goBack"
                                 class="d-flex align-items-center justify-content-between w-100">
                                 <span class="me-2">Regresar</span>
@@ -35,7 +35,27 @@
                     <SmallContent :pet="pet" />
                     <hr class="divider my-0">
                     <b-row class="mt-4 d-flex justify-content-end">
-                        <h1>Botones</h1>
+                        <b-col cols="12" sm="4" v-show="canEdit">
+                            <b-button variant="outline-dark-orange"
+                                class="me-3 d-flex align-items-center justify-content-between w-100">
+                                <span class="me-2">Editar</span>
+                                <b-icon icon="pencil" font-scale="1.3"></b-icon>
+                            </b-button>
+                        </b-col>
+                        <b-col cols="12" sm="4" class="mt-3 mt-sm-0" v-show="canCancel">
+                            <b-button variant="outline-danger"
+                                class="me-3 d-flex align-items-center justify-content-between w-100">
+                                <span class="me-2">Cancelar</span>
+                                <b-icon icon="x-circle" font-scale="1.3"></b-icon>
+                            </b-button>
+                        </b-col>
+                        <b-col cols="12" sm="4" class="mt-3 mt-sm-0">
+                            <b-button variant="outline-secondary-gray" @click="goBack"
+                                class="d-flex align-items-center justify-content-between w-100">
+                                <span class="me-2">Regresar</span>
+                                <b-icon icon="arrow-left-circle" font-scale="1.3"></b-icon>
+                            </b-button>
+                        </b-col>
                     </b-row>
                 </b-card>
             </b-col>
@@ -60,7 +80,9 @@ export default {
     },
     data() {
         return {
-            pet: {}
+            pet: {},
+            canEdit: false,
+            canCancel: false
         }
     },
     methods: {
@@ -76,6 +98,8 @@ export default {
                 })
                 const response = await instance.post(`/pet/details`, { id: this.petId });
                 this.pet = response.data.data;
+                if (this.pet.status === 'IN_REVISION') this.canEdit = true;
+                if (this.pet.status === 'PENDING' || this.pet.status === 'IN_REVISION' || this.pet.status === 'APPROVED') this.canCancel = true;
                 Swal.close();
             } catch (error) {
                 Swal.fire({
