@@ -625,7 +625,7 @@ public class PetService {
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseApi<?> cancel(CancelDto dto) {
+    public ResponseApi<?> cancel(CancelDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         if (dto.getPet() == null || validations.isNotBlankString(dto.getPet().trim()) || dto.getOwner() == null || validations.isNotBlankString(dto.getOwner().trim()) || dto.getCancelReason() == null || validations.isNotBlankString(dto.getCancelReason().trim()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
 
@@ -656,7 +656,7 @@ public class PetService {
 
         String logMessage = pet.getStatus().equals(Statusses.PENDING) ? "Pet " + savedPet.getId() + " request canceled by " + owner.getId() : "Pet " + savedPet.getId() + " cancellation request sent by " + owner.getId();
         logService.saveLog(logMessage, LogTypes.UPDATE, "PETS");
-
+        emailService.sendPetDischargeRequest(hashService.decrypt(savedPet.getModerator().getUsername()), savedPet.getName());
         return new ResponseApi<>(HttpStatus.OK,false, "Pet cancellation process successful");
     }
 
