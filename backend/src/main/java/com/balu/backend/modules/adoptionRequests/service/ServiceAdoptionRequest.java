@@ -105,7 +105,7 @@ public class ServiceAdoptionRequest {
             Long userId = decryptId(dto.getUser());
             Long petId = decryptId(dto.getPet());
 
-            if(dto.getUser() == null || validations.isNotBlankString(dto.getUser()) || dto.getPet() == null || validations.isNotBlankString(dto.getPet())  || dto.getAdditional_information() == null || validations.isNotBlankString(dto.getAdditional_information()) || dto.getHomeImage() == null || dto.getHomeSpecification() == null)
+            if(dto.getUser() == null || validations.isNotBlankString(dto.getUser()) || dto.getPet() == null || validations.isNotBlankString(dto.getPet())  || dto.getAdditional_information() == null || validations.isNotBlankString(dto.getAdditional_information()))
                 return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.MISSING_FIELDS.name());
 
             if(duplicateRequest(userId,petId)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.DUPLICATE_REQUEST.name());
@@ -194,7 +194,7 @@ public class ServiceAdoptionRequest {
                     AdoptionRequestImage saveImage = requestImagesRepository.saveAndFlush(requestImage);
                     if(saveImage != null) adoptionRequestImages.add(saveImage);
                 }
-                if(adoptionRequestImages.size() != dto.getHomeImage().length){
+                if(adoptionRequestImages.size() != dto.getImageAdoption().length){
                     iAdoptionRequestRepository.delete(saveAdoption);
                     for(AdoptionRequestImage adoptionRequestImagede : adoptionRequestImages) requestImagesRepository.delete(adoptionRequestImagede);
                     return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.IMAGE_NOT_SAVED.name());

@@ -37,7 +37,7 @@
             <b-row>
               <b-col cols="12" sm="12" lg="5" md="5">
                 <img
-                  src="https://es.mypet.com/wp-content/uploads/sites/23/2021/03/GettyImages-623368750-e1582816063521-1.jpg"
+                :src="base64ToImage(credentialPet.image)"
                   alt="Imagen de perfil"
                   class="image-pet"
                 />
@@ -476,6 +476,7 @@ export default {
           id: idPet,
         });
         this.credentialPet = response.data.data;
+        console.log(this.credentialPet)
       } catch (error) {
         Swal.fire({
           title: "Error",
@@ -562,6 +563,7 @@ export default {
   border-radius: 15px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
   transition: transform 0.3s ease; /* Agrega una transición suave para el efecto de zoom */
+  object-fit: cover ;
 }
 
 /* Cuando el mouse pasa sobre la imagen */
