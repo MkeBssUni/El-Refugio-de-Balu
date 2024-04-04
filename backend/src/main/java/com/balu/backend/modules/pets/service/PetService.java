@@ -147,7 +147,8 @@ public class PetService {
                 pet.getMedicalRecord().getDiseases() != null ? pet.getMedicalRecord().getDiseases().split(",") : null,
                 pet.getMedicalRecord().getAllergies() != null ? pet.getMedicalRecord().getAllergies().split(",") : null,
                 pet.getMedicalRecord().getObservations(),
-                pet.getSpecialCares() != null ? pet.getSpecialCares().split(",") : null
+                pet.getSpecialCares() != null ? pet.getSpecialCares().split(",") : null,
+                pet.getStatus().getName().name()
         );
 
         return new ResponseApi<>(petDetails, HttpStatus.OK,false, "Pet details retrieved successfully");
