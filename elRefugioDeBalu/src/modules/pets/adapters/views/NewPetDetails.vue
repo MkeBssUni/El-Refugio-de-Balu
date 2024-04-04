@@ -150,7 +150,7 @@ export default {
                     timerProgressBar: true,
                     showConfirmButton: false
                 }).then(() => {
-                    this.$router.push('/pets')
+                    this.$router.push('/petList')
                 })
             }
         },
@@ -211,7 +211,7 @@ export default {
             }).then((result) => {
                 if (result.isConfirmed) {
                     this.selectPet();
-                }            
+                }
             })
         },
         async closePet() {
@@ -239,7 +239,7 @@ export default {
                 }).then(() => {
                     this.$router.push('/petList')
                 })
-            } catch (error) {                
+            } catch (error) {
                 Swal.fire({
                     title: 'Error',
                     text: 'Ocurrió un error al cerrar la publicación de la mascota',
@@ -267,16 +267,17 @@ export default {
             }).then((result) => {
                 if (result.isConfirmed) {
                     this.closePet();
-                }            
+                }
             })
         },
         showChangesModal() {
             this.$bvModal.show('changesModal');
-        },        
+        },
     },
     mounted() {
-        if (!this.petId && localStorage.getItem('petId')) this.petId = localStorage.getItem('petId');
-        this.getDetails();
+        if (!this.petId && sessionStorage.getItem('petId')) this.petId = sessionStorage.getItem('petId');
+        if (!this.petId && !sessionStorage.getItem('petId')) this.$router.push('/petList');
+        this.getDetails();        
     },
     components: {
         SmallContent,

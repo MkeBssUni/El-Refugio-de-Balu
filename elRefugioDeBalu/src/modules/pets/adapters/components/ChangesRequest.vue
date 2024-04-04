@@ -1,15 +1,14 @@
 <template>
     <b-modal id="changesModal" centered scrollable hide-footer @hidden="resetForm()">
         <template #modal-header="{ close }">
-            <h5 class="mb-0">Solicitar cambios a la publicación</h5>
+            <h5 class="mb-0">Solicitar cambios</h5>
             <b-button size="sm" variant="light" @click="close()" class="ms-auto">
                 <b-icon icon="x" font-scale="1.8" class="text-dark"></b-icon>
             </b-button>
         </template>
         <b-form>
             <b-form-group label="Describa qué le falta a la publicación:" label-for="comment">
-                <b-form-textarea ref="textarea" id="comment" rows="3" max-rows="6" v-model.trim="payload.comment"
-                    placeholder="Describa los cambios que necesita la publicación para que sea aprobada..."
+                <b-form-textarea ref="textarea" id="comment" rows="2" max-rows="6" v-model.trim="payload.comment"
                     :class="{ 'is-invalid': showErrors.comment, 'mt-2': true }"
                     @input="validateForm()"></b-form-textarea>
                 <b-form-invalid-feedback v-if="showErrors.comment">
@@ -40,12 +39,14 @@
 import Swal from "sweetalert2";
 import instance from "../../../../config/axios";
 
+import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
+
 export default {
     props: {
         petId: {
             type: String,
             required: true
-        },
+        }
     },
     data() {
         return {
@@ -81,6 +82,19 @@ export default {
                 this.payload.isValid = true;
             }
         },
+        showError() {
+            Swal.fire({
+                title: 'Error',
+                text: 'Ocurrió un error al solicitar cambios en la publicación de la mascota',
+                icon: 'error',
+                iconColor: '#A93D3D',
+                timer: 3000,
+                timerProgressBar: true,
+                showConfirmButton: false
+            }).then(() => {
+                this.$bvModal.hide('changesModal');
+            })
+        },
         async requestChanges() {
             try {
                 Swal.fire({
@@ -91,16 +105,21 @@ export default {
                     imageHeight: 160,
                     showConfirmButton: false
                 })
-                await instance.post(`/pet/select`, {
-                    pet: petId,
-                    user: localStorage.getItem('userId'),
-                    status: 'in_revision'
-                })
-                await instance.post(`/pet/comment`, {
-                    pet: petId,
-                    user: localStorage.getItem('userId'),
-                    comment: this.payload.comment
-                });
+                const user = localStorage.getItem('userId');
+                if (this.petId && user) {
+                    await instance.post(`/pet/select`, {
+                        pet: this.petId,
+                        user: user,
+                        status: 'in_revision'
+                    })
+                    await instance.post(`/pet/comment`, {
+                        pet: this.petId,
+                        user: user,
+                        comment: this.payload.comment
+                    });
+                } else {
+                    this.showError();
+                }
                 Swal.fire({
                     title: 'Cambios solicitados',
                     text: 'Te hemos asignado la mascota y se han solicitado los cambios exitosamente',
@@ -111,30 +130,23 @@ export default {
                     showConfirmButton: false
                 }).then(() => {
                     this.$bvModal.hide('changesModal');
-                    this.$router.push('/petList')
+                    this.$router.push('moderated/petList')
                 })
             } catch (error) {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Ocurrió un error al solicitar cambios en la publicación de la mascota',
-                    icon: 'error',
-                    iconColor: '#A93D3D',
-                    timer: 3000,
-                    timerProgressBar: true,
-                    showConfirmButton: false
-                })
+                this.showError();
             }
         },
         showConfirmation() {
+            this.validateForm();
             if (this.payload.isValid) {
                 Swal.fire({
                     title: "¿Está seguro de solicitar cambios a la publicación?",
-                    text: "Una vez solicitados los cambios, se te asignará esta mascota y deberás darle seguimiento.",
+                    text: "Una vez solicitados los cambios, se te asignará esta mascota y deberás darle seguimiento a su proceso de adopción, ¿deseas continuar?",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",
                     cancelButtonColor: "#d33",
-                    confirmButtonText: "Sí, solicitar cambios",
+                    confirmButtonText: "Continuar",
                     cancelButtonText: "Cancelar",
                 }).then((result) => {
                     if (result.isConfirmed) {

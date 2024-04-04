@@ -67,7 +67,8 @@
                     </template>
                     <template #cell(actions)="data">
                         <div class="d-none d-md-inline-block">
-                            <b-button pill size="sm" variant="outline-dark-blue" class="px-3 d-flex align-items-center" @click="getDetails(data.item.id)">
+                            <b-button pill size="sm" variant="outline-dark-blue" class="px-3 d-flex align-items-center"
+                                @click="getDetails(data.item.id)">
                                 <span>Ver detalles</span>
                                 <b-icon icon="info-circle" font-scale="1" class="ms-1"></b-icon>
                             </b-button>
@@ -209,7 +210,7 @@ export default {
         },
         getDetails(petId) {
             this.$router.push({ name: 'newPet', params: { petId: petId } });
-            localStorage.setItem('petId', petId);
+            sessionStorage.setItem('petId', petId);                        
         }
     },
     mounted() {
