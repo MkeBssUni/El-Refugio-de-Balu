@@ -1,5 +1,6 @@
 package com.balu.backend.modules.pets.service;
 
+import com.balu.backend.kernel.EmailService;
 import com.balu.backend.kernel.ErrorMessages;
 import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.kernel.Validations;
@@ -52,6 +53,7 @@ public class PetService {
     private final ICommentRepository commentRepository;
     private final HashService hashService;
     private final LogService logService;
+    private final EmailService emailService;
 
     @Transactional(readOnly = true)
     public ResponseApi<?> findAllPaged(FindPetsDto dto, Pageable pageable) {
@@ -527,7 +529,7 @@ public class PetService {
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseApi<?> end(EndPetRequestDto dto) {
+    public ResponseApi<?> end(EndPetRequestDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         if (dto.getPet() == null || validations.isNotBlankString(dto.getPet().trim()) || dto.getUser() == null || validations.isNotBlankString(dto.getUser().trim()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
 
@@ -554,7 +556,7 @@ public class PetService {
         if (savedPet == null) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.INTERNAL_ERROR.name());
 
         logService.saveLog("Pet " + savedPet.getId() + " request closed by " + user.getId(), LogTypes.UPDATE, "PETS");
-
+        emailService.sendPetRejectedTemplate(hashService.decrypt(savedPet.getOwner().getUsername()), savedPet.getName());
         return new ResponseApi<>(HttpStatus.OK,false, "Pet request closed successfully");
     }
 

@@ -88,4 +88,17 @@ public class EmailService {
         }
     }
 
+    public void sendPetRejectedTemplate(String email, String namePet){
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+            helper.setTo(email);
+            helper.setSubject("Mascota dada de baja");
+            helper.setText(EmailTemplates.PetRejectedTemplate(namePet),true);
+            javaMailSender.send(message);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 }

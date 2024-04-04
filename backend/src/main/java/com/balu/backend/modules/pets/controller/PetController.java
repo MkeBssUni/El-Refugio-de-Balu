@@ -10,6 +10,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
 @RestController
 @RequestMapping("/api/pet")
 @AllArgsConstructor
@@ -87,7 +94,7 @@ public class PetController {
     }
 
     @PostMapping("/end")
-    public ResponseEntity<ResponseApi<?>> end(@RequestBody EndPetRequestDto dto) {
+    public ResponseEntity<ResponseApi<?>> end(@RequestBody EndPetRequestDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         ResponseApi<?> response = petService.end(dto);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
