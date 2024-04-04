@@ -31,4 +31,5 @@ public class PetDetails {
     private String[] allergies;
     private String observations;
     private String[] specialCares;
+    private String status;
 }
