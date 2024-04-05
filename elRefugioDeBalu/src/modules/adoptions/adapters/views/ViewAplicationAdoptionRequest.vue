@@ -592,9 +592,10 @@ export default {
 }
 
 .homePhotos {
-  width: 80%;
-  height: 100%;
+  width: 55%;
+  height: 160%;
   border-radius: 15px;
+  object-fit: cover ;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
   transition: transform 0.3s ease; /* Agrega una transición suave para el efecto de zoom */
 }
