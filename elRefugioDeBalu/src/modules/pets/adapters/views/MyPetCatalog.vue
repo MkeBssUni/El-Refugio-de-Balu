@@ -62,7 +62,7 @@
                                         mapStatus((pet.status).toString().toLowerCase()) }}</b-badge>
                             <div class="d-flex justify-content-center">
                                 <b-button pill variant="outline-dark-blue"
-                                    class="mt-3 px-5 d-flex align-items-center justify-content-center" to="/petDetails">
+                                    class="mt-3 px-5 d-flex align-items-center justify-content-center" @click="getDetails(pet.id)">
                                     <span>Ver detalles</span>
                                 </b-button>
                             </div>
@@ -194,6 +194,10 @@ export default {
             if (pet) {
                 await this.getComments(pet);
             }
+        },        
+        getDetails(petId) {
+            this.$router.push({ name: 'myPet', params: { petId: petId } });
+            sessionStorage.setItem('petId', petId);                        
         }
     },
     mounted() {

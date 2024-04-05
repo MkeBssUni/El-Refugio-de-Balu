@@ -1,5 +1,6 @@
 package com.balu.backend.modules.pets.service;
 
+import com.balu.backend.kernel.EmailService;
 import com.balu.backend.kernel.ErrorMessages;
 import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.kernel.Validations;
@@ -52,6 +53,7 @@ public class PetService {
     private final ICommentRepository commentRepository;
     private final HashService hashService;
     private final LogService logService;
+    private final EmailService emailService;
 
     @Transactional(readOnly = true)
     public ResponseApi<?> findAllPaged(FindPetsDto dto, Pageable pageable) {
@@ -147,7 +149,8 @@ public class PetService {
                 pet.getMedicalRecord().getDiseases() != null ? pet.getMedicalRecord().getDiseases().split(",") : null,
                 pet.getMedicalRecord().getAllergies() != null ? pet.getMedicalRecord().getAllergies().split(",") : null,
                 pet.getMedicalRecord().getObservations(),
-                pet.getSpecialCares() != null ? pet.getSpecialCares().split(",") : null
+                pet.getSpecialCares() != null ? pet.getSpecialCares().split(",") : null,
+                pet.getStatus().getName().name()
         );
 
         return new ResponseApi<>(petDetails, HttpStatus.OK,false, "Pet details retrieved successfully");
@@ -445,7 +448,7 @@ public class PetService {
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseApi<?> select(SelectPetDto dto) {
+    public ResponseApi<?> select(SelectPetDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         if (dto.getPet() == null || validations.isNotBlankString(dto.getPet().trim()) || dto.getUser() == null || validations.isNotBlankString(dto.getUser().trim()) || dto.getStatus() == null || validations.isNotBlankString(dto.getStatus().trim()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
 
@@ -475,6 +478,7 @@ public class PetService {
 
         if (dto.getStatus().equalsIgnoreCase(Statusses.APPROVED.name())) {
             logService.saveLog("Pet " + savedPet.getId() + " approved by " + user.getId(), LogTypes.UPDATE, "PETS");
+            emailService.requestChangesOrAprove(hashService.decrypt(savedPet.getOwner().getUsername()),"¡Felicidades! La publicación de "+savedPet.getName()+" ha sido aprobada y ya está disponible para adopción.");
             return new ResponseApi<>(HttpStatus.OK,false, "Pet approved successfully");
         } else {
             logService.saveLog("Pet " + savedPet.getId() + " sent to revision by " + user.getId(), LogTypes.UPDATE, "PETS");
@@ -526,7 +530,7 @@ public class PetService {
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseApi<?> end(EndPetRequestDto dto) {
+    public ResponseApi<?> end(EndPetRequestDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         if (dto.getPet() == null || validations.isNotBlankString(dto.getPet().trim()) || dto.getUser() == null || validations.isNotBlankString(dto.getUser().trim()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
 
@@ -553,7 +557,7 @@ public class PetService {
         if (savedPet == null) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.INTERNAL_ERROR.name());
 
         logService.saveLog("Pet " + savedPet.getId() + " request closed by " + user.getId(), LogTypes.UPDATE, "PETS");
-
+        emailService.sendPetRejectedTemplate(hashService.decrypt(savedPet.getOwner().getUsername()), savedPet.getName());
         return new ResponseApi<>(HttpStatus.OK,false, "Pet request closed successfully");
     }
 
@@ -586,7 +590,7 @@ public class PetService {
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseApi<?> comment(CommentPetDto dto) {
+    public ResponseApi<?> comment(CommentPetDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         if (dto.getPet() == null || validations.isNotBlankString(dto.getPet().trim()) || dto.getUser() == null || validations.isNotBlankString(dto.getUser().trim()) || dto.getComment() == null || validations.isNotBlankString(dto.getComment().trim()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
 
@@ -613,11 +617,16 @@ public class PetService {
 
         logService.saveLog("Pet " + pet.getId() + " commented by " + user.getId(), LogTypes.INSERT, "COMMENTS");
 
+        if(user.getRole().getName().equals(Roles.MOD)){
+            emailService.sendNotificationNewComment(hashService.decrypt(pet.getOwner().getUsername()), pet.getName());
+        }else{
+            emailService.sendNotificationNewComment(hashService.decrypt(pet.getModerator().getUsername()), pet.getName());
+        }
         return new ResponseApi<>(HttpStatus.OK,false, "Comment saved successfully");
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseApi<?> cancel(CancelDto dto) {
+    public ResponseApi<?> cancel(CancelDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         if (dto.getPet() == null || validations.isNotBlankString(dto.getPet().trim()) || dto.getOwner() == null || validations.isNotBlankString(dto.getOwner().trim()) || dto.getCancelReason() == null || validations.isNotBlankString(dto.getCancelReason().trim()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
 
@@ -648,7 +657,7 @@ public class PetService {
 
         String logMessage = pet.getStatus().equals(Statusses.PENDING) ? "Pet " + savedPet.getId() + " request canceled by " + owner.getId() : "Pet " + savedPet.getId() + " cancellation request sent by " + owner.getId();
         logService.saveLog(logMessage, LogTypes.UPDATE, "PETS");
-
+        emailService.sendPetDischargeRequest(hashService.decrypt(savedPet.getModerator().getUsername()), savedPet.getName());
         return new ResponseApi<>(HttpStatus.OK,false, "Pet cancellation process successful");
     }
 

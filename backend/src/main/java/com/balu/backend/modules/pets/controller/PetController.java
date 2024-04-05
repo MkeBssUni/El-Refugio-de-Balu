@@ -10,6 +10,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
 @RestController
 @RequestMapping("/api/pet")
 @AllArgsConstructor
@@ -75,7 +82,7 @@ public class PetController {
     }
 
     @PostMapping("/select")
-    public ResponseEntity<ResponseApi<?>> select(@RequestBody SelectPetDto dto) {
+    public ResponseEntity<ResponseApi<?>> select(@RequestBody SelectPetDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         ResponseApi<?> response = petService.select(dto);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
@@ -87,13 +94,13 @@ public class PetController {
     }
 
     @PostMapping("/end")
-    public ResponseEntity<ResponseApi<?>> end(@RequestBody EndPetRequestDto dto) {
+    public ResponseEntity<ResponseApi<?>> end(@RequestBody EndPetRequestDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         ResponseApi<?> response = petService.end(dto);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
     @PostMapping("/comment")
-    public ResponseEntity<ResponseApi<?>> comment(@RequestBody CommentPetDto dto) {
+    public ResponseEntity<ResponseApi<?>> comment(@RequestBody CommentPetDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         ResponseApi<?> response = petService.comment(dto);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
@@ -117,7 +124,7 @@ public class PetController {
     }
 
     @PostMapping("/cancel")
-    public ResponseEntity<ResponseApi<?>> cancel(@RequestBody CancelDto dto) {
+    public ResponseEntity<ResponseApi<?>> cancel(@RequestBody CancelDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         ResponseApi<?> response = petService.cancel(dto);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
