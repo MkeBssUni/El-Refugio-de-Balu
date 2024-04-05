@@ -105,7 +105,7 @@ public class ServiceAdoptionRequest {
             Long userId = decryptId(dto.getUser());
             Long petId = decryptId(dto.getPet());
 
-            if(dto.getUser() == null || validations.isNotBlankString(dto.getUser()) || dto.getPet() == null || validations.isNotBlankString(dto.getPet())  || dto.getAdditional_information() == null || validations.isNotBlankString(dto.getAdditional_information()))
+            if(dto.getUser() == null || validations.isNotBlankString(dto.getUser()) || dto.getPet() == null || validations.isNotBlankString(dto.getPet()) )
                 return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.MISSING_FIELDS.name());
 
             if(duplicateRequest(userId,petId)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.DUPLICATE_REQUEST.name());
@@ -117,14 +117,14 @@ public class ServiceAdoptionRequest {
             if(validations.isInvalidMinAndMaxLength(dto.getReasonsForAdoption().getPeopleAgreeToAdopt().trim(),3,100) || validations.isInvalidMinAndMaxLength(dto.getReasonsForAdoption().getHaveHadPets().trim(),5,100) || validations.isInvalidMinAndMaxLength(dto.getReasonsForAdoption().getWhereWillThePetBe().trim(),5,100)
             ||validations.isInvalidMinAndMaxLength(dto.getPreviousExperiencieDto().getWhatDidYouDoWhenThePetGotSick().trim(),5,100)
                     || validations.isInvalidMinAndMaxLength(dto.getPreviousExperiencieDto().getWhatKindOfPetsHaveYouHadBefore().trim(),5,100)
-                    || validations.isInvalidMinAndMaxLength(dto.getPreviousExperiencieDto().getWhatMemoriesDoYouHaveWithYourPet().trim(),5,100)||
-            validations.isInvalidMinAndMaxLength(dto.getAdditional_information().trim(),5,100)){
+                    || validations.isInvalidMinAndMaxLength(dto.getPreviousExperiencieDto().getWhatMemoriesDoYouHaveWithYourPet().trim(),5,100)){
                 return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.INVALID_LENGTH.name());
             }
 
 
             if(dto.getReasonsForAdoption().getAdditionalComments().length() > 0){
-                if(validations.isInvalidMinAndMaxLength(dto.getReasonsForAdoption().getAdditionalComments().trim(),5,100)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.INVALID_LENGTH.name());
+                if(validations.isInvalidMinAndMaxLength(dto.getReasonsForAdoption().getAdditionalComments().trim(),5,300)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.INVALID_LENGTH.name());
+
             }
 
             if(dto.getPreviousExperiencieDto().getLastPet().length()>2){

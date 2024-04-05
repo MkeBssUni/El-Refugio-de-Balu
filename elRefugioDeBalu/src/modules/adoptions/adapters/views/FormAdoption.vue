@@ -42,7 +42,10 @@
                           lg="4"
                           class="text-center"
                         >
-                          <label>Lugar en la que dormirá la mascota</label>
+                          <label
+                            >Lugar en la que dormirá la mascota
+                            <span class="required-asterisk">*</span></label
+                          >
                           <br />
                           <img
                             v-if="adoptionInfo.placeToSleep === null"
@@ -72,7 +75,8 @@
                           class="text-center"
                         >
                           <label
-                            >Lugar en el que vivirá la mascota (casa)</label
+                            >Lugar en el que vivirá la mascota (casa)
+                            <span class="required-asterisk">*</span></label
                           >
                           <br />
                           <img
@@ -104,7 +108,8 @@
                           class="text-center"
                         >
                           <label
-                            >Lugar en el que jugará la mascota (casa)</label
+                            >Lugar en el que jugará la mascota (casa)
+                            <span class="required-asterisk">*</span></label
                           >
                           <br />
                           <img
@@ -163,12 +168,12 @@
                       <b-container>
                         <b-row>
                           <b-col cols="12" sm="12" md="6" lg="6">
-                            <b-form-group
-                              class="mb-2"
-                              id="input-group-1"
-                              label="¿Tienes o has tenido otros animales de compañia?"
-                              label-for="input-1"
-                            >
+                            <b-form-group class="mb-2" id="input-group-1">
+                              <label for="input-1"
+                                >¿Tienes o has tenido otros animales de
+                                compañia?
+                                <span class="required-asterisk">*</span></label
+                              >
                               <b-form-input
                                 id="haveHadPets"
                                 v-model="
@@ -193,9 +198,12 @@
                             <b-form-group
                               class="mb-2"
                               id="input-group-1"
-                              label="¿En que parte de la casa lo planeas tener?"
                               label-for="input-1"
                             >
+                              <label for="input-1"
+                                >¿En que parte de la casa lo planeas tener?
+                                <span class="required-asterisk">*</span></label
+                              >
                               <b-form-input
                                 id="input-1"
                                 v-model="
@@ -222,9 +230,13 @@
                             <b-form-group
                               class="mb-2"
                               id="input-group-1"
-                              label="¿Las personas con quien vives están de acuerdo en adoptar?"
                               label-for="input-1"
                             >
+                              <label for="input-1"
+                                >¿Las personas con quien vives están de acuerdo
+                                en adoptar?
+                                <span class="required-asterisk">*</span></label
+                              >
                               <b-form-input
                                 id="input-1"
                                 v-model="
@@ -249,9 +261,11 @@
                             <b-form-group
                               class="mb-2"
                               id="input-group-1"
-                              label="Comentarios adicionales"
                               label-for="input-1"
                             >
+                              <label for="input-1"
+                                >Comentarios adicionales
+                              </label>
                               <b-form-input
                                 id="input-1"
                                 v-model="
@@ -265,6 +279,7 @@
                                 :state="validation.additionalComments"
                                 @input="validateAdditionalComments"
                               ></b-form-input>
+
                               <b-form-invalid-feedback
                                 id="additionalComments-live-feedback"
                               >
@@ -287,7 +302,6 @@
               <b-row>
                 <b-col cols="10" md="8" lg="6">
                   <b-card
-                    s
                     bg-variant="card-header-blue"
                     class="py-2 card-shadow relative-position form-card-title"
                     no-body
@@ -311,13 +325,24 @@
                     <b-card-body>
                       <b-container>
                         <b-row>
+                          <b-col cols="12" sm="12" md="12" lg="12">
+                            <b-card bg-variant="card-content-orange my-2">
+                              <span class="required-asterisk">ADVERTENCIA</span>
+                              En caso de no contar con experiencia previa, favor
+                              de contestar las preguntas simulando que harías en
+                              esos casos.
+                            </b-card>
+                          </b-col>
                           <b-col cols="12" sm="12" md="6" lg="6">
                             <b-form-group
                               class="mb-2"
                               id="input-group-1"
-                              label="¿Cuál fue tu ultima mascota?"
                               label-for="input-1"
                             >
+                              <label for="input-1"
+                                >¿Cuál fue tu ultima mascota?
+                                <span class="required-asterisk">*</span></label
+                              >
                               <b-form-input
                                 id="input-1"
                                 v-model="
@@ -342,9 +367,12 @@
                             <b-form-group
                               class="mb-2"
                               id="input-group-1"
-                              label="¿Cuando se enfermaba la mascota que hacias?"
                               label-for="input-1"
                             >
+                              <label for="input-1"
+                                >¿Cuando se enfermaba la mascota que hacias?
+                                <span class="required-asterisk">*</span></label
+                              >
                               <b-form-input
                                 id="input-1"
                                 v-model="
@@ -373,9 +401,12 @@
                             <b-form-group
                               class="mb-2"
                               id="input-group-1"
-                              label="¿Qué tipo de mascotas haz tenido antes?"
                               label-for="input-1"
                             >
+                              <label for="input-1"
+                                >¿Qué tipo de mascotas haz tenido antes?
+                                <span class="required-asterisk">*</span></label
+                              >
                               <b-form-input
                                 v-model="
                                   adoptionRequestSave.previousExperiencieDto
@@ -402,9 +433,12 @@
                             <b-form-group
                               class="mb-2"
                               id="input-group-1"
-                              label="¿Qué recuerdos tienes con tu mascota?"
                               label-for="input-1"
                             >
+                              <label for="input-1"
+                                >¿Qué recuerdos tienes con tu mascota?
+                                <span class="required-asterisk">*</span></label
+                              >
                               <b-form-input
                                 v-model="
                                   adoptionRequestSave.previousExperiencieDto
@@ -469,9 +503,12 @@
                             <b-form-group
                               class="mb-2"
                               id="input-group-1"
-                              label="¿Desea agregar más información a su solicitud de adopción?"
                               label-for="input-1"
                             >
+                              <label for="input-1"
+                                >¿Desea agregar más información a su solicitud
+                                de adopción?</label
+                              >
                               <b-form-textarea
                                 id="input-1"
                                 v-model="
@@ -526,7 +563,7 @@
                   <b-button
                     variant="outline-danger"
                     class="d-flex align-items-center justify-content-between w-100"
-                    @click="cleanInfo"
+                    @click="closeForm()"
                   >
                     <span class="me-2">Cancelar</span>
                     <b-icon icon="trash" font-scale="1.3"></b-icon>
@@ -606,6 +643,10 @@ export default {
     };
   },
   methods: {
+    closeForm() {
+      this.cleanInfo();
+      this.$router.push("/pets");
+    },
     ValidateHaveHadPets() {
       if (
         !regex.test(this.adoptionRequestSave.reasonsForAdoption.haveHadPets)
@@ -898,17 +939,6 @@ export default {
           // Marca la función como asíncrona aquí
           this.imagesToHomePet();
           if (result.isConfirmed) {
-            swal.fire({
-              title: "Espera un momento...",
-              text: "Estamos enviando tu solicitud de adopción",
-              imageUrl: gatoWalkingGif,
-              timer: 2000,
-              timerProgressBar: true,
-              imageWidth: 160, // Ancho de la imagen
-              imageHeight: 160, // Altura de la imagen
-              showConfirmButton: false,
-            });
-
             try {
               const response = await instance.post("/adoption/", {
                 user: localStorage.getItem("userId"),
@@ -943,19 +973,30 @@ export default {
                   this.adoptionRequestSave.additional_information,
                 imageAdoption: this.adoptionRequestSave.imageAdoption,
               });
-
-              if (response.status === 200) {
+              swal.fire({
+              title: "Espera un momento...",
+              text: "Estamos enviando tu solicitud de adopción",
+              imageUrl: gatoWalkingGif,
+              timer: 5000,
+              timerProgressBar: true,
+              imageWidth: 160, // Ancho de la imagen
+              imageHeight: 160, // Altura de la imagen
+              showConfirmButton: false,
+            }).finally(() => {
+              if (!response.data.error) {
                 swal.fire({
                   title: "Solicitud de adopción enviada",
                   text: "Tu solicitud de adopción ha sido enviada con éxito",
                   icon: "success",
                   confirmButtonColor: "#3085d6",
                   confirmButtonText: "Aceptar",
+                  timer: 2000,
+                }).finally(() => {
+                  this.cleanInfo();
+                  this.$router.push("/myAplicationAdoption");
                 });
-                this.cleanInfo();
-                push("/myAplicationAdoption");
               }
-              console.log(response);
+            })
             } catch (error) {
               let Msjerror = "";
               switch (error.response.data.message) {
@@ -965,22 +1006,26 @@ export default {
                   break;
                 case "DUPLICATE_REQUEST":
                   Msjerror =
-                    "Ups! ya tienes una solicitud de adopción activa para esta mascota";
+                    "Ups! Ya tienes una solicitud de adopción de la misma mascota";
                   break;
-                  case "INVALID_LENGTH":
-                    Msjerror = "Ups! la respuesta debe tener entre 10 y 100 caracteres";
+                case "INVALID_LENGTH":
+                  Msjerror =
+                    "Ups! la respuesta debe tener entre 10 y 100 caracteres";
                   break;
-                  case "INVALID_ROLE":
-                    Msjerror = "Ups! no tienes permisos para realizar esta acción";
+                case "INVALID_ROLE":
+                  Msjerror =
+                    "Ups! no tienes permisos para realizar esta acción";
                   break;
-                  case "MAX_ADOPTIONREQUEST":
-                    Msjerror = "Ups! Solo puedes tener 5 solicitudes activas,por espera a que sean aprobadas o finalizadas";
+                case "MAX_ADOPTIONREQUEST":
+                  Msjerror =
+                    "Ups! Solo puedes tener 5 solicitudes activas,por espera a que sean aprobadas o finalizadas";
                   break;
-                  case "LIMIT_ADOPTIONREQUEST":
-                    Msjerror = "La mascota no esta disponible por el momento";
+                case "LIMIT_ADOPTIONREQUEST":
+                  Msjerror = "La mascota no esta disponible por el momento";
                   break;
-                  case "ADOPTIONREQUEST_NOT_SAVED":
-                    Msjerror = "Ups! algo salió mal, por favor vuelve a intentarlo no se logro guardar la solicitud";
+                case "ADOPTIONREQUEST_NOT_SAVED":
+                  Msjerror =
+                    "Ups! algo salió mal, por favor vuelve a intentarlo no se logro guardar la solicitud";
                   break;
                 default:
                   Msjerror =
@@ -1024,16 +1069,13 @@ export default {
           null ||
         this.adoptionRequestSave.reasonsForAdoption.peopleAgreeToAdopt ===
           null ||
-        this.adoptionRequestSave.reasonsForAdoption.additionalComments ===
-          null ||
         this.adoptionRequestSave.previousExperiencieDto.lastPet === null ||
         this.adoptionRequestSave.previousExperiencieDto
           .whatDidYouDoWhenThePetGotSick === null ||
         this.adoptionRequestSave.previousExperiencieDto
           .whatKindOfPetsHaveYouHadBefore === null ||
         this.adoptionRequestSave.previousExperiencieDto
-          .whatMemoriesDoYouHaveWithYourPet === null ||
-        this.adoptionRequestSave.additional_information === null
+          .whatMemoriesDoYouHaveWithYourPet === null
       ) {
         return true;
       }
