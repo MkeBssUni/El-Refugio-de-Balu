@@ -25,12 +25,12 @@
                   style="max-width: 300px; margin-top: 60px"
                 ></b-img>
               </b-col>
-              <b-col cols="9" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
+              <b-col cols="9" class="px-2 px-sm-4 mb-sm-2">
                 <b-row>
-                  <b-col cols="10" md="8" lg="6">
+                  <b-col cols="1" md="8" lg="8">
                     <b-card
                       bg-variant="dark-secondary-orange"
-                      class="py-2 card-shadow relative-position form-card-title"
+                      class="py-2 pe-2 card-shadow relative-position form-card-title"
                       no-body
                     >
                       <div class="d-flex align-items-center ms-3 ms-md-4">
@@ -136,9 +136,8 @@
             </div>
           </b-container>
 
-          <b-container>
             <div class="row">
-              <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
+              <b-col cols="12" class="px-2 px-sm-4 px-xl-5 mb-sm-5">
                 <b-row>
                   <b-col cols="10" md="8" lg="6">
                     <b-card
@@ -167,34 +166,34 @@
                     >
                       <b-col
                         cols="12"
-                        class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5"
+                        class="px-2 px-sm-4 px-xl-5 mb-sm-5"
                       >
                         <b-row>
                           <b-col cols="12" md="4">
                             <b-form-group label="País" label-align="left">
-                              <b-input v-model="country"></b-input>
+                              <b-input v-model="SaveAddressDto.country"></b-input>
                             </b-form-group>
                           </b-col>
                           <b-col cols="12" md="4">
                             <b-form-group label="Calle" label-align="left">
-                              <b-input v-model="street"></b-input>
+                              <b-input v-model="SaveAddressDto.street"></b-input>
                             </b-form-group>
                           </b-col>
                           <b-col cols="12" md="4">
                             <b-form-group label="Colonia" label-align="left">
-                              <b-input v-model="colony"></b-input>
+                              <b-input v-model="SaveAddressDto.colony"></b-input>
                             </b-form-group>
                           </b-col>
                         </b-row>
                         <b-row>
                           <b-col cols="12" md="4">
                             <b-form-group label="Ciudad" label-align="left">
-                              <b-input v-model="city"></b-input>
+                              <b-input v-model="SaveAddressDto.city"></b-input>
                             </b-form-group>
                           </b-col>
                           <b-col cols="12" md="4">
                             <b-form-group label="Estado" label-align="left">
-                              <b-input v-model="state"></b-input>
+                              <b-input v-model="SaveAddressDto.state"></b-input>
                             </b-form-group>
                           </b-col>
                           <b-col cols="12" md="4">
@@ -203,11 +202,11 @@
                               label-align="left"
                               :state="postalCodeValidation"
                             >
-                              <b-input v-model="postalCode"></b-input>
+                              <b-input v-model="SaveAddressDto.postalCode"></b-input>
                               <b-form-invalid-feedback
                                 :state="postalCodeValidation"
                               >
-                                {{ postalCodeValidationMessage }}
+                                Codigo postal invalido
                               </b-form-invalid-feedback>
                             </b-form-group>
                           </b-col>
@@ -219,7 +218,7 @@
                               label-align="left"
                             >
                               <b-input
-                                v-model="addressReference"
+                                v-model="SaveAddressDto.addressReference"
                                 type="textarea"
                               ></b-input>
                             </b-form-group>
@@ -230,12 +229,9 @@
                             <b-form-group
                               label="Número exterior"
                               label-align="left"
-                              :state="exteriorNumberValidation"
                             >
-                              <b-input v-model="exteriorNumber"></b-input>
-                              <b-form-invalid-feedback
-                                :state="exteriorNumberValidation"
-                              >
+                              <b-input v-model="SaveAddressDto.exteriorNumber"></b-input>
+                              <b-form-invalid-feedback>
                                 Ingresa solo números
                               </b-form-invalid-feedback>
                             </b-form-group>
@@ -245,13 +241,13 @@
                               label="Número interior"
                               label-align="left"
                             >
-                              <b-input v-model="interiorNumber"></b-input>
+                              <b-input v-model="SaveAddressDto.interiorNumber"></b-input>
                             </b-form-group>
                           </b-col>
                         </b-row>
                         <div class="d-flex justify-content-end mt-3">
                           <b-button
-                            @click="submitNewAddress"
+                            @click="submitForm()"
                             variant="outline-light"
                           >
                             {{ editing ? "Guardar" : "Modificar" }}
@@ -270,7 +266,6 @@
                 ></b-button>
               </div>
             </div>
-          </b-container>
         </b-card>
       </b-card-group>
 
@@ -413,15 +408,18 @@ export default {
       confirmPasswordValidation: null,
       confirmPasswordValidationMessage: "",
       information: {},
-      country: "",
-      street: "",
-      colony: "",
-      city: "",
-      state: "",
-      postalCode: "",
-      addressReference: "",
-      exteriorNumber: "",
-      interiorNumber: "",
+      SaveAddressDto: {
+        country: "",
+        street: "",
+        colony: "",
+        city: "",
+        state: "",
+        postalCode: "",
+        addressReference: "",
+        exteriorNumber: "",
+        interiorNumber: "",
+         userId: localStorage.getItem("userId"),
+      },
       postalCodeValidation: null,
       postalCodeValidationMessage: "",
     };
@@ -500,32 +498,12 @@ export default {
     },
     async submitNewAddress() {
       try {
-        const postalCodeRegex = /^[0-9]{5}$/;
-        if (!this.postalCode.match(postalCodeRegex)) {
-          this.postalCodeValidation = false;
-          this.postalCodeValidationMessage =
-            "Por favor ingresa un código postal válido (5 dígitos numéricos)";
-          return;
-        }
-        const response = await instance.post("/api/address/", {
-          country: this.country,
-          street: this.street,
-          colony: this.colony,
-          city: this.city,
-          state: this.state,
-          postalCode: this.postalCode,
-          addressReference: this.addressReference,
-          exteriorNumber: this.exteriorNumber,
-          interiorNumber: this.interiorNumber,
-          userId: localStorage.getItem("userId"),
-        });
+        const response = await instance.post("/address/", this.SaveAddressDto);
         swal.fire({
           title: "Domicilio agregado con éxito",
           icon: "success",
         });
       } catch (error) {
-        this.postalCodeValidation = false;
-        this.postalCodeValidationMessage = error.message;
         swal.fire({
           title: "Error al agregar domicilio",
           text: error.message,
@@ -536,8 +514,7 @@ export default {
     submitForm() {
       swal
         .fire({
-          title: "¿Estás seguro de enviar la solicitud de registro?",
-          text: "Una vez enviada no podrá ser modificada",
+          title: "¿Estás seguro de realizar la accion",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
@@ -549,7 +526,7 @@ export default {
           if (result.isConfirmed) {
             swal.fire({
               title: "Espera un momento...",
-              text: "Estamos enviando tu solicitud",
+              text: "Estamos realizando tu registro",
               imageUrl: gatoWalkingGif,
               timer: 2000,
               timerProgressBar: true,
@@ -557,6 +534,7 @@ export default {
               imageHeight: 160, // Altura de la imagen
               showConfirmButton: false,
             });
+            this.submitNewAddress()
           }
         });
     },
