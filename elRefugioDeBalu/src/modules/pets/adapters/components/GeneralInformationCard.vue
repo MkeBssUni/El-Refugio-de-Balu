@@ -219,14 +219,6 @@
                 </b-card>
             </b-col>
         </b-row>
-        <b-row class="d-flex justify-content-center mt-4">
-            <b-col cols="12" sm="6" md="5" lg="4" xl="3">
-                <b-button @click="send()" variant="outline-dark-blue" class="w-100">
-                    <b-icon icon="cursor" font-scale="1.5"></b-icon>
-                    <span class="ms-2">Enviar</span>
-                </b-button>
-            </b-col>
-        </b-row>
     </b-col>
 </template>
 
@@ -547,7 +539,7 @@ export default {
         removeAdditionalImg(index) {
             this.form.additionalImages.splice(index, 1);
         },
-        send() {
+        validateForm() {
             this.validateInput('name');
             this.validateInput('category');
             this.validateInput('breed');
@@ -557,7 +549,7 @@ export default {
             this.validateInput('lifeStage');
             this.validateInput('weight');
             this.validateInput('weightUnit');
-            this.validateInput('gender')
+            this.validateInput('gender')            
         }
     },
     mounted() {
