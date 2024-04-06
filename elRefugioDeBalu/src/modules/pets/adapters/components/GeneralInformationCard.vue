@@ -63,11 +63,64 @@
                                 </b-row>
                             </b-col>
                             <b-col class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
-
+                                <b-row>
+                                    <b-col cols="12" sm="7" xl="8" class="mt-3 mt-xl-0">
+                                        <b-form-group label-for="name">
+                                            <label slot="label">
+                                                Ingresa el nombre de la mascota:
+                                                <span class="required-asterisk">*</span>
+                                            </label>
+                                            <b-form-input id="name" v-model.trim="form.name"
+                                                @input="validateInput('name')" placeholder="Nombre..."></b-form-input>
+                                            <b-form-invalid-feedback v-if="showErrors.name">{{ errorMessages.name
+                                                }}</b-form-invalid-feedback>
+                                        </b-form-group>
+                                    </b-col>
+                                    <b-col cols="12" sm="5" xl="4" class="mt-3 mt-xl-0">
+                                        <b-form-group label-for="category">
+                                            <label slot="label">
+                                                Selecciona su especie:
+                                                <span class="required-asterisk">*</span>
+                                            </label>
+                                            <b-form-select id="category" v-model.trim="form.category"
+                                                @input="validateInput('category')" @click="validateInput('category')"
+                                                class="form-select">
+                                                <option value="0" disabled>Especie...</option>
+                                                <option v-for="category in categories" :key="category.id"
+                                                    :value="category.id">
+                                                    {{ category.name }}
+                                                </option>
+                                            </b-form-select>
+                                            <b-form-invalid-feedback v-if="showErrors.category">{{
+                                                errorMessages.category
+                                                }}</b-form-invalid-feedback>
+                                        </b-form-group>
+                                    </b-col>
+                                    <b-col cols="12" sm="7" xl="8" class="mt-3">
+                                        <b-form-group label-for="breed">
+                                            <label slot="label">
+                                                Ingresa la raza de la mascota: <span class="required-asterisk">*</span>
+                                            </label>
+                                            <b-form-input id="breed" v-model.trim="form.breed"
+                                                @input="validateInput('breed')" @focus="validateInput('breed')"
+                                                placeholder="Raza..."></b-form-input>
+                                            <b-form-invalid-feedback v-if="showErrors.breed">{{ errorMessages.breed
+                                                }}</b-form-invalid-feedback>
+                                        </b-form-group>
+                                    </b-col>
+                                </b-row>
                             </b-col>
                         </b-row>
                     </b-card-body>
                 </b-card>
+            </b-col>
+        </b-row>
+        <b-row class="d-flex justify-content-center mt-4">
+            <b-col cols="12" sm="6" md="5" lg="4" xl="3">
+                <b-button @click="send()" variant="outline-dark-blue" class="w-100">
+                    <b-icon icon="cursor" font-scale="1.5"></b-icon>
+                    <span class="ms-2">Enviar</span>
+                </b-button>
             </b-col>
         </b-row>
     </b-col>
@@ -75,6 +128,9 @@
 
 <script>
 import Swal from 'sweetalert2';
+import { isInvalidName } from '../../../../kernel/validations';
+import instance from "../../../../config/axios";
+import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
 
 export default {
     data() {
@@ -82,7 +138,7 @@ export default {
             form: {
                 mainImage: null,
                 additionalImages: [],
-                /* name: "",
+                name: "",
                 category: "0",
                 breed: "",
                 size: "default",
@@ -90,13 +146,19 @@ export default {
                 ageUnit: "default",
                 stage: "default",
                 weight: "",
-                weightType: "default" */
+                weightType: "default"
             },
-            categories: [
-                { id: 1, name: "Perro" },
-                { id: 2, name: "Gato" },
-                { id: 3, name: "Otro" }
-            ],
+            errorMessages: {
+                name: "",
+                category: "",
+                breed: "",
+            },
+            showErrors: {
+                name: false,
+                category: false,
+                breed: false,
+            },
+            categories: [],
             sizes: [
                 { id: 1, value: "small", text: "Pequeño" },
                 { id: 2, value: "medium", text: "Mediano" },
@@ -114,16 +176,36 @@ export default {
             weightTypes: [
                 { value: "kg", text: "Kg" },
                 { value: "lb", text: "Lb" }
-            ]
+            ],
         }
     },
     methods: {
-        showImg() {
-            if (this.form.mainImage) return URL.createObjectURL(this.form.mainImage);
-            return "https://t3.ftcdn.net/jpg/07/01/59/38/240_F_701593826_ojYyX0cKXG3OzhoYkbeesqsQtaA6zBbj.jpg";
-        },
-        triggerMainImgSelector() {
-            this.$refs.mainImageSelector.click();
+        async getCategories() {
+            try {
+                Swal.fire({
+                    title: 'Cargando...',
+                    text: 'Estamos cargando las categorías, espera un momento',
+                    imageUrl: gatoWalkingGif,
+                    imageWidth: 160,
+                    imageHeight: 160,
+                    showConfirmButton: false
+                })
+                const response = await instance.get(`/category/list`)
+                this.categories = response.data.data
+                Swal.close()
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error al cargar las categorías',
+                    icon: 'error',
+                    iconColor: '#A93D3D',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                }).then(() => {
+                    this.$router.push('/myPets')
+                })
+            }
         },
         validateImgSize(file) {
             if (file.size > 4000000) {
@@ -141,6 +223,70 @@ export default {
                 return false;
             }
             return true;
+        },
+        validateInput(field) {
+            const input = document.getElementById(field);
+            switch (field) {
+                case "name":
+                    if (!this.form.name) {
+                        this.errorMessages.name = "Campo obligatorio";
+                        this.showErrors.name = true;
+                        input.classList.add('is-invalid');
+                    } else if (this.form.name.length < 3 || this.form.name.length > 30) {
+                        this.errorMessages.name = "El nombre de la mascota debe tener entre 3 y 30 caracteres";
+                        this.showErrors.name = true;
+                        input.classList.add('is-invalid');
+                    } else if (isInvalidName(this.form.name)) {
+                        this.errorMessages.name = "El nombre de la mascota no puede contener números ni caracteres especiales";
+                        this.showErrors.name = true;
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.errorMessages.name = "";
+                        this.showErrors.name = false;
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+                case "category":
+                    if (this.form.category == "0") {
+                        this.errorMessages.category = "Campo obligatorio";
+                        this.showErrors.category = true;
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.errorMessages.category = "";
+                        this.showErrors.category = false;
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+                case "breed":
+                    if (!this.form.breed) {
+                        this.errorMessages.breed = "Campo obligatorio";
+                        this.showErrors.breed = true;
+                        input.classList.add('is-invalid');
+                    } else if (this.form.breed.length < 3 || this.form.breed.length > 50) {
+                        this.errorMessages.breed = "La raza de la mascota debe tener entre 3 y 50 caracteres";
+                        this.showErrors.breed = true;
+                        input.classList.add('is-invalid');
+                    } else if (isInvalidName(this.form.breed)) {
+                        this.errorMessages.breed = "La raza de la mascota no puede contener números ni caracteres especiales";
+                        this.showErrors.breed = true;
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.errorMessages.breed = "";
+                        this.showErrors.breed = false;
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+            }
+        },
+        showImg() {
+            if (this.form.mainImage) return URL.createObjectURL(this.form.mainImage);
+            return "https://t3.ftcdn.net/jpg/07/01/59/38/240_F_701593826_ojYyX0cKXG3OzhoYkbeesqsQtaA6zBbj.jpg";
+        },
+        triggerMainImgSelector() {
+            this.$refs.mainImageSelector.click();
         },
         selectImg() {
             const file = this.$refs.mainImageSelector.files[0];
@@ -161,11 +307,20 @@ export default {
             const file = this.$refs.additionalImageSelector.files[0];
             if (file && this.validateImgSize(file)) {
                 this.form.additionalImages.push(file);
+                console.log(this.form.additionalImages)
             }
         },
         removeAdditionalImg(index) {
             this.form.additionalImages.splice(index, 1);
         },
+        send() {
+            this.validateInput('name');
+            this.validateInput('category');
+            this.validateInput('breed');
+        }
+    },
+    mounted() {
+        this.getCategories();
     }
 }
 </script>
