@@ -20,8 +20,7 @@
               <b-col cols="2" md="2" lg="2" style="margin-right: 95px">
                 <b-img
                   alt="profilePic"
-                  src="https://img.freepik.com/foto-gratis/retrato-hombre-blanco-aislado_53876-40306.jpg?t=st=1710875960~exp=1710879560~hmac=70796c11c06ff737b58e2f82fd3ab45b89ae7d6525c374b0c92aac9ea0514887&w=900"
-                  class="mb-4"
+ :src="profile"                  class="mb-4"
                   style="max-width: 300px; margin-top: 60px"
                 ></b-img>
               </b-col>
@@ -149,7 +148,7 @@
                         <i
                           class="material-icons me-2"
                           style="font-size: 1.5rem; color: white"
-                          >home</i
+                          >pets</i
                         >
                         <h4 class="mb-0" style="color: white">
                           Domicilio actual
@@ -249,9 +248,16 @@
                           <b-button
                             @click="submitForm()"
                             variant="outline-light"
+                            class="d-flex align-items-center"
                           >
-                            {{ editing ? "Guardar" : "Modificar" }}
-                            <b-icon icon="home" font-scale="1.3"></b-icon>
+                            {{ editing ? "Guardar" : "Modificar"
+                            }}<span class="me-2">
+                              <i
+                                class="material-icons"
+                                style="font-size: 1.5rem; color: white"
+                                >home</i
+                              >
+                            </span>
                           </b-button>
                         </div>
                       </b-col>
@@ -383,10 +389,12 @@ import swal from "sweetalert2";
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
 import instance from "../../../config/axios";
 import { decrypt } from "../../../kernel/hashFunctions";
+import profile from "../../../assets/imgs/profile.jpg"
 export default {
   name: "FormStyle",
   data() {
     return {
+      profile :profile,
       showPasswordCurrent: false,
       showPasswordNew: false,
       showPasswordConfirm: false,
@@ -426,6 +434,7 @@ export default {
   },
   mounted() {
     this.getDetails();
+    this.getAddressDetails();
   },
   computed: {
     domicilioCompleto() {
@@ -491,6 +500,47 @@ export default {
           .then(() => {
             this.$router.go(-1);
           });
+      }
+    },
+    async getAddressDetails() {
+      this.loading = true;
+      try {
+        const userId = localStorage.getItem('userId');
+        const response = await axios.get(`/api/user/${userId}`);
+        const responseData = response.data;
+
+        if (!responseData.error) {
+          const addressData = responseData.data;
+          this.address = {
+            country: addressData.country,
+            street: addressData.street,
+            colony: addressData.colony,
+            city: addressData.city,
+            state: addressData.state,
+            postalCode: addressData.postalCode,
+            addressReference: addressData.addressReference,
+            exteriorNumber: addressData.exteriorNumber,
+            interiorNumber: addressData.interiorNumber,
+          };
+        } else {
+          // Manejar errores si la respuesta tiene un error
+          console.error('Error al obtener la dirección del usuario:', responseData.message);
+          swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo obtener la dirección del usuario',
+          });
+        }
+      } catch (error) {
+        // Manejar errores de la solicitud HTTP
+        console.error('Error al obtener la dirección del usuario:', error);
+        swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo obtener la dirección del usuario',
+        });
+      } finally {
+        this.loading = false;
       }
     },
     toggleSidebar() {
