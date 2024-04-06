@@ -6,7 +6,7 @@
         </b-row>
         <b-row class="px-2 my-2">
             <GeneralInformationCard ref="generalInformationCard" />
-            <MedicalRecordCard />
+            <MedicalRecordCard ref="medicalRecordCard" />
         </b-row>
         <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
             <b-row class="px-5 px-sm-0 d-flex justify-content-end">
@@ -479,11 +479,10 @@ export default {
         validateForm() {
             this.$refs.generalInformationCard.validateForm()
             console.log(this.$refs.generalInformationCard.validateForm())
-
         },
         savePet() {
             if (this.$refs.generalInformationCard.validateForm()) this.isValidGeneralInformationForm = true;
-            else this.isValidGeneralInformationForm = false;
+            else this.isValidGeneralInformationForm = false;            
         }
     },
     components: {
