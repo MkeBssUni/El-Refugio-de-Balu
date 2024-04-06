@@ -247,6 +247,13 @@ body {
   right: 0;
 }
 
+.center-position {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .encabezadoColorform {
   width: 50%;
   background-color: #ffb23f;
@@ -480,3 +487,44 @@ body {
   height:22rem;
 }
 
+.form-card-shadow {
+  box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
+      rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+}
+
+.border-blue {
+  border: 1px solid #55b3b8 !important;
+}
+
+.form-badge-container {
+  border-radius: 0.5rem; /* bordes redondeados */
+  background-color: #f8f9fa; /* un ligero color de fondo */
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.123); /* una sombra suave */
+  max-height: 200px; /* altura máxima */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.form-badge-container::-webkit-scrollbar {
+  width: 12px; /* Ancho de la barra de desplazamiento */
+}
+
+.form-badge-container::-webkit-scrollbar-track {
+  border-radius: 50px;
+  background: #f0f0f0; /* Color de fondo de la pista */
+}
+
+.form-badge-container::-webkit-scrollbar-thumb {
+  background-color: #888; /* Color del thumb (la parte que se mueve) */
+  border-radius: 6px; /* Bordes redondeados */
+  border: 3px solid #f0f0f0; /* Crea un poco de espacio entre el thumb y la pista */
+}
+
+.input-badge-invalid-feedback {
+  font-size: 0.875rem;
+}
+
+.add-badge-btn:hover {
+  background-color: #d3d3d3;
+  border-color: #d3d3d3;
+}
