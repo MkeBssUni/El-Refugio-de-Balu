@@ -22,7 +22,7 @@
                                         <b-img :src="showImg()" class="main-img" alt="Imagen principal seleccionada"
                                             fluid rounded center></b-img>
                                         <input type="file" ref="mainImageSelector" style="display: none"
-                                            accept="image/jpeg" @change="selectImg()">
+                                            accept="image/jpeg, image/png" @change="selectImg()">
                                         <b-button v-if="!form.mainImage" @click="triggerMainImgSelector()"
                                             class="btn-add center-position d-flex align-items-center justify-content-center p-2">
                                             <b-icon icon="plus" font-scale="5"></b-icon>
@@ -48,14 +48,13 @@
                                             <b-col cols="3" v-if="form.additionalImages.length < 4"
                                                 class="d-flex align-items-center justify-content-center">
                                                 <input type="file" ref="additionalImageSelector" style="display: none"
-                                                    accept="image/jpeg" @change="selectAdditionalImg()">
+                                                    accept="image/jpeg, image/png" @change="selectAdditionalImg()">
                                                 <b-button @click="triggerAdditionalImgSelector()"
                                                     class="btn-add d-flex align-items-center justify-content-center p-1">
                                                     <b-icon icon="plus" font-scale="2.5"></b-icon>
                                                 </b-button>
                                             </b-col>
-                                            <b-col cols="9" md="7" lg="9"
-                                                v-if="form.additionalImages.length == 0"
+                                            <b-col cols="9" md="7" lg="9" v-if="form.additionalImages.length == 0"
                                                 class="d-flex align-items-center">
                                                 <label>Agrega imágenes adicionales</label>
                                             </b-col>
@@ -64,7 +63,7 @@
                                 </b-row>
                             </b-col>
                             <b-col class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
-                                
+
                             </b-col>
                         </b-row>
                     </b-card-body>
@@ -75,6 +74,8 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2';
+
 export default {
     data() {
         return {
@@ -124,8 +125,28 @@ export default {
         triggerMainImgSelector() {
             this.$refs.mainImageSelector.click();
         },
+        validateImgSize(file) {
+            if (file.size > 4000000) {
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'La imagen no puede pesar más de 4MB',
+                    toast: true,
+                    position: 'top-end',
+                    timer: 3000,
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    timerProgressBar: true,
+                });
+                return false;
+            }
+            return true;
+        },
         selectImg() {
-            this.form.mainImage = this.$refs.mainImageSelector.files[0];
+            const file = this.$refs.mainImageSelector.files[0];
+            if (file && this.validateImgSize(file)) {
+                this.form.mainImage = file;
+            }
         },
         unselectImg() {
             this.form.mainImage = null;
@@ -137,9 +158,9 @@ export default {
             this.$refs.additionalImageSelector.click();
         },
         selectAdditionalImg() {
-            const files = this.$refs.additionalImageSelector.files;
-            if (files.length > 0) {
-                this.form.additionalImages.push(files[0]);
+            const file = this.$refs.additionalImageSelector.files[0];
+            if (file && this.validateImgSize(file)) {
+                this.form.additionalImages.push(file);
             }
         },
         removeAdditionalImg(index) {
