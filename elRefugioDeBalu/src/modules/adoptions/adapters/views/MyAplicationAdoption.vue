@@ -203,9 +203,7 @@ export default {
       }
     },
     async viewAdoptionRequest(adoption) {
-      console.log(adoption.id);
       let adoptionEncrypted = await encrypt(adoption.id);
-      console.log(adoptionEncrypted);
       this.$router.push({
         name: "viewAplicationAdoptionRequest",
         params: { adoptionId: adoptionEncrypted },

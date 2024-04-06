@@ -20,7 +20,19 @@ public interface IAdoptionRequestRepository  extends JpaRepository<AdoptionReque
             "and lower(pet.name) like lower(concat('%', :namePet, '%'))", nativeQuery = true)
     Page<IAdoptionRequestViewPaged> findAllPaged(@Param("idUser") Long idUser, @Param("namePet") String namePet, Pageable pageable);
 
-
+    @Query(value = "SELECT adoption.id, adoption.created_at, sta.name AS status, CONCAT(person.name, ' ', person.last_name, ' ', person.sur_name) AS fullname " +
+            "FROM adoption_requests adoption " +
+            "INNER JOIN users us ON adoption.user_id = us.id " +
+            "INNER JOIN statusses sta ON sta.id = adoption.status_id " +
+            "INNER JOIN people person ON person.user_id = us.id " +
+            "WHERE adoption.pet_id = :idPet " +
+            "AND (LOWER(person.name) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "OR LOWER(person.last_name) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "OR LOWER(person.sur_name) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "OR LOWER(sta.name) LIKE LOWER(CONCAT('%', :search, '%'))) " +
+            "ORDER BY adoption.id ASC",
+            nativeQuery = true)
+    Page<IAdoptionRequestModViewPaged> findAllPagedMod(@Param("idPet") Long idPet, @Param("search") String search, Pageable pageable);
 
     Long countByUser_IdAndStatus_Id(Long idUser, Long statusId);
 

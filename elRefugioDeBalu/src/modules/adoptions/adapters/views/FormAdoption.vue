@@ -8,7 +8,7 @@
     <div class="my-3">
       <b-container>
         <b-row>
-          <form>
+          <form @submit="submitAdoptionForm">
             <!-- incio de fotos de casa -->
             <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
               <b-row>
@@ -535,42 +535,26 @@
                 </b-col>
               </b-row>
             </b-col>
-            <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
-              <b-row class="px-5 px-sm-0 d-flex justify-content-end">
-                <b-col cols="12" sm="6" md="5" lg="4" xl="3">
-                  <b-button
-                    variant="outline-dark-secondary-blue"
-                    :disabled="disableButton()"
-                    @click="submitAdoptionForm"
-                    type="submit"
-                    class="d-flex align-items-center justify-content-between w-100"
-                  >
-                    <span class="me-2">Enviar Solicitud</span>
-                    <b-icon
-                      icon="arrow-up-right-circle"
-                      font-scale="1.3"
-                    ></b-icon>
-                  </b-button>
-                </b-col>
-                <b-col
-                  cols="12"
-                  sm="6"
-                  md="5"
-                  lg="4"
-                  xl="3"
-                  class="mt-3 mt-sm-0"
-                >
-                  <b-button
-                    variant="outline-danger"
-                    class="d-flex align-items-center justify-content-between w-100"
-                    @click="closeForm()"
-                  >
-                    <span class="me-2">Cancelar</span>
-                    <b-icon icon="trash" font-scale="1.3"></b-icon>
-                  </b-button>
-                </b-col>
-              </b-row>
-            </b-col>
+
+            <!-- fin de info personal -->
+            <div class="container-fluid d-flex justify-content-end">
+              <b-button
+                type="submit"
+                variant="outline-dark-secondary-blue pill"
+                class="mt-3 rounded-button mx-4"
+                :disabled="disableButton()"
+              >
+                Adoptar
+              </b-button>
+              <b-button
+                type="submit"
+                variant="outline-danger pills"
+                class="mt-3 rounded-button"
+                @click="cleanInfo"
+              >
+                Limpiar
+              </b-button>
+            </div>
           </form>
         </b-row>
       </b-container>
@@ -582,8 +566,6 @@
 import Encabezado from "../../../../views/components/Encabezado.vue";
 import swal from "sweetalert2";
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
-import instance from "../../../../config/axios";
-import { decrypt } from "../../../../kernel/hashFunctions";
 
 const regex = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ' .]+$/;
 
@@ -642,6 +624,7 @@ export default {
       },
     };
   },
+  mounted() {},
   methods: {
     closeForm() {
       this.cleanInfo();
@@ -764,9 +747,7 @@ export default {
         this.validation.additionalComments = false;
         this.error.additionalComments =
           "La respuesta debe tener menos de 100 caracteres";
-      } else if (
-        this.adoptionRequestSave.reasonsForAdoption.additionalComments === null
-      ) {
+      } else if (this.adoptionInfo.additionalComments === null) {
         this.validation.additionalComments = false;
         this.error.additionalComments = "Este campo es requerido";
       } else {
@@ -915,7 +896,7 @@ export default {
         this.validation.additionalInfo = false;
         this.error.additionalInfo =
           "La respuesta debe tener menos de 100 caracteres";
-      } else if (this.adoptionRequestSave.additional_information === null) {
+      } else if (this.adoptionInfo.additionalInfo === null) {
         this.validation.additionalInfo = false;
         this.error.additionalInfo = "Este campo es requerido";
       } else {
@@ -939,107 +920,17 @@ export default {
           // Marca la función como asíncrona aquí
           this.imagesToHomePet();
           if (result.isConfirmed) {
-            try {
-              const response = await instance.post("/adoption/", {
-                user: localStorage.getItem("userId"),
-                pet: localStorage.getItem("petId"),
-                reasonsForAdoption: {
-                  peopleAgreeToAdopt:
-                    this.adoptionRequestSave.reasonsForAdoption
-                      .peopleAgreeToAdopt,
-                  haveHadPets:
-                    this.adoptionRequestSave.reasonsForAdoption.haveHadPets,
-                  whereWillThePetBe:
-                    this.adoptionRequestSave.reasonsForAdoption
-                      .whereWillThePetBe,
-                  additionalComments:
-                    this.adoptionRequestSave.reasonsForAdoption
-                      .additionalComments,
-                },
-                previousExperiencieDto: {
-                  whatDidYouDoWhenThePetGotSick:
-                    this.adoptionRequestSave.previousExperiencieDto
-                      .whatDidYouDoWhenThePetGotSick,
-                  whatKindOfPetsHaveYouHadBefore:
-                    this.adoptionRequestSave.previousExperiencieDto
-                      .whatKindOfPetsHaveYouHadBefore,
-                  whatMemoriesDoYouHaveWithYourPet:
-                    this.adoptionRequestSave.previousExperiencieDto
-                      .whatMemoriesDoYouHaveWithYourPet,
-                  lastPet:
-                    this.adoptionRequestSave.previousExperiencieDto.lastPet,
-                },
-                additional_information:
-                  this.adoptionRequestSave.additional_information,
-                imageAdoption: this.adoptionRequestSave.imageAdoption,
-              });
-              swal.fire({
+            swal.fire({
               title: "Espera un momento...",
               text: "Estamos enviando tu solicitud de adopción",
               imageUrl: gatoWalkingGif,
-              timer: 5000,
+              timer: 2000,
               timerProgressBar: true,
               imageWidth: 160, // Ancho de la imagen
               imageHeight: 160, // Altura de la imagen
               showConfirmButton: false,
-            }).finally(() => {
-              if (!response.data.error) {
-                swal.fire({
-                  title: "Solicitud de adopción enviada",
-                  text: "Tu solicitud de adopción ha sido enviada con éxito",
-                  icon: "success",
-                  confirmButtonColor: "#3085d6",
-                  confirmButtonText: "Aceptar",
-                  timer: 2000,
-                }).finally(() => {
-                  this.cleanInfo();
-                  this.$router.push("/myAplicationAdoption");
-                });
-              }
-            })
-            } catch (error) {
-              let Msjerror = "";
-              switch (error.response.data.message) {
-                case "INVALID_USER":
-                  Msjerror =
-                    "Ups! por favor vuelve a iniciar sesión y volver a intentarlo";
-                  break;
-                case "DUPLICATE_REQUEST":
-                  Msjerror =
-                    "Ups! Ya tienes una solicitud de adopción de la misma mascota";
-                  break;
-                case "INVALID_LENGTH":
-                  Msjerror =
-                    "Ups! la respuesta debe tener entre 10 y 100 caracteres";
-                  break;
-                case "INVALID_ROLE":
-                  Msjerror =
-                    "Ups! no tienes permisos para realizar esta acción";
-                  break;
-                case "MAX_ADOPTIONREQUEST":
-                  Msjerror =
-                    "Ups! Solo puedes tener 5 solicitudes activas,por espera a que sean aprobadas o finalizadas";
-                  break;
-                case "LIMIT_ADOPTIONREQUEST":
-                  Msjerror = "La mascota no esta disponible por el momento";
-                  break;
-                case "ADOPTIONREQUEST_NOT_SAVED":
-                  Msjerror =
-                    "Ups! algo salió mal, por favor vuelve a intentarlo no se logro guardar la solicitud";
-                  break;
-                default:
-                  Msjerror =
-                    "Ups! algo salió mal, por favor vuelve a intentarlo";
-                  break;
-              }
-              swal.fire({
-                title: "Error al enviar la solicitud de adopción",
-                text: Msjerror,
-                icon: "error",
-                confirmButtonColor: "#3085d6",
-                confirmButtonText: "Aceptar",
-              });
-            }
+            });
+            console.log(this.adoptionInfo);
           }
         });
     },
@@ -1124,6 +1015,12 @@ export default {
       // Verificar si el archivo es una imagen
       if (!file.type.startsWith("image/")) {
         this.makeToast("El archivo no es una imagen");
+        return;
+      }
+
+      const maxSizeInBytes = 6 * 1024 * 1024; // 6MB
+      if (file.size > maxSizeInBytes) {
+        this.makeToast("La imagen debe pesar menos de 6MB");
         return;
       }
 
