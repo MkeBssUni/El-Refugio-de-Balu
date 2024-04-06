@@ -92,7 +92,7 @@
                                             </b-form-select>
                                             <b-form-invalid-feedback v-if="showErrors.category">{{
                                                 errorMessages.category
-                                                }}</b-form-invalid-feedback>
+                                            }}</b-form-invalid-feedback>
                                         </b-form-group>
                                     </b-col>
                                     <b-col cols="12" sm="7" xl="8" class="mt-3">
@@ -164,7 +164,7 @@
                                             </b-form-select>
                                             <b-form-invalid-feedback v-if="showErrors.lifeStage">{{
                                                 errorMessages.lifeStage
-                                            }}</b-form-invalid-feedback>
+                                                }}</b-form-invalid-feedback>
                                         </b-form-group>
                                     </b-col>
                                     <b-col cols="12" sm="7" xl="8">
@@ -203,7 +203,8 @@
                                             <b-form-select id="gender" v-model="form.gender" class="form-select"
                                                 @input="validateInput('gender')">
                                                 <option value="" disabled>Sexo...</option>
-                                                <option v-for="gender in genders" :key="gender.id" :value="gender.value">
+                                                <option v-for="gender in genders" :key="gender.id"
+                                                    :value="gender.value">
                                                     {{ gender.text }}
                                                 </option>
                                             </b-form-select>
@@ -316,6 +317,19 @@ export default {
                     this.$router.push('/myPets')
                 })
             }
+        },
+        duplicateImg() {
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'No puede haber imágenes duplicadas',
+                toast: true,
+                position: 'top-end',
+                timer: 3000,
+                showCancelButton: false,
+                showConfirmButton: false,
+                timerProgressBar: true,
+            });
         },
         validateImgSize(file) {
             if (file.size > 4000000) {
@@ -495,7 +509,14 @@ export default {
         },
         selectImg() {
             const file = this.$refs.mainImageSelector.files[0];
-            if (file && this.validateImgSize(file)) {
+            if (file && this.validateImgSize(file)) {                
+                if (this.form.additionalImages.length > 0) {
+                    const repeated = this.form.additionalImages.some(image => image.name == file.name);
+                    if (repeated) {
+                        this.duplicateImg();
+                        return;
+                    }
+                }
                 this.form.mainImage = file;
             }
         },
@@ -511,8 +532,16 @@ export default {
         selectAdditionalImg() {
             const file = this.$refs.additionalImageSelector.files[0];
             if (file && this.validateImgSize(file)) {
+                if (this.form.mainImage && this.form.mainImage.name == file.name) {
+                    this.duplicateImg();
+                    return;
+                }
+                const repeated = this.form.additionalImages.some(image => image.name == file.name);
+                if (repeated) {
+                    this.duplicateImg();
+                    return;
+                }
                 this.form.additionalImages.push(file);
-                console.log(this.form.additionalImages)
             }
         },
         removeAdditionalImg(index) {
