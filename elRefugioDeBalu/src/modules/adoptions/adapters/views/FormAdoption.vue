@@ -8,7 +8,7 @@
     <div class="my-3">
       <b-container>
         <b-row>
-          <form>
+          <form @submit="submitAdoptionForm()">
             <!-- incio de fotos de casa -->
             <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
               <b-row>
@@ -541,7 +541,6 @@
                   <b-button
                     variant="outline-dark-secondary-blue"
                     :disabled="disableButton()"
-                    @click="submitAdoptionForm"
                     type="submit"
                     class="d-flex align-items-center justify-content-between w-100"
                   >
@@ -583,7 +582,6 @@ import Encabezado from "../../../../views/components/Encabezado.vue";
 import swal from "sweetalert2";
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
 import instance from "../../../../config/axios";
-import { decrypt } from "../../../../kernel/hashFunctions";
 
 const regex = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ' .]+$/;
 
@@ -642,6 +640,7 @@ export default {
       },
     };
   },
+  mounted() {},
   methods: {
     closeForm() {
       this.cleanInfo();
@@ -764,11 +763,6 @@ export default {
         this.validation.additionalComments = false;
         this.error.additionalComments =
           "La respuesta debe tener menos de 100 caracteres";
-      } else if (
-        this.adoptionRequestSave.reasonsForAdoption.additionalComments === null
-      ) {
-        this.validation.additionalComments = false;
-        this.error.additionalComments = "Este campo es requerido";
       } else {
         this.validation.additionalComments = true;
         this.error.additionalComments = null;
@@ -915,9 +909,6 @@ export default {
         this.validation.additionalInfo = false;
         this.error.additionalInfo =
           "La respuesta debe tener menos de 100 caracteres";
-      } else if (this.adoptionRequestSave.additional_information === null) {
-        this.validation.additionalInfo = false;
-        this.error.additionalInfo = "Este campo es requerido";
       } else {
         this.validation.additionalInfo = true;
         this.error.additionalInfo = null;
@@ -952,9 +943,11 @@ export default {
                   whereWillThePetBe:
                     this.adoptionRequestSave.reasonsForAdoption
                       .whereWillThePetBe,
-                  additionalComments:
-                    this.adoptionRequestSave.reasonsForAdoption
-                      .additionalComments,
+                  additionalComments: this.adoptionRequestSave
+                    .reasonsForAdoption.additionalComments
+                    ? this.adoptionRequestSave.reasonsForAdoption
+                        .additionalComments
+                    : "Sin registro",
                 },
                 previousExperiencieDto: {
                   whatDidYouDoWhenThePetGotSick:
@@ -969,34 +962,40 @@ export default {
                   lastPet:
                     this.adoptionRequestSave.previousExperiencieDto.lastPet,
                 },
-                additional_information:
-                  this.adoptionRequestSave.additional_information,
+                additional_information: this.adoptionRequestSave
+                  .additional_information
+                  ? this.adoptionRequestSave.additional_information
+                  : "Sin registro",
                 imageAdoption: this.adoptionRequestSave.imageAdoption,
               });
-              swal.fire({
-              title: "Espera un momento...",
-              text: "Estamos enviando tu solicitud de adopción",
-              imageUrl: gatoWalkingGif,
-              timer: 5000,
-              timerProgressBar: true,
-              imageWidth: 160, // Ancho de la imagen
-              imageHeight: 160, // Altura de la imagen
-              showConfirmButton: false,
-            }).finally(() => {
-              if (!response.data.error) {
-                swal.fire({
-                  title: "Solicitud de adopción enviada",
-                  text: "Tu solicitud de adopción ha sido enviada con éxito",
-                  icon: "success",
-                  confirmButtonColor: "#3085d6",
-                  confirmButtonText: "Aceptar",
-                  timer: 2000,
-                }).finally(() => {
-                  this.cleanInfo();
-                  this.$router.push("/myAplicationAdoption");
+              swal
+                .fire({
+                  title: "Espera un momento...",
+                  text: "Estamos enviando tu solicitud de adopción",
+                  imageUrl: gatoWalkingGif,
+                  timer: 5000,
+                  timerProgressBar: true,
+                  imageWidth: 160, // Ancho de la imagen
+                  imageHeight: 160, // Altura de la imagen
+                  showConfirmButton: false,
+                })
+                .finally(() => {
+                  if (!response.data.error) {
+                    swal
+                      .fire({
+                        title: "Solicitud de adopción enviada",
+                        text: "Tu solicitud de adopción ha sido enviada con éxito",
+                        icon: "success",
+                        confirmButtonColor: "#3085d6",
+                        confirmButtonText: "Aceptar",
+                        timer: 2000,
+                      })
+                      .finally(() => {
+                        this.cleanInfo();
+                        this.$router.push("/myAplicationAdoption");
+                      });
+                  }
                 });
-              }
-            })
             } catch (error) {
               let Msjerror = "";
               switch (error.response.data.message) {
@@ -1124,6 +1123,12 @@ export default {
       // Verificar si el archivo es una imagen
       if (!file.type.startsWith("image/")) {
         this.makeToast("El archivo no es una imagen");
+        return;
+      }
+
+      const maxSizeInBytes = 6 * 1024 * 1024; // 6MB
+      if (file.size > maxSizeInBytes) {
+        this.makeToast("La imagen debe pesar menos de 6MB");
         return;
       }
 

@@ -18,7 +18,7 @@ public class AdoptionRequestImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(columnDefinition = "text")
+    @Column(columnDefinition = "longtext")
     private String image;
     @ManyToOne
     @JoinColumn(name = "adoption_id",referencedColumnName = "id")
