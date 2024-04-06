@@ -10,7 +10,7 @@
         <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
             <b-row class="px-5 px-sm-0 d-flex justify-content-end">
                 <b-col cols="12" sm="6" md="5" lg="4" xl="3">
-                    <b-button variant="outline-dark-secondary-blue" @click="validateForm()"
+                    <b-button variant="outline-dark-secondary-blue" @click="savePet()"
                         class="d-flex align-items-center justify-content-between w-100">
                         <span class="me-2">Publicar</span>
                         <b-icon icon="arrow-up-right-circle" font-scale="1.3"></b-icon>
@@ -31,33 +31,13 @@ import { encrypt } from '../../../../kernel/hashFunctions';
 export default {
     data() {
         return {
+            isValidGeneralInformationForm: false,
             tempDisease: "",
             tempAllergy: "",
             tempCharacteristic: "",
             tempCare: "",
             form: {
-                mainImage: null,
-                additionalImages: [],
-                name: "",
-                category: 0,
-                breed: "",
-                size: "default",
-                age: null,
-                ageUnit: "default",
-                stage: "default",
-                weight: null,
-                weightType: "default",
-                sex: "default",
-                isVaccinated: false,
-                isDewormed: false,
-                isSterilised: false,
-                microchip: false,
-                diseases: [],
-                allergies: [],
-                comments: "",
-                characteristics: [],
-                care: [],
-                description: "",
+                
             },
             formPet: {},
             isValidForm: false,
@@ -495,7 +475,13 @@ export default {
             console.log(response);
         },
         validateForm() {
-            this.$refs.generalInformationCard.validateForm();
+            this.$refs.generalInformationCard.validateForm()
+            console.log(this.$refs.generalInformationCard.validateForm())
+
+        },
+        savePet() {
+            if (this.$refs.generalInformationCard.validateForm()) this.isValidGeneralInformationForm = true;
+            else this.isValidGeneralInformationForm = false;
         }
     },
     components: {

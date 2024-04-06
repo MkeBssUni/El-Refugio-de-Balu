@@ -250,6 +250,7 @@ export default {
                 weightUnit: "",
                 gender: ""
             },
+            isValidForm: false,
             errorMessages: {
                 name: "",
                 category: "",
@@ -263,6 +264,7 @@ export default {
                 gender: ""
             },
             showErrors: {
+                mainImage: false,
                 name: false,
                 category: false,
                 breed: false,
@@ -336,7 +338,10 @@ export default {
                     showConfirmButton: false,
                     timerProgressBar: true,
                 });
+                this.showErrors.mainImage = true;
+                return;
             }
+            this.showErrors.mainImage = false;
         },
         validateMainImageSize(file) {
             if (file.size > 4000000) {
@@ -565,7 +570,11 @@ export default {
             this.validateInput('lifeStage');
             this.validateInput('weight');
             this.validateInput('weightUnit');
-            this.validateInput('gender');                        
+            this.validateInput('gender');
+            if (this.showErrors.mainImage || this.showErrors.name || this.showErrors.category || this.showErrors.breed ||
+                this.showErrors.size || this.showErrors.age || this.showErrors.ageUnit || this.showErrors.lifeStage ||
+                this.showErrors.weight || this.showErrors.weightUnit || this.showErrors.gender) return false;
+            return true;
         }
     },
     mounted() {
