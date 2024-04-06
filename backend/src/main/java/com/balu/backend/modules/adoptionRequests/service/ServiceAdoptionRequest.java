@@ -4,12 +4,10 @@ import com.balu.backend.kernel.*;
 import com.balu.backend.modules.adoptionRequestImage.model.AdoptionRequestImage;
 import com.balu.backend.modules.adoptionRequestImage.model.AdoptionRequestImagesRepository;
 import com.balu.backend.modules.adoptionRequests.model.AdoptionRequest;
+import com.balu.backend.modules.adoptionRequests.model.IAdoptionRequestModViewPaged;
 import com.balu.backend.modules.adoptionRequests.model.IAdoptionRequestRepository;
 import com.balu.backend.modules.adoptionRequests.model.IAdoptionRequestViewPaged;
-import com.balu.backend.modules.adoptionRequests.model.dto.ChangeStatusAdoptionRequestDto;
-import com.balu.backend.modules.adoptionRequests.model.dto.GetAdoptionRequestDto;
-import com.balu.backend.modules.adoptionRequests.model.dto.GetByIdAdoptionRequestDto;
-import com.balu.backend.modules.adoptionRequests.model.dto.SaveAdoptionRequestDto;
+import com.balu.backend.modules.adoptionRequests.model.dto.*;
 import com.balu.backend.modules.hash.service.HashService;
 import com.balu.backend.modules.logs.model.LogTypes;
 import com.balu.backend.modules.logs.service.LogService;
@@ -87,16 +85,15 @@ public class ServiceAdoptionRequest {
 
 
     @Transactional(readOnly = true)
-    public ResponseApi<Optional<AdoptionRequest>> adoptionByModerador(String idPet) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        if(idPet == null) {
+    public ResponseApi<Page<IAdoptionRequestModViewPaged>> adoptionByModerador(GetAdoptionRequestModDto dto, Pageable pageable) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        if (dto.getSearchValue() != null) {
+            dto.setSearchValue(dto.getSearchValue().toLowerCase());
+        }
+        if(dto.getIdPet() == null) {
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
         }
-        Optional<AdoptionRequest> adoptionRequestOptional = iAdoptionRequestRepository.findByPet_Id(Long.parseLong(hashService.decrypt(idPet)));
-        if (adoptionRequestOptional.isPresent()) {
-            return new ResponseApi<>(adoptionRequestOptional,HttpStatus.OK, false, "Success");
-        } else {
-            return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.NO_RECORDS.name());
-        }
+        Page<IAdoptionRequestModViewPaged> page = iAdoptionRequestRepository.findAllPagedMod(Long.parseLong(hashService.decrypt(dto.getIdPet())), dto.getSearchValue(), pageable);
+        return new ResponseApi<>(page,HttpStatus.OK,false,"OK");
     }
 
     @Transactional(rollbackFor = {SQLException.class,Exception.class})

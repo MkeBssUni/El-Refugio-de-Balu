@@ -138,6 +138,17 @@ const routes = [
         },
         component: () =>
           import("../modules/adoptions/adapters/views/AdoptionList.vue"),
+      },{
+        path: "/moderated/viewAplicationAdoptionRequestMod",
+        name: "viewAplicationAdoptionRequestMod",
+        props: true,
+        meta: {
+          title: "Detalles de solicitud de adopción",
+          requiresAuth: true,
+          role: rolesAvailable.mod,
+        },
+        component: () =>
+          import("../modules/adoptions/adapters/views/ViewAplicationRequestMod.vue"),
       },
       {
         path: "/viewAplicationAdoptionRequest",
@@ -146,7 +157,7 @@ const routes = [
         meta: {
           title: "Detalles de solicitud de adopción",
           requiresAuth: true,
-          role: [rolesAvailable.general, rolesAvailable.mod],
+          role: rolesAvailable.general,
         },
         component: () =>
           import("../modules/adoptions/adapters/views/ViewAplicationAdoptionRequest.vue"),
