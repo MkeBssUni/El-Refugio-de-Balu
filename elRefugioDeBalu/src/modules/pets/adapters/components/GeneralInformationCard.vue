@@ -82,9 +82,8 @@
                                                 Selecciona su especie:
                                                 <span class="required-asterisk">*</span>
                                             </label>
-                                            <b-form-select id="category" v-model.trim="form.category"
-                                                @input="validateInput('category')" @click="validateInput('category')"
-                                                class="form-select">
+                                            <b-form-select id="category" v-model="form.category" class="form-select"
+                                                @input="validateInput('category')">
                                                 <option value="0" disabled>Especie...</option>
                                                 <option v-for="category in categories" :key="category.id"
                                                     :value="category.id">
@@ -102,9 +101,113 @@
                                                 Ingresa la raza de la mascota: <span class="required-asterisk">*</span>
                                             </label>
                                             <b-form-input id="breed" v-model.trim="form.breed"
-                                                @input="validateInput('breed')" @focus="validateInput('breed')"
-                                                placeholder="Raza..."></b-form-input>
+                                                @input="validateInput('breed')" placeholder="Raza..."></b-form-input>
                                             <b-form-invalid-feedback v-if="showErrors.breed">{{ errorMessages.breed
+                                                }}</b-form-invalid-feedback>
+                                        </b-form-group>
+                                    </b-col>
+                                    <b-col cols="12" sm="5" xl="4" class="mt-3">
+                                        <b-form-group label-for="size">
+                                            <label slot="label">
+                                                Selecciona su tamaño: <span class="required-asterisk">*</span>
+                                            </label>
+                                            <b-form-select id="size" v-model="form.size" @input="validateInput('size')"
+                                                class="form-select">
+                                                <option value="">Tamaño...</option>
+                                                <option v-for="size in sizes" :key="size.key" :value="size.value">
+                                                    {{ size.text }}
+                                                </option>
+                                            </b-form-select>
+                                            <b-form-invalid-feedback v-if="showErrors.size">{{ errorMessages.size
+                                                }}</b-form-invalid-feedback>
+                                        </b-form-group>
+                                    </b-col>
+                                    <b-col cols="12" sm="7" xl="8">
+                                        <b-form-group label-for="age" class="mt-3">
+                                            <label slot="label">
+                                                Ingresa la edad de la mascota: <span class="required-asterisk">*</span>
+                                            </label>
+                                            <b-row>
+                                                <b-col cols="8" sm="7" xl="8">
+                                                    <b-form-input id="age" v-model="form.age" placeholder="Edad..."
+                                                        @input="validateInput('age')" type="number"></b-form-input>
+                                                    <b-form-invalid-feedback v-if="showErrors.age">{{ errorMessages.age
+                                                        }}</b-form-invalid-feedback>
+                                                </b-col>
+                                                <b-col cols="4" sm="5" xl="4">
+                                                    <b-form-select id="ageUnit" v-model="form.ageUnit"
+                                                        class="form-select" @input="validateInput('ageUnit')">
+                                                        <option value="" disabled>Unidad</option>
+                                                        <option v-for="ageUnit in ageUnits" :key="ageUnit.value"
+                                                            :value="ageUnit.value">
+                                                            {{ ageUnit.text }}
+                                                        </option>
+                                                    </b-form-select>
+                                                    <b-form-invalid-feedback v-if="showErrors.ageUnit">{{
+                                                        errorMessages.ageUnit }}</b-form-invalid-feedback>
+                                                </b-col>
+                                            </b-row>
+                                        </b-form-group>
+                                    </b-col>
+                                    <b-col cols="12" sm="5" xl="4">
+                                        <b-form-group label-for="lifeStage" class="mt-3">
+                                            <label slot="label">
+                                                Selecciona su etapa: <span class="required-asterisk">*</span>
+                                            </label>
+                                            <b-form-select id="lifeStage" v-model="form.lifeStage"
+                                                @input="validateInput('lifeStage')" class="form-select">
+                                                <option value="" disabled>Etapa...</option>
+                                                <option v-for="lifeStage in lifeStages" :key="lifeStage.id"
+                                                    :value="lifeStage.value">
+                                                    {{ lifeStage.text }}
+                                                </option>
+                                            </b-form-select>
+                                            <b-form-invalid-feedback v-if="showErrors.lifeStage">{{
+                                                errorMessages.lifeStage
+                                            }}</b-form-invalid-feedback>
+                                        </b-form-group>
+                                    </b-col>
+                                    <b-col cols="12" sm="7" xl="8">
+                                        <b-form-group label-for="weight" class="mt-3">
+                                            <label slot="label">
+                                                Ingresa el peso de la mascota: <span class="required-asterisk">*</span>
+                                            </label>
+                                            <b-row>
+                                                <b-col cols="8" sm="7" xl="8">
+                                                    <b-form-input id="weight" v-model="form.weight"
+                                                        @input="validateInput('weight')" placeholder="Peso..."
+                                                        type="number"></b-form-input>
+                                                    <b-form-invalid-feedback v-if="showErrors.weight">{{
+                                                        errorMessages.weight }}</b-form-invalid-feedback>
+                                                </b-col>
+                                                <b-col cols="4" sm="5" xl="4">
+                                                    <b-form-select v-model="form.weightUnit" id="weightUnit"
+                                                        @input="validateInput('weightUnit')" class="form-select">
+                                                        <option value="" disabled>Unidad</option>
+                                                        <option v-for="weightUnit in weightUnits"
+                                                            :key="weightUnit.value" :value="weightUnit.value">
+                                                            {{ weightUnit.text }}
+                                                        </option>
+                                                    </b-form-select>
+                                                    <b-form-invalid-feedback v-if="showErrors.weight">{{
+                                                        errorMessages.weight }}</b-form-invalid-feedback>
+                                                </b-col>
+                                            </b-row>
+                                        </b-form-group>
+                                    </b-col>
+                                    <b-col cols="12" sm="5" xl="4">
+                                        <b-form-group label-for="gender" class="mt-3">
+                                            <label slot="label">
+                                                Selecciona su sexo: <span class="required-asterisk">*</span>
+                                            </label>
+                                            <b-form-select id="gender" v-model="form.gender" class="form-select"
+                                                @input="validateInput('gender')">
+                                                <option value="" disabled>Sexo...</option>
+                                                <option v-for="gender in genders" :key="gender.id" :value="gender.value">
+                                                    {{ gender.text }}
+                                                </option>
+                                            </b-form-select>
+                                            <b-form-invalid-feedback v-if="showErrors.gender">{{ errorMessages.gender
                                                 }}</b-form-invalid-feedback>
                                         </b-form-group>
                                     </b-col>
@@ -131,6 +234,11 @@ import Swal from 'sweetalert2';
 import { isInvalidName } from '../../../../kernel/validations';
 import instance from "../../../../config/axios";
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
+import sizes from "../../../../kernel/data/sizes";
+import ageUnits from "../../../../kernel/data/ageUnits";
+import lifeStages from "../../../../kernel/data/lifeStages";
+import weightUnits from "../../../../kernel/data/weightUnits";
+import genders from "../../../../kernel/data/genders";
 
 export default {
     data() {
@@ -141,42 +249,44 @@ export default {
                 name: "",
                 category: "0",
                 breed: "",
-                size: "default",
-                age: "",
-                ageUnit: "default",
-                stage: "default",
-                weight: "",
-                weightType: "default"
+                size: "",
+                age: null,
+                ageUnit: "",
+                lifeStage: "",
+                weight: null,
+                weightUnit: "",
+                gender: ""
             },
             errorMessages: {
                 name: "",
                 category: "",
                 breed: "",
+                size: "",
+                age: "",
+                ageUnit: "",
+                lifeStage: "",
+                weight: "",
+                weightUnit: "",
+                gender: ""
             },
             showErrors: {
                 name: false,
                 category: false,
                 breed: false,
+                size: false,
+                age: false,
+                ageUnit: false,
+                lifeStage: false,
+                weight: false,
+                weightUnit: false,
+                gender: false
             },
             categories: [],
-            sizes: [
-                { id: 1, value: "small", text: "Pequeño" },
-                { id: 2, value: "medium", text: "Mediano" },
-                { id: 3, value: "large", text: "Grande" }
-            ],
-            ageUnits: [
-                { value: "months", text: "Meses" },
-                { value: "years", text: "Años" }
-            ],
-            stages: [
-                { id: 1, value: "puppy", text: "Cachorro" },
-                { id: 2, value: "adult", text: "Adulto" },
-                { id: 3, value: "senior", text: "Adulto mayor" }
-            ],
-            weightTypes: [
-                { value: "kg", text: "Kg" },
-                { value: "lb", text: "Lb" }
-            ],
+            sizes: sizes,
+            ageUnits: ageUnits,
+            lifeStages: lifeStages,
+            weightUnits: weightUnits,
+            genders: genders
         }
     },
     methods: {
@@ -279,6 +389,101 @@ export default {
                         input.classList.add('is-valid');
                     }
                     break;
+                case "size":
+                    if (!this.form.size) {
+                        this.errorMessages.size = "Campo obligatorio";
+                        this.showErrors.size = true;
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.errorMessages.size = "";
+                        this.showErrors.size = false;
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+                case "age":
+                    if (!this.form.age) {
+                        this.errorMessages.age = "Campo obligatorio";
+                        this.showErrors.age = true;
+                        input.classList.add('is-invalid');
+                    } else if (this.form.age <= 0) {
+                        this.errorMessages.age = "La edad de la mascota debe ser mayor a 0";
+                        this.showErrors.age = true;
+                        input.classList.add('is-invalid');
+                    } else if (this.form.age % 1 != 0) {
+                        this.errorMessages.age = "La edad de la mascota debe ser un número entero";
+                        this.showErrors.age = true;
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.errorMessages.age = "";
+                        this.showErrors.age = false;
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+                case "ageUnit":
+                    if (!this.form.ageUnit) {
+                        this.errorMessages.ageUnit = "Campo obligatorio";
+                        this.showErrors.ageUnit = true;
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.errorMessages.ageUnit = "";
+                        this.showErrors.ageUnit = false;
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+                case "lifeStage":
+                    if (!this.form.lifeStage) {
+                        this.errorMessages.lifeStage = "Campo obligatorio";
+                        this.showErrors.lifeStage = true;
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.errorMessages.lifeStage = "";
+                        this.showErrors.lifeStage = false;
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+                case "weight":
+                    if (!this.form.weight) {
+                        this.errorMessages.weight = "Campo obligatorio";
+                        this.showErrors.weight = true;
+                        input.classList.add('is-invalid');
+                    } else if (this.form.weight <= 0) {
+                        this.errorMessages.weight = "El peso de la mascota debe ser mayor a 0";
+                        this.showErrors.weight = true;
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.errorMessages.weight = "";
+                        this.showErrors.weight = false;
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+                case "weightUnit":
+                    if (!this.form.weightUnit) {
+                        this.errorMessages.weightUnit = "Campo obligatorio";
+                        this.showErrors.weightUnit = true;
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.errorMessages.weightUnit = "";
+                        this.showErrors.weightUnit = false;
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
+                    break;
+                case "gender":
+                    if (!this.form.gender) {
+                        this.errorMessages.gender = "Campo obligatorio";
+                        this.showErrors.gender = true;
+                        input.classList.add('is-invalid');
+                    } else {
+                        this.errorMessages.gender = "";
+                        this.showErrors.gender = false;
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    }
             }
         },
         showImg() {
@@ -317,6 +522,13 @@ export default {
             this.validateInput('name');
             this.validateInput('category');
             this.validateInput('breed');
+            this.validateInput('size');
+            this.validateInput('age');
+            this.validateInput('ageUnit');
+            this.validateInput('lifeStage');
+            this.validateInput('weight');
+            this.validateInput('weightUnit');
+            this.validateInput('gender')
         }
     },
     mounted() {
