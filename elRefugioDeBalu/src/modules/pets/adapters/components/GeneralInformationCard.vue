@@ -92,7 +92,7 @@
                                             </b-form-select>
                                             <b-form-invalid-feedback v-if="showErrors.category">{{
                                                 errorMessages.category
-                                            }}</b-form-invalid-feedback>
+                                                }}</b-form-invalid-feedback>
                                         </b-form-group>
                                     </b-col>
                                     <b-col cols="12" sm="7" xl="8" class="mt-3">
@@ -164,7 +164,7 @@
                                             </b-form-select>
                                             <b-form-invalid-feedback v-if="showErrors.lifeStage">{{
                                                 errorMessages.lifeStage
-                                                }}</b-form-invalid-feedback>
+                                            }}</b-form-invalid-feedback>
                                         </b-form-group>
                                     </b-col>
                                     <b-col cols="12" sm="7" xl="8">
@@ -323,7 +323,22 @@ export default {
                 timerProgressBar: true,
             });
         },
-        validateImgSize(file) {
+        validateMainImage() {
+            if (!this.form.mainImage) {
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'Debes seleccionar una imagen principal',
+                    toast: true,
+                    position: 'top-end',
+                    timer: 3000,
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    timerProgressBar: true,
+                });
+            }
+        },
+        validateMainImageSize(file) {
             if (file.size > 4000000) {
                 Swal.fire({
                     icon: 'error',
@@ -501,7 +516,7 @@ export default {
         },
         selectImg() {
             const file = this.$refs.mainImageSelector.files[0];
-            if (file && this.validateImgSize(file)) {                
+            if (file && this.validateMainImageSize(file)) {
                 if (this.form.additionalImages.length > 0) {
                     const repeated = this.form.additionalImages.some(image => image.name == file.name);
                     if (repeated) {
@@ -523,7 +538,7 @@ export default {
         },
         selectAdditionalImg() {
             const file = this.$refs.additionalImageSelector.files[0];
-            if (file && this.validateImgSize(file)) {
+            if (file && this.validateMainImageSize(file)) {
                 if (this.form.mainImage && this.form.mainImage.name == file.name) {
                     this.duplicateImg();
                     return;
@@ -540,6 +555,7 @@ export default {
             this.form.additionalImages.splice(index, 1);
         },
         validateForm() {
+            this.validateMainImage();
             this.validateInput('name');
             this.validateInput('category');
             this.validateInput('breed');
@@ -549,7 +565,7 @@ export default {
             this.validateInput('lifeStage');
             this.validateInput('weight');
             this.validateInput('weightUnit');
-            this.validateInput('gender')            
+            this.validateInput('gender');                        
         }
     },
     mounted() {
