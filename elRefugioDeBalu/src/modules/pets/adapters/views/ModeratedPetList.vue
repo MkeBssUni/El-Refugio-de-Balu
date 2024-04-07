@@ -53,23 +53,21 @@
                         </template>
                         <template #cell(status)="data">
                             <b-badge :variant="getBadgeVariant(data.value)">{{
-                    mapStatus((data.value).toString().toLowerCase()) }}</b-badge>
+                                mapStatus((data.value).toString().toLowerCase()) }}</b-badge>
                         </template>
                         <template #cell(actions)="data">
                             <div class="d-none d-lg-inline-block">
                                 <b-button pill size="sm" variant="outline-dark-blue"
-                                    class="px-3 d-flex align-items-center">
-                                    <span>Solicitudes de adopción</span>
-                                    <b-icon icon="file-earmark-text" font-scale="1" class="ms-1"></b-icon>
+                                    @click="getAdoptionRequests(data.item.id)" class="px-3 d-flex align-items-center"
+                                    v-b-tooltip.hover.top="'Ver solicitudes de adopción'">
+                                    <b-icon icon="file-earmark-text" font-scale="1"></b-icon>
                                 </b-button>
                             </div>
                             <div class="d-none d-lg-inline-block ms-0 ms-sm-2">
-                                <b-button pill size="sm"
+                                <b-button pill size="sm" v-b-tooltip.hover.top="'Ver comentarios'"
                                     :variant="data.item.cancelRequest ? 'outline-danger' : 'outline-dark-orange'"
                                     class="px-3 d-flex align-items-center" @click="getComments(data.item.id)">
-                                    <span>Comentarios</span>
-                                    <b-icon :icon="data.item.cancelRequest ? 'exclamation-circle' : 'chat-left-text'"
-                                        font-scale="1" class="ms-1"></b-icon>
+                                    <b-icon icon="chat-left-text" font-scale="1"></b-icon>
                                 </b-button>
                             </div>
                             <div class="d-inline-block d-lg-none">
@@ -102,7 +100,8 @@
                 </b-col>
             </b-row>
         </b-container>
-        <Modal :comments="comments" :petId="selectedPetId" :canComment="canComment" :cancelRequest="selectedPetCancelRequest" @comment-added="loadComments()" />
+        <Modal :comments="comments" :petId="selectedPetId" :canComment="canComment"
+            :cancelRequest="selectedPetCancelRequest" @comment-added="loadComments()" />
     </div>
 </template>
 
@@ -143,7 +142,7 @@ export default {
             selectedPetId: "",
             selectedPetCancelRequest: "",
             comments: [],
-            canComment: false            
+            canComment: false
         }
     },
     methods: {
@@ -229,9 +228,9 @@ export default {
                     imageHeight: 160,
                     showConfirmButton: false
                 })
-                this.selectedPetId = petId                
+                this.selectedPetId = petId
                 this.selectedPetCancelRequest = this.pets.find(pet => pet.id === petId).cancelRequest;
-                this.canComment = ['in_revision', 'approved'].includes(this.pets.find(pet => pet.id === petId).status);                
+                this.canComment = ['in_revision', 'approved'].includes(this.pets.find(pet => pet.id === petId).status);
                 const response = await instance.post(`/pet/comment/all`, {
                     pet: petId,
                     user: this.payload.user
@@ -255,6 +254,10 @@ export default {
         },
         async loadComments() {
             this.getComments(this.selectedPetId)
+        },
+        getAdoptionRequests(petId) {
+            this.$router.push({ name: 'adoptionList', params: { petId: petId } });
+            sessionStorage.setItem('petId', petId);
         }
     },
     mounted() {

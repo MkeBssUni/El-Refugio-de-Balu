@@ -1,77 +1,39 @@
 <template>
   <div>
-    <Encabezado
-      color="#FFBC58"
-      :imagenUrl="require('@/assets/imgs/frogs-bros.png')"
-      titulo="Solicitudes de adopción"
-    />
+    <Encabezado color="#FFBC58" :imagenUrl="require('@/assets/imgs/frogs-bros.png')" titulo="Solicitudes de adopción" />
     <b-container fluid class="my-3">
       <b-row>
         <b-col cols="12" sm="12" md="8" lg="8" xl="8">
           <b-row align-h="center">
             <b-col cols="12" md="5" sm="12" lg="5" class="pt-md-3 my-2">
-            
-          <b-input-group class="mt-3">
-            <b-form-input
-              type="text"
-              placeholder="Buscar..."
-              id="searchValue"
-              v-model="searchValue"
-              @keyup.enter="getList()"
-            ></b-form-input>
-            <b-button
-              variant="dark-gray"
-              type="button"
-              id="searchValue"
-              @click="getList()"
-              class="d-flex align-items-center justify-content-between"
-            >
-              <b-icon icon="search"></b-icon>
-            </b-button>
-          </b-input-group>
+
+              <b-input-group class="mt-3">
+                <b-form-input type="text" placeholder="Buscar..." id="searchValue" v-model="searchValue"
+                  @keyup.enter="getList()"></b-form-input>
+                <b-button variant="dark-gray" type="button" id="searchValue" @click="getList()"
+                  class="d-flex align-items-center justify-content-between">
+                  <b-icon icon="search"></b-icon>
+                </b-button>
+              </b-input-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" sm="12" lg="12" class="mx-2 my-2">
-              <b-table
-                :fields="fields"
-                :items="adoptions"
-                :filter="searchValue"
-                label-sort-asc=""
-                label-sort-desc=""
-                no-sort-reset
-                :per-page="size"
-                :current-page="page"
-                responsive
-                small
-                striped
-                hover
-                class="text-center custom-scroll-style"
-              >
+              <b-table :fields="fields" :items="adoptions" :filter="searchValue" label-sort-asc="" label-sort-desc=""
+                no-sort-reset :per-page="size" :current-page="page" responsive small striped hover
+                class="text-center custom-scroll-style">
                 <template #cell(status)="data">
                   <b-badge :variant="getBadgeVariant(data.value)">{{
                     statusSpain(data.value)
                   }}</b-badge>
                 </template>
                 <template #cell(actions)="data">
-                  <b-button
-                    pill
-                    size="sm"
-                    variant="outline-dark-blue"
-                    class="px-2 d-none d-md-inline-block"
-                    to="/viewAplicationAdoptionRequest"
-                @click="viewAdoptionRequest(data.item)"
-
-                  >
+                  <b-button pill size="sm" variant="outline-dark-blue" class="px-2 d-none d-md-inline-block"
+                    to="/viewAplicationAdoptionRequest" @click="viewAdoptionRequest(data.item)">
                     Visualizar
                     <b-icon icon="info-circle" font-scale="1"></b-icon>
                   </b-button>
-                  <b-button
-                    pill
-                    size="sm"
-                    variant="outline-dark-blue"
-                    class="px-2 d-md-none"
-                  >
+                  <b-button pill size="sm" variant="outline-dark-blue" class="px-2 d-md-none">
                     <b-icon icon="info-circle" font-scale="1"></b-icon>
                   </b-button>
                 </template>
@@ -82,22 +44,12 @@
             <b-col cols="12">
               <b-row class="justify-content-center">
                 <b-col cols="6" md="4" class="pt-0 pt-md-3">
-                  <b-form-select
-                    :options="options"
-                    v-model="size"
-                    class="form-select"
-                    @change="getList"
-                  ></b-form-select>
+                  <b-form-select :options="options" v-model="size" class="form-select"
+                    @change="getList"></b-form-select>
                 </b-col>
               </b-row>
               <br />
-              <b-pagination
-                pills
-                v-model="page"
-                :total-rows="adoptions.length"
-                :per-page="size"
-                align="center"
-              >
+              <b-pagination pills v-model="page" :total-rows="adoptions.length" :per-page="size" align="center">
               </b-pagination>
             </b-col>
           </b-row>
@@ -105,16 +57,9 @@
         <b-col cols="12" sm="12" md="4" lg="4" xl="4">
           <b-card class="target">
             <b-row>
-              <b-col cols="12" sm="12" lg="12" md="12" >
-                <img
-                :src="base64ToImage(credentialPet.image)"
-                  alt="Imagen de perfil"
-                  class="image-pet"
-                />
-                <b-card
-                  bg-variant="card-content-orange"
-                  class="my-2 information-pet"
-                >
+              <b-col cols="12" sm="12" lg="12" md="12">
+                <img :src="base64ToImage(credentialPet.image)" alt="Imagen de perfil" class="image-pet" />
+                <b-card bg-variant="card-content-orange" class="my-2 information-pet">
                   <b-card-body>
                     <b-card-title> {{ credentialPet.name }} </b-card-title>
                     <hr class="my-line" />
@@ -137,7 +82,7 @@
                           {{ getAgeNumber(credentialPet.weight) }} {{
                             mapweightUnits(getAgeUnit(credentialPet.weight))
                           }}
-                          
+
                         </b-card-text>
                       </b-col>
                     </b-row>
@@ -164,11 +109,12 @@
                         <b-card-text>
                           <b>Edad:</b>&nbsp;{{ getAgeNumber(credentialPet.age) }} {{
                             mapageUnits(getAgeUnit(credentialPet.age))
-                          }}</b-card-text
-                        >
+                          }}</b-card-text>
                       </b-col>
                       <b-col cols="12" sm="12" lg="6" md="6" xl="6">
-                        <b-card-text> <b>Género:</b>&nbsp; {{ mapGender(credentialPet.gender.toString().toLowerCase()) }} </b-card-text>
+                        <b-card-text> <b>Género:</b>&nbsp; {{ mapGender(credentialPet.gender.toString().toLowerCase())
+                          }}
+                        </b-card-text>
                       </b-col>
                     </b-row>
                   </b-card-body>
@@ -198,6 +144,12 @@ import {
 
 export default {
   name: "AdoptionList",
+  props: {
+    petId: {
+      type: String,
+      required: true
+    }
+  },
   components: {
     Encabezado,
   },
@@ -233,6 +185,8 @@ export default {
     };
   },
   mounted() {
+    if (!this.petId && sessionStorage.getItem('petId')) this.petId = sessionStorage.getItem('petId');
+    if (!this.petId && !sessionStorage.getItem('petId')) this.$router.push('/moderated/petList');
     this.getList();
   },
   methods: {
@@ -264,7 +218,7 @@ export default {
     mapweightUnits(weightUnit) {
       return weightUnits[weightUnit] || weightUnit;
     },
-    mapGender(genderpet){
+    mapGender(genderpet) {
       return gender[genderpet] || genderpet;
     },
     mapageUnits(ageUnit) {
@@ -312,9 +266,7 @@ export default {
         const response = await instance.post(
           `/adoption/byPet/?page=${this.page - 1}&?size=${this.size}`,
           {
-            idPet: localStorage.getItem("petId")
-              ? localStorage.getItem("petId")
-              : "dLXupFuqu/0+7sHyU/IjbA==",
+            idPet: this.petId,
             searchValue: this.searchValue,
           }
         );
@@ -345,9 +297,7 @@ export default {
       console.log("entro a getCredentialPet")
       try {
         const response = await instance.post("/pet/credential", {
-          id:  localStorage.getItem("petId")
-              ? localStorage.getItem("petId")
-              : "dLXupFuqu/0+7sHyU/IjbA==",
+          id: this.petId
         });
         console.log(response)
         this.credentialPet = response.data.data;
@@ -405,8 +355,8 @@ export default {
       });
       localStorage.setItem("adoptionId", adoptionEncrypted);
     },
-    
-    
+
+
   }
 };
 </script>
@@ -426,8 +376,9 @@ export default {
   max-height: 40%;
   border-radius: 15px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
-  transition: transform 0.3s ease; /* Agrega una transición suave para el efecto de zoom */
-  object-fit: cover ;
+  transition: transform 0.3s ease;
+  /* Agrega una transición suave para el efecto de zoom */
+  object-fit: cover;
 }
 
 .select {
@@ -439,16 +390,19 @@ export default {
 
 /* Cuando el mouse pasa sobre la imagen */
 .image-pet:hover {
-  transform: scale(1.1); /* Aumenta el tamaño de la imagen al 110% */
+  transform: scale(1.1);
+  /* Aumenta el tamaño de la imagen al 110% */
 }
 
 .information-pet {
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
-  transition: transform 0.3s ease; /* Agrega una transición suave para el efecto de zoom */
+  transition: transform 0.3s ease;
+  /* Agrega una transición suave para el efecto de zoom */
 }
 
 .information-pet:hover {
-  transform: scale(1.1); /* Aumenta el tamaño de la imagen al 110% */
+  transform: scale(1.1);
+  /* Aumenta el tamaño de la imagen al 110% */
 }
 
 .my-line {
