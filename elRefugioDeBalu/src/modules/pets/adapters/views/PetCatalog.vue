@@ -28,7 +28,7 @@
                                     </b-col>
                                     <b-col cols="12" sm="6" class="mt-3 mt-sm-2">
                                         <b-form-select v-model="payload.size" class="form-select">
-                                            <option value="">Todas los tamaños</option>
+                                            <option value="">Todos los tamaños</option>
                                             <option v-for="size in sizes" :key="size.key" :value="size.value">
                                                 {{ size.text }}
                                             </option>

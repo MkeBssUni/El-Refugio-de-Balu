@@ -73,7 +73,9 @@ public class AddressService {
                         null
                 );
          */
-        Long userId= Long.parseLong(address.getUserId());
+        address.setUserId(hashService.decrypt(address.getUserId()));
+        Long userId = Long.parseLong(address.getUserId());
+        System.out.println(userId);
         Address address1 = new Address();
         Optional<User> optionalUser = userRepository.findById(Long.valueOf(address.getUserId()));
         if(optionalUser.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND,true, ErrorMessages.NOT_FOUND.name());

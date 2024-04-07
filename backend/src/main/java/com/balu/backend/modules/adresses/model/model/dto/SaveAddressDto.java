@@ -17,6 +17,5 @@ public class SaveAddressDto {
     private String exteriorNumber;
     private String interiorNumber;
     private String userId;
-    private String homeSpecificationId;
     private User user;
 }

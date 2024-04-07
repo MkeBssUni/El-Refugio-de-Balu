@@ -20,17 +20,16 @@
               <b-col cols="2" md="2" lg="2" style="margin-right: 95px">
                 <b-img
                   alt="profilePic"
-                  src="https://img.freepik.com/foto-gratis/retrato-hombre-blanco-aislado_53876-40306.jpg?t=st=1710875960~exp=1710879560~hmac=70796c11c06ff737b58e2f82fd3ab45b89ae7d6525c374b0c92aac9ea0514887&w=900"
-                  class="mb-4"
+ :src="profile"                  class="mb-4"
                   style="max-width: 300px; margin-top: 60px"
                 ></b-img>
               </b-col>
-              <b-col cols="9" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
+              <b-col cols="9" class="px-2 px-sm-4 mb-sm-2">
                 <b-row>
-                  <b-col cols="10" md="8" lg="6">
+                  <b-col cols="1" md="8" lg="8">
                     <b-card
                       bg-variant="dark-secondary-orange"
-                      class="py-2 card-shadow relative-position form-card-title"
+                      class="py-2 pe-2 card-shadow relative-position form-card-title"
                       no-body
                     >
                       <div class="d-flex align-items-center ms-3 ms-md-4">
@@ -136,9 +135,8 @@
             </div>
           </b-container>
 
-          <b-container>
             <div class="row">
-              <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
+              <b-col cols="12" class="px-2 px-sm-4 px-xl-5 mb-sm-5">
                 <b-row>
                   <b-col cols="10" md="8" lg="6">
                     <b-card
@@ -150,7 +148,7 @@
                         <i
                           class="material-icons me-2"
                           style="font-size: 1.5rem; color: white"
-                          >home</i
+                          >pets</i
                         >
                         <h4 class="mb-0" style="color: white">
                           Domicilio actual
@@ -167,34 +165,34 @@
                     >
                       <b-col
                         cols="12"
-                        class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5"
+                        class="px-2 px-sm-4 px-xl-5 mb-sm-5"
                       >
                         <b-row>
                           <b-col cols="12" md="4">
                             <b-form-group label="País" label-align="left">
-                              <b-input v-model="country"></b-input>
+                              <b-input v-model="SaveAddressDto.country"></b-input>
                             </b-form-group>
                           </b-col>
                           <b-col cols="12" md="4">
                             <b-form-group label="Calle" label-align="left">
-                              <b-input v-model="street"></b-input>
+                              <b-input v-model="SaveAddressDto.street"></b-input>
                             </b-form-group>
                           </b-col>
                           <b-col cols="12" md="4">
                             <b-form-group label="Colonia" label-align="left">
-                              <b-input v-model="colony"></b-input>
+                              <b-input v-model="SaveAddressDto.colony"></b-input>
                             </b-form-group>
                           </b-col>
                         </b-row>
                         <b-row>
                           <b-col cols="12" md="4">
                             <b-form-group label="Ciudad" label-align="left">
-                              <b-input v-model="city"></b-input>
+                              <b-input v-model="SaveAddressDto.city"></b-input>
                             </b-form-group>
                           </b-col>
                           <b-col cols="12" md="4">
                             <b-form-group label="Estado" label-align="left">
-                              <b-input v-model="state"></b-input>
+                              <b-input v-model="SaveAddressDto.state"></b-input>
                             </b-form-group>
                           </b-col>
                           <b-col cols="12" md="4">
@@ -203,11 +201,11 @@
                               label-align="left"
                               :state="postalCodeValidation"
                             >
-                              <b-input v-model="postalCode"></b-input>
+                              <b-input v-model="SaveAddressDto.postalCode"></b-input>
                               <b-form-invalid-feedback
                                 :state="postalCodeValidation"
                               >
-                                {{ postalCodeValidationMessage }}
+                                Codigo postal invalido
                               </b-form-invalid-feedback>
                             </b-form-group>
                           </b-col>
@@ -219,7 +217,7 @@
                               label-align="left"
                             >
                               <b-input
-                                v-model="addressReference"
+                                v-model="SaveAddressDto.addressReference"
                                 type="textarea"
                               ></b-input>
                             </b-form-group>
@@ -230,12 +228,9 @@
                             <b-form-group
                               label="Número exterior"
                               label-align="left"
-                              :state="exteriorNumberValidation"
                             >
-                              <b-input v-model="exteriorNumber"></b-input>
-                              <b-form-invalid-feedback
-                                :state="exteriorNumberValidation"
-                              >
+                              <b-input v-model="SaveAddressDto.exteriorNumber"></b-input>
+                              <b-form-invalid-feedback>
                                 Ingresa solo números
                               </b-form-invalid-feedback>
                             </b-form-group>
@@ -245,17 +240,24 @@
                               label="Número interior"
                               label-align="left"
                             >
-                              <b-input v-model="interiorNumber"></b-input>
+                              <b-input v-model="SaveAddressDto.interiorNumber"></b-input>
                             </b-form-group>
                           </b-col>
                         </b-row>
                         <div class="d-flex justify-content-end mt-3">
                           <b-button
-                            @click="submitNewAddress"
+                            @click="submitForm()"
                             variant="outline-light"
+                            class="d-flex align-items-center"
                           >
-                            {{ editing ? "Guardar" : "Modificar" }}
-                            <b-icon icon="home" font-scale="1.3"></b-icon>
+                            {{ editing ? "Guardar" : "Modificar"
+                            }}<span class="me-2">
+                              <i
+                                class="material-icons"
+                                style="font-size: 1.5rem; color: white"
+                                >home</i
+                              >
+                            </span>
                           </b-button>
                         </div>
                       </b-col>
@@ -270,7 +272,6 @@
                 ></b-button>
               </div>
             </div>
-          </b-container>
         </b-card>
       </b-card-group>
 
@@ -388,10 +389,12 @@ import swal from "sweetalert2";
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
 import instance from "../../../config/axios";
 import { decrypt } from "../../../kernel/hashFunctions";
+import profile from "../../../assets/imgs/profile.jpg"
 export default {
   name: "FormStyle",
   data() {
     return {
+      profile :profile,
       showPasswordCurrent: false,
       showPasswordNew: false,
       showPasswordConfirm: false,
@@ -413,21 +416,25 @@ export default {
       confirmPasswordValidation: null,
       confirmPasswordValidationMessage: "",
       information: {},
-      country: "",
-      street: "",
-      colony: "",
-      city: "",
-      state: "",
-      postalCode: "",
-      addressReference: "",
-      exteriorNumber: "",
-      interiorNumber: "",
+      SaveAddressDto: {
+        country: "",
+        street: "",
+        colony: "",
+        city: "",
+        state: "",
+        postalCode: "",
+        addressReference: "",
+        exteriorNumber: "",
+        interiorNumber: "",
+         userId: localStorage.getItem("userId"),
+      },
       postalCodeValidation: null,
       postalCodeValidationMessage: "",
     };
   },
   mounted() {
     this.getDetails();
+    this.getAddressDetails();
   },
   computed: {
     domicilioCompleto() {
@@ -495,37 +502,58 @@ export default {
           });
       }
     },
+    async getAddressDetails() {
+      this.loading = true;
+      try {
+        const userId = localStorage.getItem('userId');
+        const response = await axios.get(`/api/user/${userId}`);
+        const responseData = response.data;
+
+        if (!responseData.error) {
+          const addressData = responseData.data;
+          this.address = {
+            country: addressData.country,
+            street: addressData.street,
+            colony: addressData.colony,
+            city: addressData.city,
+            state: addressData.state,
+            postalCode: addressData.postalCode,
+            addressReference: addressData.addressReference,
+            exteriorNumber: addressData.exteriorNumber,
+            interiorNumber: addressData.interiorNumber,
+          };
+        } else {
+          // Manejar errores si la respuesta tiene un error
+          console.error('Error al obtener la dirección del usuario:', responseData.message);
+          swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo obtener la dirección del usuario',
+          });
+        }
+      } catch (error) {
+        // Manejar errores de la solicitud HTTP
+        console.error('Error al obtener la dirección del usuario:', error);
+        swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo obtener la dirección del usuario',
+        });
+      } finally {
+        this.loading = false;
+      }
+    },
     toggleSidebar() {
       this.$bvModal.show("sidebar-1");
     },
     async submitNewAddress() {
       try {
-        const postalCodeRegex = /^[0-9]{5}$/;
-        if (!this.postalCode.match(postalCodeRegex)) {
-          this.postalCodeValidation = false;
-          this.postalCodeValidationMessage =
-            "Por favor ingresa un código postal válido (5 dígitos numéricos)";
-          return;
-        }
-        const response = await instance.post("/api/address/", {
-          country: this.country,
-          street: this.street,
-          colony: this.colony,
-          city: this.city,
-          state: this.state,
-          postalCode: this.postalCode,
-          addressReference: this.addressReference,
-          exteriorNumber: this.exteriorNumber,
-          interiorNumber: this.interiorNumber,
-          userId: localStorage.getItem("userId"),
-        });
+        const response = await instance.post("/address/", this.SaveAddressDto);
         swal.fire({
           title: "Domicilio agregado con éxito",
           icon: "success",
         });
       } catch (error) {
-        this.postalCodeValidation = false;
-        this.postalCodeValidationMessage = error.message;
         swal.fire({
           title: "Error al agregar domicilio",
           text: error.message,
@@ -536,8 +564,7 @@ export default {
     submitForm() {
       swal
         .fire({
-          title: "¿Estás seguro de enviar la solicitud de registro?",
-          text: "Una vez enviada no podrá ser modificada",
+          title: "¿Estás seguro de realizar la accion",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
@@ -549,7 +576,7 @@ export default {
           if (result.isConfirmed) {
             swal.fire({
               title: "Espera un momento...",
-              text: "Estamos enviando tu solicitud",
+              text: "Estamos realizando tu registro",
               imageUrl: gatoWalkingGif,
               timer: 2000,
               timerProgressBar: true,
@@ -557,6 +584,7 @@ export default {
               imageHeight: 160, // Altura de la imagen
               showConfirmButton: false,
             });
+            this.submitNewAddress()
           }
         });
     },
