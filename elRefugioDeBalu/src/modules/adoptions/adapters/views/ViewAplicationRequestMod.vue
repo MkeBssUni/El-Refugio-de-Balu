@@ -539,6 +539,7 @@ export default {
     },
     async getDetails() {
       console.log("Aqui info del usuario");
+      console.log(this.requestAdoption.user.id)
       // try {
       //   const response = await instance.post("/person/details", {
       //     userId: await encrypt(this.requestAdoption.user.id),
@@ -550,6 +551,8 @@ export default {
       //   this.information.user.username = await decrypt(
       //     this.information.user.username
       //   );
+      //   console.log(this.information);
+        
       //   swal.close();
       // } catch (error) {
       //   Swal
@@ -569,59 +572,3 @@ export default {
 };
 </script>
 
-<style scoped>
-.target {
-  background-image: url("../../../../assets/imgs/pawBackground.jpg") !important;
-  background-size: cover;
-  background-position: center;
-  box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px,
-    rgba(17, 17, 26, 0.05) 0px 8px 32px;
-}
-
-.image-pet {
-  width: 100%;
-  height: 100%;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
-  transition: transform 0.3s ease; /* Agrega una transición suave para el efecto de zoom */
-  object-fit: cover ;
-}
-
-/* Cuando el mouse pasa sobre la imagen */
-.image-pet:hover {
-  transform: scale(1.1); /* Aumenta el tamaño de la imagen al 110% */
-}
-
-.information-pet {
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
-  transition: transform 0.3s ease; /* Agrega una transición suave para el efecto de zoom */
-}
-
-.information-pet:hover {
-  transform: scale(1.1); /* Aumenta el tamaño de la imagen al 110% */
-}
-
-.box-shadow-pretty {
-  box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px,
-    rgba(17, 17, 26, 0.05) 0px 8px 32px;
-}
-
-.my-line {
-  border: none;
-  height: 2px;
-  background-color: black;
-}
-
-.homePhotos {
-  width: 55%;
-  height: 160%;
-  border-radius: 15px;
-  object-fit: cover ;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
-  transition: transform 0.3s ease; /* Agrega una transición suave para el efecto de zoom */
-}
-
-/* Cuando el mouse pasa sobre la imagen */
-.homePhotos:hover {
-  transform: scale(1.1); /* Aumenta el tamaño de la imagen al 110% */
-}
-</style>
