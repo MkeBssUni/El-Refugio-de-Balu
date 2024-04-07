@@ -678,14 +678,14 @@ public class PetService {
         if (validations.isInvalidEnum(size.toUpperCase().trim(), Sizes.class)) return "invalid field";
 
         if (validations.isInvalidName(name) || validations.isInvalidName(breed)) return "invalid format";
-        if (validations.isInvalidMinAndMaxLength(name.trim(), 3, 30) || validations.isInvalidMinAndMaxLength(breed.trim(), 3, 50) || validations.isInvalidMinAndMaxLength(description.trim(), 100, 1500)) return "invalid length";
+        if (validations.isInvalidMinAndMaxLength(name.trim(), 3, 30) || validations.isInvalidMinAndMaxLength(breed.trim(), 3, 50) || validations.isInvalidMinAndMaxLength(description.trim(), 250, 1500)) return "invalid length";
         if (!Objects.equals(observations, "") && validations.isInvalidMinAndMaxLength(observations.trim(), 50, 500)) return "invalid length";
         if (age < 0 || weight < 0) return "invalid field";
 
         if(characteristics.length > 20) return "invalid length";
         for (int i = 0; i < characteristics.length; i++) {
             if (validations.isInvalidName(characteristics[i].trim())) return "invalid format";
-            if (validations.isInvalidMinAndMaxLength(characteristics[i].trim(), 3, 50)) return "invalid length";
+            if (validations.isInvalidMinAndMaxLength(characteristics[i].trim(), 3, 30)) return "invalid length";
             for (int j = i + 1; j < characteristics.length; j++) {
                 if (characteristics[i].equals(characteristics[j])) return "duplicate record";
             }
