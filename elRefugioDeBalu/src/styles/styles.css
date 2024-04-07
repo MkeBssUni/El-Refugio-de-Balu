@@ -496,6 +496,11 @@ body {
   border: 1px solid #55b3b8 !important;
 }
 
+.border-orange {
+  border: 1px solid #ffb23f !important;
+}
+
+
 .form-badge-container {
   border-radius: 0.5rem; /* bordes redondeados */
   background-color: #f8f9fa; /* un ligero color de fondo */

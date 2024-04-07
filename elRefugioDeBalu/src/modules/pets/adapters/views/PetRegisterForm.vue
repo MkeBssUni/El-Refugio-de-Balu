@@ -7,6 +7,7 @@
         <b-row class="px-2 my-2">
             <GeneralInformationCard ref="generalInformationCard" />
             <MedicalRecordCard ref="medicalRecordCard" />
+            <AdditionalInformationCard ref="additionalInformationCard" />
         </b-row>
         <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
             <b-row class="px-5 px-sm-0 d-flex justify-content-end">
@@ -25,6 +26,7 @@
 <script>
 import GeneralInformationCard from '../components/GeneralInformationCard.vue';
 import MedicalRecordCard from '../components/MedicalRecordCard.vue';
+import AdditionalInformationCard from '../components/AdditionalInformationCard.vue';
 import { isInvalidName } from '../../../../kernel/validations';
 import Encabezado from "../../../../views/components/Encabezado.vue";
 import Swal from 'sweetalert2';
@@ -476,9 +478,8 @@ export default {
             let response = await instance.post('/pet/save', this.formPet);
             console.log(response);
         },
-        validateForm() {
-            this.$refs.generalInformationCard.validateForm()
-            console.log(this.$refs.generalInformationCard.validateForm())
+        validateForm() {            
+            this.$refs.generalInformationCard.validateForm();            
         },
         savePet() {
             if (this.$refs.generalInformationCard.validateForm()) this.isValidGeneralInformationForm = true;
@@ -489,6 +490,7 @@ export default {
         Encabezado,
         GeneralInformationCard,
         MedicalRecordCard,
+        AdditionalInformationCard,
     },
 };
 </script>
