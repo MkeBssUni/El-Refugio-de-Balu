@@ -76,7 +76,7 @@ public class CategoryService {
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseApi<Category> saveCategory(SaveCategoryDto saveCategoryDto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+    public ResponseApi<Boolean> saveCategory(SaveCategoryDto saveCategoryDto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         saveCategoryDto.setUserId(hashService.decrypt(saveCategoryDto.getUserId()));
         saveCategoryDto.setName(hashService.decrypt(saveCategoryDto.getName()));
         saveCategoryDto.setDescription(hashService.decrypt(saveCategoryDto.getDescription()));
@@ -93,7 +93,7 @@ public class CategoryService {
         Category newCategory = this.iCategoryRepository.saveAndFlush(new Category(0l, saveCategoryDto.getName(), saveCategoryDto.getDescription(), saveCategoryDto.getImage(), Date, true, null));
         logService.saveLog("Registration of new category "+newCategory.getId() +" in the system for user with id: " + saveCategoryDto.getUserId(), LogTypes.INSERT, "CATEGORIES");
         return new ResponseApi<>(
-                newCategory,
+                true,
                 HttpStatus.CREATED,
                 true,
                 "Created successfully"

@@ -1,5 +1,8 @@
 package com.balu.backend.kernel.templates;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public class EmailTemplates {
     public static String mailTemplate(String message){
         return "<!DOCTYPE html>\n" +

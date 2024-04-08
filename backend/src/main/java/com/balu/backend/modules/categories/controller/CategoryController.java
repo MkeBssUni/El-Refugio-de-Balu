@@ -34,9 +34,9 @@ public class CategoryController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<ResponseApi<Category>> saveCategory(@RequestBody SaveCategoryDto saveCategoryDto){
+    public ResponseEntity<ResponseApi<Boolean>> saveCategory(@RequestBody SaveCategoryDto saveCategoryDto){
         try{
-            ResponseApi<Category> responseApi=this.categoryService.saveCategory(saveCategoryDto);
+            ResponseApi<Boolean> responseApi=this.categoryService.saveCategory(saveCategoryDto);
             return new ResponseEntity<>(responseApi,responseApi.getStatus());
         }catch (Exception e){
             return  new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
