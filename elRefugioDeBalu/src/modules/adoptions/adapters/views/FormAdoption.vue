@@ -120,7 +120,7 @@
                           />
                           <img
                             v-if="adoptionInfo.placeToPlay !== null"
-                            :src=" adoptionInfo.placeToPlay"
+                            :src="adoptionInfo.placeToPlay"
                             alt="imagen"
                             class="tam-img my-1"
                           />
@@ -638,7 +638,8 @@ export default {
         whatMemoriesDoYouHaveWithYourPet: null,
         additionalInfo: null,
       },
-      validationError: false
+      validationError: false,
+      assignedImages: [],
     };
   },
   mounted() {},
@@ -931,17 +932,16 @@ export default {
           // Marca la función como asíncrona aquí
           this.imagesToHomePet();
           if (result.isConfirmed) {
-            swal
-                .fire({
-                  title: "Espera un momento...",
-                  text: "Estamos enviando tu solicitud de adopción",
-                  imageUrl: gatoWalkingGif,
-                  timer: 5000,
-                  timerProgressBar: true,
-                  imageWidth: 160, // Ancho de la imagen
-                  imageHeight: 160, // Altura de la imagen
-                  showConfirmButton: false,
-                })
+            swal.fire({
+              title: "Espera un momento...",
+              text: "Estamos enviando tu solicitud de adopción",
+              imageUrl: gatoWalkingGif,
+              timer: 5000,
+              timerProgressBar: true,
+              imageWidth: 160, // Ancho de la imagen
+              imageHeight: 160, // Altura de la imagen
+              showConfirmButton: false,
+            });
             try {
               const response = await instance.post("/adoption/", {
                 user: localStorage.getItem("userId"),
@@ -980,22 +980,21 @@ export default {
                   : "Sin registro",
                 imageAdoption: this.adoptionRequestSave.imageAdoption,
               });
-                  if (!response.data.error) {
-                    swal
-                      .fire({
-                        title: "Solicitud de adopción enviada",
-                        text: "Tu solicitud de adopción ha sido enviada con éxito",
-                        icon: "success",
-                        confirmButtonColor: "#3085d6",
-                        confirmButtonText: "Aceptar",
-                        timer: 2000,
-                      })
-                      .finally(() => {
-                        this.cleanInfo();
-                        this.$router.push("/myAplicationAdoption");
-                      });
-                  }
-               
+              if (!response.data.error) {
+                swal
+                  .fire({
+                    title: "Solicitud de adopción enviada",
+                    text: "Tu solicitud de adopción ha sido enviada con éxito",
+                    icon: "success",
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Aceptar",
+                    timer: 2000,
+                  })
+                  .finally(() => {
+                    this.cleanInfo();
+                    this.$router.push("/myAplicationAdoption");
+                  });
+              }
             } catch (error) {
               let Msjerror = "";
               switch (error.response.data.message) {
@@ -1059,32 +1058,46 @@ export default {
       };
     },
     disableButton() {
-      if (
-        this.adoptionInfo.placeToSleep === null ||
-        this.adoptionInfo.placeToLive === null ||
-        this.adoptionInfo.placeToPlay === null ||
-        this.adoptionRequestSave.reasonsForAdoption.haveHadPets === null ||
-        this.adoptionRequestSave.reasonsForAdoption.whereWillThePetBe ===
-          null ||
-        this.adoptionRequestSave.reasonsForAdoption.peopleAgreeToAdopt ===
-          null ||
-        this.adoptionRequestSave.previousExperiencieDto.lastPet === null ||
+      // Validar la información de adopción
+      const adoptionInfoIncomplete = Object.values(this.adoptionInfo).some(
+        (value) => value === null
+      );
+
+      // Validar las razones de la adopción
+      const reasonsForAdoptionIncomplete = Object.values(
+        this.adoptionRequestSave.reasonsForAdoption
+      ).some((value) => value === null);
+
+      // Validar la experiencia previa
+      const previousExperienceIncomplete = Object.values(
         this.adoptionRequestSave.previousExperiencieDto
-          .whatDidYouDoWhenThePetGotSick === null ||
-        this.adoptionRequestSave.previousExperiencieDto
-          .whatKindOfPetsHaveYouHadBefore === null ||
-        this.adoptionRequestSave.previousExperiencieDto
-          .whatMemoriesDoYouHaveWithYourPet === null
-      ) {
-        return true;
-      }
-      return false;
+      ).some((value) => value === null);
+
+      // Validar si hay algún error en el formato de entrada
+      const invalidFormat = Object.values(this.validation).some(
+        (value) => value === false
+      );
+
+      // Devolver true si alguna parte de la información está incompleta o el formato es incorrecto
+      return (
+        adoptionInfoIncomplete ||
+        reasonsForAdoptionIncomplete ||
+        previousExperienceIncomplete ||
+        invalidFormat
+      );
     },
     handleFileInputChange(event, propertyName) {
       const file = event.target.files[0];
       if (file) {
+        // Verificar si la imagen ya está asignada a otra propiedad
+        if (this.assignedImages.includes(file.name)) {
+          this.makeToast("La imagen ya está asignada a otra propiedad");
+          return;
+        }
+
         this.imageToBase64(file, (base64String) => {
           this.$set(this.adoptionInfo, propertyName, base64String);
+          this.assignedImages.push(file.name); // Registrar la imagen como asignada
         });
       }
     },
@@ -1094,8 +1107,6 @@ export default {
         this.makeToast("El archivo no es una imagen");
         return;
       }
-
-      
 
       const maxSizeInBytes = 6 * 1024 * 1024; // 6MB
       if (file.size > maxSizeInBytes) {
