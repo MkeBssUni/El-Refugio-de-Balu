@@ -1,9 +1,9 @@
 package com.balu.backend.kernel.templates;
 
-import lombok.AllArgsConstructor;
-
-@AllArgsConstructor
 public class EmailTemplates {
+    private EmailTemplates() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
     public static String mailTemplate(String message){
         return "<!DOCTYPE html>\n" +
                 "<html xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" lang=\"en\">\n" +

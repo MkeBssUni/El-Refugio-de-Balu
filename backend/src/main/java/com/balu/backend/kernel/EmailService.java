@@ -11,10 +11,11 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class EmailService {
     private JavaMailSender javaMailSender;
+    private static final String Utf8Encoding = "UTF-8";
     public void sendEmailNewAccount (String email, String code) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, Utf8Encoding);
             helper.setTo(email);
             helper.setSubject("Activar cuenta");
             helper.setText(EmailTemplates.mailTemplate("Haz sido registrado correctamente en El Refugio de Balu, usa el siguiente código para activar tu cuenta: "+code),true);
@@ -27,7 +28,7 @@ public class EmailService {
     public void sendNewCode(String email, String newPassword){
         try{
             MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, Utf8Encoding);
             helper.setTo(email);
             helper.setSubject("Código de confirmación");
             helper.setText(EmailTemplates.mailTemplate("Hemos recibido una solicitud para cambiar tu contraseña, usa el siguiente código para confirmar tu identidad: "+newPassword),true);
@@ -39,7 +40,7 @@ public class EmailService {
     public void passwordChanged(String email){
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, Utf8Encoding);
             helper.setTo(email);
             helper.setSubject("Cambio de contraseña");
             helper.setText(EmailTemplates.mailTemplate("Tu contraseña ha sido cambiada exitosamente"),true);
@@ -52,7 +53,7 @@ public class EmailService {
     public void sendAdoptionApprovalTemplate(String email, String namePet){
         try{
             MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, Utf8Encoding);
             helper.setTo(email);
             helper.setSubject("¡Felicidades! se acepto tu solicitud de "+namePet);
             helper.setText(EmailTemplates.mailTemplate("Su solicitud de adopción de "+namePet+" ha sido aprobada, por favor comuníquese con nosotros para coordinar la entrega"),true);
@@ -65,7 +66,7 @@ public class EmailService {
     public void finalizeAdoptionTemplate(String email, String namePet){
         try{
             MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, Utf8Encoding);
             helper.setTo(email);
             helper.setSubject("¡Malas noticias!");
             helper.setText(EmailTemplates.mailTemplate("Su solicitud de adopción de "+namePet+" ha sido finalizada"+namePet),true);
@@ -78,7 +79,7 @@ public class EmailService {
     public void activeRequestTemplate(String email,String namePet,int countRequest){
         try{
             MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, Utf8Encoding);
             helper.setTo(email);
             helper.setSubject("¡Ven a revisar!");
             helper.setText(EmailTemplates.mailTemplate("Tienes "+countRequest+" solicitudes de adopción de "+namePet+" que necesitas revisar"),true);
@@ -91,7 +92,7 @@ public class EmailService {
     public void sendPetRejectedTemplate(String email, String petName){
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, Utf8Encoding);
             helper.setTo(email);
             helper.setSubject("Mascota dada de baja");
             helper.setText(EmailTemplates.mailTemplate("La mascota "+petName+" ha sido dada de baja de nuestro sistema"),true);
@@ -103,7 +104,7 @@ public class EmailService {
     public void sendNotificationNewComment(String email, String petName){
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, Utf8Encoding);
             helper.setTo(email);
             helper.setSubject("¡Nuevo comentario!");
             helper.setText(EmailTemplates.mailTemplate(petName+" tiene nuevos comentarios"),true);
@@ -115,7 +116,7 @@ public class EmailService {
     public void sendPetDischargeRequest(String email, String petName){
         try{
             MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, Utf8Encoding);
             helper.setTo(email);
             helper.setSubject("Solicitud de baja");
             helper.setText(EmailTemplates.mailTemplate("El dueño de "+petName+ "ha solicitado dar de baja a la mascota, atiende a su petición lo más pronto posible"),true);
@@ -127,7 +128,7 @@ public class EmailService {
     public void requestChangesOrAprove(String email, String message){
         try{
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "utf-8");
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, Utf8Encoding);
             helper.setTo(email);
             helper.setSubject("Solicitud de cambios");
             helper.setText(EmailTemplates.mailTemplate(message),true);
