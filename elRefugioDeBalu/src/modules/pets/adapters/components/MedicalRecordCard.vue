@@ -316,7 +316,6 @@ export default {
     }
 }
 </script>
-
 <style scoped>
 .add-badge-btn {
     border-color: #0c717a;
