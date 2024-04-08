@@ -69,29 +69,17 @@
           </b-table>
         </b-col>
       </b-row>
-      <b-row class="pt-2">
-        <b-col cols="12">
-          <b-row class="justify-content-center">
-            <b-col cols="6" md="4" class="pt-0 pt-md-3">
-              <b-form-select
-                :options="options"
-                v-model="size"
-                class="form-select"
-                @change="getAdoptionByGeneralPaged"
-              ></b-form-select>
-            </b-col>
-          </b-row>
-          <br />
-          <b-pagination
-            pills
-            v-model="page"
-            :total-rows="adoptions.length"
-            :per-page="size"
-            align="center"
-          >
-          </b-pagination>
-        </b-col>
-      </b-row>
+      <b-row class="px-4">
+                <b-col cols="12" class="d-flex align-items-center">
+                    <label for="perPage">Selecciona la cantidad de registros que deseas mostrar:</label>
+                    <b-form-select :options="options" v-model="size" class="ms-3 my-3 form-select" style="width: 80px"
+                        @change="getAdoptionByGeneralPaged()"></b-form-select>
+                </b-col>
+                <b-col cols="12" class="mt-1">
+                    <b-pagination pills v-model="page" :total-rows="total" :per-page="size" align="center">
+                    </b-pagination>
+                </b-col>
+            </b-row>
     </b-container>
   </div>
 </template>
@@ -115,6 +103,7 @@ export default {
       options: [1, 5, 10, 20, 50],
       size: 10,
       page: 1,
+      total: 0,
       fields: [
         { key: "specie", label: "Especie", sortable: true },
         { key: "petName", label: "Nombre mascota", sortable: true },

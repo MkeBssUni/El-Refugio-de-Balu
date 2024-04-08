@@ -129,7 +129,7 @@ const routes = [
           ),
       },
       {
-        path: "/adoptionList",
+        path: "/moderated/adoptionList",
         name: "adoptionList",
         meta: {
           title: "Solicitudes de adopción",
