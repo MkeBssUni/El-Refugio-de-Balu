@@ -37,7 +37,7 @@
             <b-row>
               <b-col cols="12" sm="12" lg="5" md="5">
                 <img
-                :src="imgGender"
+                  :src="imgGender"
                   alt="Imagen de perfil"
                   class="image-pet"
                 />
@@ -65,7 +65,8 @@
                       </b-col>
                       <b-col cols="12" sm="12" lg="6" md="6" xl="6">
                         <b-card-text>
-                          <b>Dirección:</b>&nbsp;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean porta
+                          <b>Dirección:</b>&nbsp;Lorem ipsum dolor sit amet,
+                          consectetur adipiscing elit. Aenean porta
                         </b-card-text>
                       </b-col>
                     </b-row>
@@ -94,7 +95,7 @@
                 >Lugar en el que vivira la mascota (casa)</b-card-text
               >
               <img
-              :src="base64ToImage(requestAdoption.requestImages[1].image)"
+                :src="base64ToImage(requestAdoption.requestImages[1].image)"
                 class="homePhotos"
               />
             </b-card-body>
@@ -103,7 +104,7 @@
                 >Lugar en el que jugará la mascota (casa)</b-card-text
               >
               <img
-              :src="base64ToImage(requestAdoption.requestImages[2].image)"
+                :src="base64ToImage(requestAdoption.requestImages[2].image)"
                 class="homePhotos"
               />
             </b-card-body>
@@ -249,7 +250,7 @@
 <script>
 import Swal from "sweetalert2";
 import perroChato from "@/assets/imgs/perroChato1.gif";
-import female from "@/assets/imgs/female.png";
+import female from "@/assets/imgs/female.jpg";
 import instance from "../../../../config/axios";
 import { decrypt, encrypt } from "../../../../kernel/hashFunctions";
 import {
@@ -257,7 +258,7 @@ import {
   weightUnits,
   lifeStages,
   ageUnits,
-  gender
+  gender,
 } from "../../../../kernel/data/mappingDictionaries";
 
 export default {
@@ -294,7 +295,7 @@ export default {
       }
     },
     goBack() {
-      this.$router.go(-1);
+      this.$router.push("/moderated/adoptionList");
     },
     mapSize(size) {
       return sizes[size] || size;
@@ -305,7 +306,7 @@ export default {
     mapweightUnits(weightUnit) {
       return weightUnits[weightUnit] || weightUnit;
     },
-    mapGender(genderpet){
+    mapGender(genderpet) {
       return gender[genderpet] || genderpet;
     },
     mapageUnits(ageUnit) {
@@ -377,6 +378,7 @@ export default {
       // Retornar la URL de la imagen
       return url;
     },
+    async changeStatus() {},
     async getAdoption() {
       try {
         Swal.fire({
@@ -458,7 +460,7 @@ export default {
           id: idPet,
         });
         this.credentialPet = response.data.data;
-        console.log(this.credentialPet)
+        console.log(this.credentialPet);
       } catch (error) {
         Swal.fire({
           title: "Error",
@@ -473,17 +475,36 @@ export default {
         });
       }
     },
-    adopted(){
-        this.typeState = "aprobar al adoptante"
-        this.statu = "ADOPTED"	
-        this.changeStatus();
+    adopted() {
+      this.typeState = "aprobar al adoptante";
+      this.statu = "ADOPTED";
+      this.changeStatus();
     },
-    closed(){
-      this.typeState = "finalizar la solicitud al adoptante"
-      this.statu = "CLOSED"
-      this.changeStatus();  
+    closed() {
+      this.typeState = "finalizar la solicitud al adoptante";
+      this.statu = "CLOSED";
+      this.changeStatus();
+    },
+    async changeAdopted() {
+      try {
+        let response = instance.put("/pet/adoption", {
+          pet: localStorage.getItem("petId"),
+          adoptant: this.requestAdoption.user.id,
+          moderator: localStorage.getItem("userId"),
+        });
+        if (!response.error) {
+        }
+      } catch (error) {
+        Swal.fire({
+          title: "Ocurrio un error",
+          text: "Cambio el estado no se pudo enviar correctamente",
+          icon: "error",
+          showConfirmButton: true,
+        });
+      }
     },
     async changeStatus() {
+      console.log(this.statu);
       Swal.fire({
         title: `¿Estás seguro de  ${this.typeState} `,
         text: "Una vez enviada no podrá ser modificada",
@@ -509,10 +530,20 @@ export default {
               adoptionId: localStorage.getItem("adoptionId"),
               status: this.statu,
             });
+            console.log(response);
+            if (this.statu === "ADOPTED") {
+              let response = instance.put("/pet/adoption", {
+                pet: localStorage.getItem("petId"),
+                adoptant: this.requestAdoption.user.id,
+                moderator: localStorage.getItem("userId"),
+              });
+            }
             if (!response.error) {
               Swal.fire({
-                title: "Solicitud ha sido enviada",
-                text: "Tu solicitud ha cambiado de estado correctamente",
+                title: `Solicitud ha sido ${
+                  this.typeState === "ADOPTED" ? "aprobada" : "finalizada"
+                }`,
+                text: "La solicitud ha cambiado de estado correctamente",
                 icon: "success",
                 showConfirmButton: true,
               }).then((result) => {
@@ -539,6 +570,7 @@ export default {
     },
     async getDetails() {
       console.log("Aqui info del usuario");
+      console.log(this.requestAdoption.user.id);
       // try {
       //   const response = await instance.post("/person/details", {
       //     userId: await encrypt(this.requestAdoption.user.id),
@@ -550,6 +582,8 @@ export default {
       //   this.information.user.username = await decrypt(
       //     this.information.user.username
       //   );
+      //   console.log(this.information);
+
       //   swal.close();
       // } catch (error) {
       //   Swal
@@ -568,60 +602,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.target {
-  background-image: url("../../../../assets/imgs/pawBackground.jpg") !important;
-  background-size: cover;
-  background-position: center;
-  box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px,
-    rgba(17, 17, 26, 0.05) 0px 8px 32px;
-}
-
-.image-pet {
-  width: 100%;
-  height: 100%;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
-  transition: transform 0.3s ease; /* Agrega una transición suave para el efecto de zoom */
-  object-fit: cover ;
-}
-
-/* Cuando el mouse pasa sobre la imagen */
-.image-pet:hover {
-  transform: scale(1.1); /* Aumenta el tamaño de la imagen al 110% */
-}
-
-.information-pet {
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
-  transition: transform 0.3s ease; /* Agrega una transición suave para el efecto de zoom */
-}
-
-.information-pet:hover {
-  transform: scale(1.1); /* Aumenta el tamaño de la imagen al 110% */
-}
-
-.box-shadow-pretty {
-  box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px,
-    rgba(17, 17, 26, 0.05) 0px 8px 32px;
-}
-
-.my-line {
-  border: none;
-  height: 2px;
-  background-color: black;
-}
-
-.homePhotos {
-  width: 55%;
-  height: 160%;
-  border-radius: 15px;
-  object-fit: cover ;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
-  transition: transform 0.3s ease; /* Agrega una transición suave para el efecto de zoom */
-}
-
-/* Cuando el mouse pasa sobre la imagen */
-.homePhotos:hover {
-  transform: scale(1.1); /* Aumenta el tamaño de la imagen al 110% */
-}
-</style>

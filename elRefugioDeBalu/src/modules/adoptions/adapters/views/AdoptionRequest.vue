@@ -47,7 +47,7 @@
                 class="px-2 d-none d-md-inline-block"
               >
                 Visualizar
-                <b-icon icon="info-circle" font-scale="1"></b-icon>
+                <b-icon icon="card-heading" font-scale="1.5"></b-icon>
               </b-button>
               <b-button
                 pill
