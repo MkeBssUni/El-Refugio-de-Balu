@@ -57,7 +57,7 @@ public class FavoritePetService {
         Long userId = decryptId(dto.getUser());
         if (userId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
         Optional<User> optionalUser = userRepository.findById(userId);
-        if (!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        if (optionalUser.isEmpty()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
         User user = optionalUser.get();
 
         Page<IFavoritePetsView> favoritePets = favoritePetRepository.findByUserPaged(user.getId(), dto.getSearchValue(), pageable);
@@ -86,13 +86,13 @@ public class FavoritePetService {
         Long petId = decryptId(dto.getPet());
         if (petId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
         Optional<Pet> optionalPet = petRepository.findById(petId);
-        if (!optionalPet.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        if (optionalPet.isEmpty()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
         Pet pet = optionalPet.get();
 
         Long userId = decryptId(dto.getUser());
         if (userId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
         Optional<User> optionalUser = userRepository.findById(userId);
-        if (!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        if (optionalUser.isEmpty()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
         User user = optionalUser.get();
 
         if (petRepository.existsByIdAndOwner(pet.getId(), user)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_USER.name());
@@ -116,17 +116,17 @@ public class FavoritePetService {
         Long petId = decryptId(dto.getPet());
         if (petId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
         Optional<Pet> optionalPet = petRepository.findById(petId);
-        if (!optionalPet.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        if (optionalPet.isEmpty()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
         Pet pet = optionalPet.get();
 
         Long userId = decryptId(dto.getUser());
         if (userId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
         Optional<User> optionalUser = userRepository.findById(userId);
-        if (!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        if (optionalUser.isEmpty()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
         User user = optionalUser.get();
 
         Optional<FavoritePet> optionalFavoritePet = favoritePetRepository.findByPetAndUser(pet, user);
-        if (!optionalFavoritePet.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
+        if (optionalFavoritePet.isEmpty()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
         FavoritePet favoritePet = optionalFavoritePet.get();
 
 

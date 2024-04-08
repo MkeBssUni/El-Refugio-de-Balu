@@ -1,7 +1,8 @@
 package com.balu.backend.kernel;
 
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 
 @Data
@@ -23,6 +24,4 @@ public class ResponseApi<T> {
         this.data = data;
         this.status = status;
     }
-
-
 }

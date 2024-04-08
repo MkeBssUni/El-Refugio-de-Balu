@@ -1,7 +1,5 @@
 package com.balu.backend.kernel;
 
-import jakarta.annotation.Resource;
-
 public enum ErrorMessages {
     DUPLICATE_RECORD,
     ROLE_NOT_FOUND,
