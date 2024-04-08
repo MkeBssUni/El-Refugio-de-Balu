@@ -552,11 +552,16 @@ body {
   border: 1px solid #55b3b8 !important;
 }
 
+.border-orange {
+  border: 1px solid #ffb23f !important;
+}
+
+
 .form-badge-container {
   border-radius: 0.5rem; /* bordes redondeados */
   background-color: #f8f9fa; /* un ligero color de fondo */
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.123); /* una sombra suave */
-  max-height: 200px; /* altura máxima */
+  max-height: 140px; /* altura máxima */
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -577,6 +582,7 @@ body {
 }
 
 .input-badge-invalid-feedback {
+  color: #dc3545;
   font-size: 0.875rem;
 }
 
