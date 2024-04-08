@@ -1,5 +1,5 @@
 <template>
-    <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
+    <b-col cols="12" class="px-2 px-sm-4 px-xl-5 mt-4">
         <b-row>
             <b-col cols="10" md="8" lg="6">
                 <b-card bg-variant="card-header-orange" class="py-2 form-card-shadow relative-position form-card-title"
@@ -15,9 +15,9 @@
             <b-col cols="12">
                 <b-card bg-variant="card-content-orange" class="form-card-shadow form-card-content">
                     <b-card-body>
-                        <b-row>
-                            <b-col cols="12" lg="5" xl="4" class="px-3 pt-4">
-                                <b-row class="d-flex justify-content-center">
+                        <b-row class="mt-3">
+                            <b-col cols="12" lg="5" xl="4" class="d-flex align-items-center justify-content-center">
+                                <b-row>
                                     <b-col cols="12" class="position-relative">
                                         <b-img :src="showImg()" class="main-img" alt="Imagen principal seleccionada"
                                             fluid rounded center></b-img>
@@ -32,13 +32,13 @@
                                             <b-icon icon="x" font-scale="5"></b-icon>
                                         </b-button>
                                     </b-col>
-                                    <b-col cols="12" sm="9" md="8" lg="12" class="mt-4">
+                                    <b-col cols="12" class="mt-4">
                                         <b-row class="d-flex justify-content-center">
                                             <b-col cols="3" v-for="(image, index) in form.additionalImages" :key="index"
                                                 class="position-relative d-flex justify-content-center">
                                                 <div class="additional-img-container">
-                                                    <b-img :src="getFile(image)" class="additional-img"
-                                                        alt="Imagen adicional" center></b-img>
+                                                    <b-img :src="image" class="additional-img" alt="Imagen adicional"
+                                                        center></b-img>
                                                 </div>
                                                 <b-button @click="removeAdditionalImg(index)"
                                                     class="btn-remove center-position d-flex align-items-center justify-content-center p-1">
@@ -62,11 +62,11 @@
                                     </b-col>
                                 </b-row>
                             </b-col>
-                            <b-col class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
+                            <b-col class="mt-3 mt-lg-0 d-flex align-items-center">
                                 <b-row>
                                     <b-col cols="12" sm="7" xl="8" class="mt-3 mt-xl-0">
                                         <b-form-group label-for="name">
-                                            <label slot="label">
+                                            <label class="mb-2">
                                                 Ingresa el nombre de la mascota:
                                                 <span class="required-asterisk">*</span>
                                             </label>
@@ -78,13 +78,13 @@
                                     </b-col>
                                     <b-col cols="12" sm="5" xl="4" class="mt-3 mt-xl-0">
                                         <b-form-group label-for="category">
-                                            <label slot="label">
+                                            <label class="mb-2">
                                                 Selecciona su especie:
                                                 <span class="required-asterisk">*</span>
                                             </label>
                                             <b-form-select id="category" v-model="form.category" class="form-select"
                                                 @input="validateInput('category')">
-                                                <option value="0" disabled>Especie...</option>
+                                                <option value="" disabled>Especie...</option>
                                                 <option v-for="category in categories" :key="category.id"
                                                     :value="category.id">
                                                     {{ category.name }}
@@ -97,7 +97,7 @@
                                     </b-col>
                                     <b-col cols="12" sm="7" xl="8" class="mt-3">
                                         <b-form-group label-for="breed">
-                                            <label slot="label">
+                                            <label class="mb-2">
                                                 Ingresa la raza de la mascota: <span class="required-asterisk">*</span>
                                             </label>
                                             <b-form-input id="breed" v-model.trim="form.breed"
@@ -108,7 +108,7 @@
                                     </b-col>
                                     <b-col cols="12" sm="5" xl="4" class="mt-3">
                                         <b-form-group label-for="size">
-                                            <label slot="label">
+                                            <label class="mb-2">
                                                 Selecciona su tamaño: <span class="required-asterisk">*</span>
                                             </label>
                                             <b-form-select id="size" v-model="form.size" @input="validateInput('size')"
@@ -124,7 +124,7 @@
                                     </b-col>
                                     <b-col cols="12" sm="7" xl="8">
                                         <b-form-group label-for="age" class="mt-3">
-                                            <label slot="label">
+                                            <label class="mb-2">
                                                 Ingresa la edad de la mascota: <span class="required-asterisk">*</span>
                                             </label>
                                             <b-row>
@@ -151,7 +151,7 @@
                                     </b-col>
                                     <b-col cols="12" sm="5" xl="4">
                                         <b-form-group label-for="lifeStage" class="mt-3">
-                                            <label slot="label">
+                                            <label class="mb-2">
                                                 Selecciona su etapa: <span class="required-asterisk">*</span>
                                             </label>
                                             <b-form-select id="lifeStage" v-model="form.lifeStage"
@@ -169,7 +169,7 @@
                                     </b-col>
                                     <b-col cols="12" sm="7" xl="8">
                                         <b-form-group label-for="weight" class="mt-3">
-                                            <label slot="label">
+                                            <label class="mb-2">
                                                 Ingresa el peso de la mascota: <span class="required-asterisk">*</span>
                                             </label>
                                             <b-row>
@@ -197,7 +197,7 @@
                                     </b-col>
                                     <b-col cols="12" sm="5" xl="4">
                                         <b-form-group label-for="gender" class="mt-3">
-                                            <label slot="label">
+                                            <label class="mb-2">
                                                 Selecciona su sexo: <span class="required-asterisk">*</span>
                                             </label>
                                             <b-form-select id="gender" v-model="form.gender" class="form-select"
@@ -240,7 +240,7 @@ export default {
                 mainImage: null,
                 additionalImages: [],
                 name: "",
-                category: "0",
+                category: "",
                 breed: "",
                 size: "",
                 age: null,
@@ -312,7 +312,7 @@ export default {
                 })
             }
         },
-        duplicateImg() {
+        duplicateImgError() {
             Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
@@ -325,7 +325,28 @@ export default {
                 timerProgressBar: true,
             });
         },
-        validateMainImage() {
+        loadImgError() {
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Ocurrió un error al cargar la imagen, intenta de nuevo con otra',
+                toast: true,
+                position: 'top-end',
+                timer: 3000,
+                showCancelButton: false,
+                showConfirmButton: false,
+                timerProgressBar: true,
+            });
+        },
+        convertToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const fileReader = new FileReader();
+                fileReader.readAsDataURL(file);
+                fileReader.onload = () => resolve(fileReader.result);
+                fileReader.onerror = (error) => reject(error);
+            });
+        },
+        validateNotNullMainImg() {
             if (!this.form.mainImage) {
                 Swal.fire({
                     icon: 'error',
@@ -343,7 +364,21 @@ export default {
             }
             this.showErrors.mainImage = false;
         },
-        validateMainImageSize(file) {
+        validateImg(file) {
+            if (file.type != "image/jpeg" && file.type != "image/png") {
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'Selecciona una imagen en formato JPG o PNG',
+                    toast: true,
+                    position: 'top-end',
+                    timer: 3000,
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    timerProgressBar: true,
+                });
+                return false;
+            }
             if (file.size > 4000000) {
                 Swal.fire({
                     icon: 'error',
@@ -384,7 +419,7 @@ export default {
                     }
                     break;
                 case "category":
-                    if (this.form.category == "0") {
+                    if (this.form.category == "") {
                         this.errorMessages.category = "Campo obligatorio";
                         this.showErrors.category = true;
                         input.classList.add('is-invalid');
@@ -513,54 +548,55 @@ export default {
             }
         },
         showImg() {
-            if (this.form.mainImage) return URL.createObjectURL(this.form.mainImage);
+            if (this.form.mainImage) return this.form.mainImage;
             return "https://t3.ftcdn.net/jpg/07/01/59/38/240_F_701593826_ojYyX0cKXG3OzhoYkbeesqsQtaA6zBbj.jpg";
         },
         triggerMainImgSelector() {
             this.$refs.mainImageSelector.click();
         },
-        selectImg() {
+        async selectImg() {
             const file = this.$refs.mainImageSelector.files[0];
-            if (file && this.validateMainImageSize(file)) {
-                if (this.form.additionalImages.length > 0) {
-                    const repeated = this.form.additionalImages.some(image => image.name == file.name);
-                    if (repeated) {
-                        this.duplicateImg();
+            if (file && this.validateImg(file)) {
+                try {
+                    const base64Image = await this.convertToBase64(file);                    
+                    if (this.form.additionalImages.includes(base64Image)) {
+                        this.duplicateImgError();                        
                         return;
+                    } else {
+                        this.form.mainImage = base64Image;
                     }
+                } catch (error) {
+                    this.loadImgError();
                 }
-                this.form.mainImage = file;
             }
         },
         unselectImg() {
             this.form.mainImage = null;
         },
-        getFile(file) {
-            return URL.createObjectURL(file);
-        },
         triggerAdditionalImgSelector() {
             this.$refs.additionalImageSelector.click();
         },
-        selectAdditionalImg() {
+        async selectAdditionalImg() {
             const file = this.$refs.additionalImageSelector.files[0];
-            if (file && this.validateMainImageSize(file)) {
-                if (this.form.mainImage && this.form.mainImage.name == file.name) {
-                    this.duplicateImg();
-                    return;
+            if (file && this.validateImg(file)) {
+                try {
+                    const base64Image = await this.convertToBase64(file);
+                    if (base64Image === this.form.mainImage || this.form.additionalImages.includes(base64Image)) {
+                        this.duplicateImgError();
+                        return;
+                    } else {
+                        this.form.additionalImages.push(base64Image);                        
+                    }                  
+                } catch (error) {
+                    this.loadImgError();
                 }
-                const repeated = this.form.additionalImages.some(image => image.name == file.name);
-                if (repeated) {
-                    this.duplicateImg();
-                    return;
-                }
-                this.form.additionalImages.push(file);
             }
         },
         removeAdditionalImg(index) {
             this.form.additionalImages.splice(index, 1);
         },
         validateForm() {
-            this.validateMainImage();
+            this.validateNotNullMainImg();
             this.validateInput('name');
             this.validateInput('category');
             this.validateInput('breed');
@@ -575,6 +611,41 @@ export default {
                 this.showErrors.size || this.showErrors.age || this.showErrors.ageUnit || this.showErrors.lifeStage ||
                 this.showErrors.weight || this.showErrors.weightUnit || this.showErrors.gender) return false;
             return true;
+        },
+        resetForm() {
+            this.form.mainImage = null;
+            this.form.additionalImages = [];
+            this.form.name = "";
+            this.form.category = "";
+            this.form.breed = "";
+            this.form.size = "";
+            this.form.age = null;
+            this.form.ageUnit = "";
+            this.form.lifeStage = "";
+            this.form.weight = null;
+            this.form.weightUnit = "";
+            this.form.gender = "";
+            this.showErrors.mainImage = false;
+            this.showErrors.name = false;
+            this.showErrors.category = false;
+            this.showErrors.breed = false;
+            this.showErrors.size = false;
+            this.showErrors.age = false;
+            this.showErrors.ageUnit = false;
+            this.showErrors.lifeStage = false;
+            this.showErrors.weight = false;
+            this.showErrors.weightUnit = false;
+            this.showErrors.gender = false;
+            this.errorMessages.name = "";
+            this.errorMessages.category = "";
+            this.errorMessages.breed = "";
+            this.errorMessages.size = "";
+            this.errorMessages.age = "";
+            this.errorMessages.ageUnit = "";
+            this.errorMessages.lifeStage = "";
+            this.errorMessages.weight = "";
+            this.errorMessages.weightUnit = "";
+            this.errorMessages.gender = "";
         }
     },
     mounted() {
