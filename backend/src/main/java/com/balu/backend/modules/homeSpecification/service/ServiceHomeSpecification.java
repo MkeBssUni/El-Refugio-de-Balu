@@ -38,7 +38,7 @@ public class ServiceHomeSpecification {
     private final IUserRepository iUserRepository;
 
     @Transactional(rollbackFor = {SQLException.class,Exception.class})
-    public ResponseApi<?> save(SaveHomeDetailsDto dto){
+    public ResponseApi<Boolean> save(SaveHomeDetailsDto dto){
         try{
             if(dto.getIdUser() == null|| validations.isNotBlankString(dto.getIdUser()) || dto.getType() == null || validations.isNotBlankString(dto.getType()) || dto.getNumberOfResidents() == 0) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.MISSING_FIELDS.name());
             HomeTypes homeType;
@@ -73,9 +73,7 @@ public class ServiceHomeSpecification {
                     return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.IMAGE_NOT_SAVED.name());
                 }
             }
-
-
-            return new ResponseApi<>(HttpStatus.CREATED,false,"Adoption request saved successfully");
+            return new ResponseApi<>(true,HttpStatus.CREATED,false,"Adoption request saved successfully");
         }catch (Exception e){
             return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.INTERNAL_ERROR.name());
         }

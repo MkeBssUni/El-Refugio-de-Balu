@@ -45,7 +45,7 @@ public class PersonService {
     private final SmsService smsService;
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseApi<?> publicRegister(PublicRegisterDto dto) throws Exception {
+    public ResponseApi<Boolean> publicRegister(PublicRegisterDto dto) throws Exception {
         if(dto.getUsername() == null || dto.getLastname() == null || dto.getName() == null || dto.getPhoneNumber() == null || dto.getPassword() == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
         if(validations.isNotBlankString(dto.getUsername()) && validations.isNotBlankString(dto.getPassword()) && validations.isNotBlankString((dto.getName())) && validations.isNotBlankString(dto.getLastname()) && validations.isNotBlankString(dto.getPhoneNumber())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
 

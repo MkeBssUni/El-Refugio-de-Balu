@@ -56,7 +56,7 @@ public class PetService {
     private final EmailService emailService;
 
     @Transactional(readOnly = true)
-    public ResponseApi<?> findAllPaged(FindPetsDto dto, Pageable pageable) {
+    public ResponseApi<Page<PetCatalog>> findAllPaged(FindPetsDto dto, Pageable pageable) {
         if (dto.getSize() != null) dto.setSize(dto.getSize().toLowerCase().trim());
         if (dto.getLifeStage() != null) dto.setLifeStage(dto.getLifeStage().toLowerCase().trim());
         if (dto.getGender() != null) {
@@ -117,7 +117,7 @@ public class PetService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseApi<?> findPetDetails(FindPetDetailsDto dto) {
+    public ResponseApi<PetDetails> findPetDetails(FindPetDetailsDto dto) {
         if (dto.getId() == null || validations.isNotBlankString(dto.getId().trim())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
 
         Long petId = decryptId(dto.getId());
@@ -157,7 +157,7 @@ public class PetService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseApi<?> findPetCredentials(String pet) {
+    public ResponseApi<IPetCredentialView> findPetCredentials(String pet) {
         if (pet == null || validations.isNotBlankString(pet.trim())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
         Long petId = decryptId(pet);
         if (petId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
@@ -167,7 +167,7 @@ public class PetService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseApi<?> findMyPets(FindMyPetsDto dto, Pageable pageable) {
+    public ResponseApi<Page<MyPetsCatalog>> findMyPets(FindMyPetsDto dto, Pageable pageable) {
         if (dto.getUser() == null || validations.isNotBlankString(dto.getUser().trim())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
 
         if (dto.getStatus() == null) {
@@ -211,7 +211,7 @@ public class PetService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseApi<?> findNewPetRequests(FindPetRequestsDto dto, Pageable pageable) {
+    public ResponseApi<Page<PetRequestList>> findNewPetRequests(FindPetRequestsDto dto, Pageable pageable) {
         if (dto.getCategory() != null && validations.isNotBlankString(dto.getCategory().trim())) dto.setCategory(null);
         if (dto.getSize() == null) dto.setSize("");
         if (dto.getGender() != null && validations.isNotBlankString(dto.getGender().trim())) dto.setGender(null);
@@ -249,7 +249,7 @@ public class PetService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseApi<?> findMyPetsAsMod(FindMyPetsAsModDto dto, Pageable pageable) {
+    public ResponseApi<Page<MyPetsAsModList>> findMyPetsAsMod(FindMyPetsAsModDto dto, Pageable pageable) {
         if (dto.getUser() == null || validations.isNotBlankString(dto.getUser().trim())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
 
         if (dto.getCategory() != null && validations.isNotBlankString(dto.getCategory().trim())) dto.setCategory(null);
@@ -295,7 +295,7 @@ public class PetService {
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseApi<?> save(SavePetDto dto) {
+    public ResponseApi<Boolean> save(SavePetDto dto) {
         try {
             if (dto.getName() == null || validations.isNotBlankString(dto.getName().trim()) || dto.getGender() == null || validations.isNotBlankString(dto.getGender().trim()) || dto.getBreed() == null || validations.isNotBlankString(dto.getBreed().trim()) || dto.getAge() == 0 || dto.getAgeUnit() == null || validations.isNotBlankString(dto.getAgeUnit().trim()) || dto.getLifeStage() == null || validations.isNotBlankString(dto.getLifeStage().trim()) || dto.getWeight() == null || dto.getWeight() == 0.00 || dto.getWeightUnit() == null || validations.isNotBlankString(dto.getWeightUnit().trim()) || dto.getSize() == null || validations.isNotBlankString(dto.getSize().trim()) || dto.getDescription() == null || validations.isNotBlankString(dto.getDescription().trim()) || dto.getCharacteristics() == null || dto.getCharacteristics().length < 3 || dto.getMainImage() == null || validations.isNotBlankString(dto.getMainImage().trim()) || dto.getCategory() == null || validations.isNotBlankString(dto.getCategory().trim()) || dto.getOwner() == null || validations.isNotBlankString(dto.getOwner().trim()))
                 return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
@@ -372,7 +372,7 @@ public class PetService {
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseApi<?> update(UpdatePetDto dto) {
+    public ResponseApi<Boolean> update(UpdatePetDto dto) {
         try {
             if (dto.getId() == null || validations.isNotBlankString(dto.getId().trim()) || dto.getName() == null || validations.isNotBlankString(dto.getName().trim()) || dto.getGender() == null || validations.isNotBlankString(dto.getGender().trim()) || dto.getBreed() == null || validations.isNotBlankString(dto.getBreed().trim()) || dto.getAge() == 0 || dto.getAgeUnit() == null || validations.isNotBlankString(dto.getAgeUnit().trim()) || dto.getLifeStage() == null || validations.isNotBlankString(dto.getLifeStage().trim()) || dto.getWeight() == null || dto.getWeight() == 0.00 || dto.getWeightUnit() == null || validations.isNotBlankString(dto.getWeightUnit().trim()) || dto.getSize() == null || validations.isNotBlankString(dto.getSize().trim()) || dto.getDescription() == null || validations.isNotBlankString(dto.getDescription().trim()) || dto.getCharacteristics() == null || dto.getCharacteristics().length < 3 || dto.getMainImage() == null || validations.isNotBlankString(dto.getMainImage().trim()) || dto.getCategory() == null || validations.isNotBlankString(dto.getCategory().trim()) || dto.getOwner() == null || validations.isNotBlankString(dto.getOwner().trim()))
                 return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
@@ -448,7 +448,7 @@ public class PetService {
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseApi<?> select(SelectPetDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+    public ResponseApi<Boolean> select(SelectPetDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         if (dto.getPet() == null || validations.isNotBlankString(dto.getPet().trim()) || dto.getUser() == null || validations.isNotBlankString(dto.getUser().trim()) || dto.getStatus() == null || validations.isNotBlankString(dto.getStatus().trim()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
 
@@ -487,7 +487,7 @@ public class PetService {
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseApi<?> completeAdoption(CompleteAdoptionDto dto) {
+    public ResponseApi<Boolean> completeAdoption(CompleteAdoptionDto dto) {
         if (dto.getPet() == null || validations.isNotBlankString(dto.getPet().trim()) || dto.getAdoptant() == null || validations.isNotBlankString(dto.getAdoptant().trim()) || dto.getModerator() == null || validations.isNotBlankString(dto.getModerator().trim()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
         System.out.println(dto);
@@ -530,7 +530,7 @@ public class PetService {
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseApi<?> end(EndPetRequestDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+    public ResponseApi<Boolean> end(EndPetRequestDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         if (dto.getPet() == null || validations.isNotBlankString(dto.getPet().trim()) || dto.getUser() == null || validations.isNotBlankString(dto.getUser().trim()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
 
@@ -562,7 +562,7 @@ public class PetService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseApi<?> findComments(FindCommentsDto dto) {
+    public ResponseApi<List<ICommentView>> findComments(FindCommentsDto dto) {
         if (dto.getPet() == null || validations.isNotBlankString(dto.getPet().trim()) || dto.getUser() == null || validations.isNotBlankString(dto.getUser())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
 
         Long petId = decryptId(dto.getPet());
@@ -590,7 +590,7 @@ public class PetService {
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseApi<?> comment(CommentPetDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+    public ResponseApi<Boolean> comment(CommentPetDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         if (dto.getPet() == null || validations.isNotBlankString(dto.getPet().trim()) || dto.getUser() == null || validations.isNotBlankString(dto.getUser().trim()) || dto.getComment() == null || validations.isNotBlankString(dto.getComment().trim()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
 
@@ -626,7 +626,7 @@ public class PetService {
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseApi<?> cancel(CancelDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+    public ResponseApi<Boolean> cancel(CancelDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         if (dto.getPet() == null || validations.isNotBlankString(dto.getPet().trim()) || dto.getOwner() == null || validations.isNotBlankString(dto.getOwner().trim()) || dto.getCancelReason() == null || validations.isNotBlankString(dto.getCancelReason().trim()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
 

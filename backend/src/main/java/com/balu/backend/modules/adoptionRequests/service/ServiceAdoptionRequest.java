@@ -21,6 +21,7 @@ import com.balu.backend.modules.users.model.IUserRepository;
 import com.balu.backend.modules.users.model.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -97,7 +98,7 @@ public class ServiceAdoptionRequest {
     }
 
     @Transactional(rollbackFor = {SQLException.class,Exception.class})
-    public ResponseApi<?> save(SaveAdoptionRequestDto dto){
+    public ResponseApi<Boolean> save(SaveAdoptionRequestDto dto){
         try{
             Long userId = decryptId(dto.getUser());
             Long petId = decryptId(dto.getPet());
@@ -201,12 +202,12 @@ public class ServiceAdoptionRequest {
             logService.saveLog("New adoption request registered: "+saveAdoption.getId(), LogTypes.INSERT,"ADOPTIONREQUEST | ADOPTIONREQUESTIMAGES");
             return new ResponseApi<>(HttpStatus.CREATED,false,"Adoption request saved successfully");
         }catch (Exception e){
-            return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name());
+            return new ResponseApi<>(true,HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name());
         }
     }
 
     @Transactional(rollbackFor = {SQLException.class,Exception.class})
-    public ResponseApi<?> changeStatusBygeneral(GetByIdAdoptionRequestDto dto){
+    public ResponseApi<Integer> changeStatusBygeneral(GetByIdAdoptionRequestDto dto){
         try{
             if(dto.getIdAdoption() == null || validations.isNotBlankString(dto.getIdAdoption()))
                 return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.MISSING_FIELDS.name());
@@ -230,7 +231,7 @@ public class ServiceAdoptionRequest {
     }
 
     @Transactional(rollbackFor = {SQLException.class,Exception.class})
-    public ResponseApi<?> changeStatus(ChangeStatusAdoptionRequestDto dto){
+    public ResponseApi<Integer> changeStatus(ChangeStatusAdoptionRequestDto dto){
         try{
             if(dto.getAdoptionId() == null || validations.isNotBlankString(dto.getAdoptionId())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.MISSING_FIELDS.name());
             Long idAdoption = decryptId(dto.getAdoptionId());
@@ -270,10 +271,7 @@ public class ServiceAdoptionRequest {
     public boolean duplicateRequest(Long userId, Long petId){
         try{
             Optional<AdoptionRequest> existingRequest = iAdoptionRequestRepository.findByUser_IdAndPet_Id(userId, petId);
-            if (existingRequest.isPresent()) {
-                return true;
-            }
-            return false;
+            return existingRequest.isPresent();
         }catch (Exception e){
             return false;
         }

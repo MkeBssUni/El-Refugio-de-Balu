@@ -20,8 +20,8 @@ public class HomeSpecificationController {
     private final ServiceHomeSpecification serviceHomeSpecification;
 
     @PostMapping("/")
-    public ResponseEntity<ResponseApi<?>> save (@RequestBody SaveHomeDetailsDto dto){
-        ResponseApi<?> response = serviceHomeSpecification.save(dto);
+    public ResponseEntity<ResponseApi<Boolean>> save (@RequestBody SaveHomeDetailsDto dto){
+        ResponseApi<Boolean> response = serviceHomeSpecification.save(dto);
         return ResponseEntity.status(response.getStatus()).body(response);
 
     }
