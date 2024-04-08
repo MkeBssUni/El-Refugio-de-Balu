@@ -2,7 +2,7 @@ package com.balu.backend.kernel;
 import java.util.Base64;
 import java.util.regex.Pattern;
 public class Validations {
-    private static final Pattern BASE64_PATTERN = Pattern.compile("data:image/(png|jpeg|jpg);base64,([\\w\\d+/=]+)");
+    private static final Pattern BASE64_PATTERN = Pattern.compile("data:image/(png|jpeg|jpg);base64,([\\w/+=]+)");
     private static final String JPEG_HEADER = "data:image/jpeg;base64,";
     private static final String PNG_HEADER = "data:image/png;base64,";
 
