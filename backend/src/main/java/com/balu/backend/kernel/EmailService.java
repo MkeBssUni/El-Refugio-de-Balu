@@ -17,7 +17,7 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
             helper.setTo(email);
             helper.setSubject("Activar cuenta");
-            helper.setText(EmailTemplates.newAccountTemplate(code),true);
+            helper.setText(EmailTemplates.mailTemplate("Haz sido registrado correctamente en El Refugio de Balu, usa el siguiente código para activar tu cuenta: "+code),true);
             javaMailSender.send(message);
         } catch (Exception e) {
             e.printStackTrace();
@@ -30,7 +30,7 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
             helper.setTo(email);
             helper.setSubject("Código de confirmación");
-            helper.setText(EmailTemplates.newPasswordTemplate(newPassword),true);
+            helper.setText(EmailTemplates.mailTemplate("Hemos recibido una solicitud para cambiar tu contraseña, usa el siguiente código para confirmar tu identidad: "+newPassword),true);
             javaMailSender.send(message);
         }catch (Exception e) {
             e.printStackTrace();
@@ -42,7 +42,7 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
             helper.setTo(email);
             helper.setSubject("Cambio de contraseña");
-            helper.setText(EmailTemplates.PasswordChangedTemplate(),true);
+            helper.setText(EmailTemplates.mailTemplate("Tu contraseña ha sido cambiada exitosamente"),true);
             javaMailSender.send(message);
         } catch (Exception e) {
             e.printStackTrace();
@@ -55,7 +55,7 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
             helper.setTo(email);
             helper.setSubject("¡Felicidades! se acepto tu solicitud de "+namePet);
-            helper.setText(EmailTemplates.adoptionApprovalTemplate(namePet),true);
+            helper.setText(EmailTemplates.mailTemplate("Su solicitud de adopción de "+namePet+" ha sido aprobada, por favor comuníquese con nosotros para coordinar la entrega"),true);
             javaMailSender.send(message);
         }catch (Exception e){
             e.printStackTrace();
@@ -67,8 +67,8 @@ public class EmailService {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
             helper.setTo(email);
-            helper.setSubject("¡Malas noticias! se finalizo tu solicitud de "+namePet);
-            helper.setText(EmailTemplates.finalizeAdoptionTemplate(namePet),true);
+            helper.setSubject("¡Malas noticias!");
+            helper.setText(EmailTemplates.mailTemplate("Su solicitud de adopción de "+namePet+" ha sido finalizada"+namePet),true);
             javaMailSender.send(message);
         }catch (Exception e){
             e.printStackTrace();
@@ -80,8 +80,8 @@ public class EmailService {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
             helper.setTo(email);
-            helper.setSubject("¡Ven a revisar! tienes solicitudes");
-            helper.setText(EmailTemplates.ActiveRequestTemplate(countRequest,namePet),true);
+            helper.setSubject("¡Ven a revisar!");
+            helper.setText(EmailTemplates.mailTemplate("Tienes "+countRequest+" solicitudes de adopción de "+namePet+" que necesitas revisar"),true);
             javaMailSender.send(message);
         }catch (Exception e){
             e.printStackTrace();
@@ -94,7 +94,7 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
             helper.setTo(email);
             helper.setSubject("Mascota dada de baja");
-            helper.setText(EmailTemplates.PetRejectedTemplate(petName),true);
+            helper.setText(EmailTemplates.mailTemplate("La mascota "+petName+" ha sido dada de baja de nuestro sistema"),true);
             javaMailSender.send(message);
         }catch (Exception e){
             e.printStackTrace();
@@ -106,7 +106,7 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
             helper.setTo(email);
             helper.setSubject("¡Nuevo comentario!");
-            helper.setText(EmailTemplates.newComment(petName),true);
+            helper.setText(EmailTemplates.mailTemplate(petName+" tiene nuevos comentarios"),true);
             javaMailSender.send(message);
         }catch (Exception e){
             e.printStackTrace();
@@ -118,7 +118,7 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
             helper.setTo(email);
             helper.setSubject("Solicitud de baja");
-            helper.setText(EmailTemplates.requestPetDischarge(petName),true);
+            helper.setText(EmailTemplates.mailTemplate("El dueño de "+petName+ "ha solicitado dar de baja a la mascota, atiende a su petición lo más pronto posible"),true);
             javaMailSender.send(message);
         }catch (Exception e){
             e.printStackTrace();
@@ -130,7 +130,7 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "utf-8");
             helper.setTo(email);
             helper.setSubject("Solicitud de cambios");
-            helper.setText(EmailTemplates.requestChangesOrAprove(message),true);
+            helper.setText(EmailTemplates.mailTemplate(message),true);
             javaMailSender.send(mimeMessage);
         }catch (Exception e){
             e.printStackTrace();
