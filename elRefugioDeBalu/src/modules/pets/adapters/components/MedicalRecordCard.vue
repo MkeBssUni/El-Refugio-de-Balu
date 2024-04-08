@@ -66,10 +66,7 @@
                                             <label class="mb-2" for="disease">Escribe las enfermedades de la mascota (si
                                                 aplica):</label>
                                         </b-col>
-                                        <b-col cols="10" sm="8">
-                                            <div v-if="showErrors.disease"
-                                                class="text-danger input-badge-invalid-feedback mb-2">{{
-                                                    errorMessages.disease }}</div>
+                                        <b-col cols="10" sm="8">                                            
                                             <b-form-input id="disease" v-model.trim="disease"
                                                 placeholder="Enfermedad o padecimiento..."
                                                 @input="validateField('disease')" @keyup.enter="addDisease()">
@@ -95,6 +92,9 @@
                                                         font-scale="1.4"></b-icon>
                                                 </b-badge>
                                             </div>
+                                            <div v-if="showErrors.disease" class="input-badge-invalid-feedback mt-1">
+                                                {{ errorMessages.disease }}
+                                            </div>
                                         </b-col>
                                     </b-row>
                                 </b-form-group>
@@ -106,10 +106,7 @@
                                             <label class="mb-2" for="allergie">Escribe las alergias de la mascota (si
                                                 aplica):</label>
                                         </b-col>
-                                        <b-col cols="10" sm="8">
-                                            <div v-if="showErrors.allergie"
-                                                class="text-danger input-badge-invalid-feedback mb-2">{{
-                                                    errorMessages.allergie }}</div>
+                                        <b-col cols="10" sm="8">                                            
                                             <b-form-input id="allergie" v-model.trim="allergie"
                                                 placeholder="Alergia o intolerancia..."
                                                 @input="validateField('allergie')" @keyup.enter="addAllergie()">
@@ -134,6 +131,9 @@
                                                     <b-icon icon="x" @click="removeAllergie(index)"
                                                         font-scale="1.4"></b-icon>
                                                 </b-badge>
+                                            </div>
+                                            <div v-if="showErrors.allergie" class="input-badge-invalid-feedback mt-1">
+                                                {{ errorMessages.allergie }}
                                             </div>
                                         </b-col>
                                     </b-row>
