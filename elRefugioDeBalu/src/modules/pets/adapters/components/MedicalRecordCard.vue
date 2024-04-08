@@ -1,5 +1,5 @@
 <template>
-    <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
+    <b-col cols="12" class="px-2 px-sm-4 px-xl-5 mt-4">
         <b-row>
             <b-col cols="10" md="8" lg="6">
                 <b-card bg-variant="card-header-blue" class="py-2 card-shadow relative-position form-card-title"
@@ -15,7 +15,7 @@
             <b-col cols="12">
                 <b-card bg-variant="card-content-blue" class="card-shadow form-card-content">
                     <b-card-body>
-                        <b-row>
+                        <b-row class="mt-3">
                             <b-col cols="12">
                                 <label class="mb-3">
                                     Selecciona las opciones que apliquen a la mascota:
@@ -66,17 +66,14 @@
                                             <label class="mb-2" for="disease">Escribe las enfermedades de la mascota (si
                                                 aplica):</label>
                                         </b-col>
-                                        <b-col cols="10" sm="8">
-                                            <div v-if="showErrors.disease"
-                                                class="text-danger input-badge-invalid-feedback mb-2">{{
-                                                    errorMessages.disease }}</div>
+                                        <b-col cols="10" sm="8">                                            
                                             <b-form-input id="disease" v-model.trim="disease"
                                                 placeholder="Enfermedad o padecimiento..."
-                                                @input="validateInput('disease')" @keyup.enter="addDisease()">
+                                                @input="validateField('disease')" @keyup.enter="addDisease()">
                                             </b-form-input>
                                         </b-col>
                                         <b-col cols="2" sm="4" class="align-self-end mb-1 mb-sm-0">
-                                            <b-button variant="dark-gray" type="button"
+                                            <b-button variant="dark-blue" type="button"
                                                 class="d-flex align-items-center justify-content-between add-badge-btn"
                                                 @click="addDisease()">
                                                 <span
@@ -95,6 +92,9 @@
                                                         font-scale="1.4"></b-icon>
                                                 </b-badge>
                                             </div>
+                                            <div v-if="showErrors.disease" class="input-badge-invalid-feedback mt-1">
+                                                {{ errorMessages.disease }}
+                                            </div>
                                         </b-col>
                                     </b-row>
                                 </b-form-group>
@@ -106,17 +106,14 @@
                                             <label class="mb-2" for="allergie">Escribe las alergias de la mascota (si
                                                 aplica):</label>
                                         </b-col>
-                                        <b-col cols="10" sm="8">
-                                            <div v-if="showErrors.allergie"
-                                                class="text-danger input-badge-invalid-feedback mb-2">{{
-                                                    errorMessages.allergie }}</div>
+                                        <b-col cols="10" sm="8">                                            
                                             <b-form-input id="allergie" v-model.trim="allergie"
                                                 placeholder="Alergia o intolerancia..."
-                                                @input="validateInput('allergie')" @keyup.enter="addAllergie()">
+                                                @input="validateField('allergie')" @keyup.enter="addAllergie()">
                                             </b-form-input>
                                         </b-col>
                                         <b-col cols="2" sm="4" class="align-self-end mb-1 mb-sm-0">
-                                            <b-button variant="dark-gray" type="button"
+                                            <b-button variant="dark-blue" type="button"
                                                 class="d-flex align-items-center justify-content-between add-badge-btn"
                                                 @click="addAllergie()">
                                                 <span
@@ -135,8 +132,26 @@
                                                         font-scale="1.4"></b-icon>
                                                 </b-badge>
                                             </div>
+                                            <div v-if="showErrors.allergie" class="input-badge-invalid-feedback mt-1">
+                                                {{ errorMessages.allergie }}
+                                            </div>
                                         </b-col>
                                     </b-row>
+                                </b-form-group>
+                            </b-col>
+                        </b-row>
+                        <b-row>
+                            <b-col cols="12" class="mt-4">
+                                <b-form-group>
+                                    <label for="observations" class="mb-2">
+                                        Agrega algún comentario adicional respecto a la salud de tu mascota:
+                                    </label>
+                                    <b-form-textarea id="observations" v-model.trim="form.observations" rows="2" max-rows="4"
+                                        placeholder="Comentario adicional..." @input="validateField('observations')">
+                                    </b-form-textarea>
+                                    <b-form-invalid-feedback v-if="showErrors.observations">
+                                        {{ errorMessages.observations }}
+                                    </b-form-invalid-feedback>
                                 </b-form-group>
                             </b-col>
                         </b-row>
@@ -161,14 +176,17 @@ export default {
                 microchip: false,
                 diseases: [],
                 allergies: [],
+                observations: "",
             },
             showErrors: {
                 disease: false,
                 allergie: false,
+                observations: false,
             },
             errorMessages: {
                 disease: "",
                 allergie: "",
+                observations: "",
             }
         }
     },
@@ -198,7 +216,7 @@ export default {
         removeAllergie(index) {
             this.form.allergies.splice(index, 1);
         },
-        validateInput(field) {
+        validateField(field) {
             const input = document.getElementById(field);
             switch (field) {
                 case 'disease':
@@ -251,8 +269,55 @@ export default {
                         input.classList.remove('is-invalid');
                     }
                     break;
+                case 'observations':
+                    if (this.form.observations) {
+                        if (this.form.observations.length < 30 || this.form.observations.length > 500) {
+                            this.errorMessages.observations = 'El comentario debe tener entre 30 y 500 caracteres';
+                            this.showErrors.observations = true;
+                            input.classList.add('is-invalid');
+                        } else {
+                            this.errorMessages.observations = "";
+                            this.showErrors.observations = false;
+                            input.classList.remove('is-invalid');
+                        }
+                    } else {
+                        this.errorMessages.observations = "";
+                        this.showErrors.observations = false;
+                        input.classList.remove('is-invalid');
+                    }
+                    break;
+                default:
+                    break;
             }
         },
+        resetForm() {
+            this.form = {
+                vaccinated: false,
+                dewormed: false,
+                sterilised: false,
+                microchip: false,
+                diseases: [],
+                allergies: [],
+                observations: "",
+            };
+            this.disease = "";
+            this.allergie = "";
+            this.showErrors = {
+                disease: false,
+                allergie: false,
+                observations: false,
+            };
+            this.errorMessages = {
+                disease: "",
+                allergie: "",
+                observations: "",
+            };        
+        }
     }
 }
 </script>
+<style scoped>
+.add-badge-btn {
+    border-color: #0c717a;
+}
+</style>

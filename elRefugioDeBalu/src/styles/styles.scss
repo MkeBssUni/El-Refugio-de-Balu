@@ -11,14 +11,14 @@ $theme-colors: (
   "card-content-blue": #67ccd3,
   "card-header-blue": #4ca7ac,
   "orange": #FFBC58,
-  "dark-orange": #FF9900,
+  "dark-orange": #fcad37,
   "secondary-orange": #EE7240,
   "dark-secondary-orange": #E84E0F,
   "blue": #5EBFC5,
   "dark-blue": #118A95,
   "secondary-blue": #4DB8C0,
   "dark-secondary-blue": #00737E,
-  "gray": #F2F2F2,
+  "gray": #F2F2F2,  
   "dark-gray": #e9e9e9,
   "secondary-gray": #727272,
   "dark-gray-input": #686868,
@@ -84,8 +84,8 @@ $theme-colors: (
 
 .badge-orange-outline {
   background-color: rgba(255, 255, 255, 0);
-  color: #E84E0F !important;
-  border: 2px solid #E84E0F !important;
+  color: #e9a135 !important;
+  border: 2px solid #ffb23f !important;
   font-size: 0.86rem !important;
   letter-spacing: 1px !important;
   border-radius: 120px !important;
