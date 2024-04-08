@@ -1,5 +1,5 @@
 <template>
-    <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
+    <b-col cols="12" class="px-2 px-sm-4 px-xl-5 mt-4">
         <b-row>
             <b-col cols="10" md="8" lg="6">
                 <b-card bg-variant="card-header-blue" class="py-2 card-shadow relative-position form-card-title"
@@ -15,7 +15,7 @@
             <b-col cols="12">
                 <b-card bg-variant="card-content-blue" class="card-shadow form-card-content">
                     <b-card-body>
-                        <b-row>
+                        <b-row class="mt-3">
                             <b-col cols="12">
                                 <label class="mb-3">
                                     Selecciona las opciones que apliquen a la mascota:
@@ -76,7 +76,7 @@
                                             </b-form-input>
                                         </b-col>
                                         <b-col cols="2" sm="4" class="align-self-end mb-1 mb-sm-0">
-                                            <b-button variant="dark-gray" type="button"
+                                            <b-button variant="dark-blue" type="button"
                                                 class="d-flex align-items-center justify-content-between add-badge-btn"
                                                 @click="addDisease()">
                                                 <span
@@ -116,7 +116,7 @@
                                             </b-form-input>
                                         </b-col>
                                         <b-col cols="2" sm="4" class="align-self-end mb-1 mb-sm-0">
-                                            <b-button variant="dark-gray" type="button"
+                                            <b-button variant="dark-blue" type="button"
                                                 class="d-flex align-items-center justify-content-between add-badge-btn"
                                                 @click="addAllergie()">
                                                 <span
@@ -257,4 +257,8 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+.add-badge-btn {
+    border-color: #0c717a;
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-    <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
+    <b-col cols="12" class="px-2 px-sm-4 px-xl-5 mt-4">
         <b-row>
             <b-col cols="10" md="8" lg="6">
                 <b-card bg-variant="card-header-orange" class="py-2 form-card-shadow relative-position form-card-title"
@@ -15,9 +15,9 @@
             <b-col cols="12">
                 <b-card bg-variant="card-content-orange" class="form-card-shadow form-card-content">
                     <b-card-body>
-                        <b-row>
-                            <b-col cols="12" lg="5" xl="4" class="px-3 pt-4">
-                                <b-row class="d-flex justify-content-center">
+                        <b-row class="mt-3">
+                            <b-col cols="12" lg="5" xl="4" class="d-flex align-items-center justify-content-center">
+                                <b-row>
                                     <b-col cols="12" class="position-relative">
                                         <b-img :src="showImg()" class="main-img" alt="Imagen principal seleccionada"
                                             fluid rounded center></b-img>
@@ -32,7 +32,7 @@
                                             <b-icon icon="x" font-scale="5"></b-icon>
                                         </b-button>
                                     </b-col>
-                                    <b-col cols="12" sm="9" md="8" lg="12" class="mt-4">
+                                    <b-col cols="12" class="mt-4">
                                         <b-row class="d-flex justify-content-center">
                                             <b-col cols="3" v-for="(image, index) in form.additionalImages" :key="index"
                                                 class="position-relative d-flex justify-content-center">
@@ -62,11 +62,11 @@
                                     </b-col>
                                 </b-row>
                             </b-col>
-                            <b-col class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
+                            <b-col class="mt-3 mt-lg-0 d-flex align-items-center">
                                 <b-row>
                                     <b-col cols="12" sm="7" xl="8" class="mt-3 mt-xl-0">
                                         <b-form-group label-for="name">
-                                            <label slot="label">
+                                            <label class="mb-2">
                                                 Ingresa el nombre de la mascota:
                                                 <span class="required-asterisk">*</span>
                                             </label>
@@ -78,7 +78,7 @@
                                     </b-col>
                                     <b-col cols="12" sm="5" xl="4" class="mt-3 mt-xl-0">
                                         <b-form-group label-for="category">
-                                            <label slot="label">
+                                            <label class="mb-2">
                                                 Selecciona su especie:
                                                 <span class="required-asterisk">*</span>
                                             </label>
@@ -97,7 +97,7 @@
                                     </b-col>
                                     <b-col cols="12" sm="7" xl="8" class="mt-3">
                                         <b-form-group label-for="breed">
-                                            <label slot="label">
+                                            <label class="mb-2">
                                                 Ingresa la raza de la mascota: <span class="required-asterisk">*</span>
                                             </label>
                                             <b-form-input id="breed" v-model.trim="form.breed"
@@ -108,7 +108,7 @@
                                     </b-col>
                                     <b-col cols="12" sm="5" xl="4" class="mt-3">
                                         <b-form-group label-for="size">
-                                            <label slot="label">
+                                            <label class="mb-2">
                                                 Selecciona su tamaño: <span class="required-asterisk">*</span>
                                             </label>
                                             <b-form-select id="size" v-model="form.size" @input="validateInput('size')"
@@ -124,7 +124,7 @@
                                     </b-col>
                                     <b-col cols="12" sm="7" xl="8">
                                         <b-form-group label-for="age" class="mt-3">
-                                            <label slot="label">
+                                            <label class="mb-2">
                                                 Ingresa la edad de la mascota: <span class="required-asterisk">*</span>
                                             </label>
                                             <b-row>
@@ -151,7 +151,7 @@
                                     </b-col>
                                     <b-col cols="12" sm="5" xl="4">
                                         <b-form-group label-for="lifeStage" class="mt-3">
-                                            <label slot="label">
+                                            <label class="mb-2">
                                                 Selecciona su etapa: <span class="required-asterisk">*</span>
                                             </label>
                                             <b-form-select id="lifeStage" v-model="form.lifeStage"
@@ -169,7 +169,7 @@
                                     </b-col>
                                     <b-col cols="12" sm="7" xl="8">
                                         <b-form-group label-for="weight" class="mt-3">
-                                            <label slot="label">
+                                            <label class="mb-2">
                                                 Ingresa el peso de la mascota: <span class="required-asterisk">*</span>
                                             </label>
                                             <b-row>
@@ -197,7 +197,7 @@
                                     </b-col>
                                     <b-col cols="12" sm="5" xl="4">
                                         <b-form-group label-for="gender" class="mt-3">
-                                            <label slot="label">
+                                            <label class="mb-2">
                                                 Selecciona su sexo: <span class="required-asterisk">*</span>
                                             </label>
                                             <b-form-select id="gender" v-model="form.gender" class="form-select"

@@ -1,5 +1,5 @@
 <template>
-    <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
+    <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4">
         <b-row>
             <b-col cols="10" md="8" lg="6">
                 <b-card bg-variant="card-header-orange" class="py-2 card-shadow relative-position form-card-title"
@@ -15,7 +15,7 @@
             <b-col cols="12">
                 <b-card bg-variant="card-content-orange" class="card-shadow form-card-content">
                     <b-card-body>
-                        <b-row>
+                        <b-row class="mt-3">
                             <b-col cols="12" lg="6">
                                 <b-form-group>
                                     <b-row>
@@ -31,7 +31,7 @@
                                                 @keyup.enter="addCharacteristic()"></b-form-input>
                                         </b-col>
                                         <b-col cols="2" sm="4" class="align-self-start">
-                                            <b-button variant="dark-gray" type="button" @click="addCharacteristic()"
+                                            <b-button variant="dark-orange" type="button" @click="addCharacteristic()"
                                                 class="d-flex align-items-center justify-content-between add-badge-btn">
                                                 <span
                                                     class="d-none d-sm-flex align-items-center justify-content-between me-2">Agregar</span>
@@ -72,7 +72,7 @@
                                                 @keyup.enter="addCare()" rows="1" max-rows="3"></b-form-textarea>
                                         </b-col>
                                         <b-col cols="2" sm="4" class="align-self-start">
-                                            <b-button variant="dark-gray" type="button" @click="addCare()"
+                                            <b-button variant="dark-orange" type="button" @click="addCare()"
                                                 class="d-flex align-items-center justify-content-between add-badge-btn">
                                                 <span
                                                     class="d-none d-sm-flex align-items-center justify-content-between me-2">Agregar</span>
@@ -212,6 +212,10 @@ export default {
                             input.classList.remove("is-invalid");
                             input.classList.add("is-valid");
                         }
+                    } else {
+                        this.errorMessages.care = "";
+                        this.showErrors.care = false;
+                        input.classList.remove("is-invalid");
                     }
                     break;
                 case "description":
@@ -245,4 +249,8 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+.add-badge-btn {
+    border-color: #e79d2e;
+}
+</style>
