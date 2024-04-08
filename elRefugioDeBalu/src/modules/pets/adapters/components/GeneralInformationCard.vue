@@ -37,8 +37,8 @@
                                             <b-col cols="3" v-for="(image, index) in form.additionalImages" :key="index"
                                                 class="position-relative d-flex justify-content-center">
                                                 <div class="additional-img-container">
-                                                    <b-img :src="getFile(image)" class="additional-img"
-                                                        alt="Imagen adicional" center></b-img>
+                                                    <b-img :src="image" class="additional-img" alt="Imagen adicional"
+                                                        center></b-img>
                                                 </div>
                                                 <b-button @click="removeAdditionalImg(index)"
                                                     class="btn-remove center-position d-flex align-items-center justify-content-center p-1">
@@ -84,7 +84,7 @@
                                             </label>
                                             <b-form-select id="category" v-model="form.category" class="form-select"
                                                 @input="validateInput('category')">
-                                                <option value="0" disabled>Especie...</option>
+                                                <option value="" disabled>Especie...</option>
                                                 <option v-for="category in categories" :key="category.id"
                                                     :value="category.id">
                                                     {{ category.name }}
@@ -240,7 +240,7 @@ export default {
                 mainImage: null,
                 additionalImages: [],
                 name: "",
-                category: "0",
+                category: "",
                 breed: "",
                 size: "",
                 age: null,
@@ -312,7 +312,7 @@ export default {
                 })
             }
         },
-        duplicateImg() {
+        duplicateImgError() {
             Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
@@ -325,7 +325,28 @@ export default {
                 timerProgressBar: true,
             });
         },
-        validateMainImage() {
+        loadImgError() {
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Ocurrió un error al cargar la imagen, intenta de nuevo con otra',
+                toast: true,
+                position: 'top-end',
+                timer: 3000,
+                showCancelButton: false,
+                showConfirmButton: false,
+                timerProgressBar: true,
+            });
+        },
+        convertToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const fileReader = new FileReader();
+                fileReader.readAsDataURL(file);
+                fileReader.onload = () => resolve(fileReader.result);
+                fileReader.onerror = (error) => reject(error);
+            });
+        },
+        validateNotNullMainImg() {
             if (!this.form.mainImage) {
                 Swal.fire({
                     icon: 'error',
@@ -343,7 +364,21 @@ export default {
             }
             this.showErrors.mainImage = false;
         },
-        validateMainImageSize(file) {
+        validateImg(file) {
+            if (file.type != "image/jpeg" && file.type != "image/png") {
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'Selecciona una imagen en formato JPG o PNG',
+                    toast: true,
+                    position: 'top-end',
+                    timer: 3000,
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    timerProgressBar: true,
+                });
+                return false;
+            }
             if (file.size > 4000000) {
                 Swal.fire({
                     icon: 'error',
@@ -384,7 +419,7 @@ export default {
                     }
                     break;
                 case "category":
-                    if (this.form.category == "0") {
+                    if (this.form.category == "") {
                         this.errorMessages.category = "Campo obligatorio";
                         this.showErrors.category = true;
                         input.classList.add('is-invalid');
@@ -513,54 +548,55 @@ export default {
             }
         },
         showImg() {
-            if (this.form.mainImage) return URL.createObjectURL(this.form.mainImage);
+            if (this.form.mainImage) return this.form.mainImage;
             return "https://t3.ftcdn.net/jpg/07/01/59/38/240_F_701593826_ojYyX0cKXG3OzhoYkbeesqsQtaA6zBbj.jpg";
         },
         triggerMainImgSelector() {
             this.$refs.mainImageSelector.click();
         },
-        selectImg() {
+        async selectImg() {
             const file = this.$refs.mainImageSelector.files[0];
-            if (file && this.validateMainImageSize(file)) {
-                if (this.form.additionalImages.length > 0) {
-                    const repeated = this.form.additionalImages.some(image => image.name == file.name);
-                    if (repeated) {
-                        this.duplicateImg();
+            if (file && this.validateImg(file)) {
+                try {
+                    const base64Image = await this.convertToBase64(file);                    
+                    if (this.form.additionalImages.includes(base64Image)) {
+                        this.duplicateImgError();                        
                         return;
+                    } else {
+                        this.form.mainImage = base64Image;
                     }
+                } catch (error) {
+                    this.loadImgError();
                 }
-                this.form.mainImage = file;
             }
         },
         unselectImg() {
             this.form.mainImage = null;
         },
-        getFile(file) {
-            return URL.createObjectURL(file);
-        },
         triggerAdditionalImgSelector() {
             this.$refs.additionalImageSelector.click();
         },
-        selectAdditionalImg() {
+        async selectAdditionalImg() {
             const file = this.$refs.additionalImageSelector.files[0];
-            if (file && this.validateMainImageSize(file)) {
-                if (this.form.mainImage && this.form.mainImage.name == file.name) {
-                    this.duplicateImg();
-                    return;
+            if (file && this.validateImg(file)) {
+                try {
+                    const base64Image = await this.convertToBase64(file);
+                    if (base64Image === this.form.mainImage || this.form.additionalImages.includes(base64Image)) {
+                        this.duplicateImgError();
+                        return;
+                    } else {
+                        this.form.additionalImages.push(base64Image);                        
+                    }                  
+                } catch (error) {
+                    this.loadImgError();
                 }
-                const repeated = this.form.additionalImages.some(image => image.name == file.name);
-                if (repeated) {
-                    this.duplicateImg();
-                    return;
-                }
-                this.form.additionalImages.push(file);
             }
         },
         removeAdditionalImg(index) {
             this.form.additionalImages.splice(index, 1);
         },
         validateForm() {
-            this.validateMainImage();
+            this.validateNotNullMainImg();
             this.validateInput('name');
             this.validateInput('category');
             this.validateInput('breed');
@@ -575,6 +611,41 @@ export default {
                 this.showErrors.size || this.showErrors.age || this.showErrors.ageUnit || this.showErrors.lifeStage ||
                 this.showErrors.weight || this.showErrors.weightUnit || this.showErrors.gender) return false;
             return true;
+        },
+        resetForm() {
+            this.form.mainImage = null;
+            this.form.additionalImages = [];
+            this.form.name = "";
+            this.form.category = "";
+            this.form.breed = "";
+            this.form.size = "";
+            this.form.age = null;
+            this.form.ageUnit = "";
+            this.form.lifeStage = "";
+            this.form.weight = null;
+            this.form.weightUnit = "";
+            this.form.gender = "";
+            this.showErrors.mainImage = false;
+            this.showErrors.name = false;
+            this.showErrors.category = false;
+            this.showErrors.breed = false;
+            this.showErrors.size = false;
+            this.showErrors.age = false;
+            this.showErrors.ageUnit = false;
+            this.showErrors.lifeStage = false;
+            this.showErrors.weight = false;
+            this.showErrors.weightUnit = false;
+            this.showErrors.gender = false;
+            this.errorMessages.name = "";
+            this.errorMessages.category = "";
+            this.errorMessages.breed = "";
+            this.errorMessages.size = "";
+            this.errorMessages.age = "";
+            this.errorMessages.ageUnit = "";
+            this.errorMessages.lifeStage = "";
+            this.errorMessages.weight = "";
+            this.errorMessages.weightUnit = "";
+            this.errorMessages.gender = "";
         }
     },
     mounted() {

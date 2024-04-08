@@ -244,6 +244,19 @@ export default {
             this.validateField("description");
             if (this.showErrors.characteristic || this.showErrors.care || this.showErrors.description) return false;
             return true;
+        },
+        resetForm() {
+            this.characteristic = "";
+            this.care = "";
+            this.form.characteristics = [];
+            this.form.specialCares = [];
+            this.form.description = "";
+            this.showErrors.characteristic = false;
+            this.showErrors.care = false;
+            this.showErrors.description = false;
+            this.errorMessages.characteristic = "";
+            this.errorMessages.care = "";
+            this.errorMessages.description = "";            
         }
     }
 }

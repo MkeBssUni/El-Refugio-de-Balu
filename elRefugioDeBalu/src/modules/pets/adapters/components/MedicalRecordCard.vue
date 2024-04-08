@@ -290,6 +290,29 @@ export default {
                     break;
             }
         },
+        resetForm() {
+            this.form = {
+                vaccinated: false,
+                dewormed: false,
+                sterilised: false,
+                microchip: false,
+                diseases: [],
+                allergies: [],
+                observations: "",
+            };
+            this.disease = "";
+            this.allergie = "";
+            this.showErrors = {
+                disease: false,
+                allergie: false,
+                observations: false,
+            };
+            this.errorMessages = {
+                disease: "",
+                allergie: "",
+                observations: "",
+            };        
+        }
     }
 }
 </script>
