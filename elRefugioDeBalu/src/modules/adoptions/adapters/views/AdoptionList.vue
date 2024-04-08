@@ -29,36 +29,31 @@
                 </template>
                 <template #cell(actions)="data">
                   <b-button pill size="sm" variant="outline-dark-blue" class="px-2 d-none d-md-inline-block"
-                    to="/viewAplicationAdoptionRequest" @click="viewAdoptionRequest(data.item)">
-                    Visualizar
-                    <b-icon icon="info-circle" font-scale="1"></b-icon>
-                  </b-button>
-                  <b-button pill size="sm" variant="outline-dark-blue" class="px-2 d-md-none">
-                    <b-icon icon="info-circle" font-scale="1"></b-icon>
+                    to="/viewAplicationAdoptionRequest" @click="viewAdoptionRequest(data.item)"
+                    v-b-tooltip.hover.top="'Ver detalles'">                  
+                    <b-icon icon="card-heading" font-scale="1.5"></b-icon>
                   </b-button>
                 </template>
               </b-table>
             </b-col>
           </b-row>
-          <b-row class="pt-2">
-            <b-col cols="12">
-              <b-row class="justify-content-center">
-                <b-col cols="6" md="4" class="pt-0 pt-md-3">
-                  <b-form-select :options="options" v-model="size" class="form-select"
-                    @change="getList"></b-form-select>
+          <b-row class="px-4">
+                <b-col cols="12" class="d-flex align-items-center">
+                    <label for="perPage">Selecciona la cantidad de registros que deseas mostrar:</label>
+                    <b-form-select :options="options" v-model="size" class="ms-3 my-3 form-select" style="width: 80px"
+                        @change="getList()"></b-form-select>
                 </b-col>
-              </b-row>
-              <br />
-              <b-pagination pills v-model="page" :total-rows="adoptions.length" :per-page="size" align="center">
-              </b-pagination>
-            </b-col>
-          </b-row>
+                <b-col cols="12" class="mt-1">
+                    <b-pagination pills v-model="page" :total-rows="total" :per-page="size" align="center">
+                    </b-pagination>
+                </b-col>
+            </b-row>
         </b-col>
         <b-col cols="12" sm="12" md="4" lg="4" xl="4">
           <b-card class="target">
             <b-row>
               <b-col cols="12" sm="12" lg="12" md="12">
-                <img :src="base64ToImage(credentialPet.image)" alt="Imagen de perfil" class="image-pet" />
+                <img :src="credentialPet.image" alt="Imagen de perfil" class="image-pet" />
                 <b-card bg-variant="card-content-orange" class="my-2 information-pet">
                   <b-card-body>
                     <b-card-title> {{ credentialPet.name }} </b-card-title>
@@ -144,6 +139,7 @@ import {
 
 export default {
   name: "AdoptionList",
+  total: 0,
   props: {
     petId: {
       type: String,
@@ -315,37 +311,6 @@ export default {
           }
         });
       }
-    },
-    base64ToImage(base64String) {
-      if (!base64String) {
-        console.error("base64String es nulo o indefinido");
-        return null;
-      }
-      // Extraer el tipo de la imagen desde la cadena Base64
-      const type = base64String.substring(
-        "data:image/".length,
-        base64String.indexOf(";base64")
-      );
-
-      // Crear un blob desde la cadena Base64
-      const byteCharacters = atob(base64String.split(",")[1]);
-      const byteArrays = [];
-      for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-        const slice = byteCharacters.slice(offset, offset + 512);
-        const byteNumbers = new Array(slice.length);
-        for (let i = 0; i < slice.length; i++) {
-          byteNumbers[i] = slice.charCodeAt(i);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-        byteArrays.push(byteArray);
-      }
-      const blob = new Blob(byteArrays, { type: type });
-
-      // Crear una URL para la imagen
-      const url = URL.createObjectURL(blob);
-
-      // Retornar la URL de la imagen
-      return url;
     },
     async viewAdoptionRequest(adoption) {
       let adoptionEncrypted = await encrypt(adoption.id);
