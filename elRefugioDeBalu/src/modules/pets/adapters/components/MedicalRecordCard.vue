@@ -72,7 +72,7 @@
                                                     errorMessages.disease }}</div>
                                             <b-form-input id="disease" v-model.trim="disease"
                                                 placeholder="Enfermedad o padecimiento..."
-                                                @input="validateInput('disease')" @keyup.enter="addDisease()">
+                                                @input="validateField('disease')" @keyup.enter="addDisease()">
                                             </b-form-input>
                                         </b-col>
                                         <b-col cols="2" sm="4" class="align-self-end mb-1 mb-sm-0">
@@ -112,7 +112,7 @@
                                                     errorMessages.allergie }}</div>
                                             <b-form-input id="allergie" v-model.trim="allergie"
                                                 placeholder="Alergia o intolerancia..."
-                                                @input="validateInput('allergie')" @keyup.enter="addAllergie()">
+                                                @input="validateField('allergie')" @keyup.enter="addAllergie()">
                                             </b-form-input>
                                         </b-col>
                                         <b-col cols="2" sm="4" class="align-self-end mb-1 mb-sm-0">
@@ -140,6 +140,21 @@
                                 </b-form-group>
                             </b-col>
                         </b-row>
+                        <b-row>
+                            <b-col cols="12" class="mt-4">
+                                <b-form-group>
+                                    <label for="observations" class="mb-2">
+                                        Agrega algún comentario adicional respecto a la salud de tu mascota:
+                                    </label>
+                                    <b-form-textarea id="observations" v-model.trim="form.observations" rows="2" max-rows="4"
+                                        placeholder="Comentario adicional..." @input="validateField('observations')">
+                                    </b-form-textarea>
+                                    <b-form-invalid-feedback v-if="showErrors.observations">
+                                        {{ errorMessages.observations }}
+                                    </b-form-invalid-feedback>
+                                </b-form-group>
+                            </b-col>
+                        </b-row>
                     </b-card-body>
                 </b-card>
             </b-col>
@@ -161,14 +176,17 @@ export default {
                 microchip: false,
                 diseases: [],
                 allergies: [],
+                observations: "",
             },
             showErrors: {
                 disease: false,
                 allergie: false,
+                observations: false,
             },
             errorMessages: {
                 disease: "",
                 allergie: "",
+                observations: "",
             }
         }
     },
@@ -198,7 +216,7 @@ export default {
         removeAllergie(index) {
             this.form.allergies.splice(index, 1);
         },
-        validateInput(field) {
+        validateField(field) {
             const input = document.getElementById(field);
             switch (field) {
                 case 'disease':
@@ -250,6 +268,25 @@ export default {
                         this.showErrors.allergie = false;
                         input.classList.remove('is-invalid');
                     }
+                    break;
+                case 'observations':
+                    if (this.form.observations) {
+                        if (this.form.observations.length < 30 || this.form.observations.length > 500) {
+                            this.errorMessages.observations = 'El comentario debe tener entre 30 y 500 caracteres';
+                            this.showErrors.observations = true;
+                            input.classList.add('is-invalid');
+                        } else {
+                            this.errorMessages.observations = "";
+                            this.showErrors.observations = false;
+                            input.classList.remove('is-invalid');
+                        }
+                    } else {
+                        this.errorMessages.observations = "";
+                        this.showErrors.observations = false;
+                        input.classList.remove('is-invalid');
+                    }
+                    break;
+                default:
                     break;
             }
         },
