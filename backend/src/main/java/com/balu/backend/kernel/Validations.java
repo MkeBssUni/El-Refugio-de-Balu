@@ -2,7 +2,7 @@ package com.balu.backend.kernel;
 import java.util.Base64;
 import java.util.regex.Pattern;
 public class Validations {
-    private static final Pattern BASE64_PATTERN = Pattern.compile("data:image/(png|jpeg|jpg);base64,([\\w\\d+/=]+)");
+    private static final Pattern BASE64_PATTERN = Pattern.compile("data:image/(png|jpeg|jpg);base64,([\\w/+=]+)");
     private static final String JPEG_HEADER = "data:image/jpeg;base64,";
     private static final String PNG_HEADER = "data:image/png;base64,";
 
@@ -35,16 +35,14 @@ public class Validations {
         if (!BASE64_PATTERN.matcher(base64String).matches()) {
             return true;
         }
-        byte[] decodedBytes = Base64.getDecoder().decode(base64String.split(",")[1]);
-
+        Base64.getDecoder().decode(base64String.split(",")[1]);
         String header = base64String.split(",")[0];
         return header.equals(JPEG_HEADER) || header.equals(PNG_HEADER);
     }
 
     public boolean isValidBooleanStatus(String str) {
         String lowerCaseStr = str.toLowerCase();
-        if(lowerCaseStr.equals("true") || lowerCaseStr.equals("false")) return true;
-        return  false ;
+        return lowerCaseStr.equals("true") || lowerCaseStr.equals("false");
     }
     public boolean isInvalidId(String str) {
         try {

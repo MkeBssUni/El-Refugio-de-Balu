@@ -2,9 +2,16 @@ package com.balu.backend.modules.homeSpecification.model;
 
 
 import com.balu.backend.modules.adresses.model.model.Address;
-import com.balu.backend.modules.homeSpecification.model.Dto.SaveHomeDetailsDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

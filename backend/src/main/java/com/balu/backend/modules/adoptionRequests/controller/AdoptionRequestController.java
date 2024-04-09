@@ -14,7 +14,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.Optional;
 
@@ -60,20 +66,20 @@ public class AdoptionRequestController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<ResponseApi<?>> save (@RequestBody SaveAdoptionRequestDto dto){
-        ResponseApi<?> response = serviceAdoptionRequest.save(dto);
+    public ResponseEntity<ResponseApi<Boolean>> save (@RequestBody SaveAdoptionRequestDto dto){
+        ResponseApi<Boolean> response = serviceAdoptionRequest.save(dto);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
     @PutMapping("/changeStatus")
-    public ResponseEntity<ResponseApi<?>> changeStatus (@RequestBody ChangeStatusAdoptionRequestDto dto){
-        ResponseApi<?> response = serviceAdoptionRequest.changeStatus(dto);
+    public ResponseEntity<ResponseApi<Integer>> changeStatus (@RequestBody ChangeStatusAdoptionRequestDto dto){
+        ResponseApi<Integer> response = serviceAdoptionRequest.changeStatus(dto);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
     @PutMapping("/changeStatusClosed")
-    public ResponseEntity<ResponseApi<?>> changeStatusGeneral (@RequestBody GetByIdAdoptionRequestDto dto){
-        ResponseApi<?> response = serviceAdoptionRequest.changeStatusBygeneral(dto);
+    public ResponseEntity<ResponseApi<Integer>> changeStatusGeneral (@RequestBody GetByIdAdoptionRequestDto dto){
+        ResponseApi<Integer> response = serviceAdoptionRequest.changeStatusBygeneral(dto);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 

@@ -1108,6 +1108,8 @@ export default {
         return;
       }
 
+      
+
       const maxSizeInBytes = 6 * 1024 * 1024; // 6MB
       if (file.size > maxSizeInBytes) {
         this.makeToast("La imagen debe pesar menos de 6MB");

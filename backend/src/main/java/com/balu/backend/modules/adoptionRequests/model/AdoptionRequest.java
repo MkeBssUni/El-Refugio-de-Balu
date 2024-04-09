@@ -4,7 +4,6 @@ import com.balu.backend.modules.adoptionRequestImage.model.AdoptionRequestImage;
 import com.balu.backend.modules.pets.model.Pet;
 import com.balu.backend.modules.statusses.model.Status;
 import com.balu.backend.modules.users.model.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
