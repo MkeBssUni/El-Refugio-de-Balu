@@ -520,18 +520,16 @@ export default {
             title: "Espera un momento...",
             text: "Estamos enviando tu solicitud",
             imageUrl: perroChato,
-            timer: 2000,
-            timerProgressBar: true,
             imageWidth: 160, // Ancho de la imagen
             imageHeight: 160, // Altura de la imagen
             showConfirmButton: false,
-          }).then(() => {
-            let response = instance.put("/adoption/changeStatus", {
+          }).then(async() => {
+            let response = await instance.put("/adoption/changeStatus", {
               adoptionId: localStorage.getItem("adoptionId"),
               status: this.statu,
             });
             console.log(response);
-            if (this.statu === "ADOPTED") {
+            if (this.statu === "ADOPTED" && !response.error ) {
               let response = instance.put("/pet/adoption", {
                 pet: localStorage.getItem("petId"),
                 adoptant: this.requestAdoption.user.id,
