@@ -83,6 +83,14 @@ const routes = [
           import("../modules/pets/adapters/views/MyPetDetails.vue"),
       },
       {
+        path: "/myModeratedPet",
+        name: "myModeratedPet",
+        meta: { title: "Detalles de la mascota" },
+        props: true,
+        component: () =>
+          import("../modules/pets/adapters/views/MyModeratedPetDetails.vue"),
+      },
+      {
         path: "/favorites",
         name: "favorites",
         meta: {
@@ -199,6 +207,17 @@ const routes = [
         },
         component: () =>
           import("../modules/pets/adapters/views/PetRegisterForm.vue"),
+      },
+      {
+        path: "/petUpdateForm",
+        name: "petUpdateForm",
+        meta: {
+          title: "Editar mascota",
+          requiresAuth: true,
+          role: rolesAvailable.general,
+        },
+        component: () =>
+          import("../modules/pets/adapters/views/PetUpdateForm.vue"),
       },
       {
         path: "/usersList",
