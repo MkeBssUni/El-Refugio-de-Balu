@@ -65,7 +65,7 @@ public class AdoptionRequestController {
         }
     }
 
-    @PostMapping("/")
+    @PostMapping("/saveRequest")
     public ResponseEntity<ResponseApi<Boolean>> save (@RequestBody SaveAdoptionRequestDto dto){
         ResponseApi<Boolean> response = serviceAdoptionRequest.save(dto);
         return ResponseEntity.status(response.getStatus()).body(response);

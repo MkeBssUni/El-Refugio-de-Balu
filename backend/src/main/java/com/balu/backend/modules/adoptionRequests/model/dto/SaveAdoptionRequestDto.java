@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Arrays;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,4 +18,14 @@ public class SaveAdoptionRequestDto {
     private PreviousExperiencieDto previousExperiencieDto;
     private String additional_information;
     private String[] imageAdoption;
+
+    @Override
+    public String toString() {
+        return "SaveAdoptionRequestDto{" +
+                "user='" + user + '\'' +
+                ", pet='" + pet + '\'' +
+                ", reasonsForAdoption=" + reasonsForAdoption +
+                ", previousExperiencieDto=" + previousExperiencieDto +
+                ", additional_information='" + additional_information + '\'' ;
+    }
 }
