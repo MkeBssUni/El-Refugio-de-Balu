@@ -20,258 +20,35 @@
               <b-col cols="2" md="2" lg="2" style="margin-right: 95px">
                 <b-img
                   alt="profilePic"
- :src="profile"                  class="mb-4"
+                  :src="profile"
+                  class="mb-4"
                   style="max-width: 300px; margin-top: 60px"
                 ></b-img>
               </b-col>
-              <b-col cols="9" class="px-2 px-sm-4 mb-sm-2">
-                <b-row>
-                  <b-col cols="1" md="8" lg="8">
-                    <b-card
-                      bg-variant="dark-secondary-orange"
-                      class="py-2 pe-2 card-shadow relative-position form-card-title"
-                      no-body
-                    >
-                      <div class="d-flex align-items-center ms-3 ms-md-4">
-                        <i
-                          class="material-icons me-2"
-                          style="font-size: 1.5rem; color: white"
-                          >pets</i
-                        >
-
-                        <h4 class="mb-0" style="color: white">
-                          Información personal
-                        </h4>
-                      </div>
-                    </b-card>
-                  </b-col>
+              <b-col cols="9" >
+                <b-row class="px-2 my-2">
+                  <PersonalInformationCar ref="personalInformationCar" />
                 </b-row>
-                <b-row>
-                  <b-col cols="12">
-                    <b-card
-                      bg-variant="card-content-secondary-orange"
-                      class="card-shadow form-card-content"
-                    >
-                      <b-card-body>
-                        <b-row>
-                          <b-col cols="12" md="4">
-                            <b-form-group label="Nombre" label-align="left">
-                              <b-input
-                                v-model="information.name"
-                                :readonly="!editing"
-                              ></b-input>
-                            </b-form-group>
-                          </b-col>
-                          <b-col cols="12" md="4">
-                            <b-form-group label="Apellido" label-align="left">
-                              <b-input
-                                v-model="information.lastName"
-                                :readonly="!editing"
-                              ></b-input>
-                            </b-form-group>
-                          </b-col>
-                          <b-col cols="12" md="4">
-                            <b-form-group
-                              label="Segundo apellido"
-                              label-align="left"
-                            >
-                              <b-input
-                                v-model="information.surName"
-                                :readonly="!editing"
-                              ></b-input>
-                            </b-form-group>
-                          </b-col>
-                          <b-col cols="12" md="4">
-                            <b-form-group
-                              label="Teléfono"
-                              label-align="left"
-                              :state="phoneNumberValidation"
-                            >
-                              <b-input
-                                v-model="information.phoneNumber"
-                                type="tel"
-                                pattern="[0-9]*"
-                              ></b-input>
-                              <b-form-invalid-feedback
-                                :state="phoneNumberValidation"
-                                >Ingresa solo números</b-form-invalid-feedback
-                              >
-                            </b-form-group>
-                          </b-col>
-                          <b-col cols="12" md="4">
-                            <b-form-group
-                              label="Correo electrónico"
-                              label-align="left"
-                              :state="secondaryEmailValidation"
-                            >
-                              <b-input
-                                v-model="information.user.username"
-                                type="email"
-                              ></b-input>
-                              <b-form-invalid-feedback
-                                :state="secondaryEmailValidation"
-                                >Correo electrónico
-                                inválido</b-form-invalid-feedback
-                              >
-                            </b-form-group>
-                          </b-col>
-                          <div class="d-flex justify-content-end mt-3">
-                            <b-button
-                              @click="submitForm"
-                              variant="outline-light"
-                              >{{ editing ? "Guardar" : "Modificar" }}
-                              <b-icon
-                                icon="person-circle"
-                                font-scale="1.3"
-                              ></b-icon
-                            ></b-button>
-                          </div>
-                        </b-row>
-                      </b-card-body>
-                    </b-card>
-                  </b-col>
+              </b-col>
+              <b-col cols="12" >
+                <b-row class="px-2 my-2">
+                  <CurrentAddressCard ref="currentAddressCard" />
                 </b-row>
               </b-col>
             </div>
           </b-container>
 
-            <div class="row">
-              <b-col cols="12" class="px-2 px-sm-4 px-xl-5 mb-sm-5">
-                <b-row>
-                  <b-col cols="10" md="8" lg="6">
-                    <b-card
-                      bg-variant="card-header-orange"
-                      class="py-2 card-shadow relative-position form-card-title"
-                      no-body
-                    >
-                      <div class="d-flex align-items-center ms-3 ms-md-4">
-                        <i
-                          class="material-icons me-2"
-                          style="font-size: 1.5rem; color: white"
-                          >pets</i
-                        >
-                        <h4 class="mb-0" style="color: white">
-                          Domicilio actual
-                        </h4>
-                      </div>
-                    </b-card>
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col cols="12">
-                    <b-card
-                      bg-variant="card-content-orange"
-                      class="card-shadow form-card-content"
-                    >
-                      <b-col
-                        cols="12"
-                        class="px-2 px-sm-4 px-xl-5 mb-sm-5"
-                      >
-                        <b-row>
-                          <b-col cols="12" md="4">
-                            <b-form-group label="País" label-align="left">
-                              <b-input v-model="SaveAddressDto.country"></b-input>
-                            </b-form-group>
-                          </b-col>
-                          <b-col cols="12" md="4">
-                            <b-form-group label="Calle" label-align="left">
-                              <b-input v-model="SaveAddressDto.street"></b-input>
-                            </b-form-group>
-                          </b-col>
-                          <b-col cols="12" md="4">
-                            <b-form-group label="Colonia" label-align="left">
-                              <b-input v-model="SaveAddressDto.colony"></b-input>
-                            </b-form-group>
-                          </b-col>
-                        </b-row>
-                        <b-row>
-                          <b-col cols="12" md="4">
-                            <b-form-group label="Ciudad" label-align="left">
-                              <b-input v-model="SaveAddressDto.city"></b-input>
-                            </b-form-group>
-                          </b-col>
-                          <b-col cols="12" md="4">
-                            <b-form-group label="Estado" label-align="left">
-                              <b-input v-model="SaveAddressDto.state"></b-input>
-                            </b-form-group>
-                          </b-col>
-                          <b-col cols="12" md="4">
-                            <b-form-group
-                              label="Código Postal"
-                              label-align="left"
-                              :state="postalCodeValidation"
-                            >
-                              <b-input v-model="SaveAddressDto.postalCode"></b-input>
-                              <b-form-invalid-feedback
-                                :state="postalCodeValidation"
-                              >
-                                Codigo postal invalido
-                              </b-form-invalid-feedback>
-                            </b-form-group>
-                          </b-col>
-                        </b-row>
-                        <b-row>
-                          <b-col cols="12">
-                            <b-form-group
-                              label="Referencia de dirección"
-                              label-align="left"
-                            >
-                              <b-input
-                                v-model="SaveAddressDto.addressReference"
-                                type="textarea"
-                              ></b-input>
-                            </b-form-group>
-                          </b-col>
-                        </b-row>
-                        <b-row>
-                          <b-col cols="12" md="4">
-                            <b-form-group
-                              label="Número exterior"
-                              label-align="left"
-                            >
-                              <b-input v-model="SaveAddressDto.exteriorNumber"></b-input>
-                              <b-form-invalid-feedback>
-                                Ingresa solo números
-                              </b-form-invalid-feedback>
-                            </b-form-group>
-                          </b-col>
-                          <b-col cols="12" md="4">
-                            <b-form-group
-                              label="Número interior"
-                              label-align="left"
-                            >
-                              <b-input v-model="SaveAddressDto.interiorNumber"></b-input>
-                            </b-form-group>
-                          </b-col>
-                        </b-row>
-                        <div class="d-flex justify-content-end mt-3">
-                          <b-button
-                            @click="submitForm()"
-                            variant="outline-light"
-                            class="d-flex align-items-center"
-                          >
-                            {{ editing ? "Guardar" : "Modificar"
-                            }}<span class="me-2">
-                              <i
-                                class="material-icons"
-                                style="font-size: 1.5rem; color: white"
-                                >home</i
-                              >
-                            </span>
-                          </b-button>
-                        </div>
-                      </b-col>
-                    </b-card>
-                  </b-col>
-                </b-row>
-              </b-col>
-              <div class="d-flex justify-content-end mt-3">
-                <b-button v-b-toggle.sidebar-right class="btn1"
-                  ><span class="me-2">Cambiar contraseña</span>
-                  <b-icon icon="lock-fill" font-scale="1.3"></b-icon
-                ></b-button>
-              </div>
+          <div class="row">
+            <b-col cols="12" class="px-2 px-sm-4 px-xl-5 mb-sm-5">
+              <b-row> </b-row>
+            </b-col>
+            <div class="d-flex justify-content-end mt-3">
+              <b-button v-b-toggle.sidebar-right class="btn1"
+                ><span class="me-2">Cambiar contraseña</span>
+                <b-icon icon="lock-fill" font-scale="1.3"></b-icon
+              ></b-button>
             </div>
+          </div>
         </b-card>
       </b-card-group>
 
@@ -389,12 +166,15 @@ import swal from "sweetalert2";
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
 import instance from "../../../config/axios";
 import { decrypt } from "../../../kernel/hashFunctions";
-import profile from "../../../assets/imgs/profile.jpg"
+import profile from "../../../assets/imgs/profile.jpg";
+import CurrentAddressCard from "../views/CurrentAddressCard.vue";
+import PersonalInformationCar from "../views/PersonalInformationCard.vue";
+import HomeSpecification from "../views/HomeSpecification.vue";
 export default {
   name: "FormStyle",
   data() {
     return {
-      profile :profile,
+      profile: profile,
       showPasswordCurrent: false,
       showPasswordNew: false,
       showPasswordConfirm: false,
@@ -426,7 +206,7 @@ export default {
         addressReference: "",
         exteriorNumber: "",
         interiorNumber: "",
-         userId: localStorage.getItem("userId"),
+        userId: localStorage.getItem("userId"),
       },
       postalCodeValidation: null,
       postalCodeValidationMessage: "",
@@ -450,7 +230,11 @@ export default {
       );
     },
   },
-
+  components: {
+    CurrentAddressCard,
+    HomeSpecification,
+    PersonalInformationCar,
+  },
   methods: {
     togglePasswordVisibility(field) {
       switch (field) {
@@ -505,7 +289,7 @@ export default {
     async getAddressDetails() {
       this.loading = true;
       try {
-        const userId = localStorage.getItem('userId');
+        const userId = localStorage.getItem("userId");
         const response = await axios.get(`/api/user/${userId}`);
         const responseData = response.data;
 
@@ -524,20 +308,23 @@ export default {
           };
         } else {
           // Manejar errores si la respuesta tiene un error
-          console.error('Error al obtener la dirección del usuario:', responseData.message);
+          console.error(
+            "Error al obtener la dirección del usuario:",
+            responseData.message
+          );
           swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se pudo obtener la dirección del usuario',
+            icon: "error",
+            title: "Error",
+            text: "No se pudo obtener la dirección del usuario",
           });
         }
       } catch (error) {
         // Manejar errores de la solicitud HTTP
-        console.error('Error al obtener la dirección del usuario:', error);
+        console.error("Error al obtener la dirección del usuario:", error);
         swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo obtener la dirección del usuario',
+          icon: "error",
+          title: "Error",
+          text: "No se pudo obtener la dirección del usuario",
         });
       } finally {
         this.loading = false;
@@ -584,7 +371,7 @@ export default {
               imageHeight: 160, // Altura de la imagen
               showConfirmButton: false,
             });
-            this.submitNewAddress()
+            this.submitNewAddress();
           }
         });
     },
