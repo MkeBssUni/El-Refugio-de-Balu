@@ -339,11 +339,15 @@ export default {
                     text: 'Para agregar mascotas a tus favoritas, inicia sesión',
                     icon: 'info',
                     iconColor: '#FFA500',
-                    timer: 3000,
-                    timerProgressBar: true,
-                    showConfirmButton: false
-                }).then(() => {
-                    this.$router.push('/login')
+                    showCancelButton: true,
+                    confirmButtonColor: '#FFA500',
+                    cancelButtonColor: '#A93D3D',
+                    confirmButtonText: 'Iniciar sesión',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.$router.push('/login')
+                    }
                 })
             }
         },
