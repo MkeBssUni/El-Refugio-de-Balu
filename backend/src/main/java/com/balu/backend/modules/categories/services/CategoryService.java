@@ -26,6 +26,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,11 +81,13 @@ public class CategoryService {
         saveCategoryDto.setUserId(hashService.decrypt(saveCategoryDto.getUserId()));
         saveCategoryDto.setName(hashService.decrypt(saveCategoryDto.getName()));
         saveCategoryDto.setDescription(hashService.decrypt(saveCategoryDto.getDescription()));
-        saveCategoryDto.setImage(hashService.decrypt(saveCategoryDto.getImage()));
+        saveCategoryDto.setImage(saveCategoryDto.getImage());
         if (saveCategoryDto.getName() == null && saveCategoryDto.getDescription() == null && saveCategoryDto.getImage() == null)
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
-        if (!(this.iCategoryRepository.findByName(saveCategoryDto.getName()) == null))
-            return new ResponseApi<>(HttpStatus.CONFLICT, true, ErrorMessages.DUPLICATE_RECORD.name());
+
+        Optional<Category> existentCategory = iCategoryRepository.findByNameIgnoreCase(saveCategoryDto.getName());
+        if (existentCategory.isPresent()) return new ResponseApi<>(HttpStatus.CONFLICT, true, ErrorMessages.DUPLICATE_RECORD.name());
+        
         if (validations.isNotBlankString(saveCategoryDto.getName()) && validations.isNotBlankString(saveCategoryDto.getDescription()) && validations.isNotBlankString(saveCategoryDto.getImage()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
         if (validations.isValidBase64Image(saveCategoryDto.getImage()))
@@ -106,27 +109,34 @@ public class CategoryService {
         updateCategoryDto.setId(hashService.decrypt(updateCategoryDto.getId()));
         updateCategoryDto.setName(hashService.decrypt(updateCategoryDto.getName()));
         updateCategoryDto.setDescription(hashService.decrypt(updateCategoryDto.getDescription()));
-        updateCategoryDto.setImage(hashService.decrypt(updateCategoryDto.getImage()));
+        updateCategoryDto.setImage(updateCategoryDto.getImage());
         Long id;
+
         try {
             id = Long.parseLong(updateCategoryDto.getId());
         } catch (NumberFormatException e) {
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_ID.name());
         }
+        Optional<Category> optionalCategory = iCategoryRepository.findById(id);
+        if(optionalCategory.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.NO_RECORDS.name());
 
         if (updateCategoryDto.getId() == null && updateCategoryDto.getImage() == null && updateCategoryDto.getDescription() == null && updateCategoryDto.getImage() == null)
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
-        if (!(this.iCategoryRepository.findByName(updateCategoryDto.getName()) == null))
-            return new ResponseApi<>(HttpStatus.CONFLICT, true, ErrorMessages.DUPLICATE_RECORD.name());
         if (validations.isNotBlankString(updateCategoryDto.getName()) && validations.isNotBlankString(updateCategoryDto.getDescription()) && validations.isNotBlankString(updateCategoryDto.getImage()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
         if (validations.isValidBase64Image(updateCategoryDto.getImage()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.UNSUPPORTED_IMAGE_FORMAT.name());
 
-        Integer category = this.iCategoryRepository.updateCategory(id, updateCategoryDto.getName(), updateCategoryDto.getDescription(), updateCategoryDto.getImage());
-        logService.saveLog("Update of category "+category +" for user with id: " + updateCategoryDto.getUserId(), LogTypes.UPDATE, "CATEGORIES");
+        if(!(optionalCategory.get().getName().equalsIgnoreCase(updateCategoryDto.getName()))){
+            Optional<Category> existentCategory = iCategoryRepository.findByNameIgnoreCase(updateCategoryDto.getName());
+            if(existentCategory.isPresent()) return new ResponseApi<>(HttpStatus.CONFLICT, true, ErrorMessages.DUPLICATE_RECORD.name());
+        }
+        optionalCategory.get().setName(updateCategoryDto.getName());
+        optionalCategory.get().setDescription(updateCategoryDto.getDescription());
+        optionalCategory.get().setImage(updateCategoryDto.getImage());
+        logService.saveLog("Update of category "+optionalCategory.get().getId() +" for user with id: " + updateCategoryDto.getUserId(), LogTypes.UPDATE, "CATEGORIES");
+        iCategoryRepository.saveAndFlush(optionalCategory.get());
         return new ResponseApi<>(
-                category,
                 HttpStatus.OK,
                 false,
                 "successful modification"

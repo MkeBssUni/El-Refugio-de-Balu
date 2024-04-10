@@ -31,7 +31,7 @@ public class Category {
     private Long id;
     private String name;
     private String description;
-    @Column(columnDefinition = "text")
+    @Column(columnDefinition = "longtext")
     private String image;
     @Column(insertable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
     @Temporal(TemporalType.TIMESTAMP)
