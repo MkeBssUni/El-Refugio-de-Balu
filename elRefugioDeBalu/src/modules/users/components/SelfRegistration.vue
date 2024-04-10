@@ -160,7 +160,9 @@ export default {
   methods: {
     async doneCallback(solution) {
       let response = await this.verifyCaptcha(solution);
-      this.validCaptcha = response.success;
+      if(response){
+        this.validCaptcha = response.success;
+      }
     },
 
     errorCallback(err) {
@@ -177,9 +179,16 @@ export default {
         .catch(error => {
           swal.fire({
             title: "Error",
-            text: "Ocurrió un error al verificar el captcha, por favor intenta de nuevo",
+            text: "Ocurrió un error al verificar el captcha, intentando de nuevo",
             icon: "error",
-            showConfirmButton: true,
+            timer: 1500,
+          }).then(() => {
+            this.$refs.container.innerHTML = "";
+            widget.value = new WidgetInstance(this.$refs.container, {
+              startMode: "auto",
+              doneCallback: this.doneCallback,
+              errorCallback: this.errorCallback
+            });
           });
         });
     },
