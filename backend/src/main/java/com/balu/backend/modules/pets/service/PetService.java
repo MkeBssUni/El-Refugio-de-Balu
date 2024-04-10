@@ -490,18 +490,14 @@ public class PetService {
     public ResponseApi<Boolean> completeAdoption(CompleteAdoptionDto dto) {
         if (dto.getPet() == null || validations.isNotBlankString(dto.getPet().trim()) || dto.getAdoptant() == null || validations.isNotBlankString(dto.getAdoptant().trim()) || dto.getModerator() == null || validations.isNotBlankString(dto.getModerator().trim()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.MISSING_FIELDS.name());
-        System.out.println(dto);
         Long petId = decryptId(dto.getPet());
-        System.out.println("PET"+petId);
         if (petId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
-        System.out.println("HOla?");
         Optional<Pet> optionalPet = petRepository.findById(petId);
         if (!optionalPet.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
         Pet pet = optionalPet.get();
 
         if (!pet.getStatus().getName().equals(Statusses.APPROVED)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_ALLOWED.name());
         Long adoptantId = decryptId(dto.getAdoptant());
-        System.out.println("ADOPTED"+adoptantId);
         if (adoptantId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
         Optional<User> optionalAdoptant = userRepository.findById(adoptantId);
         if (!optionalAdoptant.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
@@ -509,7 +505,6 @@ public class PetService {
         if (!adoptant.getRole().getName().equals(Roles.GENERAL)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ROLE.name());
 
         Long moderatorId = decryptId(dto.getModerator());
-        System.out.println("MODERADOR"+moderatorId);
         if (moderatorId == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ID.name());
         Optional<User> optionalModerator = userRepository.findById(moderatorId);
         if (!optionalModerator.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());

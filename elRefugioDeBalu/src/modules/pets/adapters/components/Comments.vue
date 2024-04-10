@@ -147,7 +147,6 @@ export default {
                         this.$emit('comment-added');
                     })
                 } catch (error) {
-                    console.log(error.response.data.message)
                     Swal.fire({
                         title: 'Error',
                         text: 'Ocurrió un error al enviar el comentario, por favor intenta más tarde.',

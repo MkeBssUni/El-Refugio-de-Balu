@@ -186,7 +186,6 @@ public class ServiceAdoptionRequest {
             logService.saveLog("New adoption request registered: "+saveAdoption.getId(), LogTypes.INSERT,"ADOPTIONREQUEST | ADOPTIONREQUESTIMAGES");
             return new ResponseApi<>(HttpStatus.CREATED,false,"Adoption request saved successfully");
         }catch (Exception e){
-            System.out.println(e);
             return new ResponseApi<>(true,HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name());
         }
     }
@@ -210,7 +209,6 @@ public class ServiceAdoptionRequest {
             }
             return new ResponseApi<>(adoption,HttpStatus.OK,false,"Adoption request change status successfully");
         }catch (Exception e){
-            System.out.println(e);
             return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name());
         }
     }
