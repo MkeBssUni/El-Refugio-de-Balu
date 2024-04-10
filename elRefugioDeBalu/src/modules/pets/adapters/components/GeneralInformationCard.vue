@@ -648,9 +648,6 @@ export default {
             this.errorMessages.gender = "";
         }
     },
-    mounted() {
-        this.getCategories();
-    }
 }
 </script>
 
