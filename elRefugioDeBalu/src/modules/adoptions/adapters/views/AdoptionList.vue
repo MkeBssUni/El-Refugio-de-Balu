@@ -140,17 +140,12 @@ import {
 export default {
   name: "AdoptionList",
   total: 0,
-  props: {
-    petId: {
-      type: String,
-      required: true
-    }
-  },
   components: {
     Encabezado,
   },
   data() {
     return {
+      petId: "",
       selected: null,
       searchValue: "",
       pageResponse: {},
@@ -181,9 +176,12 @@ export default {
     };
   },
   mounted() {
-    if (!this.petId && sessionStorage.getItem('petId')) this.petId = sessionStorage.getItem('petId');
-    if (!this.petId && !sessionStorage.getItem('petId')) this.$router.push('/moderated/petList');
-    this.getList();
+    if (localStorage.getItem("petId")) {
+      this.petId = localStorage.getItem("petId");
+      this.getList();
+    } else {
+      this.goBack();
+    }
   },
   methods: {
     getAgeUnit(age) {
@@ -203,7 +201,7 @@ export default {
       }
     },
     goBack() {
-      this.$router.go(-1);
+      this.$router.go(-1);      
     },
     mapSize(size) {
       return sizes[size] || size;
