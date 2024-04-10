@@ -15,10 +15,10 @@ public interface IFavoritePetRepository extends JpaRepository<FavoritePet, Long>
 
     Optional<FavoritePet> findByPetAndUser(Pet pet, User user);
 
-    @Query(value = "select p.id as id, p.name as name, p.main_image as image, concat(a.city, ', ', a.state) as location from favorite_pets f " +
+    @Query(value = "select f.addedAt,p.id as id, p.name as name, p.main_image as image, concat(a.city, ', ', a.state) as location from favorite_pets f " +
                         "inner join pets p on p.id = f.pet_id " +
                         "inner join addresses a on p.user_owner_id = a.user_id " +
-                        "where p.status_id = 3 and f.user_id = ?1 and (lower(p.name) like %?2% or lower(a.city) like %?2% or lower(a.state) like %?2%)",
+                        "where p.status_id = 3 and f.user_id = ?1 and (lower(p.name) like %?2% or lower(a.city) like %?2% or lower(a.state) like %?2%) order by f.addedAt desc",
             nativeQuery = true)
     Page<IFavoritePetsView> findByUserPaged(Long userId, String searchValue, Pageable pageable);
 }
