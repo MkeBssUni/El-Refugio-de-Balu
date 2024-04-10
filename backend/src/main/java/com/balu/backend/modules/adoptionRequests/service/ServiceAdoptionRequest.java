@@ -115,9 +115,8 @@ public class ServiceAdoptionRequest {
             }
 
 
-            if(dto.getReasonsForAdoption().getAdditionalComments().length() > 0){
-                if(validations.isInvalidMinAndMaxLength(dto.getReasonsForAdoption().getAdditionalComments().trim(),10,300)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.INVALID_LENGTH.name());
-
+            if(dto.getReasonsForAdoption().getWhyAdoptPet().length() < 0){
+                if(validations.isInvalidMinAndMaxLength(dto.getReasonsForAdoption().getWhyAdoptPet().trim(),10,300)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.INVALID_LENGTH.name());
             }
 
             if(dto.getPreviousExperiencieDto().getLastPet().length()>2){
@@ -151,7 +150,7 @@ public class ServiceAdoptionRequest {
 
              if(dto.getReasonsForAdoption() != null){
                  dto.getReasonsForAdoption().setPeopleAgreeToAdopt(hashService.encrypt(dto.getReasonsForAdoption().getPeopleAgreeToAdopt()));
-                 dto.getReasonsForAdoption().setAdditionalComments(hashService.encrypt(dto.getAdditional_information()));
+                 dto.getReasonsForAdoption().setWhyAdoptPet(hashService.encrypt(dto.getReasonsForAdoption().getWhyAdoptPet()));
                  dto.getReasonsForAdoption().setHaveHadPets(hashService.encrypt(dto.getReasonsForAdoption().getHaveHadPets()));
                  dto.getReasonsForAdoption().setWhereWillThePetBe(hashService.encrypt(dto.getReasonsForAdoption().getWhereWillThePetBe()));
              }
@@ -161,10 +160,10 @@ public class ServiceAdoptionRequest {
                  dto.getPreviousExperiencieDto().setWhatDidYouDoWhenThePetGotSick(hashService.encrypt(dto.getPreviousExperiencieDto().getWhatDidYouDoWhenThePetGotSick()));
                  dto.getPreviousExperiencieDto().setWhatKindOfPetsHaveYouHadBefore(hashService.encrypt(dto.getPreviousExperiencieDto().getWhatKindOfPetsHaveYouHadBefore()));
                  dto.getPreviousExperiencieDto().setWhatMemoriesDoYouHaveWithYourPet(hashService.encrypt(dto.getPreviousExperiencieDto().getWhatMemoriesDoYouHaveWithYourPet()));
-                 dto.setAdditional_information(hashService.encrypt(dto.getAdditional_information()));
+                 dto.setAdditionalInformation(hashService.encrypt(dto.getAdditionalInformation()));
              }
 
-            AdoptionRequest adoptionRequest = new AdoptionRequest(user,pet,status,parseJson(dto.getReasonsForAdoption()),parseJson(dto.getPreviousExperiencieDto()),dto.getAdditional_information());
+            AdoptionRequest adoptionRequest = new AdoptionRequest(user,pet,status,parseJson(dto.getReasonsForAdoption()),parseJson(dto.getPreviousExperiencieDto()),dto.getAdditionalInformation());
             AdoptionRequest saveAdoption = iAdoptionRequestRepository.saveAndFlush(adoptionRequest);
             if(saveAdoption == null) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.ADOPTIONREQUEST_NOT_SAVED.name());
 

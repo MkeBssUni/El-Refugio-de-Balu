@@ -117,13 +117,13 @@
               <b-col cols="12" sm="12" lg="6" md="6" xl="6">
                 <b-card-text>
                   <b>¿Tienes o has tenido otros animales de compañia?</b>
-                  {{ requestAdoption.reasons_for_adoption.haveHadPets }}
+                  {{ requestAdoption.reasonsForAdoption.haveHadPets }}
                 </b-card-text>
               </b-col>
               <b-col cols="12" sm="12" lg="6" md="6" xl="6">
                 <b-card-text>
                   <b>¿En que parte de la casa lo planeas tener?</b>
-                  {{ requestAdoption.reasons_for_adoption.whereWillThePetBe }}
+                  {{ requestAdoption.reasonsForAdoption.whereWillThePetBe }}
                 </b-card-text>
               </b-col>
             </b-row>
@@ -134,16 +134,16 @@
                     >¿Las personas con quien vives están de acuerdo en
                     adoptar?</b
                   >
-                  {{ requestAdoption.reasons_for_adoption.peopleAgreeToAdopt }}
+                  {{ requestAdoption.reasonsForAdoption.peopleAgreeToAdopt }}
                 </b-card-text>
               </b-col>
               <b-col cols="12" sm="12" lg="6" md="6" xl="6">
                 <b-card-text>
-                  <b>Comentarios adicionales</b>
+                  <b>¿Por qué deseas adoptar esta mascota?</b>
                   {{
-                    requestAdoption.reasons_for_adoption.additionalComments
-                      ? requestAdoption.reasons_for_adoption.additionalComments
-                      : "No se registraron comentarios adicionales"
+                    requestAdoption.reasonsForAdoption.whyAdoptPet
+                      ? requestAdoption.reasonsForAdoption.whyAdoptPet
+                      : "No se registraron motivos"
                   }}
                 </b-card-text>
               </b-col>
@@ -157,14 +157,14 @@
               <b-col cols="12" sm="12" lg="6" md="6" xl="6">
                 <b-card-text>
                   <b>¿Cuál fue tu ultima mascota?</b>
-                  {{ requestAdoption.previous_experience.lastPet }}
+                  {{ requestAdoption.previousExperience.lastPet }}
                 </b-card-text>
               </b-col>
               <b-col cols="12" sm="12" lg="6" md="6" xl="6">
                 <b-card-text>
                   <b>¿Cuando se enfermaba la mascota que hacias?</b>
                   {{
-                    requestAdoption.previous_experience
+                    requestAdoption.previousExperience
                       .whatDidYouDoWhenThePetGotSick
                   }}
                 </b-card-text>
@@ -175,7 +175,7 @@
                 <b-card-text>
                   <b>¿Qué tipo de mascotas haz tenido antes?</b>
                   {{
-                    requestAdoption.previous_experience
+                    requestAdoption.previousExperience
                       .whatKindOfPetsHaveYouHadBefore
                   }}
                 </b-card-text>
@@ -184,9 +184,9 @@
                 <b-card-text>
                   <b>¿Qué recuerdos tienes con tu mascota?</b>
                   {{
-                    requestAdoption.previous_experience
+                    requestAdoption.previousExperience
                       .whatMemoriesDoYouHaveWithYourPet
-                      ? requestAdoption.previous_experience
+                      ? requestAdoption.previousExperience
                           .whatMemoriesDoYouHaveWithYourPet
                       : "No se registraron recuerdos"
                   }}
@@ -202,8 +202,8 @@
               <b-col cols="12" sm="12" lg="12" md="12" xl="12">
                 <b-card-text>
                   {{
-                    requestAdoption.additional_information
-                      ? requestAdoption.additional_information
+                    requestAdoption.additionalInformation
+                      ? requestAdoption.additionalInformation
                       : "No se registró información adicional"
                   }}
                 </b-card-text>
@@ -393,48 +393,48 @@ export default {
           idAdoption: localStorage.getItem("adoptionId"),
         });
         this.requestAdoption = response.data.data;
-        this.requestAdoption.previous_experience = JSON.parse(
-          this.requestAdoption.previous_experience
+        this.requestAdoption.previousExperience = JSON.parse(
+          this.requestAdoption.previousExperience
         );
-        this.requestAdoption.previous_experience.lastPet = await decrypt(
-          this.requestAdoption.previous_experience.lastPet
+        this.requestAdoption.previousExperience.lastPet = await decrypt(
+          this.requestAdoption.previousExperience.lastPet
         );
-        this.requestAdoption.previous_experience.whatDidYouDoWhenThePetGotSick =
+        this.requestAdoption.previousExperience.whatDidYouDoWhenThePetGotSick =
           await decrypt(
-            this.requestAdoption.previous_experience
+            this.requestAdoption.previousExperience
               .whatDidYouDoWhenThePetGotSick
           );
-        this.requestAdoption.previous_experience.whatKindOfPetsHaveYouHadBefore =
+        this.requestAdoption.previousExperience.whatKindOfPetsHaveYouHadBefore =
           await decrypt(
-            this.requestAdoption.previous_experience
+            this.requestAdoption.previousExperience
               .whatKindOfPetsHaveYouHadBefore
           );
-        this.requestAdoption.previous_experience.whatMemoriesDoYouHaveWithYourPet =
+        this.requestAdoption.previousExperience.whatMemoriesDoYouHaveWithYourPet =
           await decrypt(
-            this.requestAdoption.previous_experience
+            this.requestAdoption.previousExperience
               .whatMemoriesDoYouHaveWithYourPet
           );
 
-        this.requestAdoption.reasons_for_adoption = JSON.parse(
-          this.requestAdoption.reasons_for_adoption
+        this.requestAdoption.reasonsForAdoption = JSON.parse(
+          this.requestAdoption.reasonsForAdoption
         );
-        this.requestAdoption.reasons_for_adoption.haveHadPets = await decrypt(
-          this.requestAdoption.reasons_for_adoption.haveHadPets
+        this.requestAdoption.reasonsForAdoption.haveHadPets = await decrypt(
+          this.requestAdoption.reasonsForAdoption.haveHadPets
         );
-        this.requestAdoption.reasons_for_adoption.peopleAgreeToAdopt =
+        this.requestAdoption.reasonsForAdoption.peopleAgreeToAdopt =
           await decrypt(
-            this.requestAdoption.reasons_for_adoption.peopleAgreeToAdopt
+            this.requestAdoption.reasonsForAdoption.peopleAgreeToAdopt
           );
-        this.requestAdoption.reasons_for_adoption.whereWillThePetBe =
+        this.requestAdoption.reasonsForAdoption.whereWillThePetBe =
           await decrypt(
-            this.requestAdoption.reasons_for_adoption.whereWillThePetBe
+            this.requestAdoption.reasonsForAdoption.whereWillThePetBe
           );
-        this.requestAdoption.reasons_for_adoption.additionalComments =
+        this.requestAdoption.reasonsForAdoption.whyAdoptPet =
           await decrypt(
-            this.requestAdoption.reasons_for_adoption.additionalComments
+            this.requestAdoption.reasonsForAdoption.whyAdoptPet
           );
-        this.requestAdoption.additional_information = await decrypt(
-          this.requestAdoption.additional_information
+        this.requestAdoption.additionalInformation = await decrypt(
+          this.requestAdoption.additionalInformation
         );
         this.getDetails();
         console.log(this.requestAdoption.user.id);

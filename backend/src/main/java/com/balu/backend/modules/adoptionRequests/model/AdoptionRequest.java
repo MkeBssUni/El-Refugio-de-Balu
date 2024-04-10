@@ -44,19 +44,19 @@ public class AdoptionRequest {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
     @Column(columnDefinition = "json",nullable = false)
-    private String reasons_for_adoption;
+    private String reasonsForAdoption;
     @Column(columnDefinition = "json",nullable = false)
-    private String previous_experience;
+    private String previousExperience;
     @Column(nullable = false)
-    private String additional_information;
+    private String additionalInformation;
 
-    public AdoptionRequest(User user, Pet pet,  Status status, String reasons_for_adoption, String previous_experience, String additional_information) {
+    public AdoptionRequest(User user, Pet pet,  Status status, String reasonsForAdoption, String previousExperience, String additionalInformation) {
         this.user = user;
         this.pet = pet;
         this.status = status;
-        this.reasons_for_adoption = reasons_for_adoption;
-        this.previous_experience = previous_experience;
-        this.additional_information = additional_information;
+        this.reasonsForAdoption = reasonsForAdoption;
+        this.previousExperience = previousExperience;
+        this.additionalInformation = additionalInformation;
     }
 
 }

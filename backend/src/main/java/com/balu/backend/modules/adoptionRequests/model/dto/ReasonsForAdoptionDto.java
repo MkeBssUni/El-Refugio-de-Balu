@@ -13,5 +13,5 @@ public class ReasonsForAdoptionDto {
     private String haveHadPets;
     private String whereWillThePetBe;
     private String peopleAgreeToAdopt;
-    private String additionalComments;
+    private String whyAdoptPet;
 }
