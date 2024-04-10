@@ -202,6 +202,7 @@ export default {
     },
     goBack() {
       this.$router.go(-1);      
+      localStorage.removeItem("petId");
     },
     mapSize(size) {
       return sizes[size] || size;
