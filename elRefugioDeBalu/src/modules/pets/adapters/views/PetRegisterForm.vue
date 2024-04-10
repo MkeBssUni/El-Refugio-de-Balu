@@ -143,6 +143,9 @@ export default {
             }
         }
     },
+    mounted() {
+        this.$refs.generalInformationCard.getCategories();    
+    },
     components: {
         Encabezado,
         GeneralInformationCard,

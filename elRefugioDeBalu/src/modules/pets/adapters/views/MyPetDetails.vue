@@ -9,7 +9,7 @@
                         <hr class="divider my-0">
                         <b-row class="mt-4 d-flex justify-content-end">
                             <b-col cols="4" lg="3" v-show="canEdit">
-                                <b-button variant="outline-dark-orange"
+                                <b-button variant="outline-dark-orange" @click="editPet()"
                                     class="me-3 d-flex align-items-center justify-content-between w-100">
                                     <span class="me-2">Editar</span>
                                     <b-icon icon="pencil" font-scale="1.3"></b-icon>
@@ -37,7 +37,7 @@
                         <hr class="divider my-0">
                         <b-row class="mt-4 d-flex justify-content-end">
                             <b-col cols="12" sm="4" v-show="canEdit">
-                                <b-button variant="outline-dark-orange"
+                                <b-button variant="outline-dark-orange" @click="editPet()"
                                     class="me-3 d-flex align-items-center justify-content-between w-100">
                                     <span class="me-2">Editar</span>
                                     <b-icon icon="pencil" font-scale="1.3"></b-icon>
@@ -122,6 +122,9 @@ export default {
         },
         showCancelModal() {
             this.$bvModal.show('cancelModal');
+        },
+        editPet() {
+            this.$router.push({ name: 'petUpdateForm' });
         }
     },
     mounted() {
