@@ -8,21 +8,21 @@
                         <LargeContent :pet="pet" />
                         <hr class="divider my-0">
                         <b-row class="mt-4 d-flex justify-content-end">
-                            <b-col cols="6" xl="3" v-show="canApprove">
+                            <b-col cols="4" lg="3" v-show="canApprove">
                                 <b-button variant="outline-success" @click="confirmApprovePet()"
                                     class="me-3 d-flex align-items-center justify-content-between w-100">
                                     <span class="me-2">Aprobar mascota</span>
                                     <b-icon icon="check-circle" font-scale="1.3"></b-icon>
                                 </b-button>
                             </b-col>
-                            <b-col cols="6" xl="3" class="mt-3 mt-xl-0" v-show="canClose">
+                            <b-col cols="4" lg="3" class="mt-0 mt-xl-0" v-show="canClose">
                                 <b-button variant="outline-danger" @click="confirmClosePet()"
                                     class="me-3 d-flex align-items-center justify-content-between w-100">
                                     <span class="me-2">Finalizar</span>
                                     <b-icon icon="x-circle" font-scale="1.3"></b-icon>
                                 </b-button>
                             </b-col>
-                            <b-col cols="6" xl="3" class="mt-3 mt-xl-0">
+                            <b-col cols="4" lg="3" class="mt-0 mt-xl-0">
                                 <b-button variant="outline-secondary-gray" @click="goBack"
                                     class="d-flex align-items-center justify-content-between w-100">
                                     <span class="me-2">Regresar</span>
@@ -36,28 +36,21 @@
                         <SmallContent :pet="pet" />
                         <hr class="divider my-0">
                         <b-row class="mt-4 d-flex justify-content-end">
-                            <b-col cols="12" sm="6">
+                            <b-col cols="12" v-show="canApprove">
                                 <b-button variant="outline-success" @click="confirmApprovePet()"
                                     class="me-3 d-flex align-items-center justify-content-between w-100">
-                                    <span class="me-2">Dar seguimiento</span>
+                                    <span class="me-2">Aprobar mascota</span>
                                     <b-icon icon="check-circle" font-scale="1.3"></b-icon>
                                 </b-button>
                             </b-col>
-                            <b-col cols="12" sm="6" class="mt-3 mt-sm-0">
-                                <b-button variant="outline-dark-orange"
-                                    class="me-3 d-flex align-items-center justify-content-between w-100">
-                                    <span class="me-2">Solicitar cambios</span>
-                                    <b-icon icon="pencil" font-scale="1.3"></b-icon>
-                                </b-button>
-                            </b-col>
-                            <b-col cols="12" sm="6" class="mt-3">
+                            <b-col cols="12" class="mt-3" v-show="canClose">
                                 <b-button variant="outline-danger" @click="confirmClosePet()"
                                     class="me-3 d-flex align-items-center justify-content-between w-100">
                                     <span class="me-2">Finalizar</span>
                                     <b-icon icon="x-circle" font-scale="1.3"></b-icon>
                                 </b-button>
                             </b-col>
-                            <b-col cols="12" sm="6" class="mt-3">
+                            <b-col cols="12" class="mt-3">
                                 <b-button variant="outline-secondary-gray" @click="goBack"
                                     class="d-flex align-items-center justify-content-between w-100">
                                     <span class="me-2">Regresar</span>

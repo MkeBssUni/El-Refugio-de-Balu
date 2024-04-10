@@ -57,12 +57,12 @@
                         </template>
                         <template #cell(actions)="data">
                             <div class="d-flex justify-content-center">
-                                <b-button pill size="sm" variant="outline-blue" @click="getDetails(data.item.id)"
+                                <b-button pill size="sm" variant="outline-dark-blue" @click="getDetails(data.item.id)"
                                     class="px-3 d-flex align-items-center"
                                     v-b-tooltip.hover.left="'Ver detalles de la mascota'">
                                     <i class="material-icons" style="font-size: 1rem">pets</i>
                                 </b-button>
-                                <b-button pill size="sm" variant="outline-dark-blue"
+                                <b-button pill size="sm" variant="outline-dark-secondary-blue"
                                     @click="getAdoptionRequests(data.item.id)" class="ms-2 px-3 d-flex align-items-center"
                                     v-b-tooltip.hover.left="'Ver solicitudes de adopción'">
                                     <b-icon icon="card-heading" font-scale="1"></b-icon>
