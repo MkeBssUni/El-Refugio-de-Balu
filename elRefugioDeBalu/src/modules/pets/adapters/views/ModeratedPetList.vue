@@ -256,8 +256,8 @@ export default {
             this.getComments(this.selectedPetId)
         },
         getAdoptionRequests(petId) {
-            this.$router.push({ name: 'adoptionList', params: { petId: petId } });
-            sessionStorage.setItem('petId', petId);
+            localStorage.setItem('petId', petId)
+            this.$router.push({ name: 'adoptionList' });            
         }
     },
     mounted() {
