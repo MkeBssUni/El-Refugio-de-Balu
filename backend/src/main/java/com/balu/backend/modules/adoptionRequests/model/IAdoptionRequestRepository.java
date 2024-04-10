@@ -34,11 +34,18 @@ public interface IAdoptionRequestRepository  extends JpaRepository<AdoptionReque
             nativeQuery = true)
     Page<IAdoptionRequestModViewPaged> findAllPagedMod(@Param("idPet") Long idPet, @Param("search") String search, Pageable pageable);
 
-    Long countByUser_IdAndStatus_Id(Long idUser, Long statusId);
+    @Query(value = "select count(*) from adoption_requests adoption \n" +
+            "inner join statusses estado on estado.id = adoption.status_id \n" +
+            "where estado.name=\"PENDING\" and adoption.user_id = :idUser ;", nativeQuery = true)
+    int countAdoptionByUser(@Param("idUser") Long idUser);
+
+    @Query(value = "select count(*) from adoption_requests inner join pets on adoption_requests.pet_id = pets.id\n" +
+            "inner join statusses estado on estado.id = adoption_requests.status_id \n" +
+            " where adoption_requests.pet_id = :idPet and estado.name = \"PENDING\";",nativeQuery = true)
+    int countAdoptionByPet(@Param("idPet") Long idPet);
 
     Optional<AdoptionRequest> findByUser_IdAndPet_Id(Long userId, Long petId);
-    Optional<AdoptionRequest> findByPet_Id(Long idPet);
-    Long countAdoptionRequestByPet_Id(Long idPet);
+
 
     @Modifying
     @Query(value = "UPDATE adoption_requests SET  status_id= :status WHERE id = :id", nativeQuery = true)

@@ -93,7 +93,7 @@ public class MainSecurity {
                         .requestMatchers("/api/favorite/pet/add").hasAnyAuthority(Roles.GENERAL.name())
                         .requestMatchers("/api/favorite/pet/remove").hasAnyAuthority(Roles.GENERAL.name())
                         .requestMatchers("/api/favorite/pet/catalog").hasAnyAuthority(Roles.GENERAL.name())
-                        .requestMatchers("/api/adoption/").hasAnyAuthority(Roles.GENERAL.name())
+                        .requestMatchers("/api/adoption/saveRequest").hasAnyAuthority(Roles.GENERAL.name())
                         .requestMatchers("/api/adoption/paged").hasAnyAuthority(Roles.GENERAL.name())
                         .requestMatchers("/api/adoption/getAdoption").hasAnyAuthority(Roles.GENERAL.name(),Roles.MOD.name())
                         .requestMatchers("/api/adoption/byPet").hasAnyAuthority(Roles.MOD.name())

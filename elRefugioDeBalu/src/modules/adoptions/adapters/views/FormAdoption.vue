@@ -264,7 +264,7 @@
                               label-for="input-1"
                             >
                               <label for="input-1"
-                                >Comentarios adicionales
+                                >¿Por qué deseas adoptar esta mascota?<span class="required-asterisk">*</span>
                               </label>
                               <b-form-input
                                 id="input-1"
@@ -583,7 +583,7 @@ import swal from "sweetalert2";
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
 import instance from "../../../../config/axios";
 
-const regex = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ' .]+$/;
+const regex = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ',. ()]+$/;
 
 export default {
   name: "FormAdoption",
@@ -743,7 +743,7 @@ export default {
       }
     },
     validateAdditionalComments() {
-      if (
+     if (
         !regex.test(
           this.adoptionRequestSave.reasonsForAdoption.additionalComments
         )
@@ -911,12 +911,15 @@ export default {
         this.validation.additionalInfo = false;
         this.error.additionalInfo =
           "La respuesta debe tener menos de 100 caracteres";
-      } else {
+      } else if (this.adoptionRequestSave.additional_information === null) {
+        this.validation.additionalInfo = true;
+        this.error.additionalInfo = null;
+      }else{
         this.validation.additionalInfo = true;
         this.error.additionalInfo = null;
       }
     },
-    async submitAdoptionForm() {
+    submitAdoptionForm() {
       swal
         .fire({
           title: "¿Estás seguro de enviar la solicitud de adopción?",
@@ -928,118 +931,107 @@ export default {
           confirmButtonText: "Si, enviar",
           cancelButtonText: "Cancelar",
         })
-        .then(async (result) => {
-          // Marca la función como asíncrona aquí
+        .then((result) => {
           this.imagesToHomePet();
           if (result.isConfirmed) {
-            swal.fire({
-              title: "Espera un momento...",
-              text: "Estamos enviando tu solicitud de adopción",
-              imageUrl: gatoWalkingGif,
-              timer: 5000,
-              timerProgressBar: true,
-              imageWidth: 160, // Ancho de la imagen
-              imageHeight: 160, // Altura de la imagen
-              showConfirmButton: false,
-            });
-            try {
-              const response = await instance.post("/adoption/", {
-                user: localStorage.getItem("userId"),
-                pet: localStorage.getItem("petId"),
-                reasonsForAdoption: {
-                  peopleAgreeToAdopt:
-                    this.adoptionRequestSave.reasonsForAdoption
-                      .peopleAgreeToAdopt,
-                  haveHadPets:
-                    this.adoptionRequestSave.reasonsForAdoption.haveHadPets,
-                  whereWillThePetBe:
-                    this.adoptionRequestSave.reasonsForAdoption
-                      .whereWillThePetBe,
-                  additionalComments: this.adoptionRequestSave
-                    .reasonsForAdoption.additionalComments
-                    ? this.adoptionRequestSave.reasonsForAdoption
-                        .additionalComments
-                    : "Sin registro",
-                },
-                previousExperiencieDto: {
-                  whatDidYouDoWhenThePetGotSick:
-                    this.adoptionRequestSave.previousExperiencieDto
-                      .whatDidYouDoWhenThePetGotSick,
-                  whatKindOfPetsHaveYouHadBefore:
-                    this.adoptionRequestSave.previousExperiencieDto
-                      .whatKindOfPetsHaveYouHadBefore,
-                  whatMemoriesDoYouHaveWithYourPet:
-                    this.adoptionRequestSave.previousExperiencieDto
-                      .whatMemoriesDoYouHaveWithYourPet,
-                  lastPet:
-                    this.adoptionRequestSave.previousExperiencieDto.lastPet,
-                },
-                additional_information: this.adoptionRequestSave
-                  .additional_information
-                  ? this.adoptionRequestSave.additional_information
-                  : "Sin registro",
-                imageAdoption: this.adoptionRequestSave.imageAdoption,
-              });
-              if (!response.data.error) {
-                swal
-                  .fire({
-                    title: "Solicitud de adopción enviada",
-                    text: "Tu solicitud de adopción ha sido enviada con éxito",
-                    icon: "success",
-                    confirmButtonColor: "#3085d6",
-                    confirmButtonText: "Aceptar",
-                    timer: 2000,
-                  })
-                  .finally(() => {
-                    this.cleanInfo();
-                    this.$router.push("/myAplicationAdoption");
-                  });
-              }
-            } catch (error) {
-              let Msjerror = "";
-              switch (error.response.data.message) {
-                case "INVALID_USER":
-                  Msjerror =
-                    "Ups! por favor vuelve a iniciar sesión y volver a intentarlo";
-                  break;
-                case "DUPLICATE_REQUEST":
-                  Msjerror =
-                    "Ups! Ya tienes una solicitud de adopción de la misma mascota";
-                  break;
-                case "INVALID_LENGTH":
-                  Msjerror =
-                    "Ups! la respuesta debe tener entre 10 y 100 caracteres";
-                  break;
-                case "INVALID_ROLE":
-                  Msjerror =
-                    "Ups! no tienes permisos para realizar esta acción";
-                  break;
-                case "MAX_ADOPTIONREQUEST":
-                  Msjerror =
-                    "Ups! Solo puedes tener 5 solicitudes activas,por espera a que sean aprobadas o finalizadas";
-                  break;
-                case "LIMIT_ADOPTIONREQUEST":
-                  Msjerror = "La mascota no esta disponible por el momento";
-                  break;
-                case "ADOPTIONREQUEST_NOT_SAVED":
-                  Msjerror =
-                    "Ups! algo salió mal, por favor vuelve a intentarlo no se logro guardar la solicitud";
-                  break;
-                default:
-                  Msjerror =
-                    "Ups! algo salió mal, por favor vuelve a intentarlo";
-                  break;
-              }
-              swal.fire({
-                title: "Error al enviar la solicitud de adopción",
-                text: Msjerror,
-                icon: "error",
-                confirmButtonColor: "#3085d6",
-                confirmButtonText: "Aceptar",
-              });
-            }
+            this.saveAdoption();
           }
         });
+    },
+    async saveAdoption() {
+      try {
+        swal.fire({
+          title: "Espera un momento...",
+          text: "Estamos revisando tu información para enviar tu solicitud de adopción",
+          imageUrl: gatoWalkingGif,
+          timerProgressBar: true,
+          imageWidth: 160, // Ancho de la imagen
+          imageHeight: 160, // Altura de la imagen
+          showConfirmButton: false,
+        });
+        await instance.post("/adoption/saveRequest", {
+          user: localStorage.getItem("userId"),
+          pet: localStorage.getItem("petId"),
+          reasonsForAdoption: {
+            peopleAgreeToAdopt:
+              this.adoptionRequestSave.reasonsForAdoption.peopleAgreeToAdopt,
+            haveHadPets:
+              this.adoptionRequestSave.reasonsForAdoption.haveHadPets,
+            whereWillThePetBe:
+              this.adoptionRequestSave.reasonsForAdoption.whereWillThePetBe,
+            additionalComments: this.adoptionRequestSave.reasonsForAdoption.additionalComments,
+          },
+          previousExperiencieDto: {
+            whatDidYouDoWhenThePetGotSick:
+              this.adoptionRequestSave.previousExperiencieDto
+                .whatDidYouDoWhenThePetGotSick,
+            whatKindOfPetsHaveYouHadBefore:
+              this.adoptionRequestSave.previousExperiencieDto
+                .whatKindOfPetsHaveYouHadBefore,
+            whatMemoriesDoYouHaveWithYourPet:
+              this.adoptionRequestSave.previousExperiencieDto
+                .whatMemoriesDoYouHaveWithYourPet,
+            lastPet: this.adoptionRequestSave.previousExperiencieDto.lastPet,
+          },
+          additional_information: this.adoptionRequestSave.additional_information? this.adoptionRequestSave.additional_information: "Sin registro",
+          imageAdoption: this.adoptionRequestSave.imageAdoption,
+        });
+
+        swal
+          .fire({
+            title: "Solicitud de adopción enviada",
+            text: "Tu solicitud de adopción ha sido enviada con éxito",
+            icon: "success",
+            iconColor: "#53A93D",
+            timer: 3000,
+            timerProgressBar: true,
+            showConfirmButton: false,
+          })
+          .finally(() => {
+            this.cleanInfo();
+            this.$router.push("/myAplicationAdoption");
+          });
+      } catch (error) {
+        console.log(error);
+        let Msjerror = "";
+        switch (error.response.data.message) {
+          case "INVALID_USER":
+            Msjerror =
+              "Ups! por favor vuelve a iniciar sesión y volver a intentarlo";
+            break;
+          case "DUPLICATE_REQUEST":
+            Msjerror =
+              "Ups! Ya tienes una solicitud de adopción de la misma mascota";
+            break;
+          case "INVALID_LENGTH":
+            Msjerror = "Ups! la respuesta debe tener entre 10 y 100 caracteres";
+            break;
+          case "INVALID_ROLE":
+            Msjerror = "Ups! no tienes permisos para realizar esta acción";
+            break;
+          case "MAX_ADOPTIONREQUEST":
+            Msjerror =
+              "Ups! Solo puedes tener 5 solicitudes activas,por espera a que sean aprobadas o finalizadas";
+            break;
+          case "LIMIT_ADOPTIONREQUEST":
+            Msjerror = "La mascota no esta disponible por el momento";
+            break;
+          case "ADOPTIONREQUEST_NOT_SAVED":
+            Msjerror =
+              "Ups! algo salió mal, por favor vuelve a intentarlo no se logro guardar la solicitud";
+            break;
+          default:
+            Msjerror = "Ups! algo salió mal, por favor vuelve a intentarlo";
+            break;
+        }
+        swal.fire({
+          title: "Error al enviar la solicitud de adopción",
+          text: Msjerror,
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Aceptar",
+        });
+      }
     },
     cleanInfo() {
       this.adoptionInfo = {
@@ -1078,12 +1070,17 @@ export default {
         (value) => value === false
       );
 
+;
+
       // Devolver true si alguna parte de la información está incompleta o el formato es incorrecto
       return (
         adoptionInfoIncomplete ||
         reasonsForAdoptionIncomplete ||
         previousExperienceIncomplete ||
-        invalidFormat
+        invalidFormat ||
+        (this.adoptionRequestSave.additional_information === null &&
+          this.adoptionRequestSave.reasonsForAdoption.additionalComments ===
+            null)
       );
     },
     handleFileInputChange(event, propertyName) {
@@ -1102,13 +1099,10 @@ export default {
       }
     },
     imageToBase64(file, callback) {
-      // Verificar si el archivo es una imagen
       if (!file.type.startsWith("image/")) {
         this.makeToast("El archivo no es una imagen");
         return;
       }
-
-      
 
       const maxSizeInBytes = 6 * 1024 * 1024; // 6MB
       if (file.size > maxSizeInBytes) {
