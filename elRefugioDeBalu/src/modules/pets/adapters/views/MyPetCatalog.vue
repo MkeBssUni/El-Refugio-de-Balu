@@ -195,8 +195,8 @@ export default {
             }
         },        
         getDetails(petId) {
-            this.$router.push({ name: 'myPet', params: { petId: petId } });
-            sessionStorage.setItem('petId', petId);                        
+            localStorage.setItem('petId', petId);
+            this.$router.push({ name: 'myPet' });  
         }
     },
     mounted() {

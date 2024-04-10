@@ -209,8 +209,8 @@ export default {
             return statusses[status] || status;
         },
         getDetails(petId) {
-            this.$router.push({ name: 'newPet', params: { petId: petId } });
-            sessionStorage.setItem('petId', petId);                        
+            localStorage.setItem('petId', petId);
+            this.$router.push({ name: 'newPet' });
         }
     },
     mounted() {

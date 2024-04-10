@@ -59,14 +59,9 @@ import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
 import { sizes, lifeStages, weightUnits, ageUnits } from "../../../../kernel/data/mappingDictionaries";
 
 export default {
-    props: {
-        petId: {
-            type: String,
-            required: true
-        }
-    },
     data() {
         return {
+            petId: "",
             pet: {}
         }
     },
@@ -93,6 +88,9 @@ export default {
             } else {
                 this.pet.images.push(mainImage);
             }
+        },        
+        goBack() {
+            this.$router.go(-1);
         },
         async getDetails() {
             try {
@@ -117,17 +115,18 @@ export default {
                     timerProgressBar: true,
                     showConfirmButton: false
                 }).then(() => {
-                    this.$router.push('/pets')
+                    this.goBack();
                 })
             }
         },
-        goBack() {
-            this.$router.go(-1);
-        }
     },
     mounted() {
-        if (!this.petId && localStorage.getItem('petId')) this.petId = localStorage.getItem('petId');
-        this.getDetails();
+        if (localStorage.getItem("petId")) {
+            this.petId = localStorage.getItem("petId");
+            this.getDetails();
+        } else {
+            this.goBack();
+        }
     },
     components: {
         SmallContent,
