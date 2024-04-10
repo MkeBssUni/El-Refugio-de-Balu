@@ -91,6 +91,7 @@ export default {
         },        
         goBack() {
             this.$router.go(-1);
+            localStorage.removeItem("petId");
         },
         async getDetails() {
             try {
