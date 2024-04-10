@@ -49,7 +49,6 @@ public class CategoryController {
             ResponseApi<Integer> responseApi=this.categoryService.updateCategory(updateCategoryDto);
             return new ResponseEntity<>(responseApi,responseApi.getStatus());
         }catch (Exception e){
-            System.out.println("error en put"+e);
             return  new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -60,7 +59,6 @@ public class CategoryController {
             ResponseApi<Integer> responseApi=this.categoryService.changeStatusCategory(changeStatusCategoryDto);
             return new ResponseEntity<>(responseApi,responseApi.getStatus());
         }catch (Exception e){
-            System.out.println("error en put"+e);
             return  new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

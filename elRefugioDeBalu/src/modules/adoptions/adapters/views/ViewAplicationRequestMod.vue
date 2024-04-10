@@ -437,7 +437,6 @@ export default {
           this.requestAdoption.additionalInformation
         );
         this.getDetails();
-        console.log(this.requestAdoption.user.id);
         Swal.close();
       } catch (error) {
         Swal.fire({
@@ -460,7 +459,6 @@ export default {
           id: idPet,
         });
         this.credentialPet = response.data.data;
-        console.log(this.credentialPet);
       } catch (error) {
         Swal.fire({
           title: "Error",
@@ -504,7 +502,6 @@ export default {
       }
     },
     async changeStatus() {
-      console.log(this.statu);
       Swal.fire({
         title: `¿Estás seguro de  ${this.typeState} `,
         text: "Una vez enviada no podrá ser modificada",
@@ -528,7 +525,6 @@ export default {
               adoptionId: localStorage.getItem("adoptionId"),
               status: this.statu,
             });
-            console.log(response);
             if (this.statu === "ADOPTED" && !response.error ) {
               let response = instance.put("/pet/adoption", {
                 pet: localStorage.getItem("petId"),
@@ -567,8 +563,6 @@ export default {
       });
     },
     async getDetails() {
-      console.log("Aqui info del usuario");
-      console.log(this.requestAdoption.user.id);
       // try {
       //   const response = await instance.post("/person/details", {
       //     userId: await encrypt(this.requestAdoption.user.id),
@@ -580,7 +574,6 @@ export default {
       //   this.information.user.username = await decrypt(
       //     this.information.user.username
       //   );
-      //   console.log(this.information);
 
       //   swal.close();
       // } catch (error) {

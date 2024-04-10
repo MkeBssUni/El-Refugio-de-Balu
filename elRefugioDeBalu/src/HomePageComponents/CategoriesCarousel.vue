@@ -59,7 +59,6 @@ export default {
       } catch (error) {
         this.enpty = true;
       }
-      console.log(this.enpty);
     },
   },
   mounted() {

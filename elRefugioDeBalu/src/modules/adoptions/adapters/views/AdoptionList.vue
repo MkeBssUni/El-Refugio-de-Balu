@@ -272,7 +272,6 @@ export default {
           const options = { year: "numeric", month: "long", day: "2-digit" };
           adoption.created_at = date.toLocaleDateString("es-ES", options);
         }
-        console.log(this.adoptions);
         this.getCredentialPet();
         Swal.close();
       } catch (error) {
@@ -290,14 +289,11 @@ export default {
       }
     },
     async getCredentialPet() {
-      console.log("entro a getCredentialPet")
       try {
         const response = await instance.post("/pet/credential", {
           id: this.petId
         });
-        console.log(response)
         this.credentialPet = response.data.data;
-        console.log(this.credentialPet);
       } catch (error) {
         Swal.fire({
           title: "Error",
