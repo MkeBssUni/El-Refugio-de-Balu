@@ -76,14 +76,9 @@ import LargeContent from "../components/PetLargeCardContent.vue"
 import CancelModal from "../components/CancelRequest.vue"
 
 export default {
-    props: {
-        petId: {
-            type: String,
-            required: true
-        }
-    },
     data() {
         return {
+            petId: "",            
             pet: {},
             canEdit: false,
             canCancel: false,
@@ -129,9 +124,12 @@ export default {
         }
     },
     mounted() {
-        if (!this.petId && sessionStorage.getItem('petId')) this.petId = sessionStorage.getItem('petId');
-        if (!this.petId && !sessionStorage.getItem('petId')) this.$router.push('/myPets');
-        this.getDetails();
+        if (localStorage.getItem("petId")) {
+            this.petId = localStorage.getItem("petId");
+            this.getDetails();
+        } else {
+            this.goBack();
+        }
     },
     components: {
         SmallContent,

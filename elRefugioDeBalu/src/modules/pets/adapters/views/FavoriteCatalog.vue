@@ -18,13 +18,14 @@
             </b-col>
         </b-row>
         <hr class="mt-4">
-        <TransitionGroup name="roll" tag="div" class="row mb-5">        
+        <TransitionGroup name="roll" tag="div" class="row mb-5">
             <b-col v-for="pet in pets" :key="pet.id" cols="12" sm="6" lg="4" xl="3" class="mt-3">
                 <b-card :key="pet.id" :img-src="pet.image" class="pet-card" no-body>
                     <b-row class="transparent absolute-position">
                         <b-col cols="12" class="d-flex justify-content-end">
                             <b-button variant="dark-gray" class="m-2 py-2 d-flex align-items-center" pill
-                                @mouseenter="hoverIn(pet.id)" @mouseleave="hoverOut()" @click="showRemovePetConfirmation(pet)"
+                                @mouseenter="hoverIn(pet.id)" @mouseleave="hoverOut()"
+                                @click="showRemovePetConfirmation(pet)"
                                 v-b-tooltip.hover.left="'Eliminar de favoritas'">
                                 <b-icon :icon="hover === pet.id ? 'heart' : 'heart-fill'" font-scale="2"
                                     :class="{ 'text-danger': hover !== pet.id, 'mt-1': true }"></b-icon>
@@ -43,10 +44,12 @@
                     </b-card-body>
                 </b-card>
             </b-col>
-            <b-col v-show="total == 0">
+        </TransitionGroup>
+        <b-row v-show="total == 0">
+            <b-col cols="12">
                 <h5 class="text-center mt-3">No has marcado mascotas como tus favoritas</h5>
             </b-col>
-        </TransitionGroup>
+        </b-row>
         <b-row class="pt-2">
             <b-col cols="12">
                 <b-pagination pills v-model="page" :total-rows="total" :per-page="size" align="center">
@@ -98,7 +101,7 @@ export default {
                     user: this.payload.user,
                     searchValue: this.searchValue
                 })
-                this.pets = response.data.data.content                
+                this.pets = response.data.data.content
                 this.total = response.data.data.totalElements
                 Swal.close()
             } catch (error) {
@@ -168,8 +171,8 @@ export default {
             });
         },
         getDetails(pet) {
-            this.$router.push({ name: 'petDetails', params: { petId: pet.id } });
             localStorage.setItem('petId', pet.id);
+            this.$router.push({ name: 'petDetails' });
         }
     },
     mounted() {
