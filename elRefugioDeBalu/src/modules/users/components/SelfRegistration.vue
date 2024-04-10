@@ -63,8 +63,7 @@
                 }}</b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group class="my-3" label-for="input-password-confirm"
-              :state="confirmPasswordValidation">
+            <b-form-group class="my-3" label-for="input-password-confirm" :state="confirmPasswordValidation">
               <label slot="label">
                 Repetir Contraseña: <span class="required-asterisk">*</span>
               </label>
@@ -143,6 +142,7 @@ export default {
         username: "",
         password: "",
         phoneNumber: "",
+        viaSms: false,
       },
       nameValidation: null,
       lastnameValidation: null,
@@ -160,7 +160,7 @@ export default {
   methods: {
     async doneCallback(solution) {
       let response = await this.verifyCaptcha(solution);
-      if(response){
+      if (response) {
         this.validCaptcha = response.success;
       }
     },
@@ -298,12 +298,23 @@ export default {
           });
         }
       } catch (error) {
-        swal.fire({
+        if(error.response && error.response.status ===  405){
+          swal.fire({
+            title: "Error",
+            text: "El servicio de mensajes de texto no está disponible por el momento, por favor intenta con el correo electrónico",
+            icon: "error",
+            showConfirmButton: true,
+          }).then(()=>{
+            this.submitForm()
+          })
+        }else{
+          swal.fire({
           title: "Error",
           text: "Algo salió mal, por favor intenta de nuevo más tarde",
           icon: "error",
           showConfirmButton: true,
         });
+        }
       }
 
     },
@@ -311,16 +322,19 @@ export default {
       swal
         .fire({
           title: "¿Estás seguro de enviar la solicitud de registro?",
-          text: "Una vez enviada no podrá ser modificada",
+          text: "Elije como quieres reibir tu código de verificación",
           icon: "warning",
           showCancelButton: true,
+          showDenyButton: true,
           confirmButtonColor: "#3085d6",
+          denyButtonColor: "#17a2b8",
           cancelButtonColor: "#d33",
-          confirmButtonText: "Si, enviar",
+          confirmButtonText: "Correo electrónico",
+          denyButtonText: "Mensaje de texto",
           cancelButtonText: "Cancelar",
         })
         .then((result) => {
-          if (result.isConfirmed) {
+          if (result.isConfirmed || result.isDenied) {
             swal.fire({
               title: "Espera un momento...",
               text: "Estamos enviando tu solicitud",
@@ -329,7 +343,8 @@ export default {
               imageHeight: 160,
               showConfirmButton: false,
             });
-            this.sendForm();
+            result.isDenied ? this.encryptedForm.viaSms = true : this.encryptedForm.viaSms = false;
+            this.sendForm()  
           }
         });
     },
