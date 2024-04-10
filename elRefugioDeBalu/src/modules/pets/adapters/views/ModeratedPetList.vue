@@ -45,7 +45,7 @@
                     <b-table :fields="fields" :items="pets" label-sort-asc="" label-sort-desc="" no-sort-reset
                         responsive small striped hover class="text-center custom-scroll-style">
                         <template #cell(cancelRequest)="data">
-                            <b-icon v-if="data.value" icon="exclamation-circle" variant="danger" font-scale="1.3"
+                            <b-icon v-if="data.item.cancelRequest && data.item.status != 'closed'" icon="exclamation-circle" variant="danger" font-scale="1.3"
                                 v-b-tooltip.hover.right="'Solicitud de cancelación'"></b-icon>
                         </template>
                         <template #cell(requests)="data">
@@ -56,31 +56,20 @@
                                 mapStatus((data.value).toString().toLowerCase()) }}</b-badge>
                         </template>
                         <template #cell(actions)="data">
-                            <div class="d-none d-lg-inline-block">
+                            <div class="d-flex justify-content-center">
+                                <b-button pill size="sm" variant="outline-blue" @click="getDetails(data.item.id)"
+                                    class="px-3 d-flex align-items-center"
+                                    v-b-tooltip.hover.left="'Ver detalles de la mascota'">
+                                    <i class="material-icons" style="font-size: 1rem">pets</i>
+                                </b-button>
                                 <b-button pill size="sm" variant="outline-dark-blue"
-                                    @click="getAdoptionRequests(data.item.id)" class="px-3 d-flex align-items-center"
-                                    v-b-tooltip.hover.top="'Ver solicitudes de adopción'">
-                                    <b-icon icon="file-earmark-text" font-scale="1"></b-icon>
+                                    @click="getAdoptionRequests(data.item.id)" class="ms-2 px-3 d-flex align-items-center"
+                                    v-b-tooltip.hover.left="'Ver solicitudes de adopción'">
+                                    <b-icon icon="card-heading" font-scale="1"></b-icon>
                                 </b-button>
-                            </div>
-                            <div class="d-none d-lg-inline-block ms-0 ms-sm-2">
-                                <b-button pill size="sm" v-b-tooltip.hover.top="'Ver comentarios'"
-                                    :variant="data.item.cancelRequest ? 'outline-danger' : 'outline-dark-orange'"
-                                    class="px-3 d-flex align-items-center" @click="getComments(data.item.id)">
-                                    <b-icon icon="chat-left-text" font-scale="1"></b-icon>
-                                </b-button>
-                            </div>
-                            <div class="d-inline-block d-lg-none">
-                                <b-button pill size="sm" variant="outline-dark-blue"
-                                    class="px-2 d-flex align-items-center"
-                                    v-b-tooltip.hover.left="'Solicitudes de adopción'">
-                                    <b-icon icon="file-earmark-text" font-scale="1"></b-icon>
-                                </b-button>
-                            </div>
-                            <div class="d-inline-block d-lg-none ms-0 ms-sm-2">
-                                <b-button pill size="sm" variant="outline-dark-orange"
-                                    class="px-2 d-flex align-items-center" v-b-tooltip.hover.left="'Comentarios'"
-                                    @click="getComments(data.item.id)">
+                                <b-button pill size="sm" v-b-tooltip.hover.left="'Ver comentarios'"
+                                    :variant="(data.item.cancelRequest && data.item.status != 'closed') ? 'outline-danger' : 'outline-dark-orange'"
+                                    class="ms-2 px-3 d-flex align-items-center" @click="getComments(data.item.id)">
                                     <b-icon icon="chat-left-text" font-scale="1"></b-icon>
                                 </b-button>
                             </div>
@@ -255,9 +244,13 @@ export default {
         async loadComments() {
             this.getComments(this.selectedPetId)
         },
+        getDetails(petId) {
+            localStorage.setItem('petId', petId)
+            this.$router.push({ name: 'myModeratedPet' });
+        },
         getAdoptionRequests(petId) {
             localStorage.setItem('petId', petId)
-            this.$router.push({ name: 'adoptionList' });            
+            this.$router.push({ name: 'adoptionList' });
         }
     },
     mounted() {
