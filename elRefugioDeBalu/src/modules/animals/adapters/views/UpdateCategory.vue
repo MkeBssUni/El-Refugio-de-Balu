@@ -162,7 +162,7 @@ export default {
         this.UpdateCategoryDtoEncrypted.id= await encrypt(this.UpdateCategoryDto.id);
         this.UpdateCategoryDtoEncrypted.name = await encrypt(this.UpdateCategoryDto.name);
         this.UpdateCategoryDtoEncrypted.description = await encrypt(this.UpdateCategoryDto.description);
-        this.UpdateCategoryDtoEncrypted.image = await encrypt(this.UpdateCategoryDto.image);
+        this.UpdateCategoryDtoEncrypted.image = this.UpdateCategoryDto.image;
         const response = await instance.put("/category/",this.UpdateCategoryDtoEncrypted);
         if (response.status == 200) {
           Swal.fire({
