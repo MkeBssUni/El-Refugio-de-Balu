@@ -16,16 +16,8 @@ public class SaveAdoptionRequestDto {
     private String pet;
     private ReasonsForAdoptionDto reasonsForAdoption;
     private PreviousExperiencieDto previousExperiencieDto;
-    private String additional_information;
+    private String additionalInformation;
     private String[] imageAdoption;
 
-    @Override
-    public String toString() {
-        return "SaveAdoptionRequestDto{" +
-                "user='" + user + '\'' +
-                ", pet='" + pet + '\'' +
-                ", reasonsForAdoption=" + reasonsForAdoption +
-                ", previousExperiencieDto=" + previousExperiencieDto +
-                ", additional_information='" + additional_information + '\'' ;
-    }
+
 }

@@ -270,7 +270,7 @@
                                 id="input-1"
                                 v-model="
                                   adoptionRequestSave.reasonsForAdoption
-                                    .additionalComments
+                                    .whyAdoptPet
                                 "
                                 rows="3"
                                 minlegt="10"
@@ -605,7 +605,7 @@ export default {
           peopleAgreeToAdopt: null,
           haveHadPets: null,
           whereWillThePetBe: null,
-          additionalComments: null,
+          whyAdoptPet: null,
         },
         previousExperiencieDto: {
           whatDidYouDoWhenThePetGotSick: null,
@@ -745,21 +745,21 @@ export default {
     validateAdditionalComments() {
      if (
         !regex.test(
-          this.adoptionRequestSave.reasonsForAdoption.additionalComments
+          this.adoptionRequestSave.reasonsForAdoption.whyAdoptPet
         )
       ) {
         this.validation.additionalComments = false;
         this.error.additionalComments =
           "Solo se aceptan letras[Aa-Zz] y puntos[.]";
       } else if (
-        this.adoptionRequestSave.reasonsForAdoption.additionalComments.length <
+        this.adoptionRequestSave.reasonsForAdoption.whyAdoptPet.length <
         10
       ) {
         this.validation.additionalComments = false;
         this.error.additionalComments =
           "La respuesta debe tener al menos 10 caracteres";
       } else if (
-        this.adoptionRequestSave.reasonsForAdoption.additionalComments.length >
+        this.adoptionRequestSave.reasonsForAdoption.whyAdoptPet.length >
         100
       ) {
         this.validation.additionalComments = false;
@@ -959,7 +959,7 @@ export default {
               this.adoptionRequestSave.reasonsForAdoption.haveHadPets,
             whereWillThePetBe:
               this.adoptionRequestSave.reasonsForAdoption.whereWillThePetBe,
-            additionalComments: this.adoptionRequestSave.reasonsForAdoption.additionalComments,
+            whyAdoptPet: this.adoptionRequestSave.reasonsForAdoption.whyAdoptPet,
           },
           previousExperiencieDto: {
             whatDidYouDoWhenThePetGotSick:
@@ -973,7 +973,7 @@ export default {
                 .whatMemoriesDoYouHaveWithYourPet,
             lastPet: this.adoptionRequestSave.previousExperiencieDto.lastPet,
           },
-          additional_information: this.adoptionRequestSave.additional_information? this.adoptionRequestSave.additional_information: "Sin registro",
+          additionalInformation: this.adoptionRequestSave.additional_information? this.adoptionRequestSave.additional_information: "Sin registro",
           imageAdoption: this.adoptionRequestSave.imageAdoption,
         });
 
@@ -1079,7 +1079,7 @@ export default {
         previousExperienceIncomplete ||
         invalidFormat ||
         (this.adoptionRequestSave.additional_information === null &&
-          this.adoptionRequestSave.reasonsForAdoption.additionalComments ===
+          this.adoptionRequestSave.reasonsForAdoption.whyAdoptPet ===
             null)
       );
     },
