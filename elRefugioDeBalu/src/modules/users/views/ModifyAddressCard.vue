@@ -83,6 +83,7 @@
                   <b-col cols="12" md="4">
                     <b-form-group label="Número exterior" label-align="left">
                       <b-input
+                      type="number"
                         v-model="UpdateAddressDto.exteriorNumber"
                       ></b-input>
                       <b-form-invalid-feedback>
@@ -93,6 +94,7 @@
                   <b-col cols="12" md="4">
                     <b-form-group label="Número interior" label-align="left">
                       <b-input
+                      type="number"
                         v-model="UpdateAddressDto.interiorNumber"
                       ></b-input>
                     </b-form-group>

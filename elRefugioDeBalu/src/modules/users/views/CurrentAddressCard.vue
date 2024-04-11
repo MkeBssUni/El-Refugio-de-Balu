@@ -70,10 +70,13 @@
                       label="Referencia de dirección"
                       label-align="left"
                     >
-                      <b-input
+                      
+                      <b-form-textarea
+                        id="textarea"
                         v-model="SaveAddressDto.addressReference"
-                        type="textarea"
-                      ></b-input>
+                        rows="3"
+                        max-rows="6"
+                      ></b-form-textarea>
                     </b-form-group>
                   </b-col>
                 </b-row>
@@ -81,6 +84,7 @@
                   <b-col cols="12" md="4">
                     <b-form-group label="Número exterior" label-align="left">
                       <b-input
+                      type="number"
                         v-model="SaveAddressDto.exteriorNumber"
                       ></b-input>
                       <b-form-invalid-feedback>
@@ -91,6 +95,7 @@
                   <b-col cols="12" md="4">
                     <b-form-group label="Número interior" label-align="left">
                       <b-input
+                      type="number"
                         v-model="SaveAddressDto.interiorNumber"
                       ></b-input>
                     </b-form-group>
@@ -98,7 +103,7 @@
                 </b-row>
                 <div class="d-flex justify-content-end mt-3">
                   <b-button
-                    @click="s()"
+                    @click="ConfirmationAlert()"
                     variant="outline-light"
                     class="d-flex align-items-center"
                   >
@@ -137,6 +142,7 @@ export default {
       },
       postalCodeValidation: null,
       postalCodeValidationMessage: "",
+      showButton: false
     };
   },
   computed: {
@@ -173,7 +179,7 @@ export default {
         });
       }
     },
-    s() {
+    ConfirmationAlert() {
       swal
         .fire({
           title: "¿Estás seguro de realizar la accion",
@@ -197,6 +203,7 @@ export default {
               showConfirmButton: false,
             });
             this.submitNewAddress();
+
           }
         });
     },
@@ -249,9 +256,14 @@ export default {
         this.confirmPasswordValidationMessage = "";
       }
     },
-    CancelUpdate(){
-        window.location.reload();
-    }
+    SaveAddressDto: {
+      deep: true,
+      handler(newVal) {
+        // Comprobar si todos los campos están vacíos o no cumplen con las validaciones
+        const isEmpty = Object.values(newVal).some(value => value === '');
+        this.showButton = isEmpty || !isValid;
+      },
+    },
   },
 };
 </script>

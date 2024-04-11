@@ -40,7 +40,7 @@ public class AddressController { private final AddressService addressService;
     }
 
     @PostMapping("/")
-    public ResponseEntity<ResponseApi<Address>> saveAddress(@RequestBody SaveAddressDto saveAddressDto) {
+    public ResponseEntity<ResponseApi<Address>> saveAddress(@RequestBody SaveAddressDto saveAddressDto){
         try {
             ResponseApi<Address> responseApi = addressService.saveAddress(saveAddressDto);
             return new ResponseEntity<>(responseApi, responseApi.getStatus());
