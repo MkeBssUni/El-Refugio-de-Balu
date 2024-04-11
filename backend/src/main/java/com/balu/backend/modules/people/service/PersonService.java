@@ -44,6 +44,7 @@ public class PersonService {
     private final LogService logService;
     private final EmailService emailService;
     private final SmsService smsService;
+    private final String tableAffected = "PEOPLE | USERS";
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseApi<Boolean> publicRegister(PublicRegisterDto dto) throws Exception {
@@ -64,6 +65,12 @@ public class PersonService {
         if(validations.isInvalidName(dto.getSurname())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
         if(validations.isInvalidPhoneNumber(dto.getPhoneNumber())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
 
+        if(validations.isInvalidMinAndMaxLength(dto.getName(), 3,40)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidMinAndMaxLength(dto.getLastname(), 3,40)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidMinAndMaxLength(dto.getSurname(), 3,40)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidMinAndMaxLength(dto.getUsername(), 3,40)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidMinAndMaxLength(dto.getPassword(), 8,40)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+
         Optional<User> existentUser = iUserRepository.findByUsername(hashService.encrypt(dto.getUsername()));
         if(existentUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
 
@@ -75,7 +82,7 @@ public class PersonService {
         user.save(hashService.encrypt(dto.getUsername()),encoder.encode(dto.getPassword()),role.get(), hashService.encrypt(activationCode));
         dto.setPhoneNumber(hashService.encrypt(dto.getPhoneNumber()));
         person.savePublicRegister(dto,user);
-        logService.saveLog("New general user registered: " + person.getName() + " " + person.getLastName(), LogTypes.INSERT, "PEOPLE | USERS");
+        logService.saveLog("New general user registered: " + person.getName() + " " + person.getLastName(), LogTypes.INSERT, tableAffected);
 
         if(dto.isViaSms()){
             if(!(sendSms(dto.getPhoneNumber(),activationCode))){
@@ -108,6 +115,11 @@ public class PersonService {
         if(validations.isInvalidName(hashService.decrypt(dto.getSurname()))) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
         if(validations.isInvalidPhoneNumber(hashService.decrypt(dto.getPhoneNumber()))) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
 
+        if(validations.isInvalidMinAndMaxLength(hashService.decrypt(dto.getName()), 3,40)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidMinAndMaxLength(hashService.decrypt(dto.getLastname()), 3,40)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidMinAndMaxLength(hashService.decrypt(dto.getSurname()), 3,40)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidMinAndMaxLength(hashService.decrypt(dto.getUsername()), 3,40)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+
         Optional<User> existentUser = iUserRepository.findByUsername(dto.getUsername());
         if(existentUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.DUPLICATE_RECORD.name());
 
@@ -126,7 +138,7 @@ public class PersonService {
         user = iUserRepository.saveAndFlush(user);
         person.saveAdminOrMod(dto,user);
         iPersonRepository.saveAndFlush(person);
-        logService.saveLog("New " + role.get().getName() + " registered: " + person.getName() + " " + person.getLastName(), LogTypes.INSERT, "PEOPLE | USERS");
+        logService.saveLog("New " + role.get().getName() + " registered: " + person.getName() + " " + person.getLastName(), LogTypes.INSERT, tableAffected);
         return new ResponseApi<>(hashService.encrypt(password), HttpStatus.CREATED, false,"OK");
     }
     @Transactional(readOnly = true)
@@ -150,7 +162,7 @@ public class PersonService {
             person.get().getUser().setBlockedAt(null);
         }
         iUserRepository.saveAndFlush(person.get().getUser());
-        logService.saveLog("User with id: " + person.get().getUser().getId() + " blocked changed to " + person.get().getUser().isBlocked(), LogTypes.UPDATE, "PEOPLE | USERS");
+        logService.saveLog("User with id: " + person.get().getUser().getId() + " blocked changed to " + person.get().getUser().isBlocked(), LogTypes.UPDATE, tableAffected);
         return new ResponseApi<>(iPersonRepository.saveAndFlush(person.get()), HttpStatus.OK, false, "OK");
     }
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
@@ -167,7 +179,7 @@ public class PersonService {
         person.get().getUser().setBlockedAt(null);
 
         iUserRepository.saveAndFlush(person.get().getUser());
-        logService.saveLog("Password changed for user with id: " + person.get().getUser().getId(), LogTypes.UPDATE, "PEOPLE | USERS");
+        logService.saveLog("Password changed for user with id: " + person.get().getUser().getId(), LogTypes.UPDATE, tableAffected);
         return new ResponseApi<>(iPersonRepository.saveAndFlush(person.get()), HttpStatus.OK, false, "OK");
     }
     @Transactional(readOnly = true)
@@ -219,7 +231,7 @@ public class PersonService {
             user.get().setBlocked(false);
             user.get().setActivationCode(null);
             iUserRepository.saveAndFlush(user.get());
-            logService.saveLog("User with id: " + user.get().getId() + " activated", LogTypes.UPDATE, "PEOPLE | USERS");
+            logService.saveLog("User with id: " + user.get().getId() + " activated", LogTypes.UPDATE, tableAffected);
             return new ResponseApi<>(HttpStatus.OK, false, "OK");
         }
         return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());

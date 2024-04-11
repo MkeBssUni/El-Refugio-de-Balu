@@ -3,6 +3,7 @@ package com.balu.backend.modules.homeSpecification.service;
 import com.balu.backend.kernel.ErrorMessages;
 import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.kernel.Validations;
+import com.balu.backend.modules.adresses.model.model.Address;
 import com.balu.backend.modules.adresses.model.model.IAddressRepository;
 import com.balu.backend.modules.hash.service.HashService;
 import com.balu.backend.modules.homeSpecification.model.*;
@@ -41,40 +42,31 @@ public class ServiceHomeSpecification {
     @Transactional(rollbackFor = {SQLException.class,Exception.class})
     public ResponseApi<Boolean> save(SaveHomeDetailsDto dto){
         try{
-            if(dto.getIdUser() == null|| validations.isNotBlankString(dto.getIdUser()) || dto.getType() == null || validations.isNotBlankString(dto.getType()) || dto.getNumberOfResidents() == 0) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.MISSING_FIELDS.name());
-            HomeTypes homeType;
-            homeType = HomeTypes.valueOf(dto.getType().toUpperCase());
-            if(homeType == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.INVALID_TYPEHOUSE.name());
+            if(dto.getIdUser() == null|| validations.isNotBlankString(dto.getIdUser()) || dto.getType() == null || validations.isNotBlankString(dto.getType()) || dto.getNumberOfResidents() <= 0) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.MISSING_FIELDS.name());
 
-            HomeSpecification homeSpecification = new HomeSpecification(homeType,dto.isOutdoorArea(),dto.getNumberOfResidents());
-            HomeSpecification saveHomeSpecification = homeSpecificationRepository.saveAndFlush(homeSpecification);
-            if(saveHomeSpecification == null){
-                return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.HOMESPECIFICATION_NOT_SAVED.name());
-            }
-            Long idUser = decryptId(dto.getIdUser());
-            Optional<User> optionalUser =  iUserRepository.findById(idUser);
-            if(!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true,ErrorMessages.INVALID_USER.name());
-            User user = optionalUser.get();
-            Integer saveAdress = iAddressRepository.changeHomeSpeceficationAssign(user.getAddress().getId(),saveHomeSpecification.getId());
-            if(saveAdress == 0){
-                return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.HOMESPECIFICATION_NOT_SAVED.name());
-            }
+            Optional<User> optionalUser = iUserRepository.findById(Long.valueOf(hashService.decrypt(dto.getIdUser())));
+            if(optionalUser.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.NOT_FOUND.name());
 
-            if(dto.getHomeImages() != null){
-                List<HomeImage> homeImages = new ArrayList<>();
-                for(String image : dto.getHomeImages()){
-                    if(validations.isInvalidImageLength(image)) return new  ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.IMAGE_NOT_SAVED.name());
-                    HomeImage homeImage = new HomeImage(image.trim(),saveHomeSpecification);
-                    HomeImage saveHomeImage = homeImageRepository.saveAndFlush(homeImage);
-                    if(saveHomeImage != null) homeImages.add(saveHomeImage);
-                }
-                if(homeImages.size() != dto.getHomeImages().length){
-                    homeSpecificationRepository.delete(saveHomeSpecification);
-                    for(HomeImage homeImage : homeImages) homeImageRepository.delete(homeImage);
-                    return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.IMAGE_NOT_SAVED.name());
-                }
+            Optional<Address> optionalAddress = iAddressRepository.findByUserId(optionalUser.get().getId());
+            if(optionalAddress.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.NO_RECORDS.name());
+
+            //if(validations.isInvalidImage(dto.getMainImage())) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_IMAGE.name());
+            if(dto.getType() == null || validations.isNotBlankString(dto.getType())) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
+
+            if(dto.getNumberOfResidents() <= 0) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
+
+            try {
+                HomeTypes homeType = HomeTypes.valueOf(dto.getType().toUpperCase());
+                HomeSpecification homeSpecification = new HomeSpecification(homeType,dto.isOutdoorArea(),dto.getNumberOfResidents(),optionalAddress.get());
+                homeSpecification = homeSpecificationRepository.saveAndFlush(homeSpecification);
+                HomeImage homeImage = new HomeImage(dto.getMainImage(),homeSpecification);
+                homeImageRepository.saveAndFlush(homeImage);
+                optionalAddress.get().setHomeSpecification(homeSpecification);
+                iAddressRepository.saveAndFlush(optionalAddress.get());
+                return new ResponseApi<>(HttpStatus.OK, false, "Home specification created successfully");
+            } catch (IllegalArgumentException e) {
+                return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_TYPEHOUSE.name());
             }
-            return new ResponseApi<>(true,HttpStatus.CREATED,false,"Adoption request saved successfully");
         }catch (Exception e){
             return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.INTERNAL_ERROR.name());
         }
@@ -96,19 +88,34 @@ public class ServiceHomeSpecification {
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public ResponseApi<HomeSpecification> update(Long specificationId, UpdateHomeSpecificationDto dto) {
+    public ResponseApi<HomeSpecification> update(UpdateHomeSpecificationDto dto) {
         try {
-            Optional<HomeSpecification> optionalSpecification = homeSpecificationRepository.findById(specificationId);
-            if (optionalSpecification.isPresent()) {
-                HomeSpecification specification = optionalSpecification.get();
-                specification.setType(HomeTypes.valueOf(dto.getType().toUpperCase()));
-                specification.setOutdoorArea(dto.isOutdoorArea());
-                specification.setNumberOfResidents(dto.getNumberOfResidents());
+            Optional<User> optionalUser = iUserRepository.findById(Long.valueOf(hashService.decrypt(dto.getIdUser())));
+            if(optionalUser.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.NOT_FOUND.name());
 
-                HomeSpecification updatedSpecification = homeSpecificationRepository.save(specification);
-                return new ResponseApi<>(updatedSpecification, HttpStatus.OK, false, "Home specification updated successfully");
-            } else {
-                return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.NO_RECORDS.name());
+            Optional<Address> optionalAddress = iAddressRepository.findByUserId(optionalUser.get().getId());
+            if(optionalAddress.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.NO_RECORDS.name());
+
+            Optional<HomeSpecification> optionalSpecification = homeSpecificationRepository.findById(optionalAddress.get().getHomeSpecification().getId());
+            if(optionalSpecification.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.NO_RECORDS.name());
+
+            if(validations.isInvalidImage(dto.getMainImage())) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_IMAGE.name());
+            if(dto.getType() == null || validations.isNotBlankString(dto.getType())) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
+
+            if(dto.getNumberOfResidents() <= 0) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
+
+            try {
+                HomeTypes.valueOf(dto.getType().toUpperCase());
+
+                optionalSpecification.get().setType(HomeTypes.valueOf(dto.getType().toUpperCase()));
+                optionalSpecification.get().setOutdoorArea(dto.isOutdoorArea());
+                optionalSpecification.get().setNumberOfResidents(dto.getNumberOfResidents());
+                optionalSpecification.get().getHomeImage().setImage(dto.getMainImage());
+
+                homeSpecificationRepository.saveAndFlush(optionalSpecification.get());
+                return new ResponseApi<>(HttpStatus.OK, false, "Home specification updated successfully");
+            } catch (IllegalArgumentException e) {
+                return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_TYPEHOUSE.name());
             }
         } catch (Exception e) {
             return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name());

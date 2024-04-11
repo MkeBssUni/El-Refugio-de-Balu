@@ -128,7 +128,8 @@ export default {
         }
 
         this.loading = true;
-        const response = await instance.put("/api/homeSpecification", this.form);
+        console.log("esto es lo que se está mandando: ", this.form)
+        const response = await instance.put("/api/homeSpecification/", this.form);
 
        
         Swal.fire({

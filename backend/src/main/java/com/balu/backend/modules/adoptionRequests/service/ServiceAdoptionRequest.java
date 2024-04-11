@@ -177,7 +177,7 @@ public class ServiceAdoptionRequest {
                 }
                 if(adoptionRequestImages.size() != dto.getImageAdoption().length){
                     iAdoptionRequestRepository.delete(saveAdoption);
-                    for(AdoptionRequestImage adoptionRequestImagede : adoptionRequestImages) requestImagesRepository.delete(adoptionRequestImagede);
+                    requestImagesRepository.deleteAll(adoptionRequestImages);
                     return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.IMAGE_NOT_SAVED.name());
                 }
             }
@@ -185,7 +185,6 @@ public class ServiceAdoptionRequest {
             logService.saveLog("New adoption request registered: "+saveAdoption.getId(), LogTypes.INSERT,"ADOPTIONREQUEST | ADOPTIONREQUESTIMAGES");
             return new ResponseApi<>(HttpStatus.CREATED,false,"Adoption request saved successfully");
         }catch (Exception e){
-            System.out.println(e);
             return new ResponseApi<>(true,HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name());
         }
     }
