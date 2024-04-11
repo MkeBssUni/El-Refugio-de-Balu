@@ -319,25 +319,26 @@ public class PersonService {
         allInfoDto.setUsername(optionalUser.get().getUsername());
         allInfoDto.setPhoneNumber(optionalPerson.get().getPhoneNumber());
 
-        addressDto.setAddressId(hashService.encrypt(optionalUser.get().getAddress().getId()));
-        addressDto.setCountry(optionalUser.get().getAddress().getCountry());
-        addressDto.setStreet(optionalUser.get().getAddress().getStreet());
-        addressDto.setColony(optionalUser.get().getAddress().getColony());
-        addressDto.setCity(optionalUser.get().getAddress().getCity());
-        addressDto.setState(optionalUser.get().getAddress().getState());
-        addressDto.setPostalCode(optionalUser.get().getAddress().getPostalCode());
-        addressDto.setAddressReference(optionalUser.get().getAddress().getAddressReference());
-        addressDto.setExteriorNumber(optionalUser.get().getAddress().getExteriorNumber());
-        addressDto.setInteriorNumber(optionalUser.get().getAddress().getInteriorNumber());
+        if(optionalUser.get().getAddress()!=null){
+            addressDto.setAddressId(hashService.encrypt(optionalUser.get().getAddress().getId()));
+            addressDto.setCountry(optionalUser.get().getAddress().getCountry());
+            addressDto.setStreet(optionalUser.get().getAddress().getStreet());
+            addressDto.setColony(optionalUser.get().getAddress().getColony());
+            addressDto.setCity(optionalUser.get().getAddress().getCity());
+            addressDto.setState(optionalUser.get().getAddress().getState());
+            addressDto.setPostalCode(optionalUser.get().getAddress().getPostalCode());
+            addressDto.setAddressReference(optionalUser.get().getAddress().getAddressReference());
+            addressDto.setExteriorNumber(optionalUser.get().getAddress().getExteriorNumber());
+            addressDto.setInteriorNumber(optionalUser.get().getAddress().getInteriorNumber());
+            homeSpecificationDto.setHomeSpecificationId(hashService.encrypt(optionalUser.get().getAddress().getHomeSpecification().getId()));
+            homeSpecificationDto.setType(optionalUser.get().getAddress().getHomeSpecification().getType());
+            homeSpecificationDto.setOutdoorArea(optionalUser.get().getAddress().getHomeSpecification().isOutdoorArea());
+            homeSpecificationDto.setNumberOfResidents(optionalUser.get().getAddress().getHomeSpecification().getNumberOfResidents());
+            homeSpecificationDto.setHomeImage(optionalUser.get().getAddress().getHomeSpecification().getHomeImage().getImage());
 
-        homeSpecificationDto.setHomeSpecificationId(hashService.encrypt(optionalUser.get().getAddress().getHomeSpecification().getId()));
-        homeSpecificationDto.setType(optionalUser.get().getAddress().getHomeSpecification().getType());
-        homeSpecificationDto.setOutdoorArea(optionalUser.get().getAddress().getHomeSpecification().isOutdoorArea());
-        homeSpecificationDto.setNumberOfResidents(optionalUser.get().getAddress().getHomeSpecification().getNumberOfResidents());
-        homeSpecificationDto.setHomeImage(optionalUser.get().getAddress().getHomeSpecification().getHomeImage().getImage());
-
-        addressDto.setHomeSpecification(homeSpecificationDto);
-        allInfoDto.setAddressDto(addressDto);
+            addressDto.setHomeSpecification(homeSpecificationDto);
+            allInfoDto.setAddressDto(addressDto);
+        }
         return new ResponseApi<>(allInfoDto,HttpStatus.OK, false, "INFO");
     }
 
