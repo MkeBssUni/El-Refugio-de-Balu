@@ -992,7 +992,7 @@ export default {
             this.$router.push("/myAplicationAdoption");
           });
       } catch (error) {
-        console.log(error);
+        console.log(error)
         let Msjerror = "";
         switch (error.response.data.message) {
           case "INVALID_USER":
@@ -1019,6 +1019,10 @@ export default {
           case "ADOPTIONREQUEST_NOT_SAVED":
             Msjerror =
               "Ups! algo salió mal, por favor vuelve a intentarlo no se logro guardar la solicitud";
+            break;
+          case "IMAGE_NOT_SAVED":
+            Msjerror =
+              "Ups! algo salió mal, por favor vuelve a intentarlo no se logro guardar la imagen pesa mas de 6MB";
             break;
           default:
             Msjerror = "Ups! algo salió mal, por favor vuelve a intentarlo";

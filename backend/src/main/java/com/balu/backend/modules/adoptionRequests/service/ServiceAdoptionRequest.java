@@ -171,7 +171,6 @@ public class ServiceAdoptionRequest {
             if(dto.getImageAdoption() != null){
                 List<AdoptionRequestImage>  adoptionRequestImages = new ArrayList<>();
                 for(String image : dto.getImageAdoption()){
-                    if(validations.isInvalidImageLength(image)) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.IMAGE_NOT_SAVED.name());
                     AdoptionRequestImage requestImage = new AdoptionRequestImage(image.trim(),saveAdoption);
                     AdoptionRequestImage saveImage = requestImagesRepository.saveAndFlush(requestImage);
                     if(saveImage != null) adoptionRequestImages.add(saveImage);

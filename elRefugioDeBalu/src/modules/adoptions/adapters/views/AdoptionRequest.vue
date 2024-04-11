@@ -128,13 +128,13 @@ export default {
     getBadgeVariant(status) {
       switch (status) {
         case "Aceptada":
-          return "success";
+          return "info";
         case "Rechazada":
           return "danger";
         case "Pendiente":
           return "warning";
         default:
-          return "secondary";
+          return "info";
       }
     },
   },
