@@ -3,6 +3,7 @@ package com.balu.backend.modules.adresses.model.controller;
 import com.balu.backend.kernel.ErrorMessages;
 import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.modules.adresses.model.model.Address;
+import com.balu.backend.modules.adresses.model.model.dto.GetAddressDetailsDto;
 import com.balu.backend.modules.adresses.model.model.dto.SaveAddressDto;
 import com.balu.backend.modules.adresses.model.model.dto.UpdateAddressDto;
 import com.balu.backend.modules.adresses.model.services.AddressService;
@@ -18,15 +19,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
 @RestController
 @RequestMapping("/api/address")
 @AllArgsConstructor
 @CrossOrigin(origins = {"*"})
 public class AddressController { private final AddressService addressService;
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<ResponseApi<Address>> getAddressByUserId(@PathVariable Long userId) {
-        ResponseApi<Address> responseApi = addressService.getAddressByUserId(userId);
+    @PostMapping("/details")
+    public ResponseEntity<ResponseApi<Address>> getAddressByUserId(@RequestBody GetAddressDetailsDto addressDetailsDto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        ResponseApi<Address> responseApi = addressService.getAddressByUserId(addressDetailsDto.getUserId());
+
         return new ResponseEntity<>(responseApi, responseApi.getStatus());
     }
 
@@ -40,10 +49,11 @@ public class AddressController { private final AddressService addressService;
         }
     }
 
-    @PutMapping("/{addressId}")
-    public ResponseEntity<ResponseApi<Address>> updateAddress(@PathVariable Long addressId, @RequestBody UpdateAddressDto updateAddressDto) {
+    @PutMapping("/")
+    public ResponseEntity<ResponseApi<Address>> updateAddress( @RequestBody UpdateAddressDto updateAddressDto) {
         try {
-            ResponseApi<Address> responseApi = addressService.updateAddress(addressId, updateAddressDto);
+            ResponseApi<Address> responseApi = addressService.updateAddress(updateAddressDto);
+            System.out.println(responseApi.getMessage());
             return new ResponseEntity<>(responseApi, responseApi.getStatus());
         } catch (Exception e) {
             return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()), HttpStatus.INTERNAL_SERVER_ERROR);
