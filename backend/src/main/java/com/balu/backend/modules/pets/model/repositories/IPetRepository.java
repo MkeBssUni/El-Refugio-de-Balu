@@ -56,4 +56,6 @@ public interface IPetRepository extends JpaRepository<Pet,Long> {
 
     @Query(value = "select count(*) from pets where status_id = 5 or status_id = 3 and user_moderator_id = ?1", nativeQuery = true)
     int countActivePetsByUser(Long userId);
+    @Query(value = "select user_owner_id from pets where id = ?1", nativeQuery = true)
+    Long findOwnerIdByPetId(Long id);
 }
