@@ -33,11 +33,11 @@
                         <b-col cols="12" class="mt-3">
                             <b-form-group>
                                 <label for="surname" class="mb-2">Apellido materno:</label>
-                                <b-form-input id="surname" v-model.trim="user.surname"
-                                    :readonly="viewPersonalInfo" @input="validateField('surname')"></b-form-input>
+                                <b-form-input id="surname" v-model.trim="user.surname" :readonly="viewPersonalInfo"
+                                    @input="validateField('surname')"></b-form-input>
                                 <b-form-invalid-feedback v-show="showErrors.surname">
                                     {{ errorMessages.surname }}
-                                </b-form-invalid-feedback>                                    
+                                </b-form-invalid-feedback>
                             </b-form-group>
                         </b-col>
                         <b-col cols="12" class="mt-3">
@@ -225,6 +225,7 @@ export default {
         return {
             viewPersonalInfo: true,
             viewAddress: true,
+            isValidPersonalInformationForm: false,
             user: {
                 userId: "",
                 username: "",
@@ -315,13 +316,6 @@ export default {
                 }).then(() => {
                     this.$router.push('/petList')
                 }) */
-            }
-        },
-        handleUpdateButton(option) {
-            if (option == 1) {
-                this.viewPersonalInfo = !this.viewPersonalInfo;
-            } else {
-                this.viewAddress = !this.viewAddress;
             }
         },
         validateField(field) {
@@ -420,7 +414,80 @@ export default {
                     }
                     break;
             }
-        }
+        },
+        validatePersonalInformationForm() {
+            this.validateField("name");
+            this.validateField("lastname");
+            this.validateField("surname");
+            this.validateField("username");
+            this.validateField("phoneNumber");
+            if (!this.showErrors.name && !this.showErrors.lastname && !this.showErrors.surname && !this.showErrors.username && !this.showErrors.phoneNumber) this.isValidPersonalInformationForm = true;
+            else this.isValidPersonalInformationForm = false;
+        },
+        confirmUpdatePersonalInfo() {
+            this.validatePersonalInformationForm();
+            if (this.isValidPersonalInformationForm) {
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: 'Estás a punto de actualizar tus datos personales, ¿deseas continuar?',
+                    icon: 'warning',
+                    iconColor: '#FFA500',
+                    showCancelButton: true,
+                    confirmButtonColor: '#FFA500',
+                    cancelButtonColor: '#A93D3D',
+                    confirmButtonText: 'Sí, continuar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.updatePersonalInfo();
+                    }
+                })
+            }
+        },
+        async updatePersonalInfo() {
+            try {
+                Swal.fire({
+                    title: 'Actualizando...',
+                    text: 'Estamos actualizando tus datos, espera un momento',
+                    imageUrl: gatoWalkingGif,
+                    imageWidth: 160,
+                    imageHeight: 160,
+                    showConfirmButton: false
+                })
+                const response = true;
+                Swal.fire({
+                    title: '¡Listo!',
+                    text: 'Tus datos se han actualizado correctamente',
+                    icon: 'success',
+                    iconColor: '#4BB543',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                })
+                this.viewPersonalInfo = !this.viewPersonalInfo;
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error al actualizar tus datos',
+                    icon: 'error',
+                    iconColor: '#A93D3D',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                })
+            }
+        },
+        handleUpdateButton(option) {
+            if (option == 1) {
+                if (this.viewPersonalInfo) {
+                    this.viewPersonalInfo = !this.viewPersonalInfo;
+                } else {
+                    this.confirmUpdatePersonalInfo();
+                }
+            } else {
+                this.viewAddress = !this.viewAddress;
+            }
+        },
     },
     mounted() {
         if (localStorage.getItem("userId")) {
