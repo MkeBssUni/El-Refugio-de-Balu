@@ -47,10 +47,10 @@
         </TransitionGroup>
         <b-row v-show="total == 0">
             <b-col cols="12">
-                <h5 class="text-center mt-3">No has marcado mascotas como tus favoritas</h5>
+                <h5 class="text-center">No has marcado mascotas como tus favoritas</h5>
             </b-col>
         </b-row>
-        <b-row class="pt-2">
+        <b-row class="pt-2" v-show="total > 0">
             <b-col cols="12">
                 <b-pagination pills v-model="page" :total-rows="total" :per-page="size" align="center">
                 </b-pagination>
