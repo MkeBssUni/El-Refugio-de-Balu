@@ -138,8 +138,7 @@ export default {
                     timer: 3000,
                     timerProgressBar: true,
                     showConfirmButton: false,
-                })
-                window.location.reload();
+                })                
             }
         }
     },
