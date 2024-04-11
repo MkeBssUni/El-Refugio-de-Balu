@@ -171,7 +171,6 @@ public class ServiceAdoptionRequest {
             if(dto.getImageAdoption() != null){
                 List<AdoptionRequestImage>  adoptionRequestImages = new ArrayList<>();
                 for(String image : dto.getImageAdoption()){
-                    if(validations.isInvalidImageLength(image)) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.IMAGE_NOT_SAVED.name());
                     AdoptionRequestImage requestImage = new AdoptionRequestImage(image.trim(),saveAdoption);
                     AdoptionRequestImage saveImage = requestImagesRepository.saveAndFlush(requestImage);
                     if(saveImage != null) adoptionRequestImages.add(saveImage);
@@ -186,6 +185,7 @@ public class ServiceAdoptionRequest {
             logService.saveLog("New adoption request registered: "+saveAdoption.getId(), LogTypes.INSERT,"ADOPTIONREQUEST | ADOPTIONREQUESTIMAGES");
             return new ResponseApi<>(HttpStatus.CREATED,false,"Adoption request saved successfully");
         }catch (Exception e){
+            System.out.println(e);
             return new ResponseApi<>(true,HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.INTERNAL_ERROR.name());
         }
     }
@@ -238,6 +238,7 @@ public class ServiceAdoptionRequest {
             User user = userOptional.get();
             if(adoption != null){
                 if(dto.getStatus() == Statusses.ADOPTED){
+                    changeAllAdoption(idAdoption,pet.getId());
                     emailService.sendAdoptionApprovalTemplate(hashService.decrypt(user.getUsername()),pet.getName());
                 }
                 if(dto.getStatus() == Statusses.CLOSED){
@@ -259,6 +260,21 @@ public class ServiceAdoptionRequest {
             return false;
         }
     }
+
+
+    public boolean changeAllAdoption(Long idAdoption, Long idPet) {
+        try {
+            int cantidadSolicitudes = iAdoptionRequestRepository.countAdoptionByPet(idPet);
+            if (cantidadSolicitudes > 0) {
+                Integer adoption = iAdoptionRequestRepository.changeIfAdopted(idPet, idAdoption);
+                return adoption != null && adoption > 0;
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
     public boolean sendEmailModerador(Long idUser,String namePet){
         try{

@@ -13,4 +13,7 @@ public interface IPersonRepository extends JpaRepository<Person,Long> {
     @Query(value = "select p.id, concat(p.name, ' ', p.last_name, ' ', p.sur_name) as fullname, p.phone_number as phone,u.username,u.blocked,r.name as role from people p inner join users u on p.user_id = u.id inner join roles r on u.role_id = r.id where p.user_id not in (select id from users where role_id = 1) and (lower(p.name) like %:name% or lower(p.last_name) like %:lastName% or lower(p.sur_name) like %:surName%)", nativeQuery = true)
     Page<IPersonViewPaged> findAllPaged(String name, String lastName, String surName, Pageable pageable);
     Optional<Person> findByUserId(Long userId);
+
+    @Query(value = "select concat(p.name, ' ', p.sur_name, ' ', p.last_name) as name, p.phone_number as phone, u.username as email from people p join users u on p.user_id = u.id where u.id = ?1", nativeQuery = true)
+    Optional<IContactInfoView> findContactInfoByUserId(Long userId);
 }

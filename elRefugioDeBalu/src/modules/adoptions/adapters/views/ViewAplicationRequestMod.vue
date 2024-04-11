@@ -23,7 +23,7 @@
               <b>Estado:</b>
               <br />
               <b-badge
-                v-if="requestAdoption.status"
+                v-if="requestAdoption.status && requestAdoption.status.name"
                 :variant="getBadgeVariant(requestAdoption.status.name)"
                 >{{ getStatus(requestAdoption.status.name) }}</b-badge
               >
@@ -35,38 +35,26 @@
         <b-col cols="12" sm="12" lg="8" md="8">
           <b-card class="target">
             <b-row>
-              <b-col cols="12" sm="12" lg="5" md="5">
-                <img
-                  :src="imgGender"
-                  alt="Imagen de perfil"
-                  class="image-pet"
-                />
-              </b-col>
-              <b-col cols="12" sm="12" lg="7" md="7">
+              <b-col cols="12" sm="12" lg="12" md="12">
                 <b-card
                   bg-variant="card-content-orange"
                   class="my-2 information-pet"
                 >
-                  <b-card-body>
-                    <b-card-title>Anna Christina Bustos</b-card-title>
+                  <b-card-body class="text-center">
+                    <b-card-title 
+                      >Informacion del adoptante <br />
+                      {{ information.name }}</b-card-title
+                    >
                     <hr class="my-line" />
                     <b-row>
-                      <b-col cols="12" sm="12" lg="8" md="8" xl="8">
-                        <b-card-text>
-                          <b>Telefono:</b> &nbsp; 777 890 567
-                        </b-card-text>
-                      </b-col>
-                    </b-row>
-                    <b-row>
                       <b-col cols="12" sm="12" lg="6" md="6" xl="6">
                         <b-card-text>
-                          <b>Ciudad:</b>&nbsp; Cuernavaca, Morelos
+                          <b>Correo electrónico:</b> &nbsp; {{ information.email }}
                         </b-card-text>
                       </b-col>
                       <b-col cols="12" sm="12" lg="6" md="6" xl="6">
                         <b-card-text>
-                          <b>Dirección:</b>&nbsp;Lorem ipsum dolor sit amet,
-                          consectetur adipiscing elit. Aenean porta
+                          <b>Telefono:</b> <br/> {{ information.phone }}
                         </b-card-text>
                       </b-col>
                     </b-row>
@@ -86,7 +74,7 @@
                 >Lugar en la que dormira o descansara la mascota</b-card-text
               >
               <img
-                :src="base64ToImage(requestAdoption.requestImages[0].image)"
+              :src="getRequestImage(requestAdoption.requestImages, 0)"
                 class="homePhotos"
               />
             </b-card-body>
@@ -95,7 +83,7 @@
                 >Lugar en el que vivira la mascota (casa)</b-card-text
               >
               <img
-                :src="base64ToImage(requestAdoption.requestImages[1].image)"
+              :src="getRequestImage(requestAdoption.requestImages, 1)"
                 class="homePhotos"
               />
             </b-card-body>
@@ -104,14 +92,14 @@
                 >Lugar en el que jugará la mascota (casa)</b-card-text
               >
               <img
-                :src="base64ToImage(requestAdoption.requestImages[2].image)"
+              :src="getRequestImage(requestAdoption.requestImages, 2)"
                 class="homePhotos"
               />
             </b-card-body>
           </b-card>
         </b-col>
         <b-col cols="12" sm="12" lg="8" md="8">
-          <b-card bg-variant="light" class="my-3 box-shadow-pretty">
+          <b-card bg-variant="light" class=" box-shadow-pretty">
             <b-card-title class="text-center">Motivos de adopción</b-card-title>
             <b-row>
               <b-col cols="12" sm="12" lg="6" md="6" xl="6">
@@ -157,7 +145,12 @@
               <b-col cols="12" sm="12" lg="6" md="6" xl="6">
                 <b-card-text>
                   <b>¿Cuál fue tu ultima mascota?</b>
-                  {{ requestAdoption.previousExperience.lastPet }}
+                  {{
+                    requestAdoption.previousExperience &&
+                    requestAdoption.previousExperience.lastPet
+                      ? requestAdoption.previousExperience.lastPet
+                      : "No se registró una mascota anterior"
+                  }}
                 </b-card-text>
               </b-col>
               <b-col cols="12" sm="12" lg="6" md="6" xl="6">
@@ -166,6 +159,9 @@
                   {{
                     requestAdoption.previousExperience
                       .whatDidYouDoWhenThePetGotSick
+                      ? requestAdoption.previousExperience
+                          .whatDidYouDoWhenThePetGotSick
+                      : "No se registraron acciones"
                   }}
                 </b-card-text>
               </b-col>
@@ -226,7 +222,9 @@
           variant="outline-success"
           class="mt-3 mx-4"
           @click="adopted"
-          :disabled="requestAdoption.status.name !== 'PENDING'"
+          :disabled="
+            requestAdoption.status && requestAdoption.status.name !== 'PENDING'
+          "
         >
           <b-icon icon="clipboard-check"></b-icon>
           &nbsp;Aprobar Solicitud del adoptante
@@ -237,7 +235,9 @@
           variant="outline-danger"
           class="mt-3"
           @click="closed"
-          :disabled="requestAdoption.status.name !== 'PENDING'"
+          :disabled="
+            requestAdoption.status && requestAdoption.status.name !== 'PENDING'
+          "
         >
           <b-icon icon="clipboard-x"></b-icon>
           &nbsp;Finalizar Solicitud del adoptante
@@ -250,26 +250,34 @@
 <script>
 import Swal from "sweetalert2";
 import perroChato from "@/assets/imgs/perroChato1.gif";
-import female from "@/assets/imgs/female.jpg";
 import instance from "../../../../config/axios";
 import { decrypt, encrypt } from "../../../../kernel/hashFunctions";
-import {
-  sizes,
-  weightUnits,
-  lifeStages,
-  ageUnits,
-  gender,
-} from "../../../../kernel/data/mappingDictionaries";
+import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
 
 export default {
   name: "viewAplicationAdoptionRequestMod",
   data() {
     return {
-      requestAdoption: {},
+      requestAdoption: {
+        user: "",
+        pet: "",
+        reasonsForAdoption: {
+          peopleAgreeToAdopt: "",
+          haveHadPets: "",
+          whereWillThePetBe: "",
+          whyAdoptPet: "",
+        },
+        previousExperience: {
+          lastPet: "",
+          whatDidYouDoWhenThePetGotSick: "",
+          whatKindOfPetsHaveYouHadBefore: "",
+          whatMemoriesDoYouHaveWithYourPet: "",
+        },
+        additional_information: "",
+        imageAdoption: [],
+      },
       infoStatus: "",
-      credentialPet: {},
       information: {},
-      imgGender: female,
       typeState: "",
       statu: "",
     };
@@ -278,39 +286,15 @@ export default {
     this.getAdoption();
   },
   methods: {
-    getAgeUnit(age) {
-      const matches = age.match(/^(\d+)\s*(\w+)$/);
-      if (matches && matches.length === 3) {
-        return matches[2].toLowerCase();
+    getRequestImage(images, index) {
+      if (images && images[index]) {
+        return images[index].image;
       } else {
-        return "";
-      }
-    },
-    getAgeNumber(age) {
-      const matches = age.match(/^(\d+)\s*(\w+)$/);
-      if (matches && matches.length === 3) {
-        return matches[1]; // Devuelve solo el número
-      } else {
-        return ""; // Opción de manejo de errores si el formato no es válido
+        return ""; // o alguna otra URL de imagen por defecto
       }
     },
     goBack() {
       this.$router.push("/moderated/adoptionList");
-    },
-    mapSize(size) {
-      return sizes[size] || size;
-    },
-    maplifeStages(stage) {
-      return lifeStages[stage] || stage;
-    },
-    mapweightUnits(weightUnit) {
-      return weightUnits[weightUnit] || weightUnit;
-    },
-    mapGender(genderpet) {
-      return gender[genderpet] || genderpet;
-    },
-    mapageUnits(ageUnit) {
-      return ageUnits[ageUnit] || ageUnit;
     },
     getDate(date) {
       const formattedDate = new Date(date);
@@ -320,13 +304,13 @@ export default {
     getBadgeVariant(status) {
       switch (status) {
         case "ADOPTED":
-          return "primary";
+          return "info";
         case "CLOSED":
           return "danger";
         case "PENDING":
           return "warning";
         default:
-          return "primary";
+          return "info";
       }
     },
     getStatus(status) {
@@ -347,38 +331,6 @@ export default {
           return "SIN DATOS";
       }
     },
-    base64ToImage(base64String) {
-      if (!base64String) {
-        console.error("base64String es nulo o indefinido");
-        return null;
-      }
-      // Extraer el tipo de la imagen desde la cadena Base64
-      const type = base64String.substring(
-        "data:image/".length,
-        base64String.indexOf(";base64")
-      );
-
-      // Crear un blob desde la cadena Base64
-      const byteCharacters = atob(base64String.split(",")[1]);
-      const byteArrays = [];
-      for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-        const slice = byteCharacters.slice(offset, offset + 512);
-        const byteNumbers = new Array(slice.length);
-        for (let i = 0; i < slice.length; i++) {
-          byteNumbers[i] = slice.charCodeAt(i);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-        byteArrays.push(byteArray);
-      }
-      const blob = new Blob(byteArrays, { type: type });
-
-      // Crear una URL para la imagen
-      const url = URL.createObjectURL(blob);
-
-      // Retornar la URL de la imagen
-      return url;
-    },
-    async changeStatus() {},
     async getAdoption() {
       try {
         Swal.fire({
@@ -429,10 +381,9 @@ export default {
           await decrypt(
             this.requestAdoption.reasonsForAdoption.whereWillThePetBe
           );
-        this.requestAdoption.reasonsForAdoption.whyAdoptPet =
-          await decrypt(
-            this.requestAdoption.reasonsForAdoption.whyAdoptPet
-          );
+        this.requestAdoption.reasonsForAdoption.whyAdoptPet = await decrypt(
+          this.requestAdoption.reasonsForAdoption.whyAdoptPet
+        );
         this.requestAdoption.additionalInformation = await decrypt(
           this.requestAdoption.additionalInformation
         );
@@ -452,56 +403,45 @@ export default {
         });
       }
     },
-    async getCredentialPet() {
-      try {
-        let idPet = await encrypt(this.requestAdoption.pet.id);
-        const response = await instance.post("/pet/credential", {
-          id: idPet,
-        });
-        this.credentialPet = response.data.data;
-      } catch (error) {
-        Swal.fire({
-          title: "Error",
-          text: "Ocurrió un error al cargar la solicitud",
-          icon: "error",
-          iconColor: "#FF0000",
-          showConfirmButton: true,
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.$router.push("/home");
-          }
-        });
-      }
-    },
     adopted() {
       this.typeState = "aprobar al adoptante";
       this.statu = "ADOPTED";
-      this.changeStatus();
+      this.showConfirm();
     },
     closed() {
       this.typeState = "finalizar la solicitud al adoptante";
       this.statu = "CLOSED";
-      this.changeStatus();
+      this.showConfirm();
     },
-    async changeAdopted() {
+    async getDetails() {
       try {
-        let response = instance.put("/pet/adoption", {
-          pet: localStorage.getItem("petId"),
-          adoptant: this.requestAdoption.user.id,
-          moderator: localStorage.getItem("userId"),
+        const idUSer = await encrypt(this.requestAdoption.user.id);
+        const response = await instance.post("/person/find/contactInfo", {
+          userId: idUSer,
         });
-        if (!response.error) {
-        }
+        this.information = response.data.data;
+        this.information.phone = await decrypt(
+          this.information.phone
+        );
+        this.information.email = await decrypt(
+          this.information.email
+        );
+        Swal.close();
       } catch (error) {
-        Swal.fire({
-          title: "Ocurrio un error",
-          text: "Cambio el estado no se pudo enviar correctamente",
-          icon: "error",
-          showConfirmButton: true,
-        });
+        Swal
+          .fire({
+            title: "Error",
+            text: "No se pudieron cargar tus datos",
+            icon: "error",
+            showConfirmButton: false,
+            timer: 1500,
+          })
+          .then(() => {
+            this.$router.go(-1);
+          });
       }
     },
-    async changeStatus() {
+    showConfirm() {
       Swal.fire({
         title: `¿Estás seguro de  ${this.typeState} `,
         text: "Una vez enviada no podrá ser modificada",
@@ -513,82 +453,118 @@ export default {
         cancelButtonText: "Cancelar",
       }).then((result) => {
         if (result.isConfirmed) {
-          Swal.fire({
-            title: "Espera un momento...",
-            text: "Estamos enviando tu solicitud",
-            imageUrl: perroChato,
-            imageWidth: 160, // Ancho de la imagen
-            imageHeight: 160, // Altura de la imagen
-            showConfirmButton: false,
-          }).then(async() => {
-            let response = await instance.put("/adoption/changeStatus", {
-              adoptionId: localStorage.getItem("adoptionId"),
-              status: this.statu,
-            });
-            if (this.statu === "ADOPTED" && !response.error ) {
-              let response = instance.put("/pet/adoption", {
-                pet: localStorage.getItem("petId"),
-                adoptant: this.requestAdoption.user.id,
-                moderator: localStorage.getItem("userId"),
-              });
-            }
-            if (!response.error) {
-              Swal.fire({
-                title: `Solicitud ha sido ${
-                  this.typeState === "ADOPTED" ? "aprobada" : "finalizada"
-                }`,
-                text: "La solicitud ha cambiado de estado correctamente",
-                icon: "success",
-                showConfirmButton: true,
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  this.$router.push("/adoptionList");
-                }
-              });
-            } else {
-              Swal.fire({
-                title: "Error",
-                text: "Ocurrió un error al cancelar la solicitud",
-                icon: "error",
-                iconColor: "#FF0000",
-                showConfirmButton: true,
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  this.$router.push("/home");
-                }
-              });
-            }
-          });
+          if (this.statu === "CLOSED") {
+            this.changeStatus();
+          } else {
+            this.changeAdopted();
+          }
         }
       });
     },
-    async getDetails() {
-      // try {
-      //   const response = await instance.post("/person/details", {
-      //     userId: await encrypt(this.requestAdoption.user.id),
-      //   });
-      //   this.information = response.data.data;
-      //   this.information.phoneNumber = await decrypt(
-      //     this.information.phoneNumber
-      //   );
-      //   this.information.user.username = await decrypt(
-      //     this.information.user.username
-      //   );
+    async changeStatus() {
+      try {
+        Swal.fire({
+          title: "Espera un momento...",
+          text: "Estamos se esta enviando la información",
+          imageUrl: gatoWalkingGif,
+          timerProgressBar: true,
+          imageWidth: 160, // Ancho de la imagen
+          imageHeight: 160, // Altura de la imagen
+          showConfirmButton: false,
+        });
+        await instance.put("/adoption/changeStatus", {
+          adoptionId: localStorage.getItem("adoptionId"),
+          status: this.statu,
+        });
+        Swal.fire({
+          title: "Su cambio ha sido aprovada",
+          text: "Espere un momento mientras se realiza el proceso siguiente",
+          icon: "success",
+          iconColor: "#53A93D",
+          timer: 3000,
+          timerProgressBar: true,
+          showConfirmButton: false,
+        }).finally(() => {
+          this.$router.push("/moderated/adoptionList");
+        });
+      } catch (error) {
+        let Msjerror = "";
+        switch (error.response.data.message) {
+          case "INVALID_USER":
+            Msjerror =
+              "Ups! por favor vuelve a iniciar sesión y volver a intentarlo";
+            break;
+          case "DUPLICATE_REQUEST":
+            Msjerror =
+              "Ups! Ya tienes una solicitud de adopción de la misma mascota";
+            break;
+          case "INVALID_LENGTH":
+            Msjerror = "Ups! la respuesta debe tener entre 10 y 100 caracteres";
+            break;
+          case "INVALID_ROLE":
+            Msjerror = "Ups! no tienes permisos para realizar esta acción";
+            break;
+          case "MAX_ADOPTIONREQUEST":
+            Msjerror =
+              "Ups! Solo puedes tener 5 solicitudes activas,por espera a que sean aprobadas o finalizadas";
+            break;
+          case "LIMIT_ADOPTIONREQUEST":
+            Msjerror = "La mascota no esta disponible por el momento";
+            break;
+          case "ADOPTIONREQUEST_NOT_SAVED":
+            Msjerror =
+              "Ups! algo salió mal, por favor vuelve a intentarlo no se logro guardar la solicitud";
+            break;
+          default:
+            Msjerror = "Ups! algo salió mal, por favor vuelve a intentarlo";
+            break;
+        }
+        Swal.fire({
+          title: "Error al enviar la solicitud de adopción",
+          text: Msjerror,
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Aceptar",
+        });
+      }
+    },
+    async changeAdopted() {
+      try {
+        Swal.fire({
+          title: "Espera un momento...",
+          text: "Estamos enviando la notificación de adopción al adoptante",
+          imageUrl: gatoWalkingGif,
+          timerProgressBar: true,
+          imageWidth: 160, // Ancho de la imagen
+          imageHeight: 160, // Altura de la imagen
+          showConfirmButton: false,
+        });
+        await instance.post("/pet/adoption", {
+          pet: await encrypt(this.requestAdoption.pet.id),
+          adoptant: await encrypt(this.requestAdoption.user.id),
+          moderator: localStorage.getItem("userId"),
+        });
 
-      //   swal.close();
-      // } catch (error) {
-      //   Swal
-      //     .fire({
-      //       title: "Error",
-      //       text: "No se pudieron cargar tus datos",
-      //       icon: "error",
-      //       showConfirmButton: false,
-      //       timer: 1500,
-      //     })
-      //     .then(() => {
-      //       this.$router.go(-1);
-      //     });
-      // }
+        Swal.fire({
+          title: "Listo!",
+          text: "Permita un momento que se envie la notificación al adoptante",
+          imageUrl: gatoWalkingGif,
+          imageWidth: 160, // Ancho de la imagen
+          imageHeight: 160, // Altura de la imagen,
+          timer: 3000,
+          timerProgressBar: true,
+          showConfirmButton: false,
+        }).finally(() => {
+          this.changeStatus();
+        });
+      } catch (error) {
+        Swal.fire({
+          title: "Ocurrio un error",
+          text: "Cambio el estado no se pudo enviar correctamente",
+          icon: "error",
+          showConfirmButton: true,
+        });
+      }
     },
   },
 };

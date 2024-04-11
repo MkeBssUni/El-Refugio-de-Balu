@@ -6,6 +6,7 @@
           <b-card
             bg-variant="card-content-secondary-orange"
             class="text-center box-shadow-pretty"
+            v-if="credentialPet"
           >
             <b-card-text>Datos de solicitud</b-card-text>
           </b-card>
@@ -23,10 +24,11 @@
               <b>Estado:</b>
               <br />
               <b-badge
-                v-if="requestAdoption.status"
+                v-if="requestAdoption.status && requestAdoption.status.name"
                 :variant="getBadgeVariant(requestAdoption.status.name)"
                 >{{ getStatus(requestAdoption.status.name) }}</b-badge
               >
+
               <br />
               {{ infoStatus }}
             </b-card-text>
@@ -37,7 +39,7 @@
             <b-row>
               <b-col cols="12" sm="12" lg="5" md="5">
                 <img
-                :src="base64ToImage(credentialPet.image)"
+                  :src="credentialPet.image"
                   alt="Imagen de perfil"
                   class="image-pet"
                 />
@@ -48,7 +50,11 @@
                   class="my-2 information-pet"
                 >
                   <b-card-body>
-                    <b-card-title> {{ credentialPet.name }} </b-card-title>
+                    <b-card-title>
+                      {{
+                        credentialPet.name ? credentialPet.name : "Sin nombre"
+                      }}
+                    </b-card-title>
                     <hr class="my-line" />
                     <b-row>
                       <b-col cols="12" sm="12" lg="8" md="8" xl="8">
@@ -66,10 +72,8 @@
                       <b-col cols="12" sm="12" lg="6" md="6" xl="6">
                         <b-card-text>
                           <b>Peso:</b>&nbsp;
-                          {{ getAgeNumber(credentialPet.weight) }} {{
-                            mapweightUnits(getAgeUnit(credentialPet.weight))
-                          }}
-                          
+                          {{ getAgeNumber(credentialPet.weight) }}
+                          {{ mapweightUnits(getAgeUnit(credentialPet.weight)) }}
                         </b-card-text>
                       </b-col>
                     </b-row>
@@ -94,13 +98,23 @@
                       </b-col>
                       <b-col cols="12" sm="12" lg="6" md="6" xl="6">
                         <b-card-text>
-                          <b>Edad:</b>&nbsp;{{ getAgeNumber(credentialPet.age) }} {{
+                          <b>Edad:</b>&nbsp;{{
+                            getAgeNumber(credentialPet.age)
+                          }}
+                          {{
                             mapageUnits(getAgeUnit(credentialPet.age))
                           }}</b-card-text
                         >
                       </b-col>
                       <b-col cols="12" sm="12" lg="6" md="6" xl="6">
-                        <b-card-text> <b>Género:</b>&nbsp; {{ mapGender(credentialPet.gender.toString().toLowerCase()) }} </b-card-text>
+                        <b-card-text>
+                          <b>Género:</b>&nbsp;
+                          {{
+                            mapGender(
+                              credentialPet.gender.toString().toLowerCase()
+                            )
+                          }}
+                        </b-card-text>
                       </b-col>
                     </b-row>
                   </b-card-body>
@@ -119,7 +133,7 @@
                 >Lugar en la que dormira o descansara la mascota</b-card-text
               >
               <img
-                :src="base64ToImage(requestAdoption.requestImages[0].image)"
+                :src="getRequestImage(requestAdoption.requestImages, 0)"
                 class="homePhotos"
               />
             </b-card-body>
@@ -128,7 +142,7 @@
                 >Lugar en el que vivira la mascota (casa)</b-card-text
               >
               <img
-              :src="base64ToImage(requestAdoption.requestImages[1].image)"
+                :src="getRequestImage(requestAdoption.requestImages, 1)"
                 class="homePhotos"
               />
             </b-card-body>
@@ -137,7 +151,7 @@
                 >Lugar en el que jugará la mascota (casa)</b-card-text
               >
               <img
-              :src="base64ToImage(requestAdoption.requestImages[2].image)"
+                :src="getRequestImage(requestAdoption.requestImages, 2)"
                 class="homePhotos"
               />
             </b-card-body>
@@ -189,8 +203,13 @@
             <b-row>
               <b-col cols="12" sm="12" lg="6" md="6" xl="6">
                 <b-card-text>
-                  <b>¿Cuál fue tu ultima mascota?</b>
-                  {{ requestAdoption.previousExperience.lastPet }}
+                  <b>¿Cuál fue tu última mascota?</b>
+                  {{
+                    requestAdoption.previousExperience &&
+                    requestAdoption.previousExperience.lastPet
+                      ? requestAdoption.previousExperience.lastPet
+                      : "No se registró una mascota anterior"
+                  }}
                 </b-card-text>
               </b-col>
               <b-col cols="12" sm="12" lg="6" md="6" xl="6">
@@ -199,6 +218,9 @@
                   {{
                     requestAdoption.previousExperience
                       .whatDidYouDoWhenThePetGotSick
+                      ? requestAdoption.previousExperience
+                          .whatDidYouDoWhenThePetGotSick
+                      : "No se registraron acciones"
                   }}
                 </b-card-text>
               </b-col>
@@ -259,7 +281,9 @@
           variant="outline-danger"
           class="mt-3"
           @click="closedRequestAdoption"
-          :disabled="requestAdoption.status.name !== 'PENDING'"
+          :disabled="
+            requestAdoption.status && requestAdoption.status.name !== 'PENDING'
+          "
         >
           <b-icon icon="clipboard-x"></b-icon>
           &nbsp;Cancelar solicitud
@@ -279,23 +303,61 @@ import {
   weightUnits,
   lifeStages,
   ageUnits,
-  gender
+  gender,
 } from "../../../../kernel/data/mappingDictionaries";
 
 export default {
   name: "viewAplicationAdoptionRequest",
   data() {
     return {
-      requestAdoption: {},
+      requestAdoption: {
+        user: "",
+        pet: "",
+        reasonsForAdoption: {
+          peopleAgreeToAdopt: "",
+          haveHadPets: "",
+          whereWillThePetBe: "",
+          whyAdoptPet: "",
+        },
+        previousExperience: {
+          lastPet: "",
+          whatDidYouDoWhenThePetGotSick: "",
+          whatKindOfPetsHaveYouHadBefore: "",
+          whatMemoriesDoYouHaveWithYourPet: "",
+        },
+        additional_information: "",
+        imageAdoption: [],
+      },
+
       infoStatus: "",
-      credentialPet: {},
+      credentialPet: {
+        name: "",
+        age: "",
+        breed: "",
+        category: "",
+        gender: "",
+        image: "",
+        lifeStage: "",
+        size: "",
+        weight: "",
+      },
     };
   },
   mounted() {
     this.getAdoption();
   },
   methods: {
+    getRequestImage(images, index) {
+      if (images && images[index]) {
+        return images[index].image;
+      } else {
+        return ""; // o alguna otra URL de imagen por defecto
+      }
+    },
     getAgeUnit(age) {
+      if (age === undefined || age === null || age === "") {
+        return ""; // Manejo de casos donde num es undefined, null o una cadena vacía
+      }
       const matches = age.match(/^(\d+)\s*(\w+)$/);
       if (matches && matches.length === 3) {
         return matches[2].toLowerCase();
@@ -303,16 +365,20 @@ export default {
         return "";
       }
     },
-    getAgeNumber(age) {
-      const matches = age.match(/^(\d+)\s*(\w+)$/);
+    getAgeNumber(num) {
+      if (num === undefined || num === null || num === "") {
+        return ""; // Manejo de casos donde num es undefined, null o una cadena vacía
+      }
+
+      const matches = num.match(/^(\d+)\s*(\w+)$/);
       if (matches && matches.length === 3) {
         return matches[1]; // Devuelve solo el número
       } else {
-        return ""; // Opción de manejo de errores si el formato no es válido
+        return ""; // Manejo de casos donde el formato no coincide con el esperado
       }
     },
     goBack() {
-      this.$router.go(-1);
+      this.$router.push("/myAplicationAdoption");
     },
     mapSize(size) {
       return sizes[size] || size;
@@ -323,7 +389,7 @@ export default {
     mapweightUnits(weightUnit) {
       return weightUnits[weightUnit] || weightUnit;
     },
-    mapGender(genderpet){
+    mapGender(genderpet) {
       return gender[genderpet] || genderpet;
     },
     mapageUnits(ageUnit) {
@@ -337,13 +403,13 @@ export default {
     getBadgeVariant(status) {
       switch (status) {
         case "ADOPTED":
-          return "primary";
+          return "info";
         case "CLOSED":
           return "danger";
         case "PENDING":
           return "warning";
         default:
-          return "primary";
+          return "info";
       }
     },
     getStatus(status) {
@@ -363,37 +429,6 @@ export default {
         default:
           return "SIN DATOS";
       }
-    },
-    base64ToImage(base64String) {
-      if (!base64String) {
-        console.error("base64String es nulo o indefinido");
-        return null;
-      }
-      // Extraer el tipo de la imagen desde la cadena Base64
-      const type = base64String.substring(
-        "data:image/".length,
-        base64String.indexOf(";base64")
-      );
-
-      // Crear un blob desde la cadena Base64
-      const byteCharacters = atob(base64String.split(",")[1]);
-      const byteArrays = [];
-      for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-        const slice = byteCharacters.slice(offset, offset + 512);
-        const byteNumbers = new Array(slice.length);
-        for (let i = 0; i < slice.length; i++) {
-          byteNumbers[i] = slice.charCodeAt(i);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-        byteArrays.push(byteArray);
-      }
-      const blob = new Blob(byteArrays, { type: type });
-
-      // Crear una URL para la imagen
-      const url = URL.createObjectURL(blob);
-
-      // Retornar la URL de la imagen
-      return url;
     },
     async getAdoption() {
       try {
@@ -445,10 +480,9 @@ export default {
           await decrypt(
             this.requestAdoption.reasonsForAdoption.whereWillThePetBe
           );
-        this.requestAdoption.reasonsForAdoption.whyAdoptPet =
-          await decrypt(
-            this.requestAdoption.reasonsForAdoption.whyAdoptPet
-          );
+        this.requestAdoption.reasonsForAdoption.whyAdoptPet = await decrypt(
+          this.requestAdoption.reasonsForAdoption.whyAdoptPet
+        );
         this.requestAdoption.additionalInformation = await decrypt(
           this.requestAdoption.additionalInformation
         );
@@ -545,4 +579,3 @@ export default {
   },
 };
 </script>
-

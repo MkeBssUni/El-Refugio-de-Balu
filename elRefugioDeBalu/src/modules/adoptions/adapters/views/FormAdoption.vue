@@ -1019,6 +1019,10 @@ export default {
             Msjerror =
               "Ups! algo salió mal, por favor vuelve a intentarlo no se logro guardar la solicitud";
             break;
+          case "IMAGE_NOT_SAVED":
+            Msjerror =
+              "Ups! algo salió mal, por favor vuelve a intentarlo no se logro guardar la imagen pesa mas de 6MB";
+            break;
           default:
             Msjerror = "Ups! algo salió mal, por favor vuelve a intentarlo";
             break;

@@ -129,13 +129,13 @@ export default {
     getBadgeVariant(status) {
       switch (status) {
         case "ADOPTED":
-          return "success";
+          return "info";
         case "CLOSED":
           return "danger";
         case "PENDING":
           return "warning";
         default:
-          return "dark-blue";
+          return "info";
       }
     },
     statusSpain(status) {

@@ -30,6 +30,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+
 @Service
 @Transactional
 @AllArgsConstructor
@@ -251,5 +252,12 @@ public class PersonService {
         if(existentUser.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
         if(existentUser.get().getActivationCode().equals(dto.getActivationCode())) return new ResponseApi<>(existentUser.get(),HttpStatus.OK, false, "OK");
         return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
+    }
+    @Transactional(readOnly = true)
+    public ResponseApi<IContactInfoView> findContactInfo(PersonDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        Optional<User> user = iUserRepository.findById(Long.valueOf(hashService.decrypt(dto.getUserId())));
+        if(user.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
+        Optional<IContactInfoView> contactInfoView = iPersonRepository.findContactInfoByUserId(user.get().getId());
+        return contactInfoView.map(value -> new ResponseApi<>(contactInfoView.get(), HttpStatus.OK, false, "OK")).orElseGet(() -> new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name()));
     }
 }
