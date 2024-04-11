@@ -39,4 +39,5 @@ public enum ErrorMessages {
     NO_ADDRESS_FOUND,
     INVALID_TYPEHOUSE,
     PHONE_NOT_AVAILABLE,
+    INACTIVE_USER,
 }

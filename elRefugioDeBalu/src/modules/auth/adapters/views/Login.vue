@@ -143,6 +143,13 @@ export default {
                             text: 'Tu cuenta se encuentra bloqueda temporalmente'
                         });
                         break;
+                    case 'INACTIVE_USER':
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Advertencia',
+                            text: 'Tu cuenta no ha sido activada, por favor activala'
+                        });
+                        break;
                     case 'ACCOUNT_JUST_BLOCKED':
                         Swal.fire({
                             icon: 'error',
