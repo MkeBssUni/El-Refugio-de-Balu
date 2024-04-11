@@ -97,7 +97,7 @@
         </b-row>
         <b-row v-show="this.total == 0">
             <b-col cols="12">
-                <h5 class="text-center mt-5">No hay solicitudes de publicación de mascotas nuevas</h5>
+                <h5 class="text-center mt-5">No hay registros relacionados o no hay solicitudes de publicación de mascotas nuevas</h5>
             </b-col>
         </b-row>
     </b-container>

@@ -71,14 +71,9 @@
                     </b-card>
                 </b-col>
             </TransitionGroup>
-            <b-row v-show="total == 0 && form.status == ''">
+            <b-row v-show="total == 0">
                 <b-col cols="12">
-                    <h5 class="text-center">No has publicado ninguna mascota</h5>
-                </b-col>
-            </b-row>
-            <b-row v-show="total == 0 && form.status != ''">
-                <b-col cols="12">
-                    <h5 class="text-center">No tienes mascotas con el estado seleccionado</h5>
+                    <h5 class="text-center">No hay registros relacionados o no has publicado ninguna mascota</h5>
                 </b-col>
             </b-row>
             <b-row class="pt-2" v-show="total > 0">

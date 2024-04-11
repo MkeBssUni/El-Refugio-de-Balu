@@ -118,7 +118,7 @@
         </TransitionGroup>
         <b-row v-show="total == 0">
             <b-col cols="12">
-                <h5 class="text-center">No hay mascotas disponibles por el momento</h5>
+                <h5 class="text-center">No hay registros relacionados o no hay mascotas disponibles por el momento</h5>
             </b-col>
         </b-row>
         <b-row class="pt-2" v-show="total > 0">
