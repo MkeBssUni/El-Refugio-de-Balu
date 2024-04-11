@@ -130,7 +130,6 @@ public class PersonController {
             ResponseApi<IContactInfoView> response = personService.findContactInfo(dto);
             return new ResponseEntity<>(response, response.getStatus());
         }catch (Exception e){
-            System.out.println(e);
             return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

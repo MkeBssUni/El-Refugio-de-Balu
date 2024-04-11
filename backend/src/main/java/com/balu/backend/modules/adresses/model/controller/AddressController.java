@@ -53,7 +53,6 @@ public class AddressController { private final AddressService addressService;
     public ResponseEntity<ResponseApi<Address>> updateAddress( @RequestBody UpdateAddressDto updateAddressDto) {
         try {
             ResponseApi<Address> responseApi = addressService.updateAddress(updateAddressDto);
-            System.out.println(responseApi.getMessage());
             return new ResponseEntity<>(responseApi, responseApi.getStatus());
         } catch (Exception e) {
             return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()), HttpStatus.INTERNAL_SERVER_ERROR);

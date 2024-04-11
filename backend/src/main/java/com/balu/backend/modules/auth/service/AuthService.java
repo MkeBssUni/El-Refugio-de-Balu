@@ -34,6 +34,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final IUserRepository iUserRepository;
     private final LogService logService;
+    private final String tableAffected = "USERS";
 
     public ResponseEntity<ResponseApi<SignedDto>> signIn(UserSignInDto userSignInDto){
         Optional<User> userOptional = userService.loadUserByUsername(userSignInDto.getUsername());
@@ -45,9 +46,9 @@ public class AuthService {
                 user.setAttempts(2);
                 user.setBlocked(false);
                 user.setBlockedAt(null);
-                logService.saveLog("User with id:" + user.getId() +" has been unblocked after 30 minutes", LogTypes.UNBLOCK, "USERS");
+                logService.saveLog("User with id:" + user.getId() +" has been unblocked after 30 minutes", LogTypes.UNBLOCK, tableAffected);
             }else{
-                logService.saveLog("User with id:" + user.getId() +" has tried to log in while blocked", LogTypes.FAILED_LOGIN, "USERS");
+                logService.saveLog("User with id:" + user.getId() +" has tried to log in while blocked", LogTypes.FAILED_LOGIN, tableAffected);
                 return new ResponseEntity<>(new ResponseApi<>(HttpStatus.UNAUTHORIZED, true, ErrorMessages.ACCOUNT_BLOCKED_TEMPORARY.name()), HttpStatus.UNAUTHORIZED);
             }
         }
@@ -68,7 +69,7 @@ public class AuthService {
             user.setLastAccess(LocalDateTime.now());
             iUserRepository.saveAndFlush(user);
 
-            logService.saveLog("User with id:" + user.getId() +" has logged in", LogTypes.LOGIN, "USERS");
+            logService.saveLog("User with id:" + user.getId() +" has logged in", LogTypes.LOGIN, tableAffected);
 
             return new ResponseEntity<>(new ResponseApi<>(signedDto, HttpStatus.OK, false, "OK"), HttpStatus.OK);
         }catch (Exception e){
@@ -76,12 +77,12 @@ public class AuthService {
             if(user.getAttempts() == 3){
                 user.setBlocked(true);
                 user.setBlockedAt(LocalDateTime.now());
-                logService.saveLog("User with id:  "+user.getId()+" has been blocked", LogTypes.BLOCK, "USERS");
+                logService.saveLog("User with id:  "+user.getId()+" has been blocked", LogTypes.BLOCK, tableAffected);
                 iUserRepository.saveAndFlush(user);
                 return new ResponseEntity<>(new ResponseApi<>(HttpStatus.UNAUTHORIZED, true, ErrorMessages.ACCOUNT_JUST_BLOCKED.name()), HttpStatus.BAD_REQUEST);
             }
             iUserRepository.saveAndFlush(user);
-            logService.saveLog("User with id:" + user.getId() +" has failed to log in", LogTypes.FAILED_LOGIN, "USERS");
+            logService.saveLog("User with id:" + user.getId() +" has failed to log in", LogTypes.FAILED_LOGIN, tableAffected);
             return new ResponseEntity<>(new ResponseApi<>(HttpStatus.UNAUTHORIZED, true, ErrorMessages.INCORRECT_CREDENTIALS.name()), HttpStatus.BAD_REQUEST);
         }
     }

@@ -33,11 +33,6 @@ public class AddressService {
     private final HashService hashService;
     private final IUserRepository userRepository;
 
-    @Transactional(readOnly = true)
-    public ResponseApi<List<Address>> getAllAddresses() {
-        List<Address> addresses = addressRepository.findAll();
-        return new ResponseApi<>(addresses, HttpStatus.OK, false, "OK");
-    }
 
     @Transactional(readOnly = true)
     public ResponseApi<Address> getAddressByUserId(String userId) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
@@ -55,43 +50,12 @@ public class AddressService {
         if (StringUtils.isEmpty(address.getCountry()) || StringUtils.isEmpty(address.getStreet()) || StringUtils.isEmpty(address.getColony()) || StringUtils.isEmpty(address.getCity()) || StringUtils.isEmpty(address.getState()) || StringUtils.isEmpty(address.getPostalCode()) || StringUtils.isEmpty(address.getAddressReference()) || StringUtils.isEmpty(address.getExteriorNumber()) || StringUtils.isEmpty(address.getInteriorNumber())) {
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
         }
-        /*long userId = Long.parseLong(hashService.decrypt(address.getUserId()));
-        User user = userRepository.getById(userId);
-
-        Address encryptedAddress = new Address
-                (0L,
-                hashService.decrypt(address.getCountry()),
-                hashService.decrypt(address.getStreet()),
-                hashService.decrypt(address.getColony()),
-                        hashService.decrypt(address.getCity()),
-                        hashService.decrypt(address.getStreet()),
-                        hashService.decrypt(address.getPostalCode()),
-                        hashService.decrypt(address.getAddressReference()),
-                        hashService.decrypt(address.getExteriorNumber()),
-                        hashService.decrypt(address.getInteriorNumber()),
-                        user,
-                        null
-                );
-         */
         address.setUserId(hashService.decrypt(address.getUserId()));
-        Long userId = Long.parseLong(address.getUserId());
         Address address1 = new Address();
         Optional<User> optionalUser = userRepository.findById(Long.valueOf(address.getUserId()));
         if(optionalUser.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND,true, ErrorMessages.NOT_FOUND.name());
         address.setUser(optionalUser.get());
         address1.save(address);
-//        Address encryptedAddress= new Address();
-//        encryptedAddress.setCountry(address.getCountry());
-//        encryptedAddress.setStreet(address.getStreet());
-//        encryptedAddress.setColony(address.getColony());
-//        encryptedAddress.setCity(address.getPostalCode());
-//        encryptedAddress.setState(address.getState());
-//        encryptedAddress.setPostalCode(address.getPostalCode());
-//        encryptedAddress.setAddressReference(address.getAddressReference());
-//        encryptedAddress.setExteriorNumber(address.getExteriorNumber());
-//        encryptedAddress.setExteriorNumber(address.getExteriorNumber());
-//        encryptedAddress.setUser(user);
-        //Address savedAddress = addressRepository.save(encryptedAddress);
         addressRepository.saveAndFlush(address1);
         return new ResponseApi<>(HttpStatus.CREATED, false, "Address saved successfully");
     }
