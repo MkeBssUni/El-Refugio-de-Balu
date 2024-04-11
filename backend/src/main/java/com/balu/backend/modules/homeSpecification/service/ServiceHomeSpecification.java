@@ -68,7 +68,6 @@ public class ServiceHomeSpecification {
                 return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_TYPEHOUSE.name());
             }
         }catch (Exception e){
-            System.out.println(e);
             return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.INTERNAL_ERROR.name());
         }
     }
