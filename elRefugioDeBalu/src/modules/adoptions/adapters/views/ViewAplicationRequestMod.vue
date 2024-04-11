@@ -41,7 +41,10 @@
                   class="my-2 information-pet"
                 >
                   <b-card-body>
-                    <b-card-title class="text-center">Informacion del adoptante <br/>  Anna Christina Bustos</b-card-title>
+                    <b-card-title class="text-center"
+                      >Informacion del adoptante <br />
+                      Anna Christina Bustos</b-card-title
+                    >
                     <hr class="my-line" />
                     <b-row>
                       <b-col cols="12" sm="12" lg="6" md="6" xl="6">
@@ -237,9 +240,8 @@ import Swal from "sweetalert2";
 import perroChato from "@/assets/imgs/perroChato1.gif";
 import female from "@/assets/imgs/female.jpg";
 import instance from "../../../../config/axios";
-import { decrypt,encrypt } from "../../../../kernel/hashFunctions";
+import { decrypt, encrypt } from "../../../../kernel/hashFunctions";
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
-
 
 export default {
   name: "viewAplicationAdoptionRequestMod",
@@ -361,10 +363,9 @@ export default {
           await decrypt(
             this.requestAdoption.reasonsForAdoption.whereWillThePetBe
           );
-        this.requestAdoption.reasonsForAdoption.whyAdoptPet =
-          await decrypt(
-            this.requestAdoption.reasonsForAdoption.whyAdoptPet
-          );
+        this.requestAdoption.reasonsForAdoption.whyAdoptPet = await decrypt(
+          this.requestAdoption.reasonsForAdoption.whyAdoptPet
+        );
         this.requestAdoption.additionalInformation = await decrypt(
           this.requestAdoption.additionalInformation
         );
@@ -395,39 +396,35 @@ export default {
       this.showConfirm();
     },
     async getDetails() {
-      // console.log("Aqui info del usuario");
-      // console.log(this.requestAdoption.user.id);
-      // try {
-      //   const response = await instance.post("/person/details", {
-      //     userId: await encrypt(this.requestAdoption.user.id),
-      //   });
-
-      //   this.information = response.data.data;
-      //   // this.information.phoneNumber = await decrypt(
-      //   //   this.information.phoneNumber
-      //   // );
-      //   // this.information.user.username = await decrypt(
-      //   //   this.information.user.username
-      //   // );
-      //   console.log(this.information);
-
-      //   Swal.close();
-      // } catch (error) {
-      //   Swal
-      //     .fire({
-      //       title: "Error",
-      //       text: "No se pudieron cargar tus datos",
-      //       icon: "error",
-      //       showConfirmButton: false,
-      //       timer: 1500,
-      //     })
-      //     .then(() => {
-      //       this.$router.go(-1);
-      //     });
-      // }
+      try {
+        const idUSer = await encrypt(this.requestAdoption.user.id);
+        const response = await instance.post("/person/find/contactInfo", {
+          userId: idUSer,
+        });
+        this.information = response.data.data;
+        // this.information.phoneNumber = await decrypt(
+        //   this.information.phoneNumber
+        // );
+        // this.information.user.username = await decrypt(
+        //   this.information.user.username
+        // );
+        console.log(this.information);
+        Swal.close();
+      } catch (error) {
+        Swal
+          .fire({
+            title: "Error",
+            text: "No se pudieron cargar tus datos",
+            icon: "error",
+            showConfirmButton: false,
+            timer: 1500,
+          })
+          .then(() => {
+            this.$router.go(-1);
+          });
+      }
     },
     showConfirm() {
-      console.log(this.statu);
       Swal.fire({
         title: `¿Estás seguro de  ${this.typeState} `,
         text: "Una vez enviada no podrá ser modificada",
@@ -439,16 +436,15 @@ export default {
         cancelButtonText: "Cancelar",
       }).then((result) => {
         if (result.isConfirmed) {
-          if(this.statu === "CLOSED"){
+          if (this.statu === "CLOSED") {
             this.changeStatus();
-          }else{
+          } else {
             this.changeAdopted();
           }
         }
       });
     },
-    async changeStatus(){
-      console.log("ya esta cambiando estado")
+    async changeStatus() {
       try {
         Swal.fire({
           title: "Espera un momento...",
@@ -460,21 +456,20 @@ export default {
           showConfirmButton: false,
         });
         await instance.put("/adoption/changeStatus", {
-              adoptionId: localStorage.getItem("adoptionId"),
-              status: this.statu,
-            });
-            Swal.fire({
-            title: "Su cambio ha sido aprovada",
-            text: "Espere un momento mientras se realiza el proceso siguiente",
-            icon: "success",
-            iconColor: "#53A93D",
-            timer: 3000,
-            timerProgressBar: true,
-            showConfirmButton: false,
-          })
-          .finally(() => {
-              this.$router.push("/moderated/adoptionList");
-          });
+          adoptionId: localStorage.getItem("adoptionId"),
+          status: this.statu,
+        });
+        Swal.fire({
+          title: "Su cambio ha sido aprovada",
+          text: "Espere un momento mientras se realiza el proceso siguiente",
+          icon: "success",
+          iconColor: "#53A93D",
+          timer: 3000,
+          timerProgressBar: true,
+          showConfirmButton: false,
+        }).finally(() => {
+          this.$router.push("/moderated/adoptionList");
+        });
       } catch (error) {
         let Msjerror = "";
         switch (error.response.data.message) {
@@ -515,7 +510,6 @@ export default {
           confirmButtonText: "Aceptar",
         });
       }
-
     },
     async changeAdopted() {
       try {
@@ -535,20 +529,18 @@ export default {
         });
 
         Swal.fire({
-            title: "Listo!",
-            text: "Por favor revisa que el estado ha sido cambiado correctamente",
-            icon: "success",
-            iconColor: "#53A93D",
-            timer: 3000,
-            timerProgressBar: true,
-            showConfirmButton: false,
-          })
-          .finally(() => {
-            console.log("ya cmabio mascota");
-            this.changeStatus();
-          });
+          title: "Listo!",
+          text: "Permita un momento que se envie la notificación al adoptante",
+          imageUrl: gatoWalkingGif,
+          imageWidth: 160, // Ancho de la imagen
+          imageHeight: 160, // Altura de la imagen,
+          timer: 3000,
+          timerProgressBar: true,
+          showConfirmButton: false,
+        }).finally(() => {
+          this.changeStatus();
+        });
       } catch (error) {
-        console.log(error);
         Swal.fire({
           title: "Ocurrio un error",
           text: "Cambio el estado no se pudo enviar correctamente",
@@ -557,7 +549,6 @@ export default {
         });
       }
     },
-  
   },
-}
+};
 </script>
