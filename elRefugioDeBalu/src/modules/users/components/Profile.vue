@@ -47,6 +47,11 @@
                   />
                 </b-row>
               </b-col>
+              <b-col cols="12" >
+                <b-row class="px-2 my-2">
+                  <HomeSpecification ref="homeSpecification" />
+                </b-row>
+              </b-col>
             </div>
           </b-container>
 
