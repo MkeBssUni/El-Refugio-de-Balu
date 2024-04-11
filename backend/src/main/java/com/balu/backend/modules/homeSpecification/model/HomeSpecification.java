@@ -47,4 +47,10 @@ public class HomeSpecification {
     }
 
 
+    public HomeSpecification(HomeTypes homeType, boolean outdoorArea, int numberOfResidents, Address address) {
+        this.type = homeType;
+        this.outdoorArea = outdoorArea;
+        this.numberOfResidents = numberOfResidents;
+        this.address = address;
+    }
 }

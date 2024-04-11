@@ -87,10 +87,11 @@ export default {
   },
   methods: {
     async CheckProfile() {
+
       this.visibility = await decrypt(localStorage.getItem("role"))
       if (this.visibility == "GENERAL") {
         this.completeProfile = await decrypt(localStorage.getItem("profileCompleted"))
-        if (this.completeProfile) {
+        if (if (this.completeProfile == "false")) {
           Swal.fire({
             title: "¡Tu perfil no está  completo!",
             text: "Completa tu perfil para seguir buscando en el refugio…",
@@ -101,6 +102,7 @@ export default {
             this.$router.push('/profile');
           });
         }
+
       } else {
         localStorage.removeItem("profileCompleted");
       }

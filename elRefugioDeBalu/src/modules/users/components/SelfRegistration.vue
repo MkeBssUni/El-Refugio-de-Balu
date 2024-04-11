@@ -14,7 +14,7 @@
               <b-form-input class="bg-light shadow text-dark-gray-input" id="input-name"
                 v-model.trim="form.name"></b-form-input>
               <b-form-invalid-feedback :state="nameValidation">El nombre debe contener solo
-                letras</b-form-invalid-feedback>
+                letras, máximo 40 caracteres</b-form-invalid-feedback>
             </b-form-group>
 
             <b-form-group class="my-3" label-for="input-lastname" :state="lastnameValidation">
@@ -23,8 +23,8 @@
               </label>
               <b-form-input class="bg-light shadow text-dark-gray-input" id="input-lastname"
                 v-model.trim="form.lastname"></b-form-input>
-              <b-form-invalid-feedback :state="lastnameValidation">El apellido debe contener solo
-                letras</b-form-invalid-feedback>
+              <b-form-invalid-feedback :state="lastnameValidation">El apellido paterno debe contener solo
+                letras, máximo 40 caracteres</b-form-invalid-feedback>
             </b-form-group>
 
             <b-form-group class="my-3" label-for="input-surname">
@@ -33,6 +33,8 @@
               </label>
               <b-form-input class="bg-light shadow text-dark-gray-input" id="input-surname"
                 v-model.trim="form.surname"></b-form-input>
+                <b-form-invalid-feedback :state="lastnameValidation">El apellido materno debe contener solo
+                letras, máximo 40 caracteres</b-form-invalid-feedback>
             </b-form-group>
 
             <b-form-group class="my-3" label-for="input-email" :state="usernameValidation">
@@ -203,6 +205,7 @@ export default {
       return !(
         this.nameValidation === true &&
         this.lastnameValidation === true &&
+        this.surnameValidation === true &&
         this.usernameValidation === true &&
         this.passwordValidation === true &&
         this.phoneValidation === true &&
@@ -213,7 +216,7 @@ export default {
     async activateAccount() {
       swal.fire({
         title: "Código de verificación",
-        text: "Ingresa el código de verificación que te enviamos a tu correo",
+        text: "Ingresa el código de verificación que te hemos enviado, este proceso puede tardar unos minutos",
         input: "text",
         showCancelButton: true,
         confirmButtonText: "Verificar",
@@ -352,9 +355,21 @@ export default {
   watch: {
     "form.name"(newVal) {
       this.nameValidation = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ' .]+$/.test(newVal.trim());
+      if (newVal.length > 40) {
+        this.nameValidation = false;
+      }
     },
     "form.lastname"(newVal) {
       this.lastnameValidation = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ' .]+$/.test(newVal.trim());
+      if (newVal.length > 40) {
+        this.lastnameValidation = false;
+      }
+    },
+    "form.surname"(newVal) {
+      this.surnameValidation = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ' .]+$/.test(newVal.trim());
+      if (newVal.length > 40) {
+        this.surnameValidation = false;
+      }
     },
     "form.username"(newVal) {
       this.usernameValidation = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(newVal.trim());

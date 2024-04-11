@@ -143,8 +143,8 @@
 
 <script>
 import Swal from "sweetalert2";
-import axios from "axios";
 import Overlay from "../../../utils/Overlay.vue";
+import instance from '../../../config/axios';
 
 export default {
   components: {
@@ -207,8 +207,11 @@ export default {
         if (!this.isValidForm) return;
 
         this.loading = true;
-
-        const response = await axios.post("/api/homeSpecification/", this.form);
+        console.log("esto se manda: ", this.form)
+        //quitar mainImage
+        this.form.mainImage = null;
+        console.log("esto se manda: ", this.form)
+        const response = await instance.post("/homeSpecification/", this.form);
 
         Swal.fire({
           icon: "success",
@@ -218,6 +221,7 @@ export default {
 
         this.resetForm();
       } catch (error) {
+        console.log("error: ", error)
         Swal.fire({
           icon: "error",
           title: "Error",
