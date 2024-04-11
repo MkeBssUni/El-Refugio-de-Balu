@@ -7,11 +7,7 @@ import com.balu.backend.modules.adresses.model.services.AddressService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -32,6 +28,15 @@ public class AddressController { private final AddressService addressService;
         try {
             return new ResponseEntity<>(addressService.update(dto), HttpStatus.OK);
         } catch (Exception e) {
+            return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PostMapping("/details")
+    public ResponseEntity<ResponseApi<AddressDto>> save(@RequestBody AddressDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        try {
+            return new ResponseEntity<>(addressService.addressInfo(dto), HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
             return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
