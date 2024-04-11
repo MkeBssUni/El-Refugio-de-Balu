@@ -213,7 +213,7 @@ export default {
     async activateAccount() {
       swal.fire({
         title: "Código de verificación",
-        text: "Ingresa el código de verificación que te enviamos a tu correo",
+        text: "Ingresa el código de verificación que te hemos enviado, este proceso puede tardar unos minutos",
         input: "text",
         showCancelButton: true,
         confirmButtonText: "Verificar",

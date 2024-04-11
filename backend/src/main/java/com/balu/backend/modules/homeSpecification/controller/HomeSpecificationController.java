@@ -29,9 +29,9 @@ public class HomeSpecificationController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ResponseApi<HomeSpecification>> update(@PathVariable Long id, @RequestBody UpdateHomeSpecificationDto dto) {
-        ResponseApi<HomeSpecification> response = serviceHomeSpecification.update(id, dto);
+    @PutMapping("/")
+    public ResponseEntity<ResponseApi<HomeSpecification>> update(@RequestBody UpdateHomeSpecificationDto dto) {
+        ResponseApi<HomeSpecification> response = serviceHomeSpecification.update(dto);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 }

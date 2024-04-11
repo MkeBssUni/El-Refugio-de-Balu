@@ -96,7 +96,7 @@ export default {
     async CheckProfile() {
       this.completeProfile =await decrypt(localStorage.getItem("profileCompleted"))
       if (this.userID) {
-        if (this.completeProfile) {
+        if (this.completeProfile == "false") {
         Swal.fire({
           title: "¡Tu perfil no esta completo!", 
           text: "Completa tu perfil para seguir buscando en el refugio...",
