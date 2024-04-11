@@ -98,6 +98,9 @@ export default {
                 })
                 const response = await instance.post(`/pet/details`, { id: this.petId });
                 this.pet = response.data.data;
+                if (this.pet.diseases == "") this.pet.diseases = null;
+                if (this.pet.allergies == "") this.pet.allergies = null;
+                if (this.pet.specialCares == "") this.pet.specialCares = null;
                 if (this.pet.status === 'IN_REVISION') this.canEdit = true;
                 if (this.pet.status === 'PENDING' || this.pet.status === 'IN_REVISION' || this.pet.status === 'APPROVED') this.canCancel = true;
                 this.status = this.pet.status;

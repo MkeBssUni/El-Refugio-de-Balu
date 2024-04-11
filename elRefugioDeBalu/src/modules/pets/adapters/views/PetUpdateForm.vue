@@ -46,7 +46,7 @@ import genders from '../../../../kernel/data/genders';
 
 export default {
     data() {
-        return {
+        return {            
             pet: {},
             isValidGeneralInformation: false,
             isValidAdditionalInformation: false,
@@ -80,8 +80,7 @@ export default {
             let gender = String(this.pet.gender).toLowerCase();
             return genders.find(g => g.value === gender).value;
         },
-        mapCategory() {
-            console.log(this.$refs.generalInformationCard.categories)
+        mapCategory() {            
             for (let i = 0; i < this.$refs.generalInformationCard.categories.length; i++) {
                 if (this.$refs.generalInformationCard.categories[i].name === this.pet.category) {
                     return this.$refs.generalInformationCard.categories[i].id;
@@ -99,7 +98,7 @@ export default {
                     showConfirmButton: false
                 })
                 const response = await instance.post(`/pet/details`, { id: this.petId });
-                this.pet = response.data.data;
+                this.pet = response.data.data;                
                 this.$refs.generalInformationCard.form.mainImage = this.pet.mainImage;
                 this.$refs.generalInformationCard.form.additionalImages = this.pet.images;
                 this.$refs.generalInformationCard.form.name = this.pet.name;
@@ -117,11 +116,11 @@ export default {
                 this.$refs.medicalRecordCard.form.sterilized = this.pet.sterilized;
                 this.$refs.medicalRecordCard.form.microchip = this.pet.microchip;
                 this.$refs.medicalRecordCard.form.observations = this.pet.observations;
-                this.$refs.medicalRecordCard.form.diseases = this.pet.diseases;
-                this.$refs.medicalRecordCard.form.allergies = this.pet.allergies;
+                this.$refs.medicalRecordCard.form.diseases = (this.pet.diseases == "") ? [] : this.pet.diseases;
+                this.$refs.medicalRecordCard.form.allergies = (this.pet.allergies == "") ? [] : this.pet.allergies;
                 this.$refs.additionalInformationCard.form.description = this.pet.description;
                 this.$refs.additionalInformationCard.form.characteristics = this.pet.characteristics;
-                this.$refs.additionalInformationCard.form.specialCares = this.pet.specialCares;
+                this.$refs.additionalInformationCard.form.specialCares = (this.pet.specialCares == "") ? [] : this.pet.specialCares;
                 Swal.close();
             } catch (error) {
                 Swal.fire({

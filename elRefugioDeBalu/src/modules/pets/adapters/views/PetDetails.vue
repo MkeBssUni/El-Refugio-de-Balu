@@ -105,6 +105,9 @@ export default {
                 })
                 const response = await instance.post(`/pet/details`, { id: this.petId });
                 this.pet = response.data.data;
+                if (this.pet.diseases == "") this.pet.diseases = null;
+                if (this.pet.allergies == "") this.pet.allergies = null;
+                if (this.pet.specialCares == "") this.pet.specialCares = null;
                 Swal.close();
             } catch (error) {
                 Swal.fire({
