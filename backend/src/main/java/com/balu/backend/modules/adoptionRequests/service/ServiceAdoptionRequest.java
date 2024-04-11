@@ -238,6 +238,7 @@ public class ServiceAdoptionRequest {
             User user = userOptional.get();
             if(adoption != null){
                 if(dto.getStatus() == Statusses.ADOPTED){
+                    changeAllAdoption(idAdoption,pet.getId());
                     emailService.sendAdoptionApprovalTemplate(hashService.decrypt(user.getUsername()),pet.getName());
                 }
                 if(dto.getStatus() == Statusses.CLOSED){
@@ -259,6 +260,21 @@ public class ServiceAdoptionRequest {
             return false;
         }
     }
+
+
+    public boolean changeAllAdoption(Long idAdoption, Long idPet) {
+        try {
+            int cantidadSolicitudes = iAdoptionRequestRepository.countAdoptionByPet(idPet);
+            if (cantidadSolicitudes > 0) {
+                Integer adoption = iAdoptionRequestRepository.changeIfAdopted(idPet, idAdoption);
+                return adoption != null && adoption > 0;
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
     public boolean sendEmailModerador(Long idUser,String namePet){
         try{

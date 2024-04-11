@@ -44,13 +44,21 @@ public interface IAdoptionRequestRepository  extends JpaRepository<AdoptionReque
             " where adoption_requests.pet_id = :idPet and estado.name = \"PENDING\";",nativeQuery = true)
     int countAdoptionByPet(@Param("idPet") Long idPet);
 
+
+
     Optional<AdoptionRequest> findByUser_IdAndPet_Id(Long userId, Long petId);
 
+    @Modifying
+    @Query(value = "UPDATE adoption_requests SET status_id = 4 WHERE pet_id = :idPet AND id != :id", nativeQuery = true)
+    int changeIfAdopted(@Param("idPet") Long idPet, @Param("id") Long id);
 
     @Modifying
     @Query(value = "UPDATE adoption_requests SET  status_id= :status WHERE id = :id", nativeQuery = true)
     Integer changeStatusAdoptionRequest(@Param("id") Long id, @Param("status") Long idStatus);
 
     Long countAdoptionRequestByPet_Moderator_Id(Long idModerador);
+
+
+
 
 }

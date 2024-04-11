@@ -40,21 +40,21 @@
                   bg-variant="card-content-orange"
                   class="my-2 information-pet"
                 >
-                  <b-card-body>
-                    <b-card-title class="text-center"
+                  <b-card-body class="text-center">
+                    <b-card-title 
                       >Informacion del adoptante <br />
-                      Anna Christina Bustos</b-card-title
+                      {{ information.name }}</b-card-title
                     >
                     <hr class="my-line" />
                     <b-row>
                       <b-col cols="12" sm="12" lg="6" md="6" xl="6">
                         <b-card-text>
-                          <b>Correo electrónico:</b> &nbsp; 777 890 567
+                          <b>Correo electrónico:</b> &nbsp; {{ information.email }}
                         </b-card-text>
                       </b-col>
                       <b-col cols="12" sm="12" lg="6" md="6" xl="6">
                         <b-card-text>
-                          <b>Telefono:</b> &nbsp; 777 890 567
+                          <b>Telefono:</b> <br/> {{ information.phone }}
                         </b-card-text>
                       </b-col>
                     </b-row>
@@ -238,7 +238,6 @@
 <script>
 import Swal from "sweetalert2";
 import perroChato from "@/assets/imgs/perroChato1.gif";
-import female from "@/assets/imgs/female.jpg";
 import instance from "../../../../config/axios";
 import { decrypt, encrypt } from "../../../../kernel/hashFunctions";
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
@@ -402,13 +401,12 @@ export default {
           userId: idUSer,
         });
         this.information = response.data.data;
-        // this.information.phoneNumber = await decrypt(
-        //   this.information.phoneNumber
-        // );
-        // this.information.user.username = await decrypt(
-        //   this.information.user.username
-        // );
-        console.log(this.information);
+        this.information.phone = await decrypt(
+          this.information.phone
+        );
+        this.information.email = await decrypt(
+          this.information.email
+        );
         Swal.close();
       } catch (error) {
         Swal
@@ -448,7 +446,7 @@ export default {
       try {
         Swal.fire({
           title: "Espera un momento...",
-          text: "Estamos revisando tu información para enviar tu solicitud de adopción",
+          text: "Estamos se esta enviando la información",
           imageUrl: gatoWalkingGif,
           timerProgressBar: true,
           imageWidth: 160, // Ancho de la imagen
