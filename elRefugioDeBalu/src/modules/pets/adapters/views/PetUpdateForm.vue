@@ -18,6 +18,13 @@
                         <b-icon icon="arrow-up-right-circle" font-scale="1.3"></b-icon>
                     </b-button>
                 </b-col>
+                <b-col cols="12" sm="6" md="5" lg="4" xl="3" class="mt-3 mt-sm-0">
+                    <b-button variant="outline-danger" @click="goBack()"
+                        class="d-flex align-items-center justify-content-between w-100">
+                        <span class="me-2">Cancelar</span>
+                        <b-icon icon="x-circle" font-scale="1.3"></b-icon>
+                    </b-button>
+                </b-col>
             </b-row>
         </b-col>
     </b-container>
@@ -209,12 +216,18 @@ export default {
                     showConfirmButton: false,
                 })
             }
-        }
+        },        
+        goBack() {
+            this.$router.go(-1);
+        },
     },
     mounted() {
         if (localStorage.getItem("petId")) {
             this.petId = localStorage.getItem("petId");            
-            this.$refs.generalInformationCard.getCategories();            
+            setTimeout(() => {
+                this.$refs.generalInformationCard.getCategories();
+            }, 250);
+            this.getDetails();           
         } else {
             this.goBack();
         }

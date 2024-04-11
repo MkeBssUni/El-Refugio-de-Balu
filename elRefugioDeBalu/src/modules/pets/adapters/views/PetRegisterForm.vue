@@ -17,6 +17,13 @@
                         <span class="me-2">Publicar</span>
                         <b-icon icon="arrow-up-right-circle" font-scale="1.3"></b-icon>
                     </b-button>
+                </b-col>                
+                <b-col cols="12" sm="6" md="5" lg="4" xl="3" class="mt-3 mt-sm-0">
+                    <b-button variant="outline-danger" @click="goBack()"
+                        class="d-flex align-items-center justify-content-between w-100">
+                        <span class="me-2">Cancelar</span>
+                        <b-icon icon="x-circle" font-scale="1.3"></b-icon>
+                    </b-button>
                 </b-col>
             </b-row>
         </b-col>
@@ -62,13 +69,13 @@ export default {
             }
         },
         convertImageToBase64(image) {
-            try {                
+            try {
                 return new Promise((resolve, reject) => {
                     const reader = new FileReader();
                     reader.readAsDataURL(image);
                     reader.onload = () => resolve(reader.result);
-                    reader.onerror = error => reject(error);                    
-                })                
+                    reader.onerror = error => reject(error);
+                })
             } catch (error) {
                 Swal.fire({
                     icon: 'error',
@@ -83,7 +90,7 @@ export default {
                 });
             }
         },
-        async savePet() {            
+        async savePet() {
             try {
                 Swal.fire({
                     title: 'Publicando mascota...',
@@ -138,12 +145,15 @@ export default {
                     timer: 3000,
                     timerProgressBar: true,
                     showConfirmButton: false,
-                })                
+                })
             }
-        }
+        },
+        goBack() {
+            this.$router.go(-1);
+        },
     },
     mounted() {
-        this.$refs.generalInformationCard.getCategories();    
+        this.$refs.generalInformationCard.getCategories();
     },
     components: {
         Encabezado,
