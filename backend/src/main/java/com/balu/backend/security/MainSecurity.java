@@ -77,6 +77,7 @@ public class MainSecurity {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(WHITE_LIST_URL).permitAll()
                         .requestMatchers("/api/person/").hasAnyAuthority(Roles.ADMIN.name())
+                        .requestMatchers("/api/person/find/contactInfo").hasAnyAuthority(Roles.MOD.name())
                         .requestMatchers("/api/person/paged/").hasAnyAuthority(Roles.ADMIN.name())
                         .requestMatchers("/api/pet/owned").hasAnyAuthority(Roles.GENERAL.name())
                         .requestMatchers("/api/pet/save").hasAnyAuthority(Roles.GENERAL.name())

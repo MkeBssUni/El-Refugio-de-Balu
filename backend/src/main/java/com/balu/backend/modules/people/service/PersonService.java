@@ -252,4 +252,9 @@ public class PersonService {
         if(existentUser.get().getActivationCode().equals(dto.getActivationCode())) return new ResponseApi<>(existentUser.get(),HttpStatus.OK, false, "OK");
         return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
     }
+    @Transactional(readOnly = true)
+    public ResponseApi<IContactInfoView> findContactInfo(PersonDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        Optional<Person> person = iPersonRepository.findById(Long.valueOf(hashService.decrypt(dto.getUserId())));
+        return person.map(value -> new ResponseApi<>(iPersonRepository.findContactInfoByUserId(value.getUser().getId()), HttpStatus.OK, false, "OK")).orElseGet(() -> new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name()));
+    }
 }
