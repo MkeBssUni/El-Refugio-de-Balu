@@ -13,17 +13,4 @@ public class SaveAdminOrModDto {
     private String username;
     private String roleString;
     private Long roleId;
-
-    @Override
-    public String toString() {
-        return "SaveAdminOrModDto{" +
-                "name='" + name + '\'' +
-                ", lastname='" + lastname + '\'' +
-                ", surname='" + surname + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", username='" + username + '\'' +
-                ", roleString='" + roleString + '\'' +
-                ", roleId=" + roleId +
-                '}';
-    }
 }
