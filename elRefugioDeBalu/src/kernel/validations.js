@@ -17,10 +17,15 @@ export function isInvalidName(name){
     name = name.trim();
     return !RegExp("^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ' .]+$").test(name);
 }
+
 export function isInvalidImage(image){;
     return !image.matches("data:image/(png|jpg|jpeg);base64,([a-zA-Z0-9+/=])+");
 }
 
 export function isNotBlank(string){
     return string.trim() === "";
+}
+
+export function isInvalidNoSpecialCharactersString(string) {    
+    return !RegExp("^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ' .0-9]+$").test(string);
 }
