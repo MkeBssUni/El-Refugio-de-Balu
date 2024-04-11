@@ -1,5 +1,5 @@
 <template>
-  <b-col cols="12" class="px-2 px-sm-4 px-xl-5 mt-4">
+  <b-col cols="12" class="px-2 px-sm-4 px-xl-5">
     <b-row>
       <b-col cols="10" md="8" lg="6">
         <b-card
@@ -273,7 +273,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .encabezadoColorform {
   width: 50%;
   background-color: #4db8c0;

@@ -114,6 +114,7 @@ export default {
         title: "Espera un momento...",
         text: "Estamos cargando tus datos",
         imageUrl: gatoWalkingGif,
+        timer:2000,
         imageWidth: 160,
         imageHeight: 160,
         showConfirmButton: false,
@@ -139,11 +140,8 @@ export default {
             showConfirmButton: false,
             timer: 1500,
           })
-          .then(() => {
-            this.$router.go(-1);
-          });
       }
-    },
+    }
   },
   watch: {
     phoneNumber(newVal) {
@@ -161,7 +159,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .encabezadoColorform {
   width: 50%;
   background-color: #4db8c0;

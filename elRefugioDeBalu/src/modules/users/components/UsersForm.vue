@@ -318,7 +318,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .encabezadoColorform {
   width: 50%;
   background-color: #e84e0f;

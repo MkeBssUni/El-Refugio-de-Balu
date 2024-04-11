@@ -31,12 +31,9 @@
             ser integrados como parte de una familia...
           </p>
 
-          <b-button class="btn-outline-dark-blue" pill href="#"
-            >Inicia sesion para conocerlos
-            <i class="material-icons" style="font-size: 1rem">pets</i></b-button
-          >
-          <b-button pill class="my-3 btn-outline-dark-blue" href="#"
-            >Registrate
+          <b-button class="btn-outline-dark-blue" pill href="#">Inicia sesion para conocerlos
+            <i class="material-icons" style="font-size: 1rem">pets</i></b-button>
+          <b-button pill class="my-3 btn-outline-dark-blue" href="#">Registrate
             <i class="material-icons" style="font-size: 1rem">pets</i>
           </b-button>
         </b-jumbotron>
@@ -52,17 +49,13 @@
     </b-row>
     <b-row class="justify-content-center mt-3">
       <b-col class="px-1_5" cols="11" sm="11" md="11" lg="11" xl="10">
-        <div
-          class="title-headerPage info-homepage w-100 mb-2 py-3 text-center w-100"
-        >
+        <div class="title-headerPage info-homepage w-100 mb-2 py-3 text-center w-100">
           <h4>
             Tu compañero ideal está esperando: descubre los amigos que tenemos
             para ti.
           </h4>
-          <b-button class="home" to="/pets"
-            ><i class="material-icons">pets</i> Vamos a conocerlos
-            <i class="material-icons">pets</i></b-button
-          >
+          <b-button class="home" to="/pets"><i class="material-icons">pets</i> Vamos a conocerlos
+            <i class="material-icons">pets</i></b-button>
         </div>
       </b-col>
     </b-row>
@@ -88,29 +81,32 @@ export default {
   },
   data() {
     return {
-      completeProfile:'',
-      userID: localStorage.getItem("userId"),
+      completeProfile: '',
+      visibility: '',
     };
   },
   methods: {
     async CheckProfile() {
-      this.completeProfile =await decrypt(localStorage.getItem("profileCompleted"))
-      if (this.userID) {
+      this.visibility = await decrypt(localStorage.getItem("role"))
+      if (this.visibility == "GENERAL") {
+        this.completeProfile = await decrypt(localStorage.getItem("profileCompleted"))
         if (this.completeProfile) {
-        Swal.fire({
-          title: "¡Tu perfil no esta completo!", 
-          text: "Completa tu perfil para seguir buscando en el refugio...",
-          icon: "warning",
-          confirmButtonColor: "#53A93D",
-          confirmButtonText: "Vamos a completarlo",
-        }).then(() => {
-          this.$router.push('/profile');
-        });
-      }
+          Swal.fire({
+            title: "¡Tu perfil no está  completo!",
+            text: "Completa tu perfil para seguir buscando en el refugio…",
+            icon: "warning",
+            confirmButtonColor: "#53A93D",
+            confirmButtonText: "Vamos a completarlo",
+          }).then(() => {
+            this.$router.push('/profile');
+          });
+        }
       } else {
         localStorage.removeItem("profileCompleted");
       }
-    },
+
+      
+    }
   },
   mounted() {
     this.CheckProfile();

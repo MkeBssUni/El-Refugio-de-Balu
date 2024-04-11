@@ -14,10 +14,10 @@
             rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
         "
       >
-        <b-card class="contentform" img-alt="Card image">
+        <b-card class="contentform">
           <b-container>
-            <div class="row">
-              <b-col cols="2" md="2" lg="2" style="margin-right: 95px">
+            <b-row>
+              <b-col cols="2" sm="12" md="2" lg="2" xl="3" class="text-center">
                 <b-img
                   alt="profilePic"
                   :src="profile"
@@ -25,13 +25,15 @@
                   style="max-width: 300px; margin-top: 60px"
                 ></b-img>
               </b-col>
-              <b-col cols="9">
-                <b-row class="px-2 my-2">
+              <b-col cols="12" sm="12" md="8" lg="9" xl="9">
+                <b-row class="">
                   <PersonalInformationCar ref="personalInformationCar" />
                 </b-row>
               </b-col>
-              <b-col cols="12">
-                <b-row class="px-2 my-2">
+            </b-row>
+            <b-row class="">
+              <b-col cols="12" sm="12" md="11" lg="11" xl="12">
+                <b-row v-if="visibility==='GENERAL'">
                   <CurrentAddressCard
                     v-if="SaveAddres"
                     ref="currentAddressCard"
@@ -47,16 +49,18 @@
                   />
                 </b-row>
               </b-col>
-              <b-col cols="12" >
-                <b-row class="px-2 my-2">
+            </b-row>
+            <b-row>
+              <b-col cols="12" sm="12" md="11" lg="11" xl="12" >
+                <b-row class="" v-if="visibility==='GENERAL'">
                   <HomeSpecification ref="homeSpecification" />
                 </b-row>
               </b-col>
-            </div>
+            </b-row>
           </b-container>
 
           <div class="row">
-            <b-col cols="12" class="px-2 px-sm-4 px-xl-5 mb-sm-5">
+            <b-col cols="12" sm="12" md="9" lg="9" xl="8" class="px-2 px-sm-4 px-xl-5 mb-sm-5">
               <b-row> </b-row>
             </b-col>
             <div class="d-flex justify-content-end mt-3">
@@ -236,11 +240,12 @@ export default {
       ModifyAddressForm: false,
       addressToModify: null,
       ViewAddress: false,
+      visibility:localStorage.getItem("role"),
     };
   },
   mounted() {
-    this.getDetails();
     this.getAddressDetails();
+    this.GetRole()
   },
   computed: {
     domicilioCompleto() {
@@ -279,47 +284,11 @@ export default {
           break;
       }
     },
-    async getDetails() {
-      swal.fire({
-        title: "Espera un momento...",
-        text: "Estamos cargando tus datos",
-        imageUrl: gatoWalkingGif,
-        imageWidth: 160,
-        imageHeight: 160,
-        showConfirmButton: false,
-      });
-      try {
-        const response = await instance.post("/person/details", {
-          userId: localStorage.getItem("userId"),
-        });
-        this.information = response.data.data;
-        this.information.phoneNumber = await decrypt(
-          this.information.phoneNumber
-        );
-        this.information.user.username = await decrypt(
-          this.information.user.username
-        );
-        swal.close();
-      } catch (error) {
-        swal
-          .fire({
-            title: "Error",
-            text: "No se pudieron cargar tus datos",
-            icon: "error",
-            showConfirmButton: false,
-            timer: 1500,
-          })
-          .then(() => {
-            this.$router.go(-1);
-          });
-      }
-    },
     toggleSidebar() {
       this.$bvModal.show("sidebar-1");
     },
     changePassword() {},
     async getAddressDetails() {
-      this.loading = true;
       try {
         const response = await instance.post(
           "/address/details",
@@ -334,9 +303,7 @@ export default {
         this.SaveAddres = true;
         this.ModifyAddressForm = false;
         this.ViewAddress = false;
-      } finally {
-        this.loading = false;
-      }
+      } 
     },
     ModifyAddress(address) {
       this.SaveAddres = false;
@@ -344,6 +311,9 @@ export default {
       this.ModifyAddressForm = true;
       this.addressToModify = address;
     },
+    async GetRole(){
+      this.visibility=await decrypt(this.visibility)
+    }
   },
   watch: {
     phoneNumber(newVal) {
@@ -397,7 +367,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .encabezadoColorform {
   width: 50%;
   background-color: #4db8c0;
