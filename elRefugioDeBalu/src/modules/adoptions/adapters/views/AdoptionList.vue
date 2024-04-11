@@ -8,8 +8,12 @@
     <b-container fluid class="my-3">
       <b-row>
         <b-col cols="12" sm="12" md="8" lg="8" xl="8">
+          
           <b-row align-h="center">
-            <b-col cols="12" md="5" sm="12" lg="5" class="pt-md-3 my-2">
+            <b-col cols="12" md="5" sm="12" lg="5" class="pt-md-2 my-2">
+              <!-- Contenido del segundo b-col -->
+             
+
               <b-input-group class="mt-3">
                 <b-form-input
                   type="text"
@@ -30,6 +34,7 @@
               </b-input-group>
             </b-col>
           </b-row>
+
           <b-row>
             <b-col cols="12" sm="12" lg="12" class="mx-2 my-2">
               <b-table
@@ -92,9 +97,25 @@
               </b-pagination>
             </b-col>
           </b-row>
+          <b-row>
+            <b-col cols="12" md="5" sm="12" lg="5" >
+
+              <b-button
+                variant="dark-gray-input"
+                type="button"
+                id="searchValue"
+                @click="goBack()"
+                class="d-flex align-items-center justify-content-start"
+              >
+                Regresar &nbsp;
+                <b-icon icon="arrow-left-circle"></b-icon>
+              </b-button>
+            </b-col>
+
+          </b-row>
         </b-col>
         <b-col cols="12" sm="12" md="4" lg="4" xl="4">
-          <b-card class="target">
+          <b-card class="target-mod">
             <b-row>
               <b-col cols="12" sm="12" lg="12" md="12">
                 <img
@@ -211,15 +232,15 @@ export default {
       size: 10,
       page: 1,
       credentialPet: {
-        age: null,
-        breed: null,
-        category: null,
-        gender: null,
-        image: null,
-        lifeStage: null,
-        name: null,
-        size: null,
-        weight: null,
+        name: "",
+        age: "",
+        breed: "",
+        category: "",
+        gender: "",
+        image: "",
+        lifeStage: "",
+        size: "",
+        weight: "",
       },
       total: 0,
       state: [
@@ -253,6 +274,9 @@ export default {
   },
   methods: {
     getAgeUnit(age) {
+      if (age === undefined || age === null || age === "") {
+        return ""; // Manejo de casos donde num es undefined, null o una cadena vacía
+      }
       const matches = age.match(/^(\d+)\s*(\w+)$/);
       if (matches && matches.length === 3) {
         return matches[2].toLowerCase();
@@ -260,12 +284,16 @@ export default {
         return "";
       }
     },
-    getAgeNumber(age) {
-      const matches = age.match(/^(\d+)\s*(\w+)$/);
+    getAgeNumber(num) {
+      if (num === undefined || num === null || num === "") {
+        return ""; // Manejo de casos donde num es undefined, null o una cadena vacía
+      }
+
+      const matches = num.match(/^(\d+)\s*(\w+)$/);
       if (matches && matches.length === 3) {
         return matches[1]; // Devuelve solo el número
       } else {
-        return ""; // Opción de manejo de errores si el formato no es válido
+        return ""; // Manejo de casos donde el formato no coincide con el esperado
       }
     },
     goBack() {
@@ -383,31 +411,17 @@ export default {
       localStorage.setItem("adoptionId", adoptionEncrypted);
     },
   },
-  render() {
-  // Suponiendo que obtienes 'age' de alguna parte
-  // Verifica si 'age' no es null antes de acceder a la propiedad 'match'
-  if (this.age !== null && typeof this.age === 'string') {
-    const matches = this.age.match(/^(\d+)\s*(\w+)$/);
-    if (matches && matches.length === 3) {
-      // Hacer algo con 'matches'
-    }
-  } else {
-    // Manejar el caso en que 'age' es null
-    // o no es una cadena
-  }
-}
-
 };
 </script>
 
 <style>
-.target {
+.target-mod {
   background-image: url("../../../../assets/imgs/pawBackground.jpg") !important;
   background-size: cover;
   background-position: center;
   box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px,
     rgba(17, 17, 26, 0.05) 0px 8px 32px;
-  max-height: 80%;
+  max-height: 99%;
 }
 
 .image-pet {

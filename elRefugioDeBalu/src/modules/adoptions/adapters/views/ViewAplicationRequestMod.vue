@@ -23,7 +23,7 @@
               <b>Estado:</b>
               <br />
               <b-badge
-                v-if="requestAdoption.status"
+                v-if="requestAdoption.status && requestAdoption.status.name"
                 :variant="getBadgeVariant(requestAdoption.status.name)"
                 >{{ getStatus(requestAdoption.status.name) }}</b-badge
               >
@@ -74,7 +74,7 @@
                 >Lugar en la que dormira o descansara la mascota</b-card-text
               >
               <img
-                :src="requestAdoption.requestImages[0].image"
+              :src="getRequestImage(requestAdoption.requestImages, 0)"
                 class="homePhotos"
               />
             </b-card-body>
@@ -83,7 +83,7 @@
                 >Lugar en el que vivira la mascota (casa)</b-card-text
               >
               <img
-                :src="requestAdoption.requestImages[1].image"
+              :src="getRequestImage(requestAdoption.requestImages, 1)"
                 class="homePhotos"
               />
             </b-card-body>
@@ -92,14 +92,14 @@
                 >Lugar en el que jugará la mascota (casa)</b-card-text
               >
               <img
-                :src="requestAdoption.requestImages[2].image"
+              :src="getRequestImage(requestAdoption.requestImages, 2)"
                 class="homePhotos"
               />
             </b-card-body>
           </b-card>
         </b-col>
         <b-col cols="12" sm="12" lg="8" md="8">
-          <b-card bg-variant="light" class="my-3 box-shadow-pretty">
+          <b-card bg-variant="light" class=" box-shadow-pretty">
             <b-card-title class="text-center">Motivos de adopción</b-card-title>
             <b-row>
               <b-col cols="12" sm="12" lg="6" md="6" xl="6">
@@ -145,7 +145,12 @@
               <b-col cols="12" sm="12" lg="6" md="6" xl="6">
                 <b-card-text>
                   <b>¿Cuál fue tu ultima mascota?</b>
-                  {{ requestAdoption.previousExperience.lastPet }}
+                  {{
+                    requestAdoption.previousExperience &&
+                    requestAdoption.previousExperience.lastPet
+                      ? requestAdoption.previousExperience.lastPet
+                      : "No se registró una mascota anterior"
+                  }}
                 </b-card-text>
               </b-col>
               <b-col cols="12" sm="12" lg="6" md="6" xl="6">
@@ -154,6 +159,9 @@
                   {{
                     requestAdoption.previousExperience
                       .whatDidYouDoWhenThePetGotSick
+                      ? requestAdoption.previousExperience
+                          .whatDidYouDoWhenThePetGotSick
+                      : "No se registraron acciones"
                   }}
                 </b-card-text>
               </b-col>
@@ -214,7 +222,9 @@
           variant="outline-success"
           class="mt-3 mx-4"
           @click="adopted"
-          :disabled="requestAdoption.status.name !== 'PENDING'"
+          :disabled="
+            requestAdoption.status && requestAdoption.status.name !== 'PENDING'
+          "
         >
           <b-icon icon="clipboard-check"></b-icon>
           &nbsp;Aprobar Solicitud del adoptante
@@ -225,7 +235,9 @@
           variant="outline-danger"
           class="mt-3"
           @click="closed"
-          :disabled="requestAdoption.status.name !== 'PENDING'"
+          :disabled="
+            requestAdoption.status && requestAdoption.status.name !== 'PENDING'
+          "
         >
           <b-icon icon="clipboard-x"></b-icon>
           &nbsp;Finalizar Solicitud del adoptante
@@ -247,21 +259,21 @@ export default {
   data() {
     return {
       requestAdoption: {
-        user: null,
-        pet: null,
+        user: "",
+        pet: "",
         reasonsForAdoption: {
-          peopleAgreeToAdopt: null,
-          haveHadPets: null,
-          whereWillThePetBe: null,
-          whyAdoptPet: null,
+          peopleAgreeToAdopt: "",
+          haveHadPets: "",
+          whereWillThePetBe: "",
+          whyAdoptPet: "",
         },
-        previousExperiencieDto: {
-          whatDidYouDoWhenThePetGotSick: null,
-          whatKindOfPetsHaveYouHadBefore: null,
-          whatMemoriesDoYouHaveWithYourPet: null,
-          lastPet: null,
+        previousExperience: {
+          lastPet: "",
+          whatDidYouDoWhenThePetGotSick: "",
+          whatKindOfPetsHaveYouHadBefore: "",
+          whatMemoriesDoYouHaveWithYourPet: "",
         },
-        additional_information: null,
+        additional_information: "",
         imageAdoption: [],
       },
       infoStatus: "",
@@ -274,6 +286,13 @@ export default {
     this.getAdoption();
   },
   methods: {
+    getRequestImage(images, index) {
+      if (images && images[index]) {
+        return images[index].image;
+      } else {
+        return ""; // o alguna otra URL de imagen por defecto
+      }
+    },
     goBack() {
       this.$router.push("/moderated/adoptionList");
     },
