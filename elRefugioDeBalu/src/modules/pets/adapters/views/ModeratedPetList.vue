@@ -10,6 +10,7 @@
                     <b-input-group class="mt-3">
                         <b-form-select v-model="payload.category" class="form-select" @change="getPetList()">
                             <option value="">Todas las categorías</option>
+                            <option v-show="!categories" disabled>No hay categorías disponibles</option>
                             <option v-for="category in categories" :key="category.id" :value="category.id">
                                 {{ category.name }}
                             </option>
@@ -37,11 +38,8 @@
                     </b-input-group>
                 </b-col>
             </b-row>
-            <b-row class="px-4 pt-4">
-                <b-col cols="12" v-show="pets.length === 0">
-                    <h5 class="text-center my-3">No tienes ninguna mascota asignada</h5>
-                </b-col>
-                <b-col cols="12" v-show="pets.length > 0">
+            <b-row class="px-4 pt-4" v-show="total > 0">                
+                <b-col cols="12">
                     <b-table :fields="fields" :items="pets" label-sort-asc="" label-sort-desc="" no-sort-reset
                         responsive small striped hover class="text-center custom-scroll-style">
                         <template #cell(cancelRequest)="data">
@@ -77,7 +75,7 @@
                     </b-table>
                 </b-col>
             </b-row>
-            <b-row class="px-4">
+            <b-row class="px-4" v-show="total > 0">
                 <b-col cols="12" class="d-flex align-items-center">
                     <label for="perPage">Selecciona la cantidad de registros que deseas mostrar:</label>
                     <b-form-select :options="options" v-model="size" class="ms-3 my-3 form-select" style="width: 80px"
@@ -88,6 +86,11 @@
                     </b-pagination>
                 </b-col>
             </b-row>
+            <b-row v-show="total == 0">
+            <b-col cols="12">
+                <h5 class="text-center mt-5">No tienes ninguna mascota asignada</h5>
+            </b-col>
+        </b-row>
         </b-container>
         <Modal :comments="comments" :petId="selectedPetId" :canComment="canComment"
             :cancelRequest="selectedPetCancelRequest" @comment-added="loadComments()" />
