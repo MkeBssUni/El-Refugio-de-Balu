@@ -48,4 +48,7 @@ public class Address {
         interiorNumber = dto.getInteriorNumber();
         user=dto.getUser();
     }
+    public void saveNull(User user){
+        this.user = user;
+    }
 }

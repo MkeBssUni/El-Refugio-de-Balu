@@ -36,4 +36,7 @@ public class HomeImage {
         this.image = image;
         this.homeSpecification = homeSpecification;
     }
+    public void saveNull(HomeSpecification homeSpecification){
+        this.homeSpecification = homeSpecification;
+    }
 }
