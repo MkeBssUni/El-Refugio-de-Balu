@@ -29,7 +29,7 @@
                             </b-input-group>
                         </b-col>
                         <b-col cols="12" sm="6" md="12" lg="3" class="d-flex justify-content-center mt-3 mt-lg-0">
-                            <b-button variant="outline-success w-100" to="/petForm"
+                            <b-button variant="outline-success w-100" @click="registerPet()"
                                 class="d-flex align-items-center justify-content-between">
                                 <span class="mr-2">Agregar</span>
                                 <b-icon icon="plus-circle" class="ms-2"></b-icon>
@@ -93,6 +93,7 @@ import Swal from "sweetalert2";
 import instance from "../../../../config/axios";
 import getStatusses from "../../../../kernel/data/userStatusses";
 import { statusses } from "../../../../kernel/data/mappingDictionaries";
+import { decrypt } from "../../../../kernel/hashFunctions";
 
 import Modal from "../components/Comments.vue";
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
@@ -203,6 +204,28 @@ export default {
         getDetails(petId) {
             localStorage.setItem('petId', petId);
             this.$router.push({ name: 'myPet' });
+        },
+        async registerPet() {
+            const userHasProfile = await decrypt(localStorage.getItem('profileCompleted'));                        
+            if (userHasProfile == 'true') {
+                this.$router.push({ name: 'petForm' });
+            } else {                
+                Swal.fire({
+                    title: 'Perfil incompleto',
+                    text: 'Para poder publicar una mascota, necesitas completar tu perfil',
+                    icon: 'warning',
+                    iconColor: '#ff7d4a',
+                    showCancelButton: true,
+                    confirmButtonText: 'Completar perfil',
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonColor: '#ff7d4a',
+                    cancelButtonColor: '#A93D3D'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.$router.push({ name: 'profile' });
+                    }
+                })
+            }
         }
     },
     mounted() {
