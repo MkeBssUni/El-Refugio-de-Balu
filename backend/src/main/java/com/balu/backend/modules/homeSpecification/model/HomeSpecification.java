@@ -56,4 +56,9 @@ public class HomeSpecification {
     public void saveNull(Address address){
         this.address = address;
     }
+    public void saveFull(HomeTypes type, boolean outdoorArea, int numberOfResidents){
+        this.type = type;
+        this.outdoorArea = outdoorArea;
+        this.numberOfResidents = numberOfResidents;
+    }
 }
