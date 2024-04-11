@@ -310,6 +310,7 @@ export default {
                     })
                 } else {
                     this.categories = response.data.data
+                    this.$emit('categoriesLoaded');
                     Swal.close()
                 }                
             } catch (error) {
