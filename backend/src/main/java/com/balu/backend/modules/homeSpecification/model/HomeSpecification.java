@@ -53,4 +53,7 @@ public class HomeSpecification {
         this.numberOfResidents = numberOfResidents;
         this.address = address;
     }
+    public void saveNull(Address address){
+        this.address = address;
+    }
 }

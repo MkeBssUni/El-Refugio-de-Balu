@@ -2,10 +2,14 @@ package com.balu.backend.modules.people.service;
 
 import com.balu.backend.kernel.*;
 import com.balu.backend.modules.adresses.model.model.Address;
+import com.balu.backend.modules.adresses.model.model.IAddressRepository;
 import com.balu.backend.modules.adresses.model.model.dto.AddressDto;
 import com.balu.backend.modules.hash.service.HashService;
 import com.balu.backend.modules.homeSpecification.model.Dto.HomeSpecificationDto;
+import com.balu.backend.modules.homeSpecification.model.HomeImage;
 import com.balu.backend.modules.homeSpecification.model.HomeSpecification;
+import com.balu.backend.modules.homeSpecification.model.Repository.HomeImageRepository;
+import com.balu.backend.modules.homeSpecification.model.Repository.HomeSpecificationRepository;
 import com.balu.backend.modules.logs.model.LogTypes;
 import com.balu.backend.modules.logs.service.LogService;
 import com.balu.backend.modules.people.model.*;
@@ -42,6 +46,9 @@ public class PersonService {
     private final IPersonRepository iPersonRepository;
     private final IUserRepository iUserRepository;
     private final IRoleRepository iRoleRepository;
+    private final IAddressRepository iAddressRepository;
+    private final HomeSpecificationRepository homeSpecificationRepository;
+    private final HomeImageRepository homeImageRepository;
     private final PasswordEncoder encoder;
     private final Validations validations = new Validations();
     private final HashService hashService;
@@ -80,12 +87,18 @@ public class PersonService {
 
         Person person = new Person();
         User user = new User();
+        Address address = new Address();
+        HomeSpecification homeSpecification = new HomeSpecification();
+        HomeImage homeImage = new HomeImage();
+
         Optional<Role> role = iRoleRepository.findByName(Roles.GENERAL);
         if(role.isEmpty()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.ROLE_NOT_FOUND.name());
         String activationCode = generateRandomString();
-        user.save(hashService.encrypt(dto.getUsername()),encoder.encode(dto.getPassword()),role.get(), hashService.encrypt(activationCode));
         dto.setPhoneNumber(hashService.encrypt(dto.getPhoneNumber()));
+
+        user.save(hashService.encrypt(dto.getUsername()),encoder.encode(dto.getPassword()),role.get(), hashService.encrypt(activationCode));
         person.savePublicRegister(dto,user);
+
         logService.saveLog("New general user registered: " + person.getName() + " " + person.getLastName(), LogTypes.INSERT, tableAffected);
 
         if(dto.isViaSms()){
@@ -95,8 +108,18 @@ public class PersonService {
         }else{
             emailService.sendEmailNewAccount(dto.getUsername(),activationCode);
         }
-        iUserRepository.saveAndFlush(user);
+
+        user = iUserRepository.saveAndFlush(user);
         iPersonRepository.saveAndFlush(person);
+
+        address.saveNull(user);
+        address = iAddressRepository.saveAndFlush(address);
+        homeSpecification.saveNull(address);
+        homeSpecification = homeSpecificationRepository.saveAndFlush(homeSpecification);
+        address = iAddressRepository.saveAndFlush(address);
+        address.setHomeSpecification(homeSpecification);
+        homeImage.saveNull(homeSpecification);
+        homeImageRepository.saveAndFlush(homeImage);
         return new ResponseApi<>(HttpStatus.CREATED, false,"OK");
     }
     @Transactional(readOnly = true)
