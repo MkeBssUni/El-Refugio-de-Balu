@@ -14,5 +14,5 @@ public class SaveHomeDetailsDto {
     private String type;
     private boolean outdoorArea;
     private int numberOfResidents;
-    private String[] homeImages;
+    private String mainImage;
 }

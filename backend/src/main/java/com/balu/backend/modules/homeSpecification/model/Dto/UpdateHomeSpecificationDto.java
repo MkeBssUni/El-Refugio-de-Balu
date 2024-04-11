@@ -9,7 +9,9 @@ import lombok.Setter;
 @Setter
 public class UpdateHomeSpecificationDto {
     private String idUser;
+    private String specificationId;
     private String type;
+    private String mainImage;
     private boolean outdoorArea;
     private int numberOfResidents;
 }
