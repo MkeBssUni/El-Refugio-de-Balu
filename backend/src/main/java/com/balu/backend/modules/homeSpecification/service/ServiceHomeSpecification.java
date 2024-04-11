@@ -7,6 +7,7 @@ import com.balu.backend.modules.adresses.model.model.IAddressRepository;
 import com.balu.backend.modules.hash.service.HashService;
 import com.balu.backend.modules.homeSpecification.model.*;
 import com.balu.backend.modules.homeSpecification.model.Dto.SaveHomeDetailsDto;
+import com.balu.backend.modules.homeSpecification.model.Dto.UpdateHomeSpecificationDto;
 import com.balu.backend.modules.homeSpecification.model.HomeSpecification;
 import com.balu.backend.modules.homeSpecification.model.Repository.HomeImageRepository;
 import com.balu.backend.modules.homeSpecification.model.Repository.HomeSpecificationRepository;
@@ -78,6 +79,42 @@ public class ServiceHomeSpecification {
             return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true, ErrorMessages.INTERNAL_ERROR.name());
         }
     }
+
+    @Transactional(readOnly = true)
+    public ResponseApi<HomeSpecification> get(Long specificationId) {
+        try {
+            Optional<HomeSpecification> optionalSpecification = homeSpecificationRepository.findById(specificationId);
+            if (optionalSpecification.isPresent()) {
+                HomeSpecification specification = optionalSpecification.get();
+                return new ResponseApi<>(specification, HttpStatus.OK, false, "Home specification retrieved successfully");
+            } else {
+                return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.NO_RECORDS.name());
+            }
+        } catch (Exception e) {
+            return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name());
+        }
+    }
+
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
+    public ResponseApi<HomeSpecification> update(Long specificationId, UpdateHomeSpecificationDto dto) {
+        try {
+            Optional<HomeSpecification> optionalSpecification = homeSpecificationRepository.findById(specificationId);
+            if (optionalSpecification.isPresent()) {
+                HomeSpecification specification = optionalSpecification.get();
+                specification.setType(HomeTypes.valueOf(dto.getType().toUpperCase()));
+                specification.setOutdoorArea(dto.isOutdoorArea());
+                specification.setNumberOfResidents(dto.getNumberOfResidents());
+
+                HomeSpecification updatedSpecification = homeSpecificationRepository.save(specification);
+                return new ResponseApi<>(updatedSpecification, HttpStatus.OK, false, "Home specification updated successfully");
+            } else {
+                return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.NO_RECORDS.name());
+            }
+        } catch (Exception e) {
+            return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name());
+        }
+    }
+
 
     public Long decryptId(String encryptedId) {
         try {
