@@ -87,7 +87,7 @@
                                                     variant="orange-outline" v-for="(care, index) in form.specialCares"
                                                     :key="index">
                                                     <span class="me-1">{{ truncate(care) }}</span>
-                                                    <b-icon icon="x" font-scale="1.4"></b-icon>
+                                                    <b-icon icon="x" font-scale="1.4" @click="removeCare(index)"></b-icon>
                                                 </b-badge>
                                             </div>
                                             <div v-if="showErrors.care" class="input-badge-invalid-feedback mt-1">

@@ -10,6 +10,7 @@
                     <b-input-group class="mt-3">
                         <b-form-select v-model="payload.category" class="form-select" @change="getPetList()">
                             <option value="">Todas las categorías</option>
+                            <option v-show="!categories" disabled>No hay categorías disponibles</option>
                             <option v-for="category in categories" :key="category.id" :value="category.id">
                                 {{ category.name }}
                             </option>
@@ -37,15 +38,12 @@
                     </b-input-group>
                 </b-col>
             </b-row>
-            <b-row class="px-4 pt-4">
-                <b-col cols="12" v-show="pets.length === 0">
-                    <h5 class="text-center my-3">No tienes ninguna mascota asignada</h5>
-                </b-col>
-                <b-col cols="12" v-show="pets.length > 0">
+            <b-row class="px-4 pt-4" v-show="total > 0">                
+                <b-col cols="12">
                     <b-table :fields="fields" :items="pets" label-sort-asc="" label-sort-desc="" no-sort-reset
                         responsive small striped hover class="text-center custom-scroll-style">
                         <template #cell(cancelRequest)="data">
-                            <b-icon v-if="data.value" icon="exclamation-circle" variant="danger" font-scale="1.3"
+                            <b-icon v-if="data.item.cancelRequest && data.item.status != 'closed'" icon="exclamation-circle" variant="danger" font-scale="1.3"
                                 v-b-tooltip.hover.right="'Solicitud de cancelación'"></b-icon>
                         </template>
                         <template #cell(requests)="data">
@@ -56,31 +54,20 @@
                                 mapStatus((data.value).toString().toLowerCase()) }}</b-badge>
                         </template>
                         <template #cell(actions)="data">
-                            <div class="d-none d-lg-inline-block">
-                                <b-button pill size="sm" variant="outline-dark-blue"
-                                    @click="getAdoptionRequests(data.item.id)" class="px-3 d-flex align-items-center"
-                                    v-b-tooltip.hover.top="'Ver solicitudes de adopción'">
-                                    <b-icon icon="file-earmark-text" font-scale="1"></b-icon>
+                            <div class="d-flex justify-content-center">
+                                <b-button pill size="sm" variant="outline-dark-blue" @click="getDetails(data.item.id)"
+                                    class="px-3 d-flex align-items-center"
+                                    v-b-tooltip.hover.left="'Ver detalles de la mascota'">
+                                    <i class="material-icons" style="font-size: 1rem">pets</i>
                                 </b-button>
-                            </div>
-                            <div class="d-none d-lg-inline-block ms-0 ms-sm-2">
-                                <b-button pill size="sm" v-b-tooltip.hover.top="'Ver comentarios'"
-                                    :variant="data.item.cancelRequest ? 'outline-danger' : 'outline-dark-orange'"
-                                    class="px-3 d-flex align-items-center" @click="getComments(data.item.id)">
-                                    <b-icon icon="chat-left-text" font-scale="1"></b-icon>
+                                <b-button pill size="sm" variant="outline-dark-secondary-blue"
+                                    @click="getAdoptionRequests(data.item.id)" class="ms-2 px-3 d-flex align-items-center"
+                                    v-b-tooltip.hover.left="'Ver solicitudes de adopción'">
+                                    <b-icon icon="card-heading" font-scale="1"></b-icon>
                                 </b-button>
-                            </div>
-                            <div class="d-inline-block d-lg-none">
-                                <b-button pill size="sm" variant="outline-dark-blue"
-                                    class="px-2 d-flex align-items-center"
-                                    v-b-tooltip.hover.left="'Solicitudes de adopción'">
-                                    <b-icon icon="file-earmark-text" font-scale="1"></b-icon>
-                                </b-button>
-                            </div>
-                            <div class="d-inline-block d-lg-none ms-0 ms-sm-2">
-                                <b-button pill size="sm" variant="outline-dark-orange"
-                                    class="px-2 d-flex align-items-center" v-b-tooltip.hover.left="'Comentarios'"
-                                    @click="getComments(data.item.id)">
+                                <b-button pill size="sm" v-b-tooltip.hover.left="'Ver comentarios'"
+                                    :variant="(data.item.cancelRequest && data.item.status != 'closed') ? 'outline-danger' : 'outline-dark-orange'"
+                                    class="ms-2 px-3 d-flex align-items-center" @click="getComments(data.item.id)">
                                     <b-icon icon="chat-left-text" font-scale="1"></b-icon>
                                 </b-button>
                             </div>
@@ -88,7 +75,7 @@
                     </b-table>
                 </b-col>
             </b-row>
-            <b-row class="px-4">
+            <b-row class="px-4" v-show="total > 0">
                 <b-col cols="12" class="d-flex align-items-center">
                     <label for="perPage">Selecciona la cantidad de registros que deseas mostrar:</label>
                     <b-form-select :options="options" v-model="size" class="ms-3 my-3 form-select" style="width: 80px"
@@ -99,6 +86,11 @@
                     </b-pagination>
                 </b-col>
             </b-row>
+            <b-row v-show="total == 0">
+            <b-col cols="12">
+                <h5 class="text-center mt-5">No hay registros relacionados o no tienes ninguna mascota asignada</h5>
+            </b-col>
+        </b-row>
         </b-container>
         <Modal :comments="comments" :petId="selectedPetId" :canComment="canComment"
             :cancelRequest="selectedPetCancelRequest" @comment-added="loadComments()" />
@@ -255,9 +247,13 @@ export default {
         async loadComments() {
             this.getComments(this.selectedPetId)
         },
+        getDetails(petId) {
+            localStorage.setItem('petId', petId)
+            this.$router.push({ name: 'myModeratedPet' });
+        },
         getAdoptionRequests(petId) {
-            this.$router.push({ name: 'adoptionList', params: { petId: petId } });
-            sessionStorage.setItem('petId', petId);
+            localStorage.setItem('petId', petId)
+            this.$router.push({ name: 'adoptionList' });
         }
     },
     mounted() {

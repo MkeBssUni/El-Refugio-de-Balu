@@ -40,8 +40,9 @@ public class AddressService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseApi<Address> getAddressByUserId(Long userId) {
-        Optional<Address> optionalAddress = addressRepository.findByUserId(userId);
+    public ResponseApi<Address> getAddressByUserId(String userId) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        Long id = Long.valueOf(hashService.decrypt(userId));
+        Optional<Address> optionalAddress = addressRepository.findByUserId(id);
         if (optionalAddress.isEmpty()) {
             return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.NO_ADDRESS_FOUND.name());
         }
@@ -96,12 +97,12 @@ public class AddressService {
     }
 
     @Transactional(rollbackFor = {NoSuchAlgorithmException.class, NoSuchPaddingException.class, InvalidAlgorithmParameterException.class, InvalidKeyException.class, IllegalBlockSizeException.class, BadPaddingException.class})
-    public ResponseApi<Address> updateAddress(Long addressId, @RequestBody UpdateAddressDto updateAddressDto) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+    public ResponseApi<Address> updateAddress(UpdateAddressDto updateAddressDto) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         if (updateAddressDto == null || (StringUtils.isEmpty(updateAddressDto.getCountry()) && StringUtils.isEmpty(updateAddressDto.getStreet()) && StringUtils.isEmpty(updateAddressDto.getColony()) && StringUtils.isEmpty(updateAddressDto.getCity()) && StringUtils.isEmpty(updateAddressDto.getState()) && StringUtils.isEmpty(updateAddressDto.getPostalCode()) && StringUtils.isEmpty(updateAddressDto.getAddressReference()) && StringUtils.isEmpty(updateAddressDto.getExteriorNumber()) && StringUtils.isEmpty(updateAddressDto.getInteriorNumber()))) {
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
         }
 
-        Optional<Address> optionalAddress = addressRepository.findById(addressId);
+        Optional<Address> optionalAddress = addressRepository.findById(updateAddressDto.getAddressId());
         if (optionalAddress.isEmpty()) {
             return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.NO_ADDRESS_FOUND.name());
         }

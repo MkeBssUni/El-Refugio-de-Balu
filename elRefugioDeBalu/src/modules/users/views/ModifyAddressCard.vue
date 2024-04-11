@@ -9,7 +9,7 @@
         >
           <div class="d-flex align-items-center ms-3 ms-md-4">
             <i class="material-icons me-2" style="font-size: 1.5rem">pets</i>
-            <h4 class="mb-0 mt-1">Registrar domicilio</h4>
+            <h4 class="mb-0 mt-1">Modificar domicilio</h4>
           </div>
         </b-card>
       </b-col>
@@ -26,29 +26,29 @@
                 <b-row>
                   <b-col cols="12" md="4">
                     <b-form-group label="País" label-align="left">
-                      <b-input readonly v-model="SaveAddressDto.country"></b-input>
+                      <b-input readonly v-model="UpdateAddressDto.country"></b-input>
                     </b-form-group>
                   </b-col>
                   <b-col cols="12" md="4">
                     <b-form-group label="Calle" label-align="left">
-                      <b-input v-model="SaveAddressDto.street"></b-input>
+                      <b-input v-model="UpdateAddressDto.street"></b-input>
                     </b-form-group>
                   </b-col>
                   <b-col cols="12" md="4">
                     <b-form-group label="Colonia" label-align="left">
-                      <b-input v-model="SaveAddressDto.colony"></b-input>
+                      <b-input v-model="UpdateAddressDto.colony"></b-input>
                     </b-form-group>
                   </b-col>
                 </b-row>
                 <b-row>
                   <b-col cols="12" md="4">
                     <b-form-group label="Ciudad" label-align="left">
-                      <b-input v-model="SaveAddressDto.city"></b-input>
+                      <b-input v-model="UpdateAddressDto.city"></b-input>
                     </b-form-group>
                   </b-col>
                   <b-col cols="12" md="4">
                     <b-form-group label="Estado" label-align="left">
-                      <b-input v-model="SaveAddressDto.state"></b-input>
+                      <b-input v-model="UpdateAddressDto.state"></b-input>
                     </b-form-group>
                   </b-col>
                   <b-col cols="12" md="4">
@@ -57,7 +57,7 @@
                       label-align="left"
                       :state="postalCodeValidation"
                     >
-                      <b-input v-model="SaveAddressDto.postalCode"></b-input>
+                      <b-input v-model="UpdateAddressDto.postalCode"></b-input>
                       <b-form-invalid-feedback :state="postalCodeValidation">
                         Codigo postal invalido
                       </b-form-invalid-feedback>
@@ -70,10 +70,12 @@
                       label="Referencia de dirección"
                       label-align="left"
                     >
-                      <b-input
-                        v-model="SaveAddressDto.addressReference"
-                        type="textarea"
-                      ></b-input>
+                      <b-form-textarea
+                        id="textarea"
+                        v-model="UpdateAddressDto.addressReference"
+                        rows="3"
+                        max-rows="6"
+                      ></b-form-textarea>
                     </b-form-group>
                   </b-col>
                 </b-row>
@@ -81,7 +83,7 @@
                   <b-col cols="12" md="4">
                     <b-form-group label="Número exterior" label-align="left">
                       <b-input
-                        v-model="SaveAddressDto.exteriorNumber"
+                        v-model="UpdateAddressDto.exteriorNumber"
                       ></b-input>
                       <b-form-invalid-feedback>
                         Ingresa solo números
@@ -91,18 +93,27 @@
                   <b-col cols="12" md="4">
                     <b-form-group label="Número interior" label-align="left">
                       <b-input
-                        v-model="SaveAddressDto.interiorNumber"
+                        v-model="UpdateAddressDto.interiorNumber"
                       ></b-input>
                     </b-form-group>
                   </b-col>
                 </b-row>
                 <div class="d-flex justify-content-end mt-3">
                   <b-button
-                    @click="s()"
+                    @click="submitForm()"
                     variant="outline-light"
                     class="d-flex align-items-center"
                   >
-                    Guardar<b-icon icon="check-lg" class="ms-2" font-scale="1.3"></b-icon>
+                    Modificar
+                    <b-icon icon="pencil" class="ms-2" font-scale="1.3"></b-icon>
+                  </b-button>
+
+                  <b-button
+                    @click="CancelUpdate()"
+                    variant="outline-danger"
+                    class="d-flex align-items-center ms-2"
+                  >
+                    Cancelar<b-icon icon="x-lg" class="ms-2" font-scale="1.3"></b-icon>
                   </b-button>
                 </div>
               </b-col>
@@ -120,20 +131,23 @@ import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
 import instance from "../../../config/axios";
 import { decrypt } from "../../../kernel/hashFunctions";
 export default {
-  name: "FormStyle",
+  name: "UpdateAddress",
+  props: {
+    addressToModify: Object,
+  },
   data() {
     return {
-      SaveAddressDto: {
+      UpdateAddressDto: {
         country: "México",
-        street: "",
-        colony: "",
-        city: "",
-        state: "",
-        postalCode: "",
-        addressReference: "",
-        exteriorNumber: "",
-        interiorNumber: "",
-        userId: localStorage.getItem("userId"),
+        street: this.addressToModify.street,
+        colony: this.addressToModify.colony,
+        city: this.addressToModify.city,
+        state: this.addressToModify.state,
+        postalCode: this.addressToModify.postalCode,
+        addressReference: this.addressToModify.addressReference,
+        exteriorNumber: this.addressToModify.exteriorNumber,
+        interiorNumber: this.addressToModify.interiorNumber,
+        addressId: this.addressToModify.id,
       },
       postalCodeValidation: null,
       postalCodeValidationMessage: "",
@@ -157,13 +171,13 @@ export default {
   methods: {
     async submitNewAddress() {
       try {
-        const response = await instance.post("/address/", this.SaveAddressDto);
-        if (!response.data.error) {
+        const response = await instance.put("/address/", this.UpdateAddressDto);
+        if (response.status == 200) {
           swal.fire({
-            title: "Domicilio agregado con éxito",
+            title: "Domicilio Actualizado con éxito",
             icon: "success",
           });
-          this.$emit("SavedAddress");
+          window.location.reload();
         }
       } catch (error) {
         swal.fire({
@@ -173,7 +187,7 @@ export default {
         });
       }
     },
-    s() {
+    submitForm() {
       swal
         .fire({
           title: "¿Estás seguro de realizar la accion",
@@ -199,6 +213,9 @@ export default {
             this.submitNewAddress();
           }
         });
+    },
+    CancelUpdate() {
+      window.location.reload();
     },
   },
   watch: {
@@ -249,9 +266,9 @@ export default {
         this.confirmPasswordValidationMessage = "";
       }
     },
-    CancelUpdate(){
-        window.location.reload();
-    }
+  },
+  mounted() {
+    this.log;
   },
 };
 </script>

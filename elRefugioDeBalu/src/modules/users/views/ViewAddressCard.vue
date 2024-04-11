@@ -9,7 +9,7 @@
         >
           <div class="d-flex align-items-center ms-3 ms-md-4">
             <i class="material-icons me-2" style="font-size: 1.5rem">pets</i>
-            <h4 class="mb-0 mt-1">Registrar domicilio</h4>
+            <h4 class="mb-0 mt-1">Domicilio Actual</h4>
           </div>
         </b-card>
       </b-col>
@@ -26,29 +26,29 @@
                 <b-row>
                   <b-col cols="12" md="4">
                     <b-form-group label="País" label-align="left">
-                      <b-input readonly v-model="SaveAddressDto.country"></b-input>
+                      <b-input readonly v-model="address.country"></b-input>
                     </b-form-group>
                   </b-col>
                   <b-col cols="12" md="4">
                     <b-form-group label="Calle" label-align="left">
-                      <b-input v-model="SaveAddressDto.street"></b-input>
+                      <b-input readonly v-model="address.street"></b-input>
                     </b-form-group>
                   </b-col>
                   <b-col cols="12" md="4">
                     <b-form-group label="Colonia" label-align="left">
-                      <b-input v-model="SaveAddressDto.colony"></b-input>
+                      <b-input readonly v-model="address.colony"></b-input>
                     </b-form-group>
                   </b-col>
                 </b-row>
                 <b-row>
                   <b-col cols="12" md="4">
                     <b-form-group label="Ciudad" label-align="left">
-                      <b-input v-model="SaveAddressDto.city"></b-input>
+                      <b-input readonly v-model="address.city"></b-input>
                     </b-form-group>
                   </b-col>
                   <b-col cols="12" md="4">
                     <b-form-group label="Estado" label-align="left">
-                      <b-input v-model="SaveAddressDto.state"></b-input>
+                      <b-input readonly v-model="address.state"></b-input>
                     </b-form-group>
                   </b-col>
                   <b-col cols="12" md="4">
@@ -57,7 +57,7 @@
                       label-align="left"
                       :state="postalCodeValidation"
                     >
-                      <b-input v-model="SaveAddressDto.postalCode"></b-input>
+                      <b-input readonly v-model="address.postalCode"></b-input>
                       <b-form-invalid-feedback :state="postalCodeValidation">
                         Codigo postal invalido
                       </b-form-invalid-feedback>
@@ -70,10 +70,13 @@
                       label="Referencia de dirección"
                       label-align="left"
                     >
-                      <b-input
-                        v-model="SaveAddressDto.addressReference"
-                        type="textarea"
-                      ></b-input>
+                      <b-form-textarea
+                        id="textarea"
+                         v-model="address.addressReference"
+                        readonly
+                        rows="3"
+                        max-rows="6"
+                      ></b-form-textarea>
                     </b-form-group>
                   </b-col>
                 </b-row>
@@ -81,7 +84,8 @@
                   <b-col cols="12" md="4">
                     <b-form-group label="Número exterior" label-align="left">
                       <b-input
-                        v-model="SaveAddressDto.exteriorNumber"
+                        readonly
+                        v-model="address.exteriorNumber"
                       ></b-input>
                       <b-form-invalid-feedback>
                         Ingresa solo números
@@ -91,18 +95,20 @@
                   <b-col cols="12" md="4">
                     <b-form-group label="Número interior" label-align="left">
                       <b-input
-                        v-model="SaveAddressDto.interiorNumber"
+                        readonly
+                        v-model="address.interiorNumber"
                       ></b-input>
                     </b-form-group>
                   </b-col>
                 </b-row>
                 <div class="d-flex justify-content-end mt-3">
                   <b-button
-                    @click="s()"
                     variant="outline-light"
                     class="d-flex align-items-center"
+                    @click="ModifyAddress"
                   >
-                    Guardar<b-icon icon="check-lg" class="ms-2" font-scale="1.3"></b-icon>
+                    Modificar
+                      <b-icon icon="pencil" class="ms-2" font-scale="1.3"></b-icon>
                   </b-button>
                 </div>
               </b-col>
@@ -116,15 +122,13 @@
 
 <script>
 import swal from "sweetalert2";
-import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
 import instance from "../../../config/axios";
-import { decrypt } from "../../../kernel/hashFunctions";
 export default {
-  name: "FormStyle",
+  name: "ViewAddressCard",
   data() {
     return {
-      SaveAddressDto: {
-        country: "México",
+      address: {
+        country: "",
         street: "",
         colony: "",
         city: "",
@@ -133,11 +137,17 @@ export default {
         addressReference: "",
         exteriorNumber: "",
         interiorNumber: "",
-        userId: localStorage.getItem("userId"),
+        id: "",
       },
       postalCodeValidation: null,
       postalCodeValidationMessage: "",
+      geetAddresDto: {
+        userId: localStorage.getItem("userId"),
+      },
     };
+  },
+  mounted() {
+    this.getAddressDetails();
   },
   computed: {
     domicilioCompleto() {
@@ -155,102 +165,47 @@ export default {
   },
 
   methods: {
-    async submitNewAddress() {
+    async getAddressDetails() {
+      this.loading = true;
       try {
-        const response = await instance.post("/address/", this.SaveAddressDto);
+        const response = await instance.post(
+          "/address/details",
+          this.geetAddresDto
+        );
         if (!response.data.error) {
+          this.address = {
+            country: response.data.data.country,
+            street: response.data.data.street,
+            colony: response.data.data.colony,
+            city: response.data.data.city,
+            state: response.data.data.state,
+            postalCode: response.data.data.postalCode,
+            addressReference: response.data.data.addressReference,
+            exteriorNumber: response.data.data.exteriorNumber,
+            interiorNumber: response.data.data.interiorNumber,
+            id:response.data.data.id
+          };
+        } else {
           swal.fire({
-            title: "Domicilio agregado con éxito",
-            icon: "success",
+            icon: "error",
+            title: "Error",
+            text: "No se pudo obtener la dirección del usuario",
           });
-          this.$emit("SavedAddress");
         }
       } catch (error) {
+        console.error(error);
         swal.fire({
-          title: "Error al agregar domicilio",
-          text: error.message,
           icon: "error",
+          title: "Error",
+          text: "No se pudo obtener la dirección del usuario",
         });
+      } finally {
+        this.loading = false;
       }
     },
-    s() {
-      swal
-        .fire({
-          title: "¿Estás seguro de realizar la accion",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Si, enviar",
-          cancelButtonText: "Cancelar",
-        })
-        .then((result) => {
-          if (result.isConfirmed) {
-            swal.fire({
-              title: "Espera un momento...",
-              text: "Estamos realizando tu registro",
-              imageUrl: gatoWalkingGif,
-              timer: 2000,
-              timerProgressBar: true,
-              imageWidth: 160, // Ancho de la imagen
-              imageHeight: 160, // Altura de la imagen
-              showConfirmButton: false,
-            });
-            this.submitNewAddress();
-          }
-        });
-    },
-  },
-  watch: {
-    phoneNumber(newVal) {
-      this.phoneNumberValidation = /^[0-9]{10}$/.test(newVal.trim())
-        ? true
-        : false;
-    },
-    secondaryEmail(newVal) {
-      this.secondaryEmailValidation =
-        /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(newVal.trim())
-          ? true
-          : false;
-    },
-    newPassword(newVal) {
-      this.passwordValidation =
-        /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,}$/.test(newVal);
-      if (!this.passwordValidation) {
-        let missingRequirements = [];
-        if (!/(?=.*\d)/.test(newVal))
-          missingRequirements.push("debe contener al menos un número (0-9)");
-        if (!/(?=.*[a-z])/.test(newVal))
-          missingRequirements.push(
-            "debe contener al menos una letra minúscula (a-z)"
-          );
-        if (!/(?=.*[A-Z])/.test(newVal))
-          missingRequirements.push(
-            "debe contener al menos una letra mayúscula (A-Z)"
-          );
-        if (/\s/.test(newVal))
-          missingRequirements.push("no debe contener espacios en blanco");
-        if (newVal.length < 8)
-          missingRequirements.push(
-            "debe tener una longitud mínima de 8 caracteres"
-          );
-        this.passwordValidationMessage =
-          "La contraseña " + missingRequirements.join(", ") + ".";
-      } else {
-        this.passwordValidationMessage = "";
-      }
-    },
-    confirmPassword(newVal) {
-      if (newVal !== this.newPassword) {
-        this.confirmPasswordValidation = false;
-        this.confirmPasswordValidationMessage = "Las contraseñas no coinciden";
-      } else {
-        this.confirmPasswordValidation = true;
-        this.confirmPasswordValidationMessage = "";
-      }
-    },
-    CancelUpdate(){
-        window.location.reload();
+    ModifyAddress(){
+      const addressModify=this.address
+      this.$emit("ModifyAddress",addressModify);
     }
   },
 };

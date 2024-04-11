@@ -4,18 +4,19 @@
             <Encabezado color="#E4E4E4" :imagenUrl="require('@/assets/imgs/mascotas_pet_list.png')"
                 titulo="Nuevas mascotas" />
         </b-row>
-        <b-row align-h="end" class="px-4">
-            <b-col cols="12" sm="6" md="3" lg="2" class="pt-3">
+        <b-row align-h="center" class="px-4">
+            <b-col cols="12" sm="6" md="3" xl="2" class="pt-3">
                 <b-input-group class="mt-3">
                     <b-form-select v-model="payload.category" class="form-select" @change="getPetList()">
                         <option value="">Todas las categorías</option>
+                        <option v-show="!categories" value="" disabled>No hay categorías disponibles</option>
                         <option v-for="category in categories" :key="category.id" :value="category.id">
                             {{ category.name }}
                         </option>
                     </b-form-select>
                 </b-input-group>
             </b-col>
-            <b-col cols="12" sm="6" md="3" lg="2" class="pt-0 pt-sm-3">
+            <b-col cols="12" sm="6" md="3" xl="2" class="pt-0 pt-sm-3">
                 <b-input-group class="mt-3">
                     <b-form-select v-model="payload.size" class="form-select" @change="getPetList()">
                         <option value="">Todas los tamaños</option>
@@ -25,7 +26,7 @@
                     </b-form-select>
                 </b-input-group>
             </b-col>
-            <b-col cols="12" sm="6" md="3" lg="2" class="pt-0 pt-md-3">
+            <b-col cols="12" sm="6" md="3" xl="2" class="pt-0 pt-md-3">
                 <b-input-group class="mt-3">
                     <b-form-select v-model="payload.gender" class="form-select" @change="getPetList()">
                         <option value="">Todos los géneros</option>
@@ -46,7 +47,7 @@
                 </b-input-group>
             </b-col>
         </b-row>
-        <b-row class="px-4 pt-4">
+        <b-row class="px-4 pt-4" v-show="this.total > 0">
             <b-col cols="12">
                 <b-table :fields="fields" :items="pets" label-sort-asc="" label-sort-desc="" no-sort-reset responsive
                     small striped hover class="text-center custom-scroll-style">
@@ -83,7 +84,7 @@
                 </b-table>
             </b-col>
         </b-row>
-        <b-row class="px-4">
+        <b-row class="px-4" v-show="this.total > 0">
             <b-col cols="12" class="d-flex align-items-center">
                 <label for="perPage">Selecciona la cantidad de registros que deseas mostrar:</label>
                 <b-form-select :options="options" v-model="size" class="ms-3 my-3 form-select" style="width: 80px"
@@ -92,6 +93,11 @@
             <b-col cols="12" class="mt-1">
                 <b-pagination pills v-model="page" :total-rows="total" :per-page="size" align="center">
                 </b-pagination>
+            </b-col>
+        </b-row>
+        <b-row v-show="this.total == 0">
+            <b-col cols="12">
+                <h5 class="text-center mt-5">No hay registros relacionados o no hay solicitudes de publicación de mascotas nuevas</h5>
             </b-col>
         </b-row>
     </b-container>
@@ -209,8 +215,8 @@ export default {
             return statusses[status] || status;
         },
         getDetails(petId) {
-            this.$router.push({ name: 'newPet', params: { petId: petId } });
-            sessionStorage.setItem('petId', petId);                        
+            localStorage.setItem('petId', petId);
+            this.$router.push({ name: 'newPet' });
         }
     },
     mounted() {

@@ -25,14 +25,31 @@
                   style="max-width: 300px; margin-top: 60px"
                 ></b-img>
               </b-col>
-              <b-col cols="9" >
+              <b-col cols="9">
                 <b-row class="px-2 my-2">
                   <PersonalInformationCar ref="personalInformationCar" />
                 </b-row>
               </b-col>
+              <b-col cols="12">
+                <b-row class="px-2 my-2">
+                  <CurrentAddressCard
+                    v-if="SaveAddres"
+                    ref="currentAddressCard"
+                    @SavedAddress="getAddressDetails"
+                  />
+                  <ViewAddressCard
+                    v-if="ViewAddress"
+                    @ModifyAddress="ModifyAddress"
+                  />
+                  <UpdateAddress
+                    v-if="ModifyAddressForm"
+                    :addressToModify="addressToModify"
+                  />
+                </b-row>
+              </b-col>
               <b-col cols="12" >
                 <b-row class="px-2 my-2">
-                  <CurrentAddressCard ref="currentAddressCard" />
+                  <HomeSpecification ref="homeSpecification" />
                 </b-row>
               </b-col>
             </div>
@@ -170,6 +187,8 @@ import profile from "../../../assets/imgs/profile.jpg";
 import CurrentAddressCard from "../views/CurrentAddressCard.vue";
 import PersonalInformationCar from "../views/PersonalInformationCard.vue";
 import HomeSpecification from "../views/HomeSpecification.vue";
+import ViewAddressCard from "../views/ViewAddressCard.vue";
+import UpdateAddress from "../views/ModifyAddressCard.vue"
 export default {
   name: "FormStyle",
   data() {
@@ -210,6 +229,13 @@ export default {
       },
       postalCodeValidation: null,
       postalCodeValidationMessage: "",
+      geetAddresDto: {
+        userId: localStorage.getItem("userId"),
+      },
+      SaveAddres: false,
+      ModifyAddressForm: false,
+      addressToModify: null,
+      ViewAddress: false,
     };
   },
   mounted() {
@@ -234,6 +260,8 @@ export default {
     CurrentAddressCard,
     HomeSpecification,
     PersonalInformationCar,
+    ViewAddressCard,
+    UpdateAddress
   },
   methods: {
     togglePasswordVisibility(field) {
@@ -286,96 +314,36 @@ export default {
           });
       }
     },
+    toggleSidebar() {
+      this.$bvModal.show("sidebar-1");
+    },
+    changePassword() {},
     async getAddressDetails() {
       this.loading = true;
       try {
-        const userId = localStorage.getItem("userId");
-        const response = await axios.get(`/api/user/${userId}`);
-        const responseData = response.data;
-
-        if (!responseData.error) {
-          const addressData = responseData.data;
-          this.address = {
-            country: addressData.country,
-            street: addressData.street,
-            colony: addressData.colony,
-            city: addressData.city,
-            state: addressData.state,
-            postalCode: addressData.postalCode,
-            addressReference: addressData.addressReference,
-            exteriorNumber: addressData.exteriorNumber,
-            interiorNumber: addressData.interiorNumber,
-          };
-        } else {
-          // Manejar errores si la respuesta tiene un error
-          console.error(
-            "Error al obtener la dirección del usuario:",
-            responseData.message
-          );
-          swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "No se pudo obtener la dirección del usuario",
-          });
+        const response = await instance.post(
+          "/address/details",
+          this.geetAddresDto
+        );
+        if (response.data.status==="OK") {
+          this.SaveAddres = false;
+          this.ModifyAddressForm = false;
+          this.ViewAddress = true;
         }
       } catch (error) {
-        // Manejar errores de la solicitud HTTP
-        console.error("Error al obtener la dirección del usuario:", error);
-        swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "No se pudo obtener la dirección del usuario",
-        });
+        this.SaveAddres = true;
+        this.ModifyAddressForm = false;
+        this.ViewAddress = false;
       } finally {
         this.loading = false;
       }
     },
-    toggleSidebar() {
-      this.$bvModal.show("sidebar-1");
+    ModifyAddress(address) {
+      this.SaveAddres = false;
+      this.ViewAddress = false;
+      this.ModifyAddressForm = true;
+      this.addressToModify = address;
     },
-    async submitNewAddress() {
-      try {
-        const response = await instance.post("/address/", this.SaveAddressDto);
-        swal.fire({
-          title: "Domicilio agregado con éxito",
-          icon: "success",
-        });
-      } catch (error) {
-        swal.fire({
-          title: "Error al agregar domicilio",
-          text: error.message,
-          icon: "error",
-        });
-      }
-    },
-    submitForm() {
-      swal
-        .fire({
-          title: "¿Estás seguro de realizar la accion",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Si, enviar",
-          cancelButtonText: "Cancelar",
-        })
-        .then((result) => {
-          if (result.isConfirmed) {
-            swal.fire({
-              title: "Espera un momento...",
-              text: "Estamos realizando tu registro",
-              imageUrl: gatoWalkingGif,
-              timer: 2000,
-              timerProgressBar: true,
-              imageWidth: 160, // Ancho de la imagen
-              imageHeight: 160, // Altura de la imagen
-              showConfirmButton: false,
-            });
-            this.submitNewAddress();
-          }
-        });
-    },
-    changePassword() {},
   },
   watch: {
     phoneNumber(newVal) {

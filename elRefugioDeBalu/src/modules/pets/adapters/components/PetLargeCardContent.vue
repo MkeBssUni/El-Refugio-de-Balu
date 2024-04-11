@@ -163,7 +163,7 @@
                         </ul>
                     </b-col>
                     <b-col cols="12" v-else>
-                        <p class="text-dark-gray-input ms-3 p-comment">Sin especificar</p>
+                        <p class="text-dark-gray-input p-comment">Sin especificar</p>
                     </b-col>
                 </b-row>
             </b-col>

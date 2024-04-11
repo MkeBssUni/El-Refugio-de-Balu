@@ -10,88 +10,98 @@
         Registro de categoria
       </h4>
     </div>
-      <b-card class="contentform">
-        <b-row class="mt-4">
-          <b-col>
-            <b-form-group label="Categoria">
-              <b-form-input
-                id="input-1"
-                v-model="SaveCategoryDto.name"
-                trim
-                @input="UpdateStateInputCategoryName()"
-                :state="nameValidationState"
-              ></b-form-input>
-              <b-form-invalid-feedback
-                v-if="!ValidationSpecialCharactersName()"
-              >
-                El nombre de la categoría contiene caracteres especiales no
-                permitidos (/[<>{}' || \\ \/]/)
-              </b-form-invalid-feedback>
-            </b-form-group>
-          </b-col>
-          <b-col>
-            <b-form-group label="Imagen">
-              <b-form-file
-                class="form-control"
-                v-model="SaveCategoryDto.image"
-                plain
-                @change="ConvertImageToBase64($event)"
-              ></b-form-file>
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col>
-            <b-form-group label="Descripción">
-              <b-form-textarea
-                id="input-1"
-                v-model="SaveCategoryDto.description"
-                trim
-                rows="4"
-                @input="UpdateStateInputCategoryDescription()"
-                :state="descriptionValidationState"
-              ></b-form-textarea>
-              <b-form-invalid-feedback
-                v-if="!ValidationSpecialCharactersDescription()"
-              >
-                La descripción de la categoría contiene caracteres especiales no
-                permitidos (/[<>{}' || \\ \/]/)
-              </b-form-invalid-feedback>
-            </b-form-group>
-          </b-col>
-          <b-col class="mt-4">
-            <b-img
-              v-if="this.SaveCategoryDto.image"
-              :src="this.SaveCategoryDto.image"
-              class="categoryImage mt-2"
-              fluid
-              thumbnail
-            ></b-img>
-          </b-col>
-        </b-row>
-        <b-row class="mt-3">
-          <b-col class="text-right"
-            ><b-button
-              variant="outline-success"
-              v-if="ValidationFormCategoryRegister()"
-              disabled
-              >Registrar</b-button
+    <b-card class="contentform">
+      <b-row class="mt-4">
+        <b-col>
+          <b-form-group label="Categoria">
+            <b-form-input
+              id="input-1"
+              v-model="SaveCategoryDto.name"
+              trim
+              @input="UpdateStateInputCategoryName()"
+              :state="nameValidationState"
+            ></b-form-input>
+            <b-form-invalid-feedback v-if="!ValidationSpecialCharactersName()">
+              El nombre de la categoría contiene caracteres especiales no
+              permitidos (/[<>{}' || \\ \/]/)
+            </b-form-invalid-feedback>
+          </b-form-group>
+        </b-col>
+        <b-col>
+          <b-form-group label="Imagen">
+            <b-form-file
+              class="form-control"
+              v-model="imageFile"
+              plain
+              :state="alertSize == null ? null :!alertSize"
+              @change="ConvertImageToBase64($event)"
+            ></b-form-file>
+             <span class="text-danger mt-2" v-if="alertSize">
+              La imagen es muy pesada, lo maximo soportado es 2mb
+            </span>
+          </b-form-group>
+          
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
+          <b-form-group label="Descripción">
+            <b-form-textarea
+              id="input-1"
+              v-model="SaveCategoryDto.description"
+              trim
+              rows="4"
+              @input="UpdateStateInputCategoryDescription()"
+              :state="descriptionValidationState"
+            ></b-form-textarea>
+            <b-form-invalid-feedback
+              v-if="!ValidationSpecialCharactersDescription()"
             >
-            <b-button
-              variant="outline-success"
-              @click="ViewAlertConfirmationRegistrationCategory"
-              v-else
-              >Registrar</b-button
-            >
-            <b-button
-              class="mx-2"
-              variant="outline-danger"
-              @click="$emit('SavedCategory')"
-              >Cancelar</b-button
-            >
-          </b-col>
-        </b-row>
-      </b-card>
+              La descripción de la categoría contiene caracteres especiales no
+              permitidos (/[<>{}' || \\ \/]/)
+            </b-form-invalid-feedback>
+          </b-form-group>
+        </b-col>
+        <b-col class="mt-4">
+          <b-img
+            v-if="SaveCategoryDto.image"
+            :src="SaveCategoryDto.image"
+            class="categoryImage mt-2"
+            fluid
+            thumbnail
+          ></b-img>
+          <b-img
+            v-else
+            src="imagenNull"
+            class="categoryImage mt-2"
+            fluid
+            thumbnail
+          ></b-img>
+        </b-col>
+      </b-row>
+      <b-row class="mt-3">
+        <b-col class="text-right"
+          ><b-button
+            variant="outline-success"
+            v-if="ValidationFormCategoryRegister()"
+            disabled
+            >Registrar</b-button
+          >
+          <b-button
+            variant="outline-success"
+            @click="ViewAlertConfirmationRegistrationCategory"
+            v-else
+            >Registrar</b-button
+          >
+          <b-button
+            class="mx-2"
+            variant="outline-danger"
+            @click="$emit('SavedCategory')"
+            >Cancelar</b-button
+          >
+        </b-col>
+      </b-row>
+    </b-card>
   </div>
 </template>
 
@@ -100,6 +110,7 @@ import Swal from "sweetalert2";
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
 import instance from "../../../../config/axios";
 import { encrypt } from "../../../../kernel/hashFunctions";
+import imagenNull from "@/assets/imgs/imageSearch.png"
 
 export default {
   data() {
@@ -107,15 +118,15 @@ export default {
       SaveCategoryDto: {
         name: "",
         description: "",
-        image: "",
+        image:imagenNull,
       },
       SaveCategoryDtoEncrypted: {
         name: "",
         description: "",
         image: "",
-        userId:localStorage.getItem('userId')
+        userId: localStorage.getItem("userId"),
       },
-      size: false,
+      alertSize: null,
       imageFile: null,
       nameValidationState: null,
       descriptionValidationState: null,
@@ -124,27 +135,24 @@ export default {
   methods: {
     ConvertImageToBase64(event) {
       const maxSize = 2 * 1024 * 1024;
-      const { files } = event.target;
-      const file = Array.from(files);
-      if (file.length > 1) {
-        this.size = false;
-      }
+      const file = event.target.files[0];
       if (file.size > maxSize) {
-        this.size = false;
-        this.SaveCategoryDto.image = null;
+        this.alertSize = true;
       } else {
         const reader = new FileReader();
         reader.onload = (e) => {
-          const base64 = e?.target?.result;
+          const base64 = e.target.result;
           this.SaveCategoryDto.image = base64;
+          this.alertSize = false;
         };
-        reader.readAsDataURL(file[0]);
-        this.size = true;
+        reader.readAsDataURL(file);
       }
     },
     async SaveCategory() {
       try {
-        this.SaveCategoryDtoEncrypted.name = await encrypt(this.SaveCategoryDto.name);
+        this.SaveCategoryDtoEncrypted.name = await encrypt(
+          this.SaveCategoryDto.name
+        );
         this.SaveCategoryDtoEncrypted.description = await encrypt(
           this.SaveCategoryDto.description
         );
@@ -159,7 +167,7 @@ export default {
             icon: "success",
             confirmButtonColor: "#118A95",
           });
-        this.$emit("SavedCategory");
+          this.$emit("SavedCategory");
         }
       } catch (error) {
         const msg = error.response

@@ -9,7 +9,7 @@
                         <hr class="divider my-0">
                         <b-row class="mt-4 d-flex justify-content-end">
                             <b-col cols="4" lg="3" v-show="canEdit">
-                                <b-button variant="outline-dark-orange"
+                                <b-button variant="outline-dark-orange" @click="editPet()"
                                     class="me-3 d-flex align-items-center justify-content-between w-100">
                                     <span class="me-2">Editar</span>
                                     <b-icon icon="pencil" font-scale="1.3"></b-icon>
@@ -37,7 +37,7 @@
                         <hr class="divider my-0">
                         <b-row class="mt-4 d-flex justify-content-end">
                             <b-col cols="12" sm="4" v-show="canEdit">
-                                <b-button variant="outline-dark-orange"
+                                <b-button variant="outline-dark-orange" @click="editPet()"
                                     class="me-3 d-flex align-items-center justify-content-between w-100">
                                     <span class="me-2">Editar</span>
                                     <b-icon icon="pencil" font-scale="1.3"></b-icon>
@@ -76,14 +76,9 @@ import LargeContent from "../components/PetLargeCardContent.vue"
 import CancelModal from "../components/CancelRequest.vue"
 
 export default {
-    props: {
-        petId: {
-            type: String,
-            required: true
-        }
-    },
     data() {
         return {
+            petId: "",            
             pet: {},
             canEdit: false,
             canCancel: false,
@@ -103,6 +98,9 @@ export default {
                 })
                 const response = await instance.post(`/pet/details`, { id: this.petId });
                 this.pet = response.data.data;
+                if (this.pet.diseases == "") this.pet.diseases = null;
+                if (this.pet.allergies == "") this.pet.allergies = null;
+                if (this.pet.specialCares == "") this.pet.specialCares = null;
                 if (this.pet.status === 'IN_REVISION') this.canEdit = true;
                 if (this.pet.status === 'PENDING' || this.pet.status === 'IN_REVISION' || this.pet.status === 'APPROVED') this.canCancel = true;
                 this.status = this.pet.status;
@@ -123,15 +121,22 @@ export default {
         },
         goBack() {
             this.$router.go(-1);
+            localStorage.removeItem("petId");
         },
         showCancelModal() {
             this.$bvModal.show('cancelModal');
+        },
+        editPet() {
+            this.$router.push({ name: 'petUpdateForm' });
         }
     },
     mounted() {
-        if (!this.petId && sessionStorage.getItem('petId')) this.petId = sessionStorage.getItem('petId');
-        if (!this.petId && !sessionStorage.getItem('petId')) this.$router.push('/myPets');
-        this.getDetails();
+        if (localStorage.getItem("petId")) {
+            this.petId = localStorage.getItem("petId");
+            this.getDetails();
+        } else {
+            this.goBack();
+        }
     },
     components: {
         SmallContent,

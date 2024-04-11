@@ -95,6 +95,12 @@ public class PetController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
+    @PostMapping("/approve")
+    public ResponseEntity<ResponseApi<Boolean>> approve(@RequestBody ApprovePetDto dto) {
+        ResponseApi<Boolean> response = petService.approve(dto);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
     @PostMapping("/adoption")
     public ResponseEntity<ResponseApi<Boolean>> complete(@RequestBody CompleteAdoptionDto dto) {
         ResponseApi<Boolean> response = petService.completeAdoption(dto);
