@@ -1,6 +1,8 @@
 package com.balu.backend.config;
 
 import com.balu.backend.modules.hash.service.HashService;
+import com.balu.backend.modules.people.model.IPersonRepository;
+import com.balu.backend.modules.people.model.Person;
 import com.balu.backend.modules.roles.model.IRoleRepository;
 import com.balu.backend.modules.roles.model.Role;
 import com.balu.backend.modules.roles.model.Roles;
@@ -24,6 +26,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class InitialConfig implements CommandLineRunner {
     private final IUserRepository iUserRepository;
+    private final IPersonRepository iPersonRepository;
     private final IStatusRepository iStatusRepository;
     private final IRoleRepository iRoleRepository;
     private final PasswordEncoder passwordEncoder;
@@ -64,7 +67,14 @@ public class InitialConfig implements CommandLineRunner {
         Optional<User> optionalUser = iUserRepository.findByUsername(username);
         if(optionalUser.isEmpty()){
             String finalUsername = username;
-            optionalRole.ifPresent(role1 -> iUserRepository.saveAndFlush(new User(finalUsername, passwordEncoder.encode(password), role1)));
+            optionalRole.ifPresent(role1 -> iUserRepository.saveAndFlush(new User(finalUsername, passwordEncoder.encode(password), role1,true)));
+            Person person = new Person();
+            person.setName("Balu Alfonso");
+            person.setLastName("Aguario");
+            person.setSurName("Santos");
+            person.setPhoneNumber(hashService.encrypt("7779876543"));
+            person.setUser(iUserRepository.findByUsername(username).get());
+            iPersonRepository.saveAndFlush(person);
         }
     }
     @Bean

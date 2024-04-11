@@ -88,6 +88,12 @@ public class User {
         this.password = password;
         this.role = role1;
     }
+    public User(String username, String password, Role role1, boolean profileCompleted) {
+        this.username = username;
+        this.password = password;
+        this.role = role1;
+        this.profileCompleted = profileCompleted;
+    }
     public void save(String username, String password, Role role, String recoveryCode){
         this.username = username;
         this.password = password;
