@@ -453,7 +453,6 @@ export default {
           this.requestAdoption.additionalInformation
         );
         this.getCredentialPet();
-        console.log(this.requestAdoption);
         Swal.close();
       } catch (error) {
         Swal.fire({
@@ -476,7 +475,6 @@ export default {
           id: idPet,
         });
         this.credentialPet = response.data.data;
-        console.log(this.credentialPet)
       } catch (error) {
         Swal.fire({
           title: "Error",

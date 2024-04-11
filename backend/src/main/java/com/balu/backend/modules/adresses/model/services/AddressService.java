@@ -56,7 +56,6 @@ public class AddressService {
         }
         /*long userId = Long.parseLong(hashService.decrypt(address.getUserId()));
         User user = userRepository.getById(userId);
-        System.out.println(user.getId()+" "+user.getUsername());
 
         Address encryptedAddress = new Address
                 (0L,
@@ -75,7 +74,6 @@ public class AddressService {
          */
         address.setUserId(hashService.decrypt(address.getUserId()));
         Long userId = Long.parseLong(address.getUserId());
-        System.out.println(userId);
         Address address1 = new Address();
         Optional<User> optionalUser = userRepository.findById(Long.valueOf(address.getUserId()));
         if(optionalUser.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND,true, ErrorMessages.NOT_FOUND.name());

@@ -3,6 +3,7 @@ package com.balu.backend.modules.people.controller;
 import com.balu.backend.kernel.ErrorMessages;
 import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.kernel.SearchDto;
+import com.balu.backend.modules.people.model.IContactInfoView;
 import com.balu.backend.modules.people.model.IPersonViewPaged;
 import com.balu.backend.modules.people.model.Person;
 import com.balu.backend.modules.people.model.dto.*;
@@ -118,6 +119,15 @@ public class PersonController {
     public ResponseEntity<ResponseApi<User>> validateCode(@RequestBody ActivateAccountDto dto) throws Exception{
         try{
             ResponseApi<User> response = personService.validateCode(dto);
+            return new ResponseEntity<>(response, response.getStatus());
+        }catch (Exception e){
+            return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PostMapping("/find/contactInfo")
+    public ResponseEntity<ResponseApi<IContactInfoView>> findContactInfo(@RequestBody PersonDto dto) throws Exception{
+        try{
+            ResponseApi<IContactInfoView> response = personService.findContactInfo(dto);
             return new ResponseEntity<>(response, response.getStatus());
         }catch (Exception e){
             return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);

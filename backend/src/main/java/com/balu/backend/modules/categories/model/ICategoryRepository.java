@@ -9,16 +9,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ICategoryRepository extends JpaRepository<Category, Long> {
     List<Category> findByStatusTrue();
 
-    Category findByName(String name);
-
-    @Modifying
-    @Query(value = "UPDATE categories SET name = :name, description = :description, image = :image WHERE id = :id", nativeQuery = true)
-    Integer updateCategory(@Param("id") Long id, @Param("name") String name, @Param("description") String description, @Param("image") String image);
+    Optional<Category> findByNameIgnoreCase(String name);
 
     @Modifying
     @Query(value = "UPDATE categories SET status = :status WHERE id = :id", nativeQuery = true)

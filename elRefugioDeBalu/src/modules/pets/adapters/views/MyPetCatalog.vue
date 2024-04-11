@@ -130,7 +130,6 @@ export default {
                 this.total = response.data.data.totalElements
                 Swal.close()
             } catch (error) {
-                console.log(error)
                 Swal.fire({
                     title: 'Error',
                     text: 'Ocurrió un error al cargar tus mascotas',

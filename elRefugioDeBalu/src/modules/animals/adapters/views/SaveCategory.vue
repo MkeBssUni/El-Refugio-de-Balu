@@ -148,7 +148,7 @@ export default {
         this.SaveCategoryDtoEncrypted.description = await encrypt(
           this.SaveCategoryDto.description
         );
-        this.SaveCategoryDtoEncrypted.image = await encrypt(this.SaveCategoryDto.image);
+        this.SaveCategoryDtoEncrypted.image = this.SaveCategoryDto.image;
         const response = await instance.post(
           "/category/",
           this.SaveCategoryDtoEncrypted

@@ -992,7 +992,6 @@ export default {
             this.$router.push("/myAplicationAdoption");
           });
       } catch (error) {
-        console.log(error)
         let Msjerror = "";
         switch (error.response.data.message) {
           case "INVALID_USER":
@@ -1127,7 +1126,6 @@ export default {
       reader.readAsDataURL(file);
     },
     makeToast(text) {
-      console.log("makeToast", text);
       const Toast = swal.mixin({
         toast: true,
         position: "top-end",
