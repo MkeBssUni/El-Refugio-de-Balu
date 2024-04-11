@@ -20,6 +20,7 @@
                                     <b-col cols="12" sm="6" class="mt-2">
                                         <b-form-select v-model="payload.category" class="form-select">
                                             <option value="">Todas las categorías</option>
+                                            <option v-show="!categories" value="" disabled>No hay categorías disponibles</option>
                                             <option v-for="category in categories" :key="category.id"
                                                 :value="category.id">
                                                 {{ category.name }}
@@ -115,7 +116,12 @@
                 </b-card>
             </b-col>
         </TransitionGroup>
-        <b-row class="pt-2">
+        <b-row v-show="total == 0">
+            <b-col cols="12">
+                <h5 class="text-center">No hay mascotas disponibles por el momento</h5>
+            </b-col>
+        </b-row>
+        <b-row class="pt-2" v-show="total > 0">
             <b-col cols="12">
                 <b-pagination pills v-model="page" :total-rows="total" :per-page="size" align="center">
                 </b-pagination>
@@ -183,7 +189,7 @@ export default {
                     showConfirmButton: false
                 })
                 const response = await instance.get(`/category/list`)
-                this.categories = response.data.data
+                this.categories = response.data.data                               
                 Swal.close()
             } catch (error) {
                 Swal.fire({
