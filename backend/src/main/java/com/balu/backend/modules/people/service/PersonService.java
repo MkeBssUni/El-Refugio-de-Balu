@@ -64,6 +64,12 @@ public class PersonService {
         if(validations.isInvalidName(dto.getSurname())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
         if(validations.isInvalidPhoneNumber(dto.getPhoneNumber())) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
 
+        if(validations.isInvalidMinAndMaxLength(dto.getName(), 3,40)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidMinAndMaxLength(dto.getLastname(), 3,40)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidMinAndMaxLength(dto.getSurname(), 3,40)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidMinAndMaxLength(dto.getUsername(), 3,40)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidMinAndMaxLength(dto.getPassword(), 8,40)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+
         Optional<User> existentUser = iUserRepository.findByUsername(hashService.encrypt(dto.getUsername()));
         if(existentUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
 
@@ -107,6 +113,11 @@ public class PersonService {
         if(validations.isInvalidName(hashService.decrypt(dto.getLastname()))) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
         if(validations.isInvalidName(hashService.decrypt(dto.getSurname()))) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
         if(validations.isInvalidPhoneNumber(hashService.decrypt(dto.getPhoneNumber()))) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+
+        if(validations.isInvalidMinAndMaxLength(hashService.decrypt(dto.getName()), 3,40)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidMinAndMaxLength(hashService.decrypt(dto.getLastname()), 3,40)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidMinAndMaxLength(hashService.decrypt(dto.getSurname()), 3,40)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidMinAndMaxLength(hashService.decrypt(dto.getUsername()), 3,40)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
 
         Optional<User> existentUser = iUserRepository.findByUsername(dto.getUsername());
         if(existentUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.DUPLICATE_RECORD.name());
