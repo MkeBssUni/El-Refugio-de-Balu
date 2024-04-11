@@ -585,8 +585,3 @@ body {
   color: #dc3545;
   font-size: 0.875rem;
 }
-
-.add-badge-btn:hover {
-  background-color: #d3d3d3;
-  border-color: #d3d3d3;
-}
