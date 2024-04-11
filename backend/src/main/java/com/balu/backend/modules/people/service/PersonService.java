@@ -1,7 +1,11 @@
 package com.balu.backend.modules.people.service;
 
 import com.balu.backend.kernel.*;
+import com.balu.backend.modules.adresses.model.model.Address;
+import com.balu.backend.modules.adresses.model.model.dto.AddressDto;
 import com.balu.backend.modules.hash.service.HashService;
+import com.balu.backend.modules.homeSpecification.model.Dto.HomeSpecificationDto;
+import com.balu.backend.modules.homeSpecification.model.HomeSpecification;
 import com.balu.backend.modules.logs.model.LogTypes;
 import com.balu.backend.modules.logs.service.LogService;
 import com.balu.backend.modules.people.model.*;
@@ -272,4 +276,46 @@ public class PersonService {
         Optional<IContactInfoView> contactInfoView = iPersonRepository.findContactInfoByUserId(user.get().getId());
         return contactInfoView.map(value -> new ResponseApi<>(contactInfoView.get(), HttpStatus.OK, false, "OK")).orElseGet(() -> new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name()));
     }
+
+    @Transactional(readOnly = true)
+    public ResponseApi<AllInfoDto> findAllInfo(PersonDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        if(dto.getUserId()==null) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
+        Optional<User> optionalUser = iUserRepository.findById(Long.valueOf(hashService.decrypt(dto.getUserId())));
+        if(optionalUser.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
+
+        Optional<Person> optionalPerson = iPersonRepository.findByUserId(optionalUser.get().getId());
+        if(optionalPerson.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
+
+        AllInfoDto allInfoDto = new AllInfoDto();
+        AddressDto addressDto = new AddressDto();
+        HomeSpecificationDto homeSpecificationDto = new HomeSpecificationDto();
+
+        allInfoDto.setName(optionalPerson.get().getName());
+        allInfoDto.setLastname(optionalPerson.get().getLastName());
+        allInfoDto.setSurname(optionalPerson.get().getSurName());
+        allInfoDto.setUsername(optionalUser.get().getUsername());
+        allInfoDto.setPhoneNumber(optionalPerson.get().getPhoneNumber());
+
+        addressDto.setAddressId(hashService.encrypt(optionalUser.get().getAddress().getId()));
+        addressDto.setCountry(optionalUser.get().getAddress().getCountry());
+        addressDto.setStreet(optionalUser.get().getAddress().getStreet());
+        addressDto.setColony(optionalUser.get().getAddress().getColony());
+        addressDto.setCity(optionalUser.get().getAddress().getCity());
+        addressDto.setState(optionalUser.get().getAddress().getState());
+        addressDto.setPostalCode(optionalUser.get().getAddress().getPostalCode());
+        addressDto.setAddressReference(optionalUser.get().getAddress().getAddressReference());
+        addressDto.setExteriorNumber(optionalUser.get().getAddress().getExteriorNumber());
+        addressDto.setInteriorNumber(optionalUser.get().getAddress().getInteriorNumber());
+
+        homeSpecificationDto.setHomeSpecificationId(hashService.encrypt(optionalUser.get().getAddress().getHomeSpecification().getId()));
+        homeSpecificationDto.setType(optionalUser.get().getAddress().getHomeSpecification().getType());
+        homeSpecificationDto.setOutdoorArea(optionalUser.get().getAddress().getHomeSpecification().isOutdoorArea());
+        homeSpecificationDto.setNumberOfResidents(optionalUser.get().getAddress().getHomeSpecification().getNumberOfResidents());
+        homeSpecificationDto.setHomeImage(optionalUser.get().getAddress().getHomeSpecification().getHomeImage().getImage());
+
+        addressDto.setHomeSpecification(homeSpecificationDto);
+        allInfoDto.setAddressDto(addressDto);
+        return new ResponseApi<>(allInfoDto,HttpStatus.OK, false, "INFO");
+    }
+
 }
