@@ -5,7 +5,7 @@
                 titulo="Editar la información de la mascota" />
         </b-row>
         <b-row class="px-2 my-2">
-            <GeneralInformationCard ref="generalInformationCard" :pet="pet" />
+            <GeneralInformationCard ref="generalInformationCard" @categoriesLoaded="onCategoriesLoaded" />
             <MedicalRecordCard ref="medicalRecordCard" />
             <AdditionalInformationCard ref="additionalInformationCard" />
         </b-row>
@@ -46,7 +46,7 @@ import genders from '../../../../kernel/data/genders';
 
 export default {
     data() {
-        return {            
+        return {
             pet: {},
             isValidGeneralInformation: false,
             isValidAdditionalInformation: false,
@@ -80,7 +80,8 @@ export default {
             let gender = String(this.pet.gender).toLowerCase();
             return genders.find(g => g.value === gender).value;
         },
-        mapCategory() {            
+        mapCategory() {
+            console.log(this.$refs.generalInformationCard.categories.length)
             for (let i = 0; i < this.$refs.generalInformationCard.categories.length; i++) {
                 if (this.$refs.generalInformationCard.categories[i].name === this.pet.category) {
                     return this.$refs.generalInformationCard.categories[i].id;
@@ -98,7 +99,7 @@ export default {
                     showConfirmButton: false
                 })
                 const response = await instance.post(`/pet/details`, { id: this.petId });
-                this.pet = response.data.data;                
+                this.pet = response.data.data;
                 this.$refs.generalInformationCard.form.mainImage = this.pet.mainImage;
                 this.$refs.generalInformationCard.form.additionalImages = this.pet.images;
                 this.$refs.generalInformationCard.form.name = this.pet.name;
@@ -215,18 +216,20 @@ export default {
                     showConfirmButton: false,
                 })
             }
-        },        
+        },
         goBack() {
             this.$router.go(-1);
+        },
+        onCategoriesLoaded() {                          
+            this.getDetails();      
         },
     },
     mounted() {
         if (localStorage.getItem("petId")) {
-            this.petId = localStorage.getItem("petId");            
+            this.petId = localStorage.getItem("petId");
             setTimeout(() => {
                 this.$refs.generalInformationCard.getCategories();
-            }, 250);
-            this.getDetails();           
+            }, 250);            
         } else {
             this.goBack();
         }
