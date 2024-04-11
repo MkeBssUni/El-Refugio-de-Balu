@@ -342,4 +342,29 @@ public class PersonService {
         return new ResponseApi<>(allInfoDto,HttpStatus.OK, false, "INFO");
     }
 
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
+    public ResponseApi<Boolean> updatePersonalInfo (UpdatePersonalInfoDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        Optional<User> optionalUser = iUserRepository.findById(Long.valueOf(hashService.decrypt(dto.getUserId())));
+        if(optionalUser.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
+
+        Optional<Person> optionalPerson = iPersonRepository.findByUserId(optionalUser.get().getId());
+        if(optionalPerson.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
+
+        if(dto.getName() == null || dto.getSurname() == null || dto.getLastname() == null || dto.getEmail() == null || dto.getPhone() == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
+        if(validations.isNotBlankString(dto.getName()) && validations.isNotBlankString(dto.getSurname()) && validations.isNotBlankString(dto.getLastname()) && validations.isNotBlankString(dto.getEmail()) && validations.isNotBlankString(dto.getPhone())) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
+
+        if(validations.isInvalidName(dto.getName()) || validations.isInvalidName(dto.getSurname()) || validations.isInvalidName(dto.getLastname())) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidEmail(hashService.decrypt(dto.getEmail()))) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidPhoneNumber(hashService.decrypt(dto.getPhone()))) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
+
+        optionalPerson.get().setName(dto.getName());
+        optionalPerson.get().setLastName(dto.getLastname());
+        optionalPerson.get().setSurName(dto.getSurname());
+        optionalPerson.get().setPhoneNumber(dto.getPhone());
+        optionalUser.get().setUsername(dto.getEmail());
+
+        iPersonRepository.saveAndFlush(optionalPerson.get());
+        iUserRepository.saveAndFlush(optionalUser.get());
+        return new ResponseApi<>(HttpStatus.OK, false, "Info updated");
+    }
 }
