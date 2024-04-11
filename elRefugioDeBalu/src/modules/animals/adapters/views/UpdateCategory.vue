@@ -34,10 +34,14 @@
             <b-form-group label="Imagen">
               <b-form-file
                 class="form-control"
-                v-model="UpdateCategoryDto.image"
+                v-model="imageFile"
                 plain
+                :state="alertSize == null ? null :!alertSize"
                 @change="ConvertImageToBase64($event)"
               ></b-form-file>
+              <span class="text-danger mt-2" v-if="alertSize">
+              La imagen es muy pesada, lo maximo soportado es 2mb
+            </span>
             </b-form-group>
           </b-col>
         </b-row>
@@ -134,27 +138,23 @@ export default {
       imageFile: null,
       nameValidationState: null,
       descriptionValidationState: null,
+      alertSize:null
     };
   },
   methods: {
     ConvertImageToBase64(event) {
       const maxSize = 2 * 1024 * 1024;
-      const { files } = event.target;
-      const file = Array.from(files);
-      if (file.length > 1) {
-        this.size = false;
-      }
+      const file = event.target.files[0];
       if (file.size > maxSize) {
-        this.size = false;
-        this.UpdateCategoryDto.image = null;
+        this.alertSize = true;
       } else {
         const reader = new FileReader();
         reader.onload = (e) => {
-          const base64 = e?.target?.result;
+          const base64 = e.target.result;
           this.UpdateCategoryDto.image = base64;
+          this.alertSize = false;
         };
-        reader.readAsDataURL(file[0]);
-        this.size = true;
+        reader.readAsDataURL(file);
       }
     },
     async UpdateCategory() {
