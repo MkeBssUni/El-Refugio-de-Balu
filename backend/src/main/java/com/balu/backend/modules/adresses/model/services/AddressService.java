@@ -14,6 +14,7 @@ import com.balu.backend.modules.homeSpecification.model.Repository.HomeImageRepo
 import com.balu.backend.modules.homeSpecification.model.Repository.HomeSpecificationRepository;
 import com.balu.backend.modules.people.model.IPersonRepository;
 import com.balu.backend.modules.people.model.Person;
+import com.balu.backend.modules.pets.model.repositories.IPetRepository;
 import com.balu.backend.modules.users.model.IUserRepository;
 import com.balu.backend.modules.users.model.User;
 import io.micrometer.common.util.StringUtils;
@@ -45,10 +46,19 @@ public class AddressService {
     private final Validations validations = new Validations();
     private final HomeImageRepository homeImageRepository;
     private final HomeSpecificationRepository homeSpecificationRepository;
+    private final IPetRepository iPetRepository;
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseApi<Boolean> update (AddressDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        Optional<User> optionalUser = iUserRepository.findById(Long.valueOf(hashService.decrypt(dto.getUserId())));
+        Optional<User> optionalUser;
+        if(dto.getPetId()!=null){
+            optionalUser = iUserRepository.findById(iPetRepository.findOwnerIdByPetId(Long.valueOf(hashService.decrypt(dto.getPetId()))));
+        }else if(dto.getUserId()!=null){
+            optionalUser = iUserRepository.findById(Long.valueOf(hashService.decrypt(dto.getUserId())));
+        }else{
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
+        }
+        
         if(optionalUser.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
 
         Optional<Address> optionalAddress = addressRepository.findByUserId(Long.valueOf(hashService.decrypt(dto.getUserId())));
