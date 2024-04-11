@@ -88,7 +88,7 @@
             </b-row>
             <b-row v-show="total == 0">
             <b-col cols="12">
-                <h5 class="text-center mt-5">No tienes ninguna mascota asignada</h5>
+                <h5 class="text-center mt-5">No hay registros relacionados o no tienes ninguna mascota asignada</h5>
             </b-col>
         </b-row>
         </b-container>
