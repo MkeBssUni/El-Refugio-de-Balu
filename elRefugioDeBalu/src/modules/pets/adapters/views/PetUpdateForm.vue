@@ -44,30 +44,30 @@ export default {
             isValidGeneralInformation: false,
             isValidAdditionalInformation: false,
         };
-    },    
+    },
     methods: {
         goBack() {
             this.$router.go(-1);
         },
         mapSize() {
-            let size = String(this.pet.size).toLowerCase();            
-            return sizes.find(s => s.value === size).value;            
+            let size = String(this.pet.size).toLowerCase();
+            return sizes.find(s => s.value === size).value;
         },
         mapAgeUnit() {
-            let ageUnit = String(this.pet.ageUnit).toLowerCase();            
-            return ageUnits.find(a => a.value === ageUnit).value;            
+            let ageUnit = String(this.pet.ageUnit).toLowerCase();
+            return ageUnits.find(a => a.value === ageUnit).value;
         },
         mapAgeUnit() {
-            let ageUnit = String(this.pet.ageUnit).toLowerCase();            
-            return ageUnits.find(a => a.value === ageUnit).value;            
+            let ageUnit = String(this.pet.ageUnit).toLowerCase();
+            return ageUnits.find(a => a.value === ageUnit).value;
         },
         mapWeightUnit() {
-            let weightUnit = String(this.pet.weightUnit).toLowerCase();            
-            return weightUnits.find(w => w.value === weightUnit).value;            
+            let weightUnit = String(this.pet.weightUnit).toLowerCase();
+            return weightUnits.find(w => w.value === weightUnit).value;
         },
         mapLifeStage() {
-            let lifeStage = String(this.pet.lifeStage).toLowerCase();            
-            return lifeStages.find(l => l.value === lifeStage).value;            
+            let lifeStage = String(this.pet.lifeStage).toLowerCase();
+            return lifeStages.find(l => l.value === lifeStage).value;
         },
         mapGender() {
             let gender = String(this.pet.gender).toLowerCase();
@@ -75,11 +75,11 @@ export default {
         },
         mapCategory() {
             console.log(this.$refs.generalInformationCard.categories)
-            for(let i = 0; i < this.$refs.generalInformationCard.categories.length; i++) {
+            for (let i = 0; i < this.$refs.generalInformationCard.categories.length; i++) {
                 if (this.$refs.generalInformationCard.categories[i].name === this.pet.category) {
                     return this.$refs.generalInformationCard.categories[i].id;
                 }
-            }            
+            }
         },
         async getDetails() {
             try {
@@ -92,13 +92,13 @@ export default {
                     showConfirmButton: false
                 })
                 const response = await instance.post(`/pet/details`, { id: this.petId });
-                this.pet = response.data.data;                                 
+                this.pet = response.data.data;
                 this.$refs.generalInformationCard.form.mainImage = this.pet.mainImage;
                 this.$refs.generalInformationCard.form.additionalImages = this.pet.images;
                 this.$refs.generalInformationCard.form.name = this.pet.name;
                 this.$refs.generalInformationCard.form.breed = this.pet.breed;
                 this.$refs.generalInformationCard.form.size = this.mapSize();
-                this.$refs.generalInformationCard.form.age = this.pet.age; 
+                this.$refs.generalInformationCard.form.age = this.pet.age;
                 this.$refs.generalInformationCard.form.ageUnit = this.mapAgeUnit();
                 this.$refs.generalInformationCard.form.weight = this.pet.weight;
                 this.$refs.generalInformationCard.form.weightUnit = this.mapWeightUnit();
@@ -151,7 +151,7 @@ export default {
                 })
             }
         },
-        async updatePet() {            
+        async updatePet() {
             try {
                 Swal.fire({
                     title: 'Modificando mascota...',
@@ -208,15 +208,13 @@ export default {
                     timerProgressBar: true,
                     showConfirmButton: false,
                 })
-                window.location.reload();
             }
         }
     },
-    mounted() {        
+    mounted() {
         if (localStorage.getItem("petId")) {
-            this.petId = localStorage.getItem("petId");
-            this.$refs.generalInformationCard.getCategories();
-            this.getDetails();
+            this.petId = localStorage.getItem("petId");            
+            this.$refs.generalInformationCard.getCategories();            
         } else {
             this.goBack();
         }
