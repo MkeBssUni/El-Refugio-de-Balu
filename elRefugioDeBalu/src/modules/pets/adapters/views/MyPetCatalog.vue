@@ -59,10 +59,11 @@
                             <b-card-title>{{ pet.name }}</b-card-title>
                             <b-card-sub-title>{{ pet.location }}</b-card-sub-title>
                             <b-badge :variant="getBadgeVariant(pet.status)" class="mt-2">{{
-                                        mapStatus((pet.status).toString().toLowerCase()) }}</b-badge>
+                                mapStatus((pet.status).toString().toLowerCase()) }}</b-badge>
                             <div class="d-flex justify-content-center">
                                 <b-button pill variant="outline-dark-blue"
-                                    class="mt-3 px-5 d-flex align-items-center justify-content-center" @click="getDetails(pet.id)">
+                                    class="mt-3 px-5 d-flex align-items-center justify-content-center"
+                                    @click="getDetails(pet.id)">
                                     <span>Ver detalles</span>
                                 </b-button>
                             </div>
@@ -70,7 +71,17 @@
                     </b-card>
                 </b-col>
             </TransitionGroup>
-            <b-row class="pt-2">
+            <b-row v-show="total == 0 && form.status == ''">
+                <b-col cols="12">
+                    <h5 class="text-center">No has publicado ninguna mascota</h5>
+                </b-col>
+            </b-row>
+            <b-row v-show="total == 0 && form.status != ''">
+                <b-col cols="12">
+                    <h5 class="text-center">No tienes mascotas con el estado seleccionado</h5>
+                </b-col>
+            </b-row>
+            <b-row class="pt-2" v-show="total > 0">
                 <b-col cols="12">
                     <b-pagination pills v-model="page" :total-rows="total" :per-page="size" align="center">
                     </b-pagination>
@@ -193,10 +204,10 @@ export default {
             if (pet) {
                 await this.getComments(pet);
             }
-        },        
+        },
         getDetails(petId) {
             localStorage.setItem('petId', petId);
-            this.$router.push({ name: 'myPet' });  
+            this.$router.push({ name: 'myPet' });
         }
     },
     mounted() {
