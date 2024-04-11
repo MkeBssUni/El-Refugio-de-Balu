@@ -22,7 +22,7 @@ public class Validations {
         return !logo.matches("data:image/(png|jpg|jpeg);base64,([a-zA-Z\\d+/=])+");
     }
     public boolean isInvalidImageLength(String image){
-        return image.length() > 65535;
+        return image.length() > 4294967295L;
     }
     public boolean isNotBlankString(String... args){
         for (String arg : args) {

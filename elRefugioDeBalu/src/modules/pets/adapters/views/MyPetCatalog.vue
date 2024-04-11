@@ -29,7 +29,7 @@
                             </b-input-group>
                         </b-col>
                         <b-col cols="12" sm="6" md="12" lg="3" class="d-flex justify-content-center mt-3 mt-lg-0">
-                            <b-button variant="outline-success w-100" to="/petForm"
+                            <b-button variant="outline-success w-100" @click="registerPet()"
                                 class="d-flex align-items-center justify-content-between">
                                 <span class="mr-2">Agregar</span>
                                 <b-icon icon="plus-circle" class="ms-2"></b-icon>
@@ -59,10 +59,11 @@
                             <b-card-title>{{ pet.name }}</b-card-title>
                             <b-card-sub-title>{{ pet.location }}</b-card-sub-title>
                             <b-badge :variant="getBadgeVariant(pet.status)" class="mt-2">{{
-                                        mapStatus((pet.status).toString().toLowerCase()) }}</b-badge>
+                                mapStatus((pet.status).toString().toLowerCase()) }}</b-badge>
                             <div class="d-flex justify-content-center">
                                 <b-button pill variant="outline-dark-blue"
-                                    class="mt-3 px-5 d-flex align-items-center justify-content-center" @click="getDetails(pet.id)">
+                                    class="mt-3 px-5 d-flex align-items-center justify-content-center"
+                                    @click="getDetails(pet.id)">
                                     <span>Ver detalles</span>
                                 </b-button>
                             </div>
@@ -70,7 +71,12 @@
                     </b-card>
                 </b-col>
             </TransitionGroup>
-            <b-row class="pt-2">
+            <b-row v-show="total == 0">
+                <b-col cols="12">
+                    <h5 class="text-center">No hay registros relacionados o no has publicado ninguna mascota</h5>
+                </b-col>
+            </b-row>
+            <b-row class="pt-2" v-show="total > 0">
                 <b-col cols="12">
                     <b-pagination pills v-model="page" :total-rows="total" :per-page="size" align="center">
                     </b-pagination>
@@ -87,6 +93,7 @@ import Swal from "sweetalert2";
 import instance from "../../../../config/axios";
 import getStatusses from "../../../../kernel/data/userStatusses";
 import { statusses } from "../../../../kernel/data/mappingDictionaries";
+import { decrypt } from "../../../../kernel/hashFunctions";
 
 import Modal from "../components/Comments.vue";
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
@@ -193,10 +200,32 @@ export default {
             if (pet) {
                 await this.getComments(pet);
             }
-        },        
+        },
         getDetails(petId) {
-            this.$router.push({ name: 'myPet', params: { petId: petId } });
-            sessionStorage.setItem('petId', petId);                        
+            localStorage.setItem('petId', petId);
+            this.$router.push({ name: 'myPet' });
+        },
+        async registerPet() {
+            const userHasProfile = await decrypt(localStorage.getItem('profileCompleted'));                        
+            if (userHasProfile == 'true') {
+                this.$router.push({ name: 'petForm' });
+            } else {                
+                Swal.fire({
+                    title: 'Perfil incompleto',
+                    text: 'Para poder publicar una mascota, necesitas completar tu perfil',
+                    icon: 'warning',
+                    iconColor: '#ff7d4a',
+                    showCancelButton: true,
+                    confirmButtonText: 'Completar perfil',
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonColor: '#ff7d4a',
+                    cancelButtonColor: '#A93D3D'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.$router.push({ name: 'profile' });
+                    }
+                })
+            }
         }
     },
     mounted() {

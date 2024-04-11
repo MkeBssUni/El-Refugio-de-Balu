@@ -295,9 +295,24 @@ export default {
                     imageHeight: 160,
                     showConfirmButton: false
                 })
-                const response = await instance.get(`/category/list`)
-                this.categories = response.data.data
-                Swal.close()
+                const response = await instance.get(`/category/list`)                         
+                if (response.data.message === "NO_RECORDS") {                                      
+                    Swal.fire({
+                        title: '¡Lo sentimos!',
+                        text: 'Por el momento no puedes registrar ni modificar mascotas porque no hay categorías disponibles',
+                        icon: 'info',
+                        iconColor: '#A93D3D',
+                        timer: 3000,
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    }).then(() => {
+                        this.$router.push('/myPets')                        
+                    })
+                } else {
+                    this.categories = response.data.data
+                    this.$emit('categoriesLoaded');
+                    Swal.close()
+                }                
             } catch (error) {
                 Swal.fire({
                     title: 'Error',
@@ -648,9 +663,6 @@ export default {
             this.errorMessages.gender = "";
         }
     },
-    mounted() {
-        this.getCategories();
-    }
 }
 </script>
 

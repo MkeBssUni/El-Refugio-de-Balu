@@ -224,7 +224,7 @@ export default {
   data() {
     return {
       total: 0,
-      petId: null,
+      petId: "",
       selected: null,
       searchValue: "",
       pageResponse: {},
@@ -266,11 +266,12 @@ export default {
     };
   },
   mounted() {
-    if (!this.petId && sessionStorage.getItem("petId"))
-      this.petId = sessionStorage.getItem("petId");
-    if (!this.petId && !sessionStorage.getItem("petId"))
-      this.$router.push("/moderated/petList");
-    this.getList();
+    if (localStorage.getItem("petId")) {
+      this.petId = localStorage.getItem("petId");
+      this.getList();
+    } else {
+      this.goBack();
+    }
   },
   methods: {
     getAgeUnit(age) {
@@ -297,7 +298,8 @@ export default {
       }
     },
     goBack() {
-      this.$router.go(-1);
+      this.$router.go(-1);      
+      localStorage.removeItem("petId");
     },
     mapSize(size) {
       return sizes[size] || size;

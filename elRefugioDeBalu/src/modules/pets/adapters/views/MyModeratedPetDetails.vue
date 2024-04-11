@@ -8,28 +8,21 @@
                         <LargeContent :pet="pet" />
                         <hr class="divider my-0">
                         <b-row class="mt-4 d-flex justify-content-end">
-                            <b-col cols="6" xl="3">
-                                <b-button variant="outline-success" @click="confirmSelectPet()"
+                            <b-col cols="4" lg="3" v-show="canApprove">
+                                <b-button variant="outline-success" @click="confirmApprovePet()"
                                     class="me-3 d-flex align-items-center justify-content-between w-100">
-                                    <span class="me-2">Dar seguimiento</span>
+                                    <span class="me-2">Aprobar mascota</span>
                                     <b-icon icon="check-circle" font-scale="1.3"></b-icon>
                                 </b-button>
                             </b-col>
-                            <b-col cols="6" xl="3">
-                                <b-button variant="outline-dark-orange" @click="showChangesModal()"
-                                    class="me-3 d-flex align-items-center justify-content-between w-100">
-                                    <span class="me-2">Solicitar cambios</span>
-                                    <b-icon icon="pencil" font-scale="1.3"></b-icon>
-                                </b-button>
-                            </b-col>
-                            <b-col cols="6" xl="3" class="mt-3 mt-xl-0">
+                            <b-col cols="4" lg="3" class="mt-0 mt-xl-0" v-show="canClose">
                                 <b-button variant="outline-danger" @click="confirmClosePet()"
                                     class="me-3 d-flex align-items-center justify-content-between w-100">
                                     <span class="me-2">Finalizar</span>
                                     <b-icon icon="x-circle" font-scale="1.3"></b-icon>
                                 </b-button>
                             </b-col>
-                            <b-col cols="6" xl="3" class="mt-3 mt-xl-0">
+                            <b-col cols="4" lg="3" class="mt-0 mt-xl-0">
                                 <b-button variant="outline-secondary-gray" @click="goBack"
                                     class="d-flex align-items-center justify-content-between w-100">
                                     <span class="me-2">Regresar</span>
@@ -43,28 +36,21 @@
                         <SmallContent :pet="pet" />
                         <hr class="divider my-0">
                         <b-row class="mt-4 d-flex justify-content-end">
-                            <b-col cols="12" sm="6">
-                                <b-button variant="outline-success" @click="confirmSelectPet()"
+                            <b-col cols="12" v-show="canApprove">
+                                <b-button variant="outline-success" @click="confirmApprovePet()"
                                     class="me-3 d-flex align-items-center justify-content-between w-100">
-                                    <span class="me-2">Dar seguimiento</span>
+                                    <span class="me-2">Aprobar mascota</span>
                                     <b-icon icon="check-circle" font-scale="1.3"></b-icon>
                                 </b-button>
                             </b-col>
-                            <b-col cols="12" sm="6" class="mt-3 mt-sm-0">
-                                <b-button variant="outline-dark-orange"
-                                    class="me-3 d-flex align-items-center justify-content-between w-100">
-                                    <span class="me-2">Solicitar cambios</span>
-                                    <b-icon icon="pencil" font-scale="1.3"></b-icon>
-                                </b-button>
-                            </b-col>
-                            <b-col cols="12" sm="6" class="mt-3">
+                            <b-col cols="12" class="mt-3" v-show="canClose">
                                 <b-button variant="outline-danger" @click="confirmClosePet()"
                                     class="me-3 d-flex align-items-center justify-content-between w-100">
                                     <span class="me-2">Finalizar</span>
                                     <b-icon icon="x-circle" font-scale="1.3"></b-icon>
                                 </b-button>
                             </b-col>
-                            <b-col cols="12" sm="6" class="mt-3">
+                            <b-col cols="12" class="mt-3">
                                 <b-button variant="outline-secondary-gray" @click="goBack"
                                     class="d-flex align-items-center justify-content-between w-100">
                                     <span class="me-2">Regresar</span>
@@ -75,8 +61,7 @@
                     </b-card>
                 </b-col>
             </b-row>
-        </b-container>
-        <ChangesModal :petId="petId" />
+        </b-container>        
     </div>
 </template>
 
@@ -93,9 +78,10 @@ import { sizes, lifeStages, weightUnits, ageUnits } from "../../../../kernel/dat
 export default {
     data() {
         return {
-            petId: "",
+            petId: "",            
             pet: {},
-            comment: ""
+            canApprove: false,
+            canClose: false
         }
     },
     methods: {
@@ -137,6 +123,10 @@ export default {
                 if (this.pet.diseases == "") this.pet.diseases = null;
                 if (this.pet.allergies == "") this.pet.allergies = null;
                 if (this.pet.specialCares == "") this.pet.specialCares = null;
+                if (this.pet.status === 'IN_REVISION') {
+                    this.canApprove = true;
+                    this.canClose = true;
+                }                
                 Swal.close();
             } catch (error) {
                 Swal.fire({
@@ -156,24 +146,23 @@ export default {
             this.$router.go(-1);
             localStorage.removeItem('petId');
         },
-        async selectPet() {
+        async approvePet() {
             try {
                 Swal.fire({
                     title: 'Cargando...',
-                    text: 'Te estamos asignando la mascota, espera un momento',
+                    text: 'Estamos aprobando a la mascota, espera un momento',
                     imageUrl: gatoWalkingGif,
                     imageWidth: 160,
                     imageHeight: 160,
                     showConfirmButton: false
                 })
-                await instance.post(`/pet/select`, {
+                await instance.post(`/pet/approve`, {
                     pet: this.petId,
-                    user: localStorage.getItem('userId'),
-                    status: 'approved'
+                    user: localStorage.getItem('userId'),                    
                 });
                 Swal.fire({
-                    title: 'Mascota asignada',
-                    text: 'Te hemos asignado la mascota exitosamente',
+                    title: 'Mascota aprobada',
+                    text: 'La mascota ha sido aprobada exitosamente',
                     icon: 'success',
                     iconColor: '#4CAF50',
                     timer: 3000,
@@ -185,7 +174,7 @@ export default {
             } catch (error) {
                 Swal.fire({
                     title: 'Error',
-                    text: 'Ocurrió un error al asignar la mascota',
+                    text: 'Ocurrió un error al aprobar a la mascota',
                     icon: 'error',
                     iconColor: '#A93D3D',
                     timer: 3000,
@@ -196,11 +185,11 @@ export default {
                 })
             }
         },
-        confirmSelectPet() {
+        confirmApprovePet() {
             Swal.fire({
                 title: '¿Estás seguro?',
-                text: 'Tendrás que darle seguimiento al proceso de adopción de esta mascota, ¿deseas continuar?',
-                icon: 'warning',
+                text: 'Estás por aprobar la publicación de esta mascota, ¿deseas continuar?',
+                icon: 'question',
                 iconColor: '#FFA500',
                 showCancelButton: true,
                 confirmButtonColor: '#4CAF50',
@@ -209,7 +198,7 @@ export default {
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    this.selectPet();
+                    this.approvePet();
                 }
             })
         },
@@ -236,7 +225,7 @@ export default {
                     timerProgressBar: true,
                     showConfirmButton: false
                 }).then(() => {
-                    this.$router.push('/petList')
+                    this.$router.push('/moderated/petList')
                 })
             } catch (error) {
                 Swal.fire({
@@ -269,9 +258,6 @@ export default {
                 }
             })
         },
-        showChangesModal() {
-            this.$bvModal.show('changesModal');
-        },
     },
     mounted() {        
         if (localStorage.getItem('petId')) {
@@ -283,8 +269,7 @@ export default {
     },
     components: {
         SmallContent,
-        LargeContent,
-        ChangesModal
+        LargeContent
     }
 }
 </script>

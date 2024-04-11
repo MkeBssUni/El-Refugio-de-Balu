@@ -20,4 +20,5 @@ public class UpdateAddressDto {
     private String interiorNumber;
     private Long userId;
     private Long homeSpecificationId;
+    private Long addressId;
 }

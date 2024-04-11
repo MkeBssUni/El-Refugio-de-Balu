@@ -6,12 +6,20 @@
                 <b-icon icon="x" font-scale="1.8" class="text-dark"></b-icon>
             </b-button>
         </template>
-        <b-alert variant="danger" show v-show="cancelRequest">
-            <div class="d-flex align-items-center">
-                <b-icon icon="exclamation-triangle-fill" font-scale="1.5" class="me-4"></b-icon>
-                <p class="mb-0">El usuario solicitó cancelar la adopción de esta mascota porque...</p>
-            </div>
-            <p class="ms-5 mt-2 mb-0 text-dark">{{ cancelRequest }}</p>
+        <b-alert variant="danger" class="custom-alert" show v-show="cancelRequest">
+            <b-row class="d-flex align-items-center">
+                <b-col cols="2">
+                    <b-icon icon="exclamation-triangle-fill" font-scale="1.5" class="me-4"></b-icon>
+                </b-col>
+                <b-col cols="10">
+                    <p class="mb-0">El usuario solicitó cancelar la adopción de esta mascota porque...</p>                                        
+                </b-col>                                
+            </b-row>                    
+            <b-row class="ms-3">
+                <b-col cols="12">
+                    <p class="ms-5 mt-2 mb-0 text-dark">{{ cancelRequest }}</p>
+                </b-col>
+            </b-row>    
         </b-alert>
         <b-row v-for="comment in comments" :key="comment.id" class="my-3">
             <b-col cols="12" v-if="sessionRole == comment.userRole" class="text-end">
@@ -189,5 +197,10 @@ form div {
 
 .comment {
     font-size: 1.15rem;
+}
+
+.custom-alert p {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 </style>
