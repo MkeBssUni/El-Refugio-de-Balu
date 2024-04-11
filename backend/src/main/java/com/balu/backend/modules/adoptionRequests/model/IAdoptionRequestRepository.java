@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface IAdoptionRequestRepository  extends JpaRepository<AdoptionRequest,Long> {
     Optional<AdoptionRequest> findByUser_Id(Long idUser);
-    @Query(value="select adopt.id, adopt.created_at, adopt.pet_id, pet.name as petname, cat.name as specie, statu.name as status " +
+    @Query(value="select adopt.id, adopt.created_at as createdAt, adopt.pet_id as petId, pet.name as petname, cat.name as specie, statu.name as status " +
             "from adoption_requests adopt " +
             "inner join pets pet on adopt.pet_id = pet.id " +
             "inner join categories cat on cat.id = pet.category_id " +
@@ -20,7 +20,7 @@ public interface IAdoptionRequestRepository  extends JpaRepository<AdoptionReque
             "and lower(pet.name) like lower(concat('%', :namePet, '%'))", nativeQuery = true)
     Page<IAdoptionRequestViewPaged> findAllPaged(@Param("idUser") Long idUser, @Param("namePet") String namePet, Pageable pageable);
 
-    @Query(value = "SELECT adoption.id, adoption.created_at, sta.name AS status, CONCAT(person.name, ' ', person.last_name, ' ', person.sur_name) AS fullname " +
+    @Query(value = "SELECT adoption.id, adoption.created_at AS createdAt, sta.name AS status, CONCAT(person.name, ' ', person.last_name, ' ', person.sur_name) AS fullname " +
             "FROM adoption_requests adoption " +
             "INNER JOIN users us ON adoption.user_id = us.id " +
             "INNER JOIN statusses sta ON sta.id = adoption.status_id " +

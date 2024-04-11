@@ -2,7 +2,7 @@ package com.balu.backend.modules.adoptionRequests.model;
 
 public interface IAdoptionRequestModViewPaged {
     Long getId();
-    String getCreated_at();
+    String getCreatedAt();
     String getStatus();
     String getFullname();
 

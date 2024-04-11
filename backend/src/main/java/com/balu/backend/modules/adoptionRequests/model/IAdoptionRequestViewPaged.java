@@ -2,8 +2,8 @@ package com.balu.backend.modules.adoptionRequests.model;
 
 public interface IAdoptionRequestViewPaged {
     Long getId();
-    String getCreated_at();
-    Long getPet_id();
+    String getCreatedAt();
+    Long getPetId();
     String getPetName();
     String getSpecie();
     String getStatus();
