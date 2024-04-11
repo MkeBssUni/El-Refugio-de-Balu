@@ -106,7 +106,7 @@ export default {
 
             try {
                 const response = await instance.post('/auth/', this.logInForm)
-
+                console.log(response.data.data.profileCompleted,"Login");
                 localStorage.setItem('userId', response.data.data.userId);
                 localStorage.setItem('token', await encrypt(response.data.data.token));
                 localStorage.setItem('role', await encrypt(response.data.data.role.name));
