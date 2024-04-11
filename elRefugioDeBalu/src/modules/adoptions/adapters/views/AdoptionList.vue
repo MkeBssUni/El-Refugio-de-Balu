@@ -251,7 +251,7 @@ export default {
       ],
       fields: [
         { key: "fullname", label: "Usuario", sortable: true },
-        { key: "created_at", label: "Fecha de realización", sortable: true },
+        { key: "createdAt", label: "Fecha de realización", sortable: true },
         { key: "status", label: "Estado", sortable: true },
         { key: "actions", label: "Acciones" },
       ],
@@ -363,9 +363,9 @@ export default {
         );
         this.adoptions = response.data.data.content;
         for await (const adoption of this.adoptions) {
-          const date = new Date(adoption.created_at);
+          const date = new Date(adoption.createdAt);
           const options = { year: "numeric", month: "long", day: "2-digit" };
-          adoption.created_at = date.toLocaleDateString("es-ES", options);
+          adoption.createdAt = date.toLocaleDateString("es-ES", options);
         }
         this.getCredentialPet();
         Swal.close();
