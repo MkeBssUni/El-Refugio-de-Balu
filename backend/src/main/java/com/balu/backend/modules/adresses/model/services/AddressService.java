@@ -1,11 +1,19 @@
 package com.balu.backend.modules.adresses.model.services;
 
 import com.balu.backend.kernel.ResponseApi;
+import com.balu.backend.kernel.Validations;
 import com.balu.backend.modules.adresses.model.model.Address;
 import com.balu.backend.modules.adresses.model.model.IAddressRepository;
+import com.balu.backend.modules.adresses.model.model.dto.AddressDto;
 import com.balu.backend.modules.adresses.model.model.dto.SaveAddressDto;
 import com.balu.backend.modules.adresses.model.model.dto.UpdateAddressDto;
 import com.balu.backend.modules.hash.service.HashService;
+import com.balu.backend.modules.homeSpecification.model.Dto.HomeSpecificationDto;
+import com.balu.backend.modules.homeSpecification.model.HomeTypes;
+import com.balu.backend.modules.homeSpecification.model.Repository.HomeImageRepository;
+import com.balu.backend.modules.homeSpecification.model.Repository.HomeSpecificationRepository;
+import com.balu.backend.modules.people.model.IPersonRepository;
+import com.balu.backend.modules.people.model.Person;
 import com.balu.backend.modules.users.model.IUserRepository;
 import com.balu.backend.modules.users.model.User;
 import io.micrometer.common.util.StringUtils;
@@ -20,6 +28,7 @@ import javax.crypto.NoSuchPaddingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import com.balu.backend.kernel.ErrorMessages;
@@ -31,72 +40,67 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AddressService {
     private final IAddressRepository addressRepository;
     private final HashService hashService;
-    private final IUserRepository userRepository;
+    private final IUserRepository iUserRepository;
+    private final IPersonRepository iPersonRepository;
+    private final Validations validations = new Validations();
+    private final HomeImageRepository homeImageRepository;
+    private final HomeSpecificationRepository homeSpecificationRepository;
 
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
+    public ResponseApi<Boolean> update (AddressDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        Optional<User> optionalUser = iUserRepository.findById(Long.valueOf(hashService.decrypt(dto.getUserId())));
+        if(optionalUser.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
 
+        Optional<Address> optionalAddress = addressRepository.findByUserId(Long.valueOf(hashService.decrypt(dto.getUserId())));
+        if(optionalAddress.isEmpty()) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.ALREADY_EXISTS.name());
+
+        if(validations.isNotBlankString(dto.getCountry(), dto.getStreet(), dto.getColony(), dto.getCity(), dto.getState(), dto.getPostalCode(), dto.getAddressReference(), dto.getExteriorNumber(), dto.getInteriorNumber())) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
+        if(validations.isInvalidMinAndMaxLength(dto.getPostalCode(),5,5)) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_LENGTH.name());
+        if(validations.isInvalidMinAndMaxLength(dto.getCountry(),3,10)) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_LENGTH.name());
+        if(validations.isInvalidMinAndMaxLength(dto.getStreet(),3,100)) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_LENGTH.name());
+        if(validations.isInvalidMinAndMaxLength(dto.getColony(),3,100)) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_LENGTH.name());
+        if(validations.isInvalidMinAndMaxLength(dto.getCity(),3,100)) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_LENGTH.name());
+        if(validations.isInvalidMinAndMaxLength(dto.getState(),3,100)) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_LENGTH.name());
+        if(validations.isInvalidMinAndMaxLength(dto.getAddressReference(),20,1000)) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_LENGTH.name());
+
+        if(validations.isInvalidImage(dto.getHomeSpecification().getHomeImage())) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_IMAGE.name());
+        if(dto.getHomeSpecification().getNumberOfResidents()<=0) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
+
+        try{
+            HomeTypes homeType = HomeTypes.valueOf(String.valueOf(dto.getHomeSpecification().getType()).toUpperCase());
+            optionalAddress.get().saveFullAddres(dto);
+            optionalAddress.get().getHomeSpecification().saveFull(homeType,dto.getHomeSpecification().isOutdoorArea(),dto.getHomeSpecification().getNumberOfResidents());
+            optionalAddress.get().getHomeSpecification().getHomeImage().setImage(dto.getHomeSpecification().getHomeImage());
+
+            addressRepository.saveAndFlush(optionalAddress.get());
+            homeImageRepository.saveAndFlush(optionalAddress.get().getHomeSpecification().getHomeImage());
+            homeSpecificationRepository.saveAndFlush(optionalAddress.get().getHomeSpecification());
+            optionalUser.get().setProfileCompleted(true);
+            iUserRepository.saveAndFlush(optionalUser.get());
+            return new ResponseApi<>(HttpStatus.OK, false, "Address updated successfully");
+        }catch (IllegalArgumentException e){
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_TYPEHOUSE.name());
+        }
+    }
     @Transactional(readOnly = true)
-    public ResponseApi<Address> getAddressByUserId(String userId) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        Long id = Long.valueOf(hashService.decrypt(userId));
-        Optional<Address> optionalAddress = addressRepository.findByUserId(id);
-        if (optionalAddress.isEmpty()) {
-            return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.NO_ADDRESS_FOUND.name());
-        }
-        Address address = optionalAddress.get();
-        return new ResponseApi<>(address, HttpStatus.OK, false, "OK");
-    }
+    public ResponseApi<AddressDto> addressInfo(AddressDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        if(dto.getUserId()==null) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
+        Optional<User> optionalUser = iUserRepository.findById(Long.valueOf(hashService.decrypt(dto.getUserId())));
+        if(optionalUser.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
 
-    @Transactional(rollbackFor = {NoSuchAlgorithmException.class, NoSuchPaddingException.class, InvalidAlgorithmParameterException.class, InvalidKeyException.class, IllegalBlockSizeException.class, BadPaddingException.class})
-    public ResponseApi<Address> saveAddress(SaveAddressDto address) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        if (StringUtils.isEmpty(address.getCountry()) || StringUtils.isEmpty(address.getStreet()) || StringUtils.isEmpty(address.getColony()) || StringUtils.isEmpty(address.getCity()) || StringUtils.isEmpty(address.getState()) || StringUtils.isEmpty(address.getPostalCode()) || StringUtils.isEmpty(address.getAddressReference()) || StringUtils.isEmpty(address.getExteriorNumber()) || StringUtils.isEmpty(address.getInteriorNumber())) {
-            return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
-        }
-        address.setUserId(hashService.decrypt(address.getUserId()));
-        Address address1 = new Address();
-        Optional<User> optionalUser = userRepository.findById(Long.valueOf(address.getUserId()));
-        if(optionalUser.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND,true, ErrorMessages.NOT_FOUND.name());
-        address.setUser(optionalUser.get());
-        address1.save(address);
-        addressRepository.saveAndFlush(address1);
-        return new ResponseApi<>(HttpStatus.CREATED, false, "Address saved successfully");
-    }
-
-    @Transactional(rollbackFor = {NoSuchAlgorithmException.class, NoSuchPaddingException.class, InvalidAlgorithmParameterException.class, InvalidKeyException.class, IllegalBlockSizeException.class, BadPaddingException.class})
-    public ResponseApi<Address> updateAddress(UpdateAddressDto updateAddressDto) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        if (updateAddressDto == null || (StringUtils.isEmpty(updateAddressDto.getCountry()) && StringUtils.isEmpty(updateAddressDto.getStreet()) && StringUtils.isEmpty(updateAddressDto.getColony()) && StringUtils.isEmpty(updateAddressDto.getCity()) && StringUtils.isEmpty(updateAddressDto.getState()) && StringUtils.isEmpty(updateAddressDto.getPostalCode()) && StringUtils.isEmpty(updateAddressDto.getAddressReference()) && StringUtils.isEmpty(updateAddressDto.getExteriorNumber()) && StringUtils.isEmpty(updateAddressDto.getInteriorNumber()))) {
-            return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
-        }
-
-        Optional<Address> optionalAddress = addressRepository.findById(updateAddressDto.getAddressId());
-        if (optionalAddress.isEmpty()) {
-            return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.NO_ADDRESS_FOUND.name());
-        }
-        Address existingAddress = optionalAddress.get();
-        existingAddress.setCountry(updateAddressDto.getCountry());
-        existingAddress.setStreet(updateAddressDto.getStreet());
-        existingAddress.setColony(updateAddressDto.getColony());
-        existingAddress.setCity(updateAddressDto.getCity());
-        existingAddress.setCity(updateAddressDto.getCity());
-        existingAddress.setState(updateAddressDto.getState());
-        existingAddress.setPostalCode(updateAddressDto.getPostalCode());
-        existingAddress.setAddressReference(updateAddressDto.getAddressReference());
-        existingAddress.setExteriorNumber(updateAddressDto.getExteriorNumber());
-        existingAddress.setInteriorNumber(updateAddressDto.getInteriorNumber());
-        Address encryptedAddress = encryptAddressFields(existingAddress);
-        Address updatedAddress = addressRepository.save(encryptedAddress);
-        return new ResponseApi<>(updatedAddress, HttpStatus.OK, false, "Address updated successfully");
-    }
-
-    private Address encryptAddressFields(Address address) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        Address encryptedAddress = new Address();
-        encryptedAddress.setCountry(hashService.encrypt(address.getCountry()));
-        encryptedAddress.setStreet(hashService.encrypt(address.getStreet()));
-        encryptedAddress.setColony(hashService.encrypt(address.getColony()));
-        encryptedAddress.setCity(hashService.encrypt(address.getCity()));
-        encryptedAddress.setState(hashService.encrypt(address.getState()));
-        encryptedAddress.setPostalCode(hashService.encrypt(address.getPostalCode()));
-        encryptedAddress.setAddressReference(hashService.encrypt(address.getAddressReference()));
-        encryptedAddress.setExteriorNumber(hashService.encrypt(address.getExteriorNumber()));
-        encryptedAddress.setInteriorNumber(hashService.encrypt(address.getInteriorNumber()));
-        return encryptedAddress;
+        Optional<Person> optionalPerson = iPersonRepository.findByUserId(optionalUser.get().getId());
+        if(optionalPerson.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
+        AddressDto addressDto = new AddressDto();
+        addressDto.setAddressId(hashService.encrypt(optionalUser.get().getAddress().getId()));
+        addressDto.setCountry(optionalUser.get().getAddress().getCountry());
+        addressDto.setStreet(optionalUser.get().getAddress().getStreet());
+        addressDto.setColony(optionalUser.get().getAddress().getColony());
+        addressDto.setCity(optionalUser.get().getAddress().getCity());
+        addressDto.setState(optionalUser.get().getAddress().getState());
+        addressDto.setPostalCode(optionalUser.get().getAddress().getPostalCode());
+        addressDto.setAddressReference(optionalUser.get().getAddress().getAddressReference());
+        addressDto.setExteriorNumber(optionalUser.get().getAddress().getExteriorNumber());
+        addressDto.setInteriorNumber(optionalUser.get().getAddress().getInteriorNumber());
+        return new ResponseApi<>(addressDto, HttpStatus.OK, false, "Address retrieved successfully");
     }
 }

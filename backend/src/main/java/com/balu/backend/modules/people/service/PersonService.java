@@ -1,7 +1,15 @@
 package com.balu.backend.modules.people.service;
 
 import com.balu.backend.kernel.*;
+import com.balu.backend.modules.adresses.model.model.Address;
+import com.balu.backend.modules.adresses.model.model.IAddressRepository;
+import com.balu.backend.modules.adresses.model.model.dto.AddressDto;
 import com.balu.backend.modules.hash.service.HashService;
+import com.balu.backend.modules.homeSpecification.model.Dto.HomeSpecificationDto;
+import com.balu.backend.modules.homeSpecification.model.HomeImage;
+import com.balu.backend.modules.homeSpecification.model.HomeSpecification;
+import com.balu.backend.modules.homeSpecification.model.Repository.HomeImageRepository;
+import com.balu.backend.modules.homeSpecification.model.Repository.HomeSpecificationRepository;
 import com.balu.backend.modules.logs.model.LogTypes;
 import com.balu.backend.modules.logs.service.LogService;
 import com.balu.backend.modules.people.model.*;
@@ -38,6 +46,9 @@ public class PersonService {
     private final IPersonRepository iPersonRepository;
     private final IUserRepository iUserRepository;
     private final IRoleRepository iRoleRepository;
+    private final IAddressRepository iAddressRepository;
+    private final HomeSpecificationRepository homeSpecificationRepository;
+    private final HomeImageRepository homeImageRepository;
     private final PasswordEncoder encoder;
     private final Validations validations = new Validations();
     private final HashService hashService;
@@ -76,12 +87,18 @@ public class PersonService {
 
         Person person = new Person();
         User user = new User();
+        Address address = new Address();
+        HomeSpecification homeSpecification = new HomeSpecification();
+        HomeImage homeImage = new HomeImage();
+
         Optional<Role> role = iRoleRepository.findByName(Roles.GENERAL);
         if(role.isEmpty()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.ROLE_NOT_FOUND.name());
         String activationCode = generateRandomString();
-        user.save(hashService.encrypt(dto.getUsername()),encoder.encode(dto.getPassword()),role.get(), hashService.encrypt(activationCode));
         dto.setPhoneNumber(hashService.encrypt(dto.getPhoneNumber()));
+
+        user.save(hashService.encrypt(dto.getUsername()),encoder.encode(dto.getPassword()),role.get(), hashService.encrypt(activationCode));
         person.savePublicRegister(dto,user);
+
         logService.saveLog("New general user registered: " + person.getName() + " " + person.getLastName(), LogTypes.INSERT, tableAffected);
 
         if(dto.isViaSms()){
@@ -91,8 +108,18 @@ public class PersonService {
         }else{
             emailService.sendEmailNewAccount(dto.getUsername(),activationCode);
         }
-        iUserRepository.saveAndFlush(user);
+
+        user = iUserRepository.saveAndFlush(user);
         iPersonRepository.saveAndFlush(person);
+
+        address.saveNull(user);
+        address = iAddressRepository.saveAndFlush(address);
+        homeSpecification.saveNull(address);
+        homeSpecification = homeSpecificationRepository.saveAndFlush(homeSpecification);
+        address = iAddressRepository.saveAndFlush(address);
+        address.setHomeSpecification(homeSpecification);
+        homeImage.saveNull(homeSpecification);
+        homeImageRepository.saveAndFlush(homeImage);
         return new ResponseApi<>(HttpStatus.CREATED, false,"OK");
     }
     @Transactional(readOnly = true)
@@ -272,4 +299,47 @@ public class PersonService {
         Optional<IContactInfoView> contactInfoView = iPersonRepository.findContactInfoByUserId(user.get().getId());
         return contactInfoView.map(value -> new ResponseApi<>(contactInfoView.get(), HttpStatus.OK, false, "OK")).orElseGet(() -> new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name()));
     }
+
+    @Transactional(readOnly = true)
+    public ResponseApi<AllInfoDto> findAllInfo(PersonDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        if(dto.getUserId()==null) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
+        Optional<User> optionalUser = iUserRepository.findById(Long.valueOf(hashService.decrypt(dto.getUserId())));
+        if(optionalUser.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
+
+        Optional<Person> optionalPerson = iPersonRepository.findByUserId(optionalUser.get().getId());
+        if(optionalPerson.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
+
+        AllInfoDto allInfoDto = new AllInfoDto();
+        AddressDto addressDto = new AddressDto();
+        HomeSpecificationDto homeSpecificationDto = new HomeSpecificationDto();
+
+        allInfoDto.setName(optionalPerson.get().getName());
+        allInfoDto.setLastname(optionalPerson.get().getLastName());
+        allInfoDto.setSurname(optionalPerson.get().getSurName());
+        allInfoDto.setUsername(optionalUser.get().getUsername());
+        allInfoDto.setPhoneNumber(optionalPerson.get().getPhoneNumber());
+
+        if(optionalUser.get().getAddress()!=null){
+            addressDto.setAddressId(hashService.encrypt(optionalUser.get().getAddress().getId()));
+            addressDto.setCountry(optionalUser.get().getAddress().getCountry());
+            addressDto.setStreet(optionalUser.get().getAddress().getStreet());
+            addressDto.setColony(optionalUser.get().getAddress().getColony());
+            addressDto.setCity(optionalUser.get().getAddress().getCity());
+            addressDto.setState(optionalUser.get().getAddress().getState());
+            addressDto.setPostalCode(optionalUser.get().getAddress().getPostalCode());
+            addressDto.setAddressReference(optionalUser.get().getAddress().getAddressReference());
+            addressDto.setExteriorNumber(optionalUser.get().getAddress().getExteriorNumber());
+            addressDto.setInteriorNumber(optionalUser.get().getAddress().getInteriorNumber());
+            homeSpecificationDto.setHomeSpecificationId(hashService.encrypt(optionalUser.get().getAddress().getHomeSpecification().getId()));
+            homeSpecificationDto.setType(optionalUser.get().getAddress().getHomeSpecification().getType());
+            homeSpecificationDto.setOutdoorArea(optionalUser.get().getAddress().getHomeSpecification().isOutdoorArea());
+            homeSpecificationDto.setNumberOfResidents(optionalUser.get().getAddress().getHomeSpecification().getNumberOfResidents());
+            homeSpecificationDto.setHomeImage(optionalUser.get().getAddress().getHomeSpecification().getHomeImage().getImage());
+
+            addressDto.setHomeSpecification(homeSpecificationDto);
+            allInfoDto.setAddressDto(addressDto);
+        }
+        return new ResponseApi<>(allInfoDto,HttpStatus.OK, false, "INFO");
+    }
+
 }

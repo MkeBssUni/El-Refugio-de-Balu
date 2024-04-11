@@ -133,4 +133,14 @@ public class PersonController {
             return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PostMapping("/find/allInfo")
+    public ResponseEntity<ResponseApi<AllInfoDto>> findAllInfo(@RequestBody PersonDto dto) throws Exception{
+        try{
+            ResponseApi<AllInfoDto> response = personService.findAllInfo(dto);
+            return new ResponseEntity<>(response, response.getStatus());
+        }catch (Exception e){
+            System.out.println("Error: "+e.getMessage());
+            return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
