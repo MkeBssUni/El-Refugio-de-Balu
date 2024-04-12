@@ -347,6 +347,9 @@ public class PersonService {
         Optional<User> optionalUser = iUserRepository.findById(Long.valueOf(hashService.decrypt(dto.getUserId())));
         if(optionalUser.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
 
+        Optional<User> existentUser = iUserRepository.findByUsername(dto.getEmail());
+        if(existentUser.isPresent() && !existentUser.get().getId().equals(optionalUser.get().getId())) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.DUPLICATE_RECORD.name());
+
         Optional<Person> optionalPerson = iPersonRepository.findByUserId(optionalUser.get().getId());
         if(optionalPerson.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
 
