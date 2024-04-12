@@ -50,15 +50,7 @@ public class AddressService {
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseApi<Boolean> update (AddressDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        Optional<User> optionalUser;
-        if(dto.getPetId()!=null){
-            optionalUser = iUserRepository.findById(iPetRepository.findOwnerIdByPetId(Long.valueOf(hashService.decrypt(dto.getPetId()))));
-        }else if(dto.getUserId()!=null){
-            optionalUser = iUserRepository.findById(Long.valueOf(hashService.decrypt(dto.getUserId())));
-        }else{
-            return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
-        }
-        
+        Optional<User> optionalUser = iUserRepository.findById(Long.valueOf(hashService.decrypt(dto.getUserId())));
         if(optionalUser.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
 
         Optional<Address> optionalAddress = addressRepository.findByUserId(Long.valueOf(hashService.decrypt(dto.getUserId())));
@@ -94,8 +86,15 @@ public class AddressService {
     }
     @Transactional(readOnly = true)
     public ResponseApi<AddressDto> addressInfo(AddressDto dto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        if(dto.getUserId()==null) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
-        Optional<User> optionalUser = iUserRepository.findById(Long.valueOf(hashService.decrypt(dto.getUserId())));
+        Optional<User> optionalUser;
+        if(dto.getPetId()!=null){
+            optionalUser = iUserRepository.findById(iPetRepository.findOwnerIdByPetId(Long.valueOf(hashService.decrypt(dto.getPetId()))));
+        }else if(dto.getUserId()!=null){
+            optionalUser = iUserRepository.findById(Long.valueOf(hashService.decrypt(dto.getUserId())));
+        }else{
+            return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
+        }
+
         if(optionalUser.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.RECORD_NOT_FOUND.name());
 
         Optional<Person> optionalPerson = iPersonRepository.findByUserId(optionalUser.get().getId());
