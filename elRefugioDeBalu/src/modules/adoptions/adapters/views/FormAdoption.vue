@@ -1142,7 +1142,6 @@ export default {
       };
 
       reader.onerror = function (error) {
-        console.error("Error al leer el archivo", error);
       };
 
       reader.readAsDataURL(file);
