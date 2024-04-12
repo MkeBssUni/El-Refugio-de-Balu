@@ -1,6 +1,6 @@
 <template>
     <b-container fluid>
-        <b-row class="px-4 pb-5 pt-4">
+        <b-row class="d-flex align-items-stretch px-4 pb-5 pt-4">
             <b-col cols="12" md="6" lg="5" xl="4">
                 <b-card bg-variant="orange" class="py-2 form-card-shadow relative-position form-card-title" no-body>
                     <div class="d-flex align-items-center ms-3">
@@ -310,6 +310,15 @@
                         </b-col>
                     </b-row>
                 </b-card>
+            </b-col>
+            <b-col cols="6" lg="7" xl="8" v-if="!showAddress" class="d-none mt-3 d-md-flex align-items-start">
+                <div class="relative-position mt-1">
+                    <b-img alt="Mascotas y sus dueños" :src="require('@/assets/imgs/mod_font.jpg')" fluid class="no-address-img"></b-img>
+                    <div class="overlay-text mt-3 mx-3 d-flex align-items-center justify-content-between">
+                        <i class="material-icons me-2" style="font-size: 1.5rem">pets</i>
+                        <h5 class="mb-0 mt-1 text-center">Gracias por ser parte de nuestra comunidad</h5>
+                    </div>
+                </div>
             </b-col>
         </b-row>
     </b-container>
@@ -1141,5 +1150,24 @@ export default {
     height: 200px;
     object-fit: cover;
     border-radius: 10px;
+}
+
+.overlay-text {
+    position: absolute;
+    top: 0;
+    right: 0px;    
+    background-color: rgba(255, 255, 255, 0.5);    
+    padding: 5px 10px;    
+    border-radius: 5px;    
+    color: #333;
+    font-size: 16px;    
+    font-weight: bold;
+}
+
+.no-address-img {
+    width: 100%;
+    height: 90vh;
+    object-fit: cover;
+    border-radius: 6px;
 }
 </style>
