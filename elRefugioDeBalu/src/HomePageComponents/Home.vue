@@ -91,29 +91,6 @@ export default {
       completeProfile:'',
       userID: localStorage.getItem("userId"),
     };
-  },
-  // methods: {
-  //   async CheckProfile() {
-  //     this.completeProfile =await decrypt(localStorage.getItem("profileCompleted"))
-  //     if (this.userID) {
-  //       if (this.completeProfile == "false") {
-  //       Swal.fire({
-  //         title: "¡Tu perfil no esta completo!", 
-  //         text: "Completa tu perfil para seguir buscando en el refugio...",
-  //         icon: "warning",
-  //         confirmButtonColor: "#53A93D",
-  //         confirmButtonText: "Vamos a completarlo",
-  //       }).then(() => {
-  //         this.$router.push('/profile');
-  //       });
-  //     }
-  //     } else {
-  //       localStorage.removeItem("profileCompleted");
-  //     }
-  //   },
-  // },
-  // mounted() {
-  //   this.CheckProfile();
-  // },
+  },  
 };
 </script>

@@ -267,7 +267,7 @@ const routes = [
           requiresAuth: true,
           role: [rolesAvailable.general, rolesAvailable.mod, rolesAvailable.admin],
         },
-        component: () => import("../modules/users/components/Profile.vue"),
+        component: () => import("../modules/users/views/Profile.vue"),
       },
     ],
   },
