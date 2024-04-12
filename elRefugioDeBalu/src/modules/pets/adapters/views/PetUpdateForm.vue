@@ -77,7 +77,6 @@ export default {
             return genders.find(g => g.value === gender).value;
         },
         mapCategory() {
-            console.log(this.$refs.generalInformationCard.categories.length)
             for (let i = 0; i < this.$refs.generalInformationCard.categories.length; i++) {
                 if (this.$refs.generalInformationCard.categories[i].name === this.pet.category) {
                     return this.$refs.generalInformationCard.categories[i].id;

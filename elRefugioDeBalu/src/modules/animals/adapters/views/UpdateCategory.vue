@@ -286,9 +286,6 @@ export default {
       });
     },
     ValidationFormCategoryModify() {
-      console.log(this.nameValidationState &&
-        this.descriptionValidationState &&
-        this.imageFile,"AAAAAAAAAAAA")
       return (
         this.nameValidationState &&
         this.descriptionValidationState &&
