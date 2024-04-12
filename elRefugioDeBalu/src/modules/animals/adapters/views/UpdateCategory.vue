@@ -276,8 +276,8 @@ export default {
             imageUrl: gatoWalkingGif,
             timer: 2000,
             timerProgressBar: true,
-            imageWidth: 160, // Ancho de la imagen
-            imageHeight: 160, // Altura de la imagen
+            imageWidth: 160,
+            imageHeight: 160,
             showConfirmButton: false,
           }).then(() => {
             this.UpdateCategory();
@@ -299,17 +299,17 @@ export default {
         this.ValidationNameLength();
     },
     ValidationSpecialCharactersName() {
-      const regex = /^(?!.*[<>$&/(){}[\]'"\\])[^0-9]*$/;
+      const regex = /^(?!.*[<>$&/(){}[\]'"\\])\D*$/;
       return regex.test(this.UpdateCategoryDto.name);
     },
     UpdateStateInputCategoryDescription() {
       this.descriptionValidationState =
-        !(this.UpdateCategoryDto.description.trim() === "") &&
+        (this.UpdateCategoryDto.description.trim() != "") &&
         this.ValidationSpecialCharactersDescription() &&
         this.ValidationDescriptionLength();
     },
     ValidationSpecialCharactersDescription() {
-      const regex = /^(?!.*[<>$&/(){}[\]'"\\])[^0-9]*$/;
+      const regex = /^(?!.*[<>$&/(){}[\]'"\\])\D*$/;
       return regex.test(this.UpdateCategoryDto.description);
     },
     showImg() {

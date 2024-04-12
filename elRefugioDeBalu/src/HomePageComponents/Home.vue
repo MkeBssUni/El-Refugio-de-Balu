@@ -77,8 +77,6 @@ import CarouselGalery from "../HomePageComponents/Carrorusel.vue";
 import Banner from "../HomePageComponents/Banner.vue";
 import FooterBaluVue from "../views/FooterBalu.vue";
 import CategoriesCarousel from "./CategoriesCarousel.vue";
-import Swal from "sweetalert2";
-import { decrypt } from '../kernel/hashFunctions';
 export default {
   components: {
     CarouselGalery,

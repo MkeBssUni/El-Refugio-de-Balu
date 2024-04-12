@@ -239,8 +239,8 @@ export default {
             imageUrl: gatoWalkingGif,
             timer: 2000,
             timerProgressBar: true,
-            imageWidth: 160, // Ancho de la imagen
-            imageHeight: 160, // Altura de la imagen
+            imageWidth: 160,
+            imageHeight: 160,
             showConfirmButton: false,
           }).then(() => {
             this.SaveCategory();
@@ -252,7 +252,7 @@ export default {
         return this.nameValidationState && this.descriptionValidationState && this.imageFile
     },
     ValidationSpecialCharactersName() {
-       const regex = /^(?!.*[<>$&/(){}[\]'"\\])[^0-9]*$/;
+       const regex = /^(?!.*[<>$&/(){}[\]'"\\])\D*$/;
       return regex.test(this.SaveCategoryDto.name);
     },
     UpdateStateInputCategoryName() {
@@ -263,12 +263,12 @@ export default {
     },
     UpdateStateInputCategoryDescription() {
       this.descriptionValidationState =
-        !(this.SaveCategoryDto.description.trim() === "") &&
+        (this.SaveCategoryDto.description.trim() != "") &&
         this.ValidationSpecialCharactersDescription() &&
         this.ValidationDescriptionLength()
     },
     ValidationSpecialCharactersDescription() {
-      const regex = /^(?!.*[<>$&/(){}[\]'"\\])[^0-9]*$/;
+      const regex = /^(?!.*[<>$&/(){}[\]'"\\])\D*$/;
       return regex.test(this.SaveCategoryDto.description);
     },
     showImg() {

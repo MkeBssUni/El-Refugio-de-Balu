@@ -64,10 +64,6 @@ export default {
             let ageUnit = String(this.pet.ageUnit).toLowerCase();
             return ageUnits.find(a => a.value === ageUnit).value;
         },
-        mapAgeUnit() {
-            let ageUnit = String(this.pet.ageUnit).toLowerCase();
-            return ageUnits.find(a => a.value === ageUnit).value;
-        },
         mapWeightUnit() {
             let weightUnit = String(this.pet.weightUnit).toLowerCase();
             return weightUnits.find(w => w.value === weightUnit).value;
@@ -216,9 +212,6 @@ export default {
                     showConfirmButton: false,
                 })
             }
-        },
-        goBack() {
-            this.$router.go(-1);
         },
         onCategoriesLoaded() {                          
             this.getDetails();      
