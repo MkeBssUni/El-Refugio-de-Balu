@@ -50,7 +50,8 @@ public class AddressService {
         Optional<Address> optionalAddress = addressRepository.findByUserId(Long.valueOf(hashService.decrypt(dto.getUserId())));
         if(optionalAddress.isEmpty()) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.NOT_FOUND.name());
 
-        if(validations.isNotBlankString(dto.getCountry(), dto.getStreet(), dto.getColony(), dto.getCity(), dto.getState(), dto.getPostalCode(), dto.getAddressReference(), dto.getExteriorNumber())) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
+        if(validations.isNotBlankString(dto.getCountry(), dto.getStreet(), dto.getColony(), dto.getCity(), dto.getState(), dto.getPostalCode(), dto.getAddressReference(), dto.getExteriorNumber()
+        )) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
         if(validations.isInvalidMinAndMaxLength(dto.getPostalCode(),5,5)) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_LENGTH.name());
         if(validations.isInvalidMinAndMaxLength(dto.getCountry(),3,50)) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_LENGTH.name());
         if(validations.isInvalidMinAndMaxLength(dto.getStreet(),3,50)) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_LENGTH.name());
