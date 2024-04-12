@@ -252,7 +252,7 @@ export default {
           default:
             Swal.fire({
               title: "Ha ocurrido un error",
-              text: "Intentelo de nuevo mas tarde " + error,
+              text: "Intentelo de nuevo mas tarde ",
               icon: "error",
               confirmButtonColor: "#118A95",
             });
@@ -299,7 +299,7 @@ export default {
         this.ValidationNameLength();
     },
     ValidationSpecialCharactersName() {
-      const regex = /^(?!.*[<>$&/(){}[\]'"\\])\D*$/;
+      const regex = /^(?!.*[<>$&/()!¡#@\-_{}[\]'"\\])\D*$/i;
       return regex.test(this.UpdateCategoryDto.name);
     },
     UpdateStateInputCategoryDescription() {
@@ -309,7 +309,7 @@ export default {
         this.ValidationDescriptionLength();
     },
     ValidationSpecialCharactersDescription() {
-      const regex = /^(?!.*[<>$&/(){}[\]'"\\])\D*$/;
+      const regex = /^(?!.*[<>$&/()!¡#@\-_{}[\]'"\\])\D*$/i;
       return regex.test(this.UpdateCategoryDto.description);
     },
     showImg() {
