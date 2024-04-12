@@ -330,14 +330,14 @@ export default {
 </script>
 
 <template>
-    <b-container fluid class="bg-blue">
-        <b-row align-v="center">
-            <b-col cols="6" class="px-5">
+    <b-container fluid class="full-height">
+        <b-row class="py-5 py-md-0 bg-blue">
+            <b-col cols="12" md="8" lg="6" class="px-5 align-self-center">
                 <b-card class="shadow bg-orange">
                     <img src="../../../../assets/imgs/logo blanco.png" class="img-fluid d-block mx-auto"
                         alt="Responsive image" width="30%">
                     <b-form class="px-5">
-                        <b-form-group class="my-3 text-white" label-for="input-email">
+                        <b-form-group class="mt-4 text-white" label-for="input-email">
                             <label slot="label">
                                 Correo Electrónico: <span class="required-asterisk">*</span>
                             </label>
@@ -348,7 +348,7 @@ export default {
                                 }}</b-form-invalid-feedback>
                         </b-form-group>
 
-                        <b-form-group class="my-3 text-white" label-for="input-password">
+                        <b-form-group class="mt-3 text-white" label-for="input-password">
                             <label slot="label">
                                 Contraseña: <span class="required-asterisk">*</span>
                             </label>
@@ -365,47 +365,56 @@ export default {
                                 </b-input-group-prepend>
                             </b-input-group>
                             <b-form-invalid-feedback v-if="showErrors.password">{{
-                                    errors.password
+                                errors.password
                                 }}</b-form-invalid-feedback>
                         </b-form-group>
-                        <b-row class="justify-content-center">
-                            <b-col class="d-flex justify-content-center align-items-center mt-3">
+                        <b-row class="justify-content-center text-center">
+                            <b-col class="d-flex justify-content-center align-items-center mt-4">
                                 <b-button class="bg-dark-secondary-orange text-white mx-5" @click="login()"
                                     :disabled="!form.isValid">Iniciar sesión</b-button>
                             </b-col>
                         </b-row>
-
-                        <b-row class="justify-content-center">
+                        <b-row class="justify-content-center text-center">
                             <b-col class="d-flex justify-content-center align-items-center mt-3">
-                                <b-link @click="sendCodePassword" class="text-dark-blue text-decoration-none">
+                                <b-link @click="sendCodePassword" class="text-dark-secondary-blue text-decoration-none">
                                     ¿No recuerdas tu contraseña? Resetear contraseña</b-link>
                             </b-col>
                         </b-row>
-                        <b-row class="justify-content-center">
+                        <b-row class="justify-content-center text-center">
                             <b-col class="d-flex justify-content-center align-items-center mt-3">
-                                <b-link to="/selfRegistration" class="text-dark-blue text-decoration-none">
+                                <b-link to="/selfRegistration" class="text-dark-secondary-blue text-decoration-none">
                                     ¿No tienes cuenta? Regístrate</b-link>
                             </b-col>
                         </b-row>
-                        <b-row class="justify-content-center">
+                        <b-row class="justify-content-center text-center">
                             <b-col class="d-flex justify-content-center align-items-center mt-3">
-                                <b-link @click="activateAccount" class="text-dark-blue text-decoration-none">
+                                <b-link @click="activateAccount" class="text-dark-secondary-blue text-decoration-none">
                                     Activa tu cuenta</b-link>
+                            </b-col>
+                        </b-row>
+                        <b-row class="justify-content-center text-center">
+                            <b-col class="d-flex justify-content-center align-items-center mt-3">
+                                <b-link class="text-dark-secondary-orange text-decoration-none" to="/home">
+                                    Continuar sin iniciar sesión</b-link>
                             </b-col>
                         </b-row>
                     </b-form>
                 </b-card>
             </b-col>
-            <b-col cols="6" class="text-center">
-                <b-img :src="loginI" fluid left rounded class="img mx-auto" style="max-height: 570px;"></b-img>
+            <b-col cols="4" lg="6" class="px-0 d-none d-md-block">
+                <b-img :src="loginI" fluid class="img"></b-img>
             </b-col>
         </b-row>
     </b-container>
 </template>
 
 <style scoped>
+.full-height {
+    height: 100vh;    
+}
+
 .img {
-    height: 90vh;
+    height: 100vh;
     width: 100%;
     object-fit: cover;
 }
