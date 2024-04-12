@@ -124,7 +124,7 @@ public class EmailTemplates {
                 "                                        <tr>\n" +
                 "                                            <td class=\"pad\" style=\"padding-bottom:15px;padding-left:35px;padding-right:30px;padding-top:10px;\">\n" +
                 "                                                <div style=\"color:#fefefe;font-family:'Baloo', Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:16px;letter-spacing:0px;line-height:150%;text-align:justify;mso-line-height-alt:24px;\">\n" +
-                "                                                    <p style=\"margin: 0; word-break: break-word;\">"+message+".</p>\n" +
+                "                                                    <p style=\"margin: 0; word-break: break-word;\">"+message+"</p>\n" +
                 "                                                </div>\n" +
                 "                                            </td>\n" +
                 "                                        </tr>\n" +

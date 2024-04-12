@@ -12,7 +12,7 @@
                     <b-row class="px-4 pt-5">
                         <b-col cols="12">
                             <b-form-group>
-                                <label for="name" class="mb-2">Nombre:</label>
+                                <label for="name" class="mb-2">Nombre: <span class="required-asterisk" v-show="!viewPersonalInfo">*</span></label>
                                 <b-form-input id="name" v-model.trim="user.name" :readonly="viewPersonalInfo"
                                     @input="validateField('name')"></b-form-input>
                                 <b-form-invalid-feedback v-show="showErrors.name">
@@ -22,7 +22,7 @@
                         </b-col>
                         <b-col cols="12" class="mt-3">
                             <b-form-group>
-                                <label for="lastname" class="mb-2">Apellido paterno:</label>
+                                <label for="lastname" class="mb-2">Apellido paterno: <span class="required-asterisk" v-show="!viewPersonalInfo">*</span></label>
                                 <b-form-input id="lastname" v-model.trim="user.lastname" :readonly="viewPersonalInfo"
                                     @input="validateField('lastname')"></b-form-input>
                                 <b-form-invalid-feedback v-show="showErrors.lastname">
@@ -32,7 +32,7 @@
                         </b-col>
                         <b-col cols="12" class="mt-3">
                             <b-form-group>
-                                <label for="surname" class="mb-2">Apellido materno:</label>
+                                <label for="surname" class="mb-2">Apellido materno: <span class="required-asterisk" v-show="!viewPersonalInfo">*</span></label>
                                 <b-form-input id="surname" v-model.trim="user.surname" :readonly="viewPersonalInfo"
                                     @input="validateField('surname')"></b-form-input>
                                 <b-form-invalid-feedback v-show="showErrors.surname">
@@ -42,7 +42,7 @@
                         </b-col>
                         <b-col cols="12" class="mt-3">
                             <b-form-group>
-                                <label for="phoneNumber" class="mb-2">Número de teléfono:</label>
+                                <label for="phoneNumber" class="mb-2">Número de teléfono: <span class="required-asterisk" v-show="!viewPersonalInfo">*</span></label>
                                 <b-form-input id="phoneNumber" v-model.trim="user.phoneNumber"
                                     :readonly="viewPersonalInfo" @input="validateField('phoneNumber')"
                                     type="tel"></b-form-input>
@@ -75,7 +75,7 @@
                     <b-row class="px-4">
                         <b-col cols="12" class="mt-3">
                             <b-form-group>
-                                <label for="username" class="mb-2">Correo electrónico:</label>
+                                <label for="username" class="mb-2">Correo electrónico: <span class="required-asterisk" v-show="!viewEmail">*</span></label>
                                 <b-form-input id="username" v-model.trim="user.username" :readonly="viewEmail"
                                     @input="validateField('username')"></b-form-input>
                                 <b-form-invalid-feedback v-show="showErrors.username">
@@ -129,7 +129,7 @@
                                             <b-button variant="secondary-blue"
                                                 class="mt-3 w-100 d-flex justify-content-between align-items-center"
                                                 @click="triggerMainImgSelector">
-                                                <span>Seleccionar</span>
+                                                <span>Seleccionar <span class="required-asterisk" v-show="!viewAddress">*</span></span>
                                                 <b-icon icon="image" font-scale="1.2"></b-icon>
                                             </b-button>
                                             <input type="file" accept="image/jpeg, image/png" id="homeImage"
@@ -151,7 +151,7 @@
                             <b-row>
                                 <b-col cols="12" lg="4" xl="12" class="mt-3">
                                     <b-form-group>
-                                        <label for="country" class="mb-2">País:</label>
+                                        <label for="country" class="mb-2">País: <span class="required-asterisk" v-show="!viewAddress">*</span></label>
                                         <b-form-select id="country" v-model="user.addressDto.country"
                                             :disabled="viewAddress" class="form-select">
                                             <option value="null" disabled v-if="!user.addressDto.country">Selecciona un
@@ -163,7 +163,7 @@
                                 </b-col>
                                 <b-col cols="12" xl="12" class="mt-3">
                                     <b-form-group>
-                                        <label for="state" class="mb-2">Estado:</label>
+                                        <label for="state" class="mb-2">Estado: <span class="required-asterisk" v-show="!viewAddress">*</span></label>
                                         <b-form-select id="state" v-model="user.addressDto.state"
                                             :disabled="viewAddress" class="form-select">
                                             <option value="null" disabled v-if="!user.addressDto.state">Selecciona un
@@ -175,7 +175,7 @@
                                 </b-col>
                                 <b-col cols="12" xl="12" class="mt-3">
                                     <b-form-group>
-                                        <label for="city" class="mb-2">Ciudad:</label>
+                                        <label for="city" class="mb-2">Ciudad: <span class="required-asterisk" v-show="!viewAddress">*</span></label>
                                         <b-form-input id="city" v-model="user.addressDto.city" :readonly="viewAddress"
                                             @input="validateField('city')"></b-form-input>
                                         <b-form-invalid-feedback v-show="showErrors.city">
@@ -189,7 +189,7 @@
                             <b-row>
                                 <b-col cols="12" lg="6" class="mt-3">
                                     <b-form-group>
-                                        <label for="colony" class="mb-2">Colonia:</label>
+                                        <label for="colony" class="mb-2">Colonia: <span class="required-asterisk" v-show="!viewAddress">*</span></label>
                                         <b-form-input id="colony" v-model="user.addressDto.colony"
                                             :readonly="viewAddress" @input="validateField('colony')"></b-form-input>
                                         <b-form-invalid-feedback v-show="showErrors.colony">
@@ -199,7 +199,7 @@
                                 </b-col>
                                 <b-col cols="12" lg="6" class="mt-3">
                                     <b-form-group>
-                                        <label for="street" class="mb-2">Calle:</label>
+                                        <label for="street" class="mb-2">Calle: <span class="required-asterisk" v-show="!viewAddress">*</span></label>
                                         <b-form-input id="street" v-model="user.addressDto.street"
                                             :readonly="viewAddress" @input="validateField('street')"></b-form-input>
                                         <b-form-invalid-feedback v-show="showErrors.street">
@@ -209,7 +209,7 @@
                                 </b-col>
                                 <b-col cols="6" lg="3" class="mt-3 align-self-end">
                                     <b-form-group>
-                                        <label for="externalNumber" class="mb-2">Número exterior:</label>
+                                        <label for="externalNumber" class="mb-2">Número exterior: <span class="required-asterisk" v-show="!viewAddress">*</span></label>
                                         <b-form-input id="externalNumber" v-model="user.addressDto.exteriorNumber"
                                             :readonly="viewAddress"
                                             @input="validateField('externalNumber')"></b-form-input>
@@ -231,7 +231,7 @@
                                 </b-col>
                                 <b-col cols="12" lg="6" class="mt-3 align-self-end">
                                     <b-form-group>
-                                        <label for="postalCode" class="mb-2">Código postal:</label>
+                                        <label for="postalCode" class="mb-2">Código postal: <span class="required-asterisk" v-show="!viewAddress">*</span></label>
                                         <b-form-input id="postalCode" v-model="user.addressDto.postalCode"
                                             :readonly="viewAddress" @input="validateField('postalCode')"></b-form-input>
                                         <b-form-invalid-feedback v-show="showErrors.postalCode">
@@ -253,7 +253,7 @@
                                 </b-col>
                                 <b-col cols="12" lg="4" class="mt-3 align-self-end">
                                     <b-form-group>
-                                        <label for="homeType" class="mb-2">Tipo de hogar:</label>
+                                        <label for="homeType" class="mb-2">Tipo de hogar: <span class="required-asterisk" v-show="!viewAddress">*</span></label>
                                         <b-form-select id="homeType" class="form-select"
                                             v-model="user.addressDto.homeSpecification.type" :disabled="viewAddress">
                                             <option value="null" disabled
@@ -267,7 +267,7 @@
                                 <b-col cols="6" md="12" lg="4" class="mt-3 align-self-end">
                                     <b-form-group>
                                         <label for="numberOfResidents" class="mb-2">Número de
-                                            residentes:</label>
+                                            residentes: <span class="required-asterisk" v-show="!viewAddress">*</span></label>
                                         <b-form-input id="numberOfResidents"
                                             v-model="user.addressDto.homeSpecification.numberOfResidents"
                                             :readonly="viewAddress" @input="validateField('numberOfResidents')"
@@ -313,7 +313,8 @@
             </b-col>
             <b-col cols="6" lg="7" xl="8" v-if="!showAddress" class="d-none mt-3 d-md-flex align-items-start">
                 <div class="relative-position mt-1">
-                    <b-img alt="Mascotas y sus dueños" :src="require('@/assets/imgs/mod_font.jpg')" fluid class="no-address-img"></b-img>
+                    <b-img alt="Mascotas y sus dueños" :src="require('@/assets/imgs/mod_font.jpg')" fluid
+                        class="no-address-img"></b-img>
                     <div class="overlay-text mt-3 mx-3 d-flex align-items-center justify-content-between">
                         <i class="material-icons me-2" style="font-size: 1.5rem">pets</i>
                         <h5 class="mb-0 mt-1 text-center">Gracias por ser parte de nuestra comunidad</h5>
@@ -1155,12 +1156,12 @@ export default {
 .overlay-text {
     position: absolute;
     top: 0;
-    right: 0px;    
-    background-color: rgba(255, 255, 255, 0.5);    
-    padding: 5px 10px;    
-    border-radius: 5px;    
+    right: 0px;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 5px 10px;
+    border-radius: 5px;
     color: #333;
-    font-size: 16px;    
+    font-size: 16px;
     font-weight: bold;
 }
 
