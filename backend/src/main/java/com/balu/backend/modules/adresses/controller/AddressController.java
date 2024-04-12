@@ -28,7 +28,6 @@ public class AddressController { private final AddressService addressService;
         try {
             return new ResponseEntity<>(addressService.update(dto), HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
             return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -37,7 +36,6 @@ public class AddressController { private final AddressService addressService;
         try {
             return new ResponseEntity<>(addressService.addressInfo(dto), HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
             return new ResponseEntity<>(new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

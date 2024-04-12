@@ -55,7 +55,7 @@ public class PersonService {
     private final LogService logService;
     private final EmailService emailService;
     private final SmsService smsService;
-    private final String tableAffected = "PEOPLE | USERS";
+    private static final String table = "PEOPLE | USERS";
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ResponseApi<Boolean> publicRegister(PublicRegisterDto dto) throws Exception {
@@ -99,7 +99,7 @@ public class PersonService {
         user.save(hashService.encrypt(dto.getUsername()),encoder.encode(dto.getPassword()),role.get(), hashService.encrypt(activationCode));
         person.savePublicRegister(dto,user);
 
-        logService.saveLog("New general user registered: " + person.getName() + " " + person.getLastName(), LogTypes.INSERT, tableAffected);
+        logService.saveLog("New general user registered: " + person.getName() + " " + person.getLastName(), LogTypes.INSERT, table);
 
         if(dto.isViaSms()){
             if(!(sendSms(dto.getPhoneNumber(),activationCode))){
@@ -165,7 +165,7 @@ public class PersonService {
         user = iUserRepository.saveAndFlush(user);
         person.saveAdminOrMod(dto,user);
         iPersonRepository.saveAndFlush(person);
-        logService.saveLog("New " + role.get().getName() + " registered: " + person.getName() + " " + person.getLastName(), LogTypes.INSERT, tableAffected);
+        logService.saveLog("New " + role.get().getName() + " registered: " + person.getName() + " " + person.getLastName(), LogTypes.INSERT, table);
         return new ResponseApi<>(hashService.encrypt(password), HttpStatus.CREATED, false,"OK");
     }
     @Transactional(readOnly = true)
@@ -189,7 +189,7 @@ public class PersonService {
             person.get().getUser().setBlockedAt(null);
         }
         iUserRepository.saveAndFlush(person.get().getUser());
-        logService.saveLog("User with id: " + person.get().getUser().getId() + " blocked changed to " + person.get().getUser().isBlocked(), LogTypes.UPDATE, tableAffected);
+        logService.saveLog("User with id: " + person.get().getUser().getId() + " blocked changed to " + person.get().getUser().isBlocked(), LogTypes.UPDATE, table);
         return new ResponseApi<>(iPersonRepository.saveAndFlush(person.get()), HttpStatus.OK, false, "OK");
     }
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
@@ -206,7 +206,7 @@ public class PersonService {
         person.get().getUser().setBlockedAt(null);
 
         iUserRepository.saveAndFlush(person.get().getUser());
-        logService.saveLog("Password changed for user with id: " + person.get().getUser().getId(), LogTypes.UPDATE, tableAffected);
+        logService.saveLog("Password changed for user with id: " + person.get().getUser().getId(), LogTypes.UPDATE, table);
         return new ResponseApi<>(iPersonRepository.saveAndFlush(person.get()), HttpStatus.OK, false, "OK");
     }
     @Transactional(readOnly = true)
@@ -227,7 +227,7 @@ public class PersonService {
         user.get().setBlockedAt(null);
         iUserRepository.saveAndFlush(user.get());
         emailService.passwordChanged(hashService.decrypt(dto.getUsername()));
-        logService.saveLog("Password reset for user with id: " + user.get().getId(), LogTypes.UPDATE, "USERS");
+        logService.saveLog("Password reset for user with id: " + user.get().getId(), LogTypes.UPDATE, table);
         return new ResponseApi<>(HttpStatus.OK, false, "OK");
     }
     private String generateRandomString(){
@@ -258,7 +258,7 @@ public class PersonService {
             user.get().setBlocked(false);
             user.get().setActivationCode(null);
             iUserRepository.saveAndFlush(user.get());
-            logService.saveLog("User with id: " + user.get().getId() + " activated", LogTypes.UPDATE, tableAffected);
+            logService.saveLog("User with id: " + user.get().getId() + " activated", LogTypes.UPDATE, table);
             return new ResponseApi<>(HttpStatus.OK, false, "OK");
         }
         return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
@@ -271,7 +271,7 @@ public class PersonService {
         existentUser.get().setActivationCode(hashService.encrypt(activationCode));
         iUserRepository.saveAndFlush(existentUser.get());
         emailService.sendEmailNewAccount(hashService.decrypt(dto.getUsername()),activationCode);
-        logService.saveLog("New activation code sent to user with id: " + existentUser.get().getId(), LogTypes.UPDATE, "USERS");
+        logService.saveLog("New activation code sent to user with id: " + existentUser.get().getId(), LogTypes.UPDATE, table);
         return new ResponseApi<>(HttpStatus.OK, false, "OK");
     }
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
@@ -282,7 +282,7 @@ public class PersonService {
         existentUser.get().setActivationCode(hashService.encrypt(activationCode));
         iUserRepository.saveAndFlush(existentUser.get());
         emailService.sendNewCode(hashService.decrypt(dto.getUsername()),activationCode);
-        logService.saveLog("New code sent to user with id: " + existentUser.get().getId(), LogTypes.UPDATE, "USERS");
+        logService.saveLog("New code sent to user with id: " + existentUser.get().getId(), LogTypes.UPDATE, table);
         return new ResponseApi<>(HttpStatus.OK, false, "OK");
     }
     @Transactional(rollbackFor = {SQLException.class, Exception.class})

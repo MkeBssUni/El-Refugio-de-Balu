@@ -1,5 +1,6 @@
 package com.balu.backend.modules.categories.services;
 
+import com.balu.backend.kernel.CustomException;
 import com.balu.backend.kernel.ErrorMessages;
 import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.kernel.Validations;
@@ -36,8 +37,8 @@ public class CategoryService {
     private final ICategoryRepository iCategoryRepository;
     private final HashService hashService;
     private final Validations validations = new Validations();
-
     private final LogService logService;
+    private final static String categories = "CATEGORIES";
 
     @Transactional(readOnly = true)
     public ResponseApi<List<GetCategoryListDto>> getListCategories() {
@@ -53,18 +54,13 @@ public class CategoryService {
                 .map(category -> {
                     try {
                         return new GetCategoryListDto(hashService.encrypt(category.getId()), category.getName());
-                    } catch (NoSuchAlgorithmException e) {
-                        throw new RuntimeException(e);
-                    } catch (NoSuchPaddingException e) {
-                        throw new RuntimeException(e);
-                    } catch (InvalidAlgorithmParameterException e) {
-                        throw new RuntimeException(e);
-                    } catch (InvalidKeyException e) {
-                        throw new RuntimeException(e);
-                    } catch (IllegalBlockSizeException e) {
-                        throw new RuntimeException(e);
-                    } catch (BadPaddingException e) {
-                        throw new RuntimeException(e);
+                    } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException |
+                             InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+                        try {
+                            throw new CustomException("Error",e);
+                        } catch (CustomException ex) {
+                            throw new RuntimeException(ex);
+                        }
                     }
                 })
                 .collect(Collectors.toList());
@@ -92,9 +88,9 @@ public class CategoryService {
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
         if (validations.isValidBase64Image(saveCategoryDto.getImage()))
             return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.UNSUPPORTED_IMAGE_FORMAT.name());
-        LocalDateTime Date = LocalDateTime.now();
-        Category newCategory = this.iCategoryRepository.saveAndFlush(new Category(0l, saveCategoryDto.getName(), saveCategoryDto.getDescription(), saveCategoryDto.getImage(), Date, true, null));
-        logService.saveLog("Registration of new category "+newCategory.getId() +" in the system for user with id: " + saveCategoryDto.getUserId(), LogTypes.INSERT, "CATEGORIES");
+        LocalDateTime date = LocalDateTime.now();
+        Category newCategory = this.iCategoryRepository.saveAndFlush(new Category(0l, saveCategoryDto.getName(), saveCategoryDto.getDescription(), saveCategoryDto.getImage(), date, true, null));
+        logService.saveLog("Registration of new category "+newCategory.getId() +" in the system for user with id: " + saveCategoryDto.getUserId(), LogTypes.INSERT, categories);
         return new ResponseApi<>(
                 true,
                 HttpStatus.CREATED,
@@ -134,7 +130,7 @@ public class CategoryService {
         optionalCategory.get().setName(updateCategoryDto.getName());
         optionalCategory.get().setDescription(updateCategoryDto.getDescription());
         optionalCategory.get().setImage(updateCategoryDto.getImage());
-        logService.saveLog("Update of category "+optionalCategory.get().getId() +" for user with id: " + updateCategoryDto.getUserId(), LogTypes.UPDATE, "CATEGORIES");
+        logService.saveLog("Update of category "+optionalCategory.get().getId() +" for user with id: " + updateCategoryDto.getUserId(), LogTypes.UPDATE, categories);
         iCategoryRepository.saveAndFlush(optionalCategory.get());
         return new ResponseApi<>(
                 HttpStatus.OK,
@@ -156,7 +152,7 @@ public class CategoryService {
         Boolean status = Boolean.parseBoolean(hashService.decrypt(changeStatusCategoryDto.getStatus()));
         String userId = hashService.decrypt(changeStatusCategoryDto.getUserId());
         Integer category = this.iCategoryRepository.changeStatusCategory(id, !status);
-        logService.saveLog("ChangeStatus of category "+id +" for user with id: " + userId, LogTypes.UPDATE, "CATEGORIES");
+        logService.saveLog("ChangeStatus of category "+id +" for user with id: " + userId, LogTypes.UPDATE, categories);
         //No me dejo usar el enumerador de CHANGE_STATUS
         return new ResponseApi<>(
                 category,
@@ -188,18 +184,13 @@ public class CategoryService {
             category -> {
                 try {
                     return  new CarouselCategoryDto(hashService.encrypt(category.getId()),category.getName(),category.getDescription(),category.getImage());
-                } catch (NoSuchAlgorithmException e) {
-                    throw new RuntimeException(e);
-                } catch (NoSuchPaddingException e) {
-                    throw new RuntimeException(e);
-                } catch (InvalidAlgorithmParameterException e) {
-                    throw new RuntimeException(e);
-                } catch (InvalidKeyException e) {
-                    throw new RuntimeException(e);
-                } catch (IllegalBlockSizeException e) {
-                    throw new RuntimeException(e);
-                } catch (BadPaddingException e) {
-                    throw new RuntimeException(e);
+                } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException |
+                         InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+                    try {
+                        throw new CustomException("Error",e);
+                    } catch (CustomException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             }).collect(Collectors.toList());
     return  new ResponseApi<>(

@@ -1,9 +1,6 @@
 package com.balu.backend.modules.pets.service;
 
-import com.balu.backend.kernel.EmailService;
-import com.balu.backend.kernel.ErrorMessages;
-import com.balu.backend.kernel.ResponseApi;
-import com.balu.backend.kernel.Validations;
+import com.balu.backend.kernel.*;
 import com.balu.backend.modules.categories.model.Category;
 import com.balu.backend.modules.categories.model.ICategoryRepository;
 import com.balu.backend.modules.hash.service.HashService;
@@ -54,6 +51,13 @@ public class PetService {
     private final HashService hashService;
     private final LogService logService;
     private final EmailService emailService;
+    private static final String invalidField = "invalid field";
+    private static final String invalidFormat = "invalid format";
+    private static final String invalidLength = "invalid length";
+    private static final String duplicateRecord = "duplicate record";
+    private static final String invalidImage = "invalid image";
+    private static final String duplicateImage = "duplicate image";
+
 
     @Transactional(readOnly = true)
     public ResponseApi<Page<PetCatalog>> findAllPaged(FindPetsDto dto, Pageable pageable) {
@@ -93,7 +97,11 @@ public class PetService {
                             pet.getFavorite() == 1 ? true : false
                     );
                 } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
-                    throw new RuntimeException(e);
+                    try {
+                        throw new CustomException("Error",e);
+                    } catch (CustomException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
             return new ResponseApi<>(petsCatalog, HttpStatus.OK,false, "Pets retrieved successfully");
@@ -115,6 +123,7 @@ public class PetService {
             return new ResponseApi<>(petsCatalog, HttpStatus.OK,false, "Pets retrieved successfully");
         }
     }
+
 
     @Transactional(readOnly = true)
     public ResponseApi<PetDetails> findPetDetails(FindPetDetailsDto dto) {
@@ -302,17 +311,17 @@ public class PetService {
 
             String errorMessage = saveAndUpdatePetValidations(dto.getName(), dto.getGender(), dto.getBreed(), dto.getAge(), dto.getAgeUnit(), dto.getLifeStage(), dto.getWeight(), dto.getWeightUnit(), dto.getSize(), dto.getDescription(), dto.getCharacteristics(), dto.getSpecialCares(), dto.getDiseases(), dto.getAllergies(), dto.getObservations(), dto.getMainImage(), dto.getImages());
             switch (errorMessage) {
-                case "invalid field":
+                case invalidField:
                     return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
-                case "invalid format":
+                case invalidFormat:
                     return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FORMAT.name());
-                case "invalid length":
+                case invalidLength:
                     return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
-                case "duplicate record":
+                case duplicateRecord:
                     return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.DUPLICATE_RECORD.name());
-                case "invalid image":
+                case invalidImage:
                     return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_IMAGE.name());
-                case "duplicate image":
+                case duplicateImage:
                     return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.DUPLICATE_IMAGE.name());
                 case "":
                     break;
@@ -330,7 +339,7 @@ public class PetService {
             if (!optionalUser.isPresent()) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.NOT_FOUND.name());
             User user = optionalUser.get();
             if (!user.getRole().getName().equals(Roles.GENERAL)) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_ROLE.name());
-            //if (user.getAddress() == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_USER.name());
+            if (user.getAddress() == null) return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_USER.name());
 
             Optional<Status> optionalStatus = statusRepository.findByName(Statusses.PENDING);
             Status status = optionalStatus.get();
@@ -394,17 +403,17 @@ public class PetService {
 
             String errorMessage = saveAndUpdatePetValidations(dto.getName(), dto.getGender(), dto.getBreed(), dto.getAge(), dto.getAgeUnit(), dto.getLifeStage(), dto.getWeight(), dto.getWeightUnit(), dto.getSize(), dto.getDescription(), dto.getCharacteristics(), dto.getSpecialCares(), dto.getDiseases(), dto.getAllergies(), dto.getObservations(), dto.getMainImage(), dto.getImages());
             switch (errorMessage) {
-                case "invalid field":
+                case invalidField:
                     return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FIELD.name());
-                case "invalid format":
+                case invalidFormat:
                     return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_FORMAT.name());
-                case "invalid length":
+                case invalidLength:
                     return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_LENGTH.name());
-                case "duplicate record":
+                case duplicateRecord:
                     return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.DUPLICATE_RECORD.name());
-                case "invalid image":
+                case invalidImage:
                     return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.INVALID_IMAGE.name());
-                case "duplicate image":
+                case duplicateImage:
                     return new ResponseApi<>(HttpStatus.BAD_REQUEST,true, ErrorMessages.DUPLICATE_IMAGE.name());
                 case "":
                     break;
@@ -699,65 +708,65 @@ public class PetService {
     }
 
     public String saveAndUpdatePetValidations(String name, String gender, String breed, int age, String ageUnit, String lifeStage, Double weight, String weightUnit, String size, String description, String[] characteristics, String[] specialCares, String[] diseases, String[] allergies, String observations, String mainImage, String[] images) {
-        if (validations.isInvalidEnum(gender.toUpperCase().trim(), Genders.class)) return "invalid field";
-        if (validations.isInvalidEnum(ageUnit.toUpperCase().trim(), AgeUnits.class)) return "invalid field";
-        if (validations.isInvalidEnum(lifeStage.toUpperCase().trim(), LifeStages.class)) return "invalid field";
-        if (validations.isInvalidEnum(weightUnit.toUpperCase().trim(), WeightUnits.class)) return "invalid field";
-        if (validations.isInvalidEnum(size.toUpperCase().trim(), Sizes.class)) return "invalid field";
+        if (validations.isInvalidEnum(gender.toUpperCase().trim(), Genders.class)) return invalidField;
+        if (validations.isInvalidEnum(ageUnit.toUpperCase().trim(), AgeUnits.class)) return invalidField;
+        if (validations.isInvalidEnum(lifeStage.toUpperCase().trim(), LifeStages.class)) return invalidField;
+        if (validations.isInvalidEnum(weightUnit.toUpperCase().trim(), WeightUnits.class)) return invalidField;
+        if (validations.isInvalidEnum(size.toUpperCase().trim(), Sizes.class)) return invalidField;
 
-        if (validations.isInvalidName(name) || validations.isInvalidName(breed)) return "invalid format";
-        if (validations.isInvalidMinAndMaxLength(name.trim(), 3, 30) || validations.isInvalidMinAndMaxLength(breed.trim(), 3, 50) || validations.isInvalidMinAndMaxLength(description.trim(), 250, 1500)) return "invalid length";
-        if (!Objects.equals(observations, "") && validations.isInvalidMinAndMaxLength(observations.trim(), 30, 500)) return "invalid length";
-        if (age < 0 || weight < 0) return "invalid field";
+        if (validations.isInvalidName(name) || validations.isInvalidName(breed)) return invalidFormat;
+        if (validations.isInvalidMinAndMaxLength(name.trim(), 3, 30) || validations.isInvalidMinAndMaxLength(breed.trim(), 3, 50) || validations.isInvalidMinAndMaxLength(description.trim(), 250, 1500)) return invalidLength;
+        if (!Objects.equals(observations, "") && validations.isInvalidMinAndMaxLength(observations.trim(), 30, 500)) return invalidLength;
+        if (age < 0 || weight < 0) return invalidField;
 
-        if(characteristics.length > 20) return "invalid length";
+        if(characteristics.length > 20) return invalidLength;
         for (int i = 0; i < characteristics.length; i++) {
-            if (validations.isInvalidName(characteristics[i].trim())) return "invalid format";
-            if (validations.isInvalidMinAndMaxLength(characteristics[i].trim(), 3, 30)) return "invalid length";
+            if (validations.isInvalidName(characteristics[i].trim())) return invalidFormat;
+            if (validations.isInvalidMinAndMaxLength(characteristics[i].trim(), 3, 30)) return invalidLength;
             for (int j = i + 1; j < characteristics.length; j++) {
-                if (characteristics[i].equals(characteristics[j])) return "duplicate record";
+                if (characteristics[i].equals(characteristics[j])) return duplicateRecord;
             }
         }
 
         if (specialCares != null) {
             for (int i = 0; i < specialCares.length; i++) {
-                if (validations.isInvalidName(specialCares[i].trim())) return "invalid format";
-                if (validations.isInvalidMinAndMaxLength(specialCares[i].trim(), 20, 200)) return "invalid length";
+                if (validations.isInvalidName(specialCares[i].trim())) return invalidFormat;
+                if (validations.isInvalidMinAndMaxLength(specialCares[i].trim(), 20, 200)) return invalidLength;
                 for (int j = i + 1; j < specialCares.length; j++) {
-                    if (specialCares[i].equals(specialCares[j])) return "duplicate record";
+                    if (specialCares[i].equals(specialCares[j])) return duplicateRecord;
                 }
             }
         }
 
         if (diseases != null) {
             for (int i = 0; i < diseases.length; i++) {
-                if (validations.isInvalidName(diseases[i].trim())) return "invalid format";
-                if (validations.isInvalidMinAndMaxLength(diseases[i].trim(), 3, 50)) return "invalid length";
+                if (validations.isInvalidName(diseases[i].trim())) return invalidFormat;
+                if (validations.isInvalidMinAndMaxLength(diseases[i].trim(), 3, 50)) return invalidLength;
                 for (int j = i + 1; j < diseases.length; j++) {
-                    if (diseases[i].equals(diseases[j])) return "duplicate record";
+                    if (diseases[i].equals(diseases[j])) return duplicateRecord;
                 }
             }
         }
 
         if (allergies != null) {
             for (int i = 0; i < allergies.length; i++) {
-                if (validations.isInvalidName(allergies[i].trim())) return "invalid format";
-                if (validations.isInvalidMinAndMaxLength(allergies[i].trim(), 3, 50)) return "invalid length";
+                if (validations.isInvalidName(allergies[i].trim())) return invalidFormat;
+                if (validations.isInvalidMinAndMaxLength(allergies[i].trim(), 3, 50)) return invalidLength;
                 for (int j = i + 1; j < allergies.length; j++) {
-                    if (allergies[i].equals(allergies[j])) return "duplicate record";
+                    if (allergies[i].equals(allergies[j])) return duplicateRecord;
                 }
             }
         }
 
-        if (validations.isInvalidImage(mainImage)) return "invalid image";
+        if (validations.isInvalidImage(mainImage)) return invalidImage;
         if (images != null) {
-            if (images.length > 4) return "invalid length";
+            if (images.length > 4) return invalidLength;
             HashSet<String> imagesSet = new HashSet<>();
             imagesSet.add(mainImage);
             for (String image : images) {
                 boolean isAdded = imagesSet.add(image);
-                if (!isAdded) return "duplicate image";
-                if (validations.isInvalidImage(image) || validations.isInvalidImageLength(image)) return "invalid image";
+                if (!isAdded) return duplicateImage;
+                if (validations.isInvalidImage(image) || validations.isInvalidImageLength(image)) return invalidImage;
             }
         }
 

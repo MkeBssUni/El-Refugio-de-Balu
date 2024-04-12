@@ -1,5 +1,6 @@
 package com.balu.backend.security.service;
 
+import com.balu.backend.kernel.CustomException;
 import com.balu.backend.modules.users.model.User;
 import com.balu.backend.modules.users.service.UserService;
 import com.balu.backend.security.entities.UserDetailsImpl;
@@ -28,7 +29,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 return UserDetailsImpl.build(user.get());
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            try{
+                throw new CustomException("Error",e);
+            }catch (CustomException ex){
+                ex.printStackTrace();
+            }
         }
         return null;
     }

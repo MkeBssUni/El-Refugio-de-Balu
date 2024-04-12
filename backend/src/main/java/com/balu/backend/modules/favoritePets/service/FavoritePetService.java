@@ -1,5 +1,6 @@
 package com.balu.backend.modules.favoritePets.service;
 
+import com.balu.backend.kernel.CustomException;
 import com.balu.backend.kernel.ErrorMessages;
 import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.kernel.Validations;
@@ -71,7 +72,11 @@ public class FavoritePetService {
                                 favoritePet.getLocation()
                         );
                     } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
-                        throw new RuntimeException(e);
+                        try {
+                            throw new CustomException("Error",e);
+                        } catch (CustomException ex) {
+                            throw new RuntimeException(ex);
+                        }
                     }
                 }
         );
