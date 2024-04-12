@@ -116,18 +116,12 @@ export default {
      ConvertImageToBase64($event) {
       const maxSize = 6 * 1024 * 1024;
       const file = $event.target.files[0];
+      if (!file.type.startsWith("image/")) {
+        this.makeToast("El archivo no es una imagen")
+        return;
+      }
       if (file.size > maxSize) {
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: '¡La imagen seleccionada es muy pesada!',
-          toast: true,
-          position: 'top-end',
-          timer: 3000,
-          showCancelButton: false,
-          showConfirmButton: false,
-          timerProgressBar: true,
-        });
+       this.makeToast("El tamaño de la imagen no puede ser mayor a 6MB");
         this.alertSize = true;
         this.imageFile = false
       } else {
@@ -140,6 +134,25 @@ export default {
         reader.readAsDataURL(file);
         this.imageFile = true
       }
+    },
+    
+    makeToast(text) {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+
+      Toast.fire({
+        icon: "warning",
+        title: `ADVERTENCIA: ${text}`,
+      });
     },
     async SaveCategory() {
       try {
