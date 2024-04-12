@@ -1,9 +1,9 @@
 <template>
     <b-container fluid>
-        <b-row class="px-5 pb-5 pt-4">
-            <b-col cols="4">
+        <b-row class="px-4 pb-5 pt-4">
+            <b-col cols="12" md="6" lg="5" xl="4">
                 <b-card bg-variant="orange" class="py-2 form-card-shadow relative-position form-card-title" no-body>
-                    <div class="d-flex align-items-center ms-3 ms-md-4">
+                    <div class="d-flex align-items-center ms-3">
                         <b-icon icon="person" variant="dark" font-scale="1.5" class="me-2"></b-icon>
                         <h4 class="mb-0 mt-1">Información personal</h4>
                     </div>
@@ -52,26 +52,27 @@
                             </b-form-group>
                         </b-col>
                     </b-row>
-                    <b-row class="px-4 pb-4">
-                        <b-col cols="12">
+                    <b-row class="px-4 pb-4 d-flex justify-content-end">
+                        <b-col cols="6" md="12">
                             <b-button variant="orange"
                                 class="mt-4 w-100 d-flex align-items-center justify-content-between"
                                 @click="handleUpdateButton(1)">
-                                <span>{{ viewPersonalInfo ? 'Modificar' : 'Guardar modificaciones' }}</span>
+                                <span>{{ viewPersonalInfo ? 'Modificar' : 'Guardar' }}</span>
                                 <b-icon class="me-2" :icon="viewPersonalInfo ? 'pencil' : 'check-circle'"
                                     font-scale="1.2"></b-icon>
                             </b-button>
                         </b-col>
-                        <b-col cols="12" v-if="!viewPersonalInfo">
+                        <b-col cols="6" md="12" v-if="!viewPersonalInfo">
                             <b-button variant="light-danger"
-                                class="mt-3 w-100 d-flex align-items-center justify-content-between" @click="cancel(1)">
+                                class="mt-4 mt-lg-3 w-100 d-flex align-items-center justify-content-between"
+                                @click="cancel(1)">
                                 <span>Cancelar</span>
                                 <b-icon class="me-2" icon="x-circle" font-scale="1.2"></b-icon>
                             </b-button>
                         </b-col>
                     </b-row>
                     <hr>
-                    <b-row class="px-4">                        
+                    <b-row class="px-4">
                         <b-col cols="12" class="mt-3">
                             <b-form-group>
                                 <label for="username" class="mb-2">Correo electrónico:</label>
@@ -83,8 +84,8 @@
                             </b-form-group>
                         </b-col>
                     </b-row>
-                    <b-row class="px-4 pb-4">
-                        <b-col cols="12">
+                    <b-row class="px-4 pb-4 d-flex justify-content-end">
+                        <b-col cols="6" md="12">
                             <b-button variant="orange"
                                 class="mt-4 w-100 d-flex align-items-center justify-content-between"
                                 @click="handleUpdateButton(3)">
@@ -93,9 +94,10 @@
                                     font-scale="1.2"></b-icon>
                             </b-button>
                         </b-col>
-                        <b-col cols="12" v-if="!viewEmail">
+                        <b-col cols="6" md="12" v-if="!viewEmail">
                             <b-button variant="light-danger"
-                                class="mt-3 w-100 d-flex align-items-center justify-content-between" @click="cancel(3)">
+                                class="mt-4 mt-md-3 w-100 d-flex align-items-center justify-content-between"
+                                @click="cancel(3)">
                                 <span>Cancelar</span>
                                 <b-icon class="me-2" icon="x-circle" font-scale="1.2"></b-icon>
                             </b-button>
@@ -103,73 +105,75 @@
                     </b-row>
                 </b-card>
             </b-col>
-            <b-col cols="8" v-if="showAddress">
+            <b-col cols="12" md="6" lg="7" xl="8" v-if="showAddress" class="mt-4 mt-md-0">
                 <b-card bg-variant="secondary-blue" class="py-2 form-card-shadow relative-position form-card-title"
                     no-body>
-                    <div class="d-flex align-items-center ms-3 ms-md-4">
+                    <div class="d-flex align-items-center ms-3">
                         <b-icon icon="house-door" variant="dark" font-scale="1.5" class="me-2"></b-icon>
                         <h4 class="mb-0 mt-1">Información de tu hogar</h4>
                     </div>
                 </b-card>
-                <b-card bg-variant="gray" class="form-card-shadow form-card-content p-4">
+                <b-card bg-variant="gray" class="form-card-shadow form-card-content py-2 px-2 px-lg-3 px-xl-4">
                     <b-row>
-                        <b-col cols="6">
+                        <b-col cols="12" xl="6" class="mt-3 d-flex align-items-center justify-content-center">
                             <b-row>
-                                <b-col cols="12" class="d-flex justify-content-center mt-3">
+                                <b-col cols="12" class="d-flex justify-content-center">
                                     <b-img id="homeImage" :src="showImg()" class="home-img"></b-img>
                                 </b-col>
-                            </b-row>
-                            <b-row v-show="viewAddress">
-                                <b-col cols="12" class="text-center mt-2">
+                                <b-col cols="12" v-show="viewAddress" class="mt-2 text-center">
                                     <label for="homeImage">Imagen de tu hogar</label>
                                 </b-col>
-                            </b-row>
-                            <b-row v-if="!viewAddress" class="d-flex justify-content-center px-3">
-                                <b-col cols="6">
-                                    <b-button variant="secondary-blue"
-                                        class="mt-3 w-100 d-flex justify-content-between align-items-center"
-                                        @click="triggerMainImgSelector">
-                                        <span>Seleccionar</span>
-                                        <b-icon icon="image" font-scale="1.2"></b-icon>
-                                    </b-button>
-                                    <input type="file" accept="image/jpeg, image/png" id="homeImage"
-                                        ref="homeImageSelector" @change="selectImg" class="d-none">
-                                </b-col>
-                                <b-col cols="6" v-if="user.addressDto.homeSpecification.homeImage">
-                                    <b-button variant="light-danger"
-                                        class="mt-3 w-100 d-flex justify-content-between align-items-center"
-                                        @click="removeImg()">
-                                        <span>Eliminar</span>
-                                        <b-icon icon="x-circle" font-scale="1.2"></b-icon>
-                                    </b-button>
+                                <b-col cols="12" v-show="!viewAddress" class="px-3 px-lg-4">
+                                    <b-row class="d-flex justify-content-center">
+                                        <b-col cols="6">
+                                            <b-button variant="secondary-blue"
+                                                class="mt-3 w-100 d-flex justify-content-between align-items-center"
+                                                @click="triggerMainImgSelector">
+                                                <span>Seleccionar</span>
+                                                <b-icon icon="image" font-scale="1.2"></b-icon>
+                                            </b-button>
+                                            <input type="file" accept="image/jpeg, image/png" id="homeImage"
+                                                ref="homeImageSelector" @change="selectImg" class="d-none">
+                                        </b-col>
+                                        <b-col cols="6" v-if="user.addressDto.homeSpecification.homeImage">
+                                            <b-button variant="light-danger"
+                                                class="mt-3 w-100 d-flex justify-content-between align-items-center"
+                                                @click="removeImg()">
+                                                <span>Eliminar</span>
+                                                <b-icon icon="x-circle" font-scale="1.2"></b-icon>
+                                            </b-button>
+                                        </b-col>
+                                    </b-row>
                                 </b-col>
                             </b-row>
                         </b-col>
-                        <b-col cols="6">
+                        <b-col cols="12" xl="6">
                             <b-row>
-                                <b-col cols="12" class="mt-3">
+                                <b-col cols="12" lg="4" xl="12" class="mt-3">
                                     <b-form-group>
                                         <label for="country" class="mb-2">País:</label>
                                         <b-form-select id="country" v-model="user.addressDto.country"
-                                            :disabled="viewAddress" class="form-select">                                            
-                                            <option value="null" disabled v-if="!user.addressDto.country">Selecciona un país</option>
+                                            :disabled="viewAddress" class="form-select">
+                                            <option value="null" disabled v-if="!user.addressDto.country">Selecciona un
+                                                país</option>
                                             <option v-for="country in countries" :key="country.value"
                                                 :value="country.value">{{ country.value }}</option>
                                         </b-form-select>
                                     </b-form-group>
                                 </b-col>
-                                <b-col cols="12" class="mt-3">
+                                <b-col cols="12" xl="12" class="mt-3">
                                     <b-form-group>
                                         <label for="state" class="mb-2">Estado:</label>
                                         <b-form-select id="state" v-model="user.addressDto.state"
                                             :disabled="viewAddress" class="form-select">
-                                            <option value="null" disabled v-if="!user.addressDto.state">Selecciona un estado</option>
+                                            <option value="null" disabled v-if="!user.addressDto.state">Selecciona un
+                                                estado</option>
                                             <option v-for="state in states" :key="state.value" :value="state.value">{{
                                                 state.value }}</option>
                                         </b-form-select>
                                     </b-form-group>
                                 </b-col>
-                                <b-col cols="12" class="mt-3">
+                                <b-col cols="12" xl="12" class="mt-3">
                                     <b-form-group>
                                         <label for="city" class="mb-2">Ciudad:</label>
                                         <b-form-input id="city" v-model="user.addressDto.city" :readonly="viewAddress"
@@ -183,7 +187,7 @@
                         </b-col>
                         <b-col cols="12">
                             <b-row>
-                                <b-col cols="6" class="mt-3">
+                                <b-col cols="12" lg="6" class="mt-3">
                                     <b-form-group>
                                         <label for="colony" class="mb-2">Colonia:</label>
                                         <b-form-input id="colony" v-model="user.addressDto.colony"
@@ -193,7 +197,7 @@
                                         </b-form-invalid-feedback>
                                     </b-form-group>
                                 </b-col>
-                                <b-col cols="6" class="mt-3">
+                                <b-col cols="12" lg="6" class="mt-3">
                                     <b-form-group>
                                         <label for="street" class="mb-2">Calle:</label>
                                         <b-form-input id="street" v-model="user.addressDto.street"
@@ -203,7 +207,7 @@
                                         </b-form-invalid-feedback>
                                     </b-form-group>
                                 </b-col>
-                                <b-col cols="3" class="mt-3">
+                                <b-col cols="6" lg="3" class="mt-3 align-self-end">
                                     <b-form-group>
                                         <label for="externalNumber" class="mb-2">Número exterior:</label>
                                         <b-form-input id="externalNumber" v-model="user.addressDto.exteriorNumber"
@@ -214,7 +218,7 @@
                                         </b-form-invalid-feedback>
                                     </b-form-group>
                                 </b-col>
-                                <b-col cols="3" class="mt-3">
+                                <b-col cols="6" lg="3" class="mt-3 align-self-end">
                                     <b-form-group>
                                         <label for="internalNumber" class="mb-2">Número interior:</label>
                                         <b-form-input id="internalNumber" v-model="user.addressDto.interiorNumber"
@@ -225,7 +229,7 @@
                                         </b-form-invalid-feedback>
                                     </b-form-group>
                                 </b-col>
-                                <b-col cols="6" class="mt-3">
+                                <b-col cols="12" lg="6" class="mt-3 align-self-end">
                                     <b-form-group>
                                         <label for="postalCode" class="mb-2">Código postal:</label>
                                         <b-form-input id="postalCode" v-model="user.addressDto.postalCode"
@@ -247,18 +251,20 @@
                                         </b-form-invalid-feedback>
                                     </b-form-group>
                                 </b-col>
-                                <b-col cols="4" class="mt-3">
+                                <b-col cols="12" lg="4" class="mt-3 align-self-end">
                                     <b-form-group>
                                         <label for="homeType" class="mb-2">Tipo de hogar:</label>
                                         <b-form-select id="homeType" class="form-select"
                                             v-model="user.addressDto.homeSpecification.type" :disabled="viewAddress">
-                                            <option value="null" disabled v-if="!user.addressDto.homeSpecification.type">Selecciona un tipo de hogar</option>                                                        
+                                            <option value="null" disabled
+                                                v-if="!user.addressDto.homeSpecification.type">Selecciona un tipo de
+                                                hogar</option>
                                             <option v-for="homeType in homeTypes" :key="homeType.value"
                                                 :value="homeType.value">{{ homeType.text }}</option>
                                         </b-form-select>
                                     </b-form-group>
                                 </b-col>
-                                <b-col cols="4" class="mt-3">
+                                <b-col cols="6" md="12" lg="4" class="mt-3 align-self-end">
                                     <b-form-group>
                                         <label for="numberOfResidents" class="mb-2">Número de
                                             residentes:</label>
@@ -271,7 +277,7 @@
                                         </b-form-invalid-feedback>
                                     </b-form-group>
                                 </b-col>
-                                <b-col cols="4" class="mt-3">
+                                <b-col cols="6" md="12" lg="4" class="mt-3 align-self-end">
                                     <b-form-group>
                                         <label for="outdoorArea" class="mb-2">¿Tienes área exterior?</label>
                                         <b-form-select id="outdoorArea" class="form-select"
@@ -286,16 +292,16 @@
                         </b-col>
                     </b-row>
                     <b-row class="d-flex justify-content-end">
-                        <b-col cols="5">
+                        <b-col cols="6" xl="5">
                             <b-button variant="secondary-blue"
                                 class="mt-4 w-100 d-flex align-items-center justify-content-between"
                                 @click="handleUpdateButton(2)">
-                                <span>{{ viewAddress ? 'Modificar' : 'Guardar modificaciones' }}</span>
+                                <span>{{ viewAddress ? 'Modificar' : 'Guardar' }}</span>
                                 <b-icon class="me-2" :icon="viewAddress ? 'pencil' : 'check-circle'"
                                     font-scale="1.2"></b-icon>
                             </b-button>
                         </b-col>
-                        <b-col cols="5" v-if="!viewAddress">
+                        <b-col cols="6" xl="5" v-if="!viewAddress">
                             <b-button variant="light-danger"
                                 class="mt-4 w-100 d-flex align-items-center justify-content-between" @click="cancel(2)">
                                 <span>Cancelar</span>
@@ -399,7 +405,7 @@ export default {
             }
         }
     },
-    methods: {        
+    methods: {
         cleanPersonalInformationInputs() {
             document.getElementById("name").classList.remove("is-invalid", "is-valid");
             document.getElementById("lastname").classList.remove("is-invalid", "is-valid");
@@ -918,7 +924,7 @@ export default {
             this.validateEmailForm();
             if (this.isValidEmailForm) {
                 Swal.fire({
-                    title: '¿Estás seguro?',                    
+                    title: '¿Estás seguro?',
                     text: 'Estás a punto de actualizar tu correo electrónico, deberás iniciar sesión nuevamente, ¿deseas continuar?',
                     icon: 'warning',
                     iconColor: '#FFA500',
@@ -978,7 +984,7 @@ export default {
                     showConfirmButton: false
                 })
             }
-        },        
+        },
         async updateAddress() {
             try {
                 Swal.fire({
@@ -1021,7 +1027,7 @@ export default {
                     this.cleanAddressInputs();
                     const profileCompleted = await decrypt(localStorage.getItem("profileCompleted"));
                     if (profileCompleted === "false") {
-                        localStorage.setItem("profileCompleted", await encrypt("true"));                        
+                        localStorage.setItem("profileCompleted", await encrypt("true"));
                     }
                 })
             } catch (error) {
@@ -1092,12 +1098,12 @@ export default {
                         showCancelButton: false,
                         showConfirmButton: false,
                         timerProgressBar: true,
-                    });                    
+                    });
                 }
             }
         },
         handleUpdateButton(option) {
-            switch(option) {
+            switch (option) {
                 case 1:
                     if (this.viewPersonalInfo) this.viewPersonalInfo = !this.viewPersonalInfo;
                     else this.confirmUpdatePersonalInfo();
@@ -1110,22 +1116,22 @@ export default {
                     if (this.viewEmail) this.viewEmail = !this.viewEmail;
                     else this.confirmUpdateEmail();
                     break;
-            }            
+            }
         },
-        async getStorageRole() {            
+        async getStorageRole() {
             return await decrypt(localStorage.getItem("role"));
         },
     },
     async mounted() {
-    if (localStorage.getItem("userId")) {
-        const role = await this.getStorageRole();
-        if (role === "GENERAL") this.showAddress = true;
-        else this.showAddress = false;
-        this.getProfile();
-    } else {
-        this.showError();
+        if (localStorage.getItem("userId")) {
+            const role = await this.getStorageRole();
+            if (role === "GENERAL") this.showAddress = true;
+            else this.showAddress = false;
+            this.getProfile();
+        } else {
+            this.showError();
+        }
     }
-}
 }
 </script>
 
