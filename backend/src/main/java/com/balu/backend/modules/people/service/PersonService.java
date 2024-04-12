@@ -357,6 +357,10 @@ public class PersonService {
         if(validations.isInvalidEmail(hashService.decrypt(dto.getEmail()))) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
         if(validations.isInvalidPhoneNumber(hashService.decrypt(dto.getPhone()))) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
 
+        if(validations.isInvalidMinAndMaxLength(dto.getName(), 3,50)) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidMinAndMaxLength(dto.getLastname(), 3,50)) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
+        if(validations.isInvalidMinAndMaxLength(dto.getSurname(), 3,50)) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
+
         optionalPerson.get().setName(dto.getName());
         optionalPerson.get().setLastName(dto.getLastname());
         optionalPerson.get().setSurName(dto.getSurname());
