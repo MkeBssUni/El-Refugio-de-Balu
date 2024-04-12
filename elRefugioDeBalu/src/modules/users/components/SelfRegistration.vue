@@ -1,12 +1,12 @@
 <template>
-  <b-container fluid class="bg-blue">
-    <b-row align-v="center">
-      <b-col cols="6" class="px-5 mr-3 mx-auto">
+  <b-container fluid>
+    <b-row class="bg-blue px-sm-4 px-md-0">
+      <b-col cols="12" md="7" lg="6" class="px-5 py-5 align-self-center">
         <b-card class="shadow bg-orange">
-          <img :src="require('@/assets/imgs/logo blanco.png')" class="img-fluid d-block mx-auto" alt="Responsive image"
-            width="30%" />
-          <h3 class="text-center text-white">Crear Cuenta</h3>
-          <b-form class="px-5" @submit.prevent="submitForm">
+          <img :src="require('@/assets/imgs/logo blanco.png')" class="d-block mx-auto" alt="Responsive image"
+            width="160px" />
+          <h3 class="text-center text-white">Crea tu cuenta</h3>
+          <b-form class="px-3 px-lg-4" @submit.prevent="submitForm">
             <b-form-group class="my-3" label-for="input-name" :state="nameValidation">
               <label slot="label">
                 Nombre: <span class="required-asterisk">*</span>
@@ -33,7 +33,7 @@
               </label>
               <b-form-input class="bg-light shadow text-dark-gray-input" id="input-surname"
                 v-model.trim="form.surname"></b-form-input>
-                <b-form-invalid-feedback :state="lastnameValidation">El apellido materno debe contener solo
+              <b-form-invalid-feedback :state="lastnameValidation">El apellido materno debe contener solo
                 letras, máximo 40 caracteres</b-form-invalid-feedback>
             </b-form-group>
 
@@ -102,11 +102,18 @@
                   :disabled="disableButton()">Crear cuenta</b-button>
               </b-col>
             </b-row>
+            <b-row class="justify-content-center">
+              <b-col class="d-flex justify-content-center align-items-center mt-3">
+                <b-button class="bg-dark-secondary-orange text-white mx-5" to="/home">
+                  Continuar como invitado
+                 </b-button>
+              </b-col>
+            </b-row>
           </b-form>
         </b-card>
       </b-col>
-      <b-col cols="5" class="d-flex justify-content-center ml-3 mx-auto">
-        <b-img :src="selfRegistrationImage" fluid left rounded class="img mx-auto"></b-img>
+      <b-col cols="5" lg="6" class="p-0 d-none d-md-block align-self-center">
+        <b-img :src="selfRegistrationImage" class="img-fluid" alt="Responsive image"></b-img>
       </b-col>
     </b-row>
   </b-container>
@@ -301,22 +308,22 @@ export default {
           });
         }
       } catch (error) {
-        if(error.response && error.response.status ===  405){
+        if (error.response && error.response.status === 405) {
           swal.fire({
             title: "Error",
             text: "El servicio de mensajes de texto no está disponible por el momento, por favor intenta con el correo electrónico",
             icon: "error",
             showConfirmButton: true,
-          }).then(()=>{
+          }).then(() => {
             this.submitForm()
           })
-        }else{
+        } else {
           swal.fire({
-          title: "Error",
-          text: "Algo salió mal, por favor intenta de nuevo más tarde",
-          icon: "error",
-          showConfirmButton: true,
-        });
+            title: "Error",
+            text: "Algo salió mal, por favor intenta de nuevo más tarde",
+            icon: "error",
+            showConfirmButton: true,
+          });
         }
       }
 
@@ -347,7 +354,7 @@ export default {
               showConfirmButton: false,
             });
             result.isDenied ? this.encryptedForm.viaSms = true : this.encryptedForm.viaSms = false;
-            this.sendForm()  
+            this.sendForm()
           }
         });
     },
@@ -434,7 +441,9 @@ export default {
 }
 
 .img-fluid {
-  max-width: 100%;
+  min-width: 100%;
+  height: 180vh;
+  object-fit: cover;
 }
 
 .eye-icon {

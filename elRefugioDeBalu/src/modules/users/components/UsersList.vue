@@ -85,7 +85,7 @@ export default {
       fields: [
         { key: "fullname", label: "Nombre completo" },
         { key: "username", label: "Correo Electrónico" },
-        { key: "phone", label: "Numero de teléfono" },
+        { key: "phone", label: "Teléfono" },
         { key: "blocked", label: "Estado" },
         { key: "role", label: "Rol" },
         { key: "actions", label: "Acciones" },

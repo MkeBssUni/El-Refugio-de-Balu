@@ -28,7 +28,7 @@
                     v-if="!ValidationSpecialCharactersName()"
                   >
                     El nombre de la categoría no puede contener los caracteres
-                    especiales <>$&/(){}[]'"\ ni números
+                    especiales <>$&!¡¿?#@/(){}[]'"\ ni números
                   </b-form-invalid-feedback>
                   <b-form-invalid-feedback v-if="!ValidationNameLength()">
                     El tamaño mínimo de caracteres es 3 y el máximo 100
@@ -51,7 +51,7 @@
                     v-if="!ValidationSpecialCharactersDescription()"
                   >
                     La descripción de la categoría no puede contener los
-                    caracteres especiales <>$&/(){}[]'"\ ni números
+                    especiales <>$&!¡¿?#@/(){}[]'"\ ni números
                   </b-form-invalid-feedback>
                   <b-form-invalid-feedback
                     v-if="!ValidationDescriptionLength()"
@@ -154,8 +154,8 @@ export default {
       },
       size: false,
       imageFile: true,
-      nameValidationState: null,
-      descriptionValidationState: null,
+      nameValidationState: true,
+      descriptionValidationState: true,
       alertSize: null,
     };
   },
@@ -252,7 +252,7 @@ export default {
           default:
             Swal.fire({
               title: "Ha ocurrido un error",
-              text: "Intentelo de nuevo mas tarde " + error,
+              text: "Intentelo de nuevo mas tarde ",
               icon: "error",
               confirmButtonColor: "#118A95",
             });
@@ -286,6 +286,9 @@ export default {
       });
     },
     ValidationFormCategoryModify() {
+      console.log(this.nameValidationState &&
+        this.descriptionValidationState &&
+        this.imageFile,"AAAAAAAAAAAA")
       return (
         this.nameValidationState &&
         this.descriptionValidationState &&
@@ -299,7 +302,7 @@ export default {
         this.ValidationNameLength();
     },
     ValidationSpecialCharactersName() {
-      const regex = /^(?!.*[<>$&/(){}[\]'"\\])\D*$/;
+      const regex = /^(?!.*[<>$&/()!¡#@\-_{}[\]'"\\])\D*$/i;
       return regex.test(this.UpdateCategoryDto.name);
     },
     UpdateStateInputCategoryDescription() {
@@ -309,7 +312,7 @@ export default {
         this.ValidationDescriptionLength();
     },
     ValidationSpecialCharactersDescription() {
-      const regex = /^(?!.*[<>$&/(){}[\]'"\\])\D*$/;
+      const regex = /^(?!.*[<>$&/()!¡#@\-_{}[\]'"\\])\D*$/i;
       return regex.test(this.UpdateCategoryDto.description);
     },
     showImg() {

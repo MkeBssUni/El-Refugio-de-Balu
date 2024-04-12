@@ -34,13 +34,13 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final IUserRepository iUserRepository;
     private final LogService logService;
-    private final String tableAffected = "USERS";
 
     public ResponseEntity<ResponseApi<SignedDto>> signIn(UserSignInDto userSignInDto){
         Optional<User> userOptional = userService.loadUserByUsername(userSignInDto.getUsername());
         if(userOptional.isEmpty()) return new ResponseEntity<>(new ResponseApi<>(HttpStatus.UNAUTHORIZED, true, ErrorMessages.INCORRECT_CREDENTIALS.name()), HttpStatus.UNAUTHORIZED);
         User user = userOptional.get();
 
+        String tableAffected = "USERS";
         if(user.isBlocked()){
             if(user.getBlockedAt()==null){
                 return new ResponseEntity<>(new ResponseApi<>(HttpStatus.UNAUTHORIZED, true, ErrorMessages.INACTIVE_USER.name()), HttpStatus.UNAUTHORIZED);
@@ -63,8 +63,8 @@ public class AuthService {
             SecurityContextHolder.getContext().setAuthentication(auth);
             String token = jwtProvider.generateToken(auth);
 
-            String PREFIX = "Bearer";
-            SignedDto signedDto = new SignedDto(token, PREFIX,hashService.encrypt(user.getId()),user.getRole(),user.isProfileCompleted());
+            String prefix = "Bearer";
+            SignedDto signedDto = new SignedDto(token, prefix,hashService.encrypt(user.getId()),user.getRole(),user.isProfileCompleted());
 
             signedDto.setUserId(hashService.encrypt(user.getId()));
 

@@ -48,7 +48,7 @@ public class ServiceHomeSpecification {
             Optional<Address> optionalAddress = iAddressRepository.findByUserId(optionalUser.get().getId());
             if(optionalAddress.isEmpty()) return new ResponseApi<>(HttpStatus.NOT_FOUND, true, ErrorMessages.NO_RECORDS.name());
 
-            //if(validations.isInvalidImage(dto.getMainImage())) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_IMAGE.name());
+            if(validations.isInvalidImage(dto.getMainImage())) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_IMAGE.name());
             if(dto.getType() == null || validations.isNotBlankString(dto.getType())) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
 
             if(dto.getNumberOfResidents() <= 0) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
@@ -119,16 +119,5 @@ public class ServiceHomeSpecification {
             return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR, true, ErrorMessages.INTERNAL_ERROR.name());
         }
     }
-
-
-    public Long decryptId(String encryptedId) {
-        try {
-            String decryptedId = hashService.decrypt(encryptedId);
-            return Long.parseLong(decryptedId);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
 
 }
