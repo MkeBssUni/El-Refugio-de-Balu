@@ -448,13 +448,12 @@ export default {
     async getAdressByPet() {
       try {
         const petId = await encrypt(this.requestAdoption.pet.id);
-        console.log(petId)
         const responseadress = await instance.post("/address/details", {
           petId: petId,
         });
-        console.log(responseadress)
+        
         this.addressByPet = responseadress.data.data;
-        console.log(this.addressByPet);
+        
       } catch (error) {
         console.error(error);
       }
