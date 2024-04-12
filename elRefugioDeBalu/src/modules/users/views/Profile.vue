@@ -156,7 +156,8 @@
                                     <b-form-group>
                                         <label for="externalNumber" class="mb-2">Número exterior:</label>
                                         <b-form-input id="externalNumber" v-model="user.addressDto.exteriorNumber"
-                                            :readonly="viewAddress" @input="validateField('externalNumber')"></b-form-input>
+                                            :readonly="viewAddress"
+                                            @input="validateField('externalNumber')"></b-form-input>
                                         <b-form-invalid-feedback v-show="showErrors.externalNumber">
                                             {{ errorMessages.externalNumber }}
                                         </b-form-invalid-feedback>
@@ -166,7 +167,8 @@
                                     <b-form-group>
                                         <label for="internalNumber" class="mb-2">Número interior:</label>
                                         <b-form-input id="internalNumber" v-model="user.addressDto.interiorNumber"
-                                            :readonly="viewAddress" @input="validateField('internalNumber')"></b-form-input>
+                                            :readonly="viewAddress"
+                                            @input="validateField('internalNumber')"></b-form-input>
                                         <b-form-invalid-feedback v-show="showErrors.internalNumber">
                                             {{ errorMessages.internalNumber }}
                                         </b-form-invalid-feedback>
@@ -191,7 +193,7 @@
                                             @input="validateField('addressReference')" rows="3"></b-form-textarea>
                                         <b-form-invalid-feedback v-show="showErrors.addressReference">
                                             {{ errorMessages.addressReference }}
-                                        </b-form-invalid-feedback>                                        
+                                        </b-form-invalid-feedback>
                                     </b-form-group>
                                 </b-col>
                                 <b-col cols="4" class="mt-3">
@@ -200,7 +202,7 @@
                                         <b-form-select id="homeType" class="form-select"
                                             v-model="user.addressDto.homeSpecification.type" :disabled="viewAddress">
                                             <b-form-select-option v-for="homeType in homeTypes" :key="homeType.value"
-                                                :value="homeType.value">{{ homeType.text }}</b-form-select-option>                                                
+                                                :value="homeType.value">{{ homeType.text }}</b-form-select-option>
                                         </b-form-select>
                                     </b-form-group>
                                 </b-col>
@@ -208,7 +210,8 @@
                                     <b-form-group>
                                         <label for="numberOfResidents" class="mb-2">Número de
                                             residentes:</label>
-                                        <b-form-input id="numberOfResidents" v-model="user.addressDto.homeSpecification.numberOfResidents"
+                                        <b-form-input id="numberOfResidents"
+                                            v-model="user.addressDto.homeSpecification.numberOfResidents"
                                             :readonly="viewAddress" @input="validateField('numberOfResidents')"
                                             type="number"></b-form-input>
                                         <b-form-invalid-feedback v-show="showErrors.numberOfResidents">
@@ -251,7 +254,7 @@
 import Swal from "sweetalert2";
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
 import instance from "../../../config/axios";
-import { decrypt } from '../../../kernel/hashFunctions';
+import { decrypt, encrypt } from '../../../kernel/hashFunctions';
 import { isInvalidName, isInvalidNoSpecialCharactersString, isInvalidEmail, isInvalidPhoneNumber, isInvalidOnlyNumbersString } from "../../../kernel/validations";
 import countries from "../../../kernel/data/countries";
 import states from "../../../kernel/data/states";
@@ -268,7 +271,6 @@ export default {
             isValidPersonalInformationForm: false,
             isValidAddressForm: false,
             user: {
-                userId: "",
                 username: "",
                 name: "",
                 lastname: "",
@@ -361,7 +363,7 @@ export default {
                     imageHeight: 160,
                     showConfirmButton: false
                 })
-                const response = await instance.post(`/person/find/allInfo`, { userId: this.user.userId });
+                const response = await instance.post(`/person/find/allInfo`, { userId: localStorage.getItem("userId") });
                 this.user = response.data.data;
                 this.user.username = await decrypt(this.user.username);
                 this.user.phoneNumber = await decrypt(this.user.phoneNumber);
@@ -591,8 +593,8 @@ export default {
                     } else {
                         this.showErrors.internalNumber = false;
                         this.errorMessages.internalNumber = "";
-                        input.classList.remove("is-invalid");  
-                        input.classList.add("is-valid");                      
+                        input.classList.remove("is-invalid");
+                        input.classList.add("is-valid");
                     }
                     break;
                 case "postalCode":
@@ -615,7 +617,7 @@ export default {
                         input.classList.add("is-valid");
                     }
                     break;
-                case "addressReference":                    
+                case "addressReference":
                     if (this.user.addressDto.addressReference && (this.user.addressDto.addressReference.length < 20 || this.user.addressDto.addressReference.length > 200)) {
                         this.showErrors.addressReference = true;
                         this.errorMessages.addressReference = "La referencia de la dirección debe tener entre 20 y 200 caracteres";
@@ -731,7 +733,16 @@ export default {
                     imageHeight: 160,
                     showConfirmButton: false
                 })
-                const response = true;
+                const email = await encrypt(this.user.username);
+                const phone = await encrypt(this.user.phoneNumber);
+                await instance.put(`/person/update/personalInfo`, {
+                    userId: localStorage.getItem("userId"),
+                    name: this.user.name,
+                    lastname: this.user.lastname,
+                    surname: this.user.surname,
+                    email: email,
+                    phone: phone
+                });
                 Swal.fire({
                     title: '¡Listo!',
                     text: 'Tus datos se han actualizado correctamente',
@@ -740,6 +751,14 @@ export default {
                     timer: 3000,
                     timerProgressBar: true,
                     showConfirmButton: false
+                }).then(() => {
+                    this.getProfile();
+                    this.viewPersonalInfo = !this.viewPersonalInfo;                    
+                    document.getElementById("name").classList.remove("is-valid");
+                    document.getElementById("lastname").classList.remove("is-valid");
+                    document.getElementById("surname").classList.remove("is-valid");
+                    document.getElementById("username").classList.remove("is-valid");
+                    document.getElementById("phoneNumber").classList.remove("is-valid");                    
                 })
             } catch (error) {
                 Swal.fire({
@@ -763,7 +782,24 @@ export default {
                     imageHeight: 160,
                     showConfirmButton: false
                 })
-                const response = true;
+                await instance.put(`/address/`, {
+                    userId: localStorage.getItem("userId"),
+                    country: this.user.addressDto.country,
+                    state: this.user.addressDto.state,
+                    city: this.user.addressDto.city,
+                    colony: this.user.addressDto.colony,
+                    street: this.user.addressDto.street,
+                    postalCode: this.user.addressDto.postalCode,
+                    exteriorNumber: this.user.addressDto.exteriorNumber,
+                    interiorNumber: this.user.addressDto.interiorNumber,
+                    addressReference: this.user.addressDto.addressReference,
+                    homeSpecification: {
+                        type: this.user.addressDto.homeSpecification.type,
+                        outdoorArea: this.user.addressDto.homeSpecification.outdoorArea,
+                        numberOfResidents: this.user.addressDto.homeSpecification.numberOfResidents,
+                        homeImage: this.user.addressDto.homeSpecification.homeImage
+                    }
+                });
                 Swal.fire({
                     title: '¡Listo!',
                     text: 'La información de tu hogar se ha actualizado correctamente',
@@ -772,6 +808,20 @@ export default {
                     timer: 3000,
                     timerProgressBar: true,
                     showConfirmButton: false
+                }).then(() => {
+                    this.getProfile();
+                    this.viewAddress = !this.viewAddress;
+                    document.getElementById("country").classList.remove("is-valid");
+                    document.getElementById("state").classList.remove("is-valid");
+                    document.getElementById("city").classList.remove("is-valid");
+                    document.getElementById("colony").classList.remove("is-valid");
+                    document.getElementById("street").classList.remove("is-valid");
+                    document.getElementById("externalNumber").classList.remove("is-valid");
+                    document.getElementById("internalNumber").classList.remove("is-valid");
+                    document.getElementById("postalCode").classList.remove("is-valid");
+                    document.getElementById("addressReference").classList.remove("is-valid");
+                    document.getElementById("homeType").classList.remove("is-valid");
+                    document.getElementById("numberOfResidents").classList.remove("is-valid");
                 })
             } catch (error) {
                 Swal.fire({
@@ -803,7 +853,6 @@ export default {
     },
     mounted() {
         if (localStorage.getItem("userId")) {
-            this.user.userId = localStorage.getItem("userId");
             this.getProfile();
         } else {
             this.showError();
