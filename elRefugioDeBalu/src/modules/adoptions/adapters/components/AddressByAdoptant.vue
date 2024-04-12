@@ -6,36 +6,32 @@
       <b-row>
         <b-col cols="12" sm="12" lg="4" md="4" xl="4">
           <b-card-text>
-            <b>Ciudad:</b> &nbsp; 
+            <b>Ciudad:</b> &nbsp; {{ address.country }}
           </b-card-text>
         </b-col>
         <b-col cols="12" sm="12" lg="4" md="4" xl="4">
-          <b-card-text> <b>País:</b>  </b-card-text>
+          <b-card-text> <b>País:</b>&nbsp; {{ address.city }}  </b-card-text>
         </b-col>
         <b-col cols="12" sm="12" lg="4" md="4" xl="4">
-          <b-card-text> <b>Estado:</b>  </b-card-text>
+          <b-card-text> <b>Estado:</b>&nbsp; {{ address.state }}  </b-card-text>
         </b-col>
         <b-col cols="12" sm="12" lg="4" md="4" xl="4">
-          <b-card-text> <b>Calle:</b>  </b-card-text>
+          <b-card-text> <b>Calle:</b>&nbsp; {{ address.street }}  </b-card-text>
         </b-col>
         <b-col cols="12" sm="12" lg="4" md="4" xl="4">
-          <b-card-text> <b>Colonia:</b>  </b-card-text>
+          <b-card-text> <b>Colonia:</b>&nbsp; {{ address.colony }}  </b-card-text>
         </b-col>
         <b-col cols="12" sm="12" lg="4" md="4" xl="4">
-          <b-card-text> <b>Código Postal:</b></b-card-text>
+          <b-card-text> <b>Código Postal:</b>&nbsp; {{ address.postalCode }}</b-card-text>
         </b-col>
         <b-col cols="12" sm="12" lg="4" md="4" xl="4">
-          <b-card-text> <b>Número exterior:</b></b-card-text>
+          <b-card-text> <b>Número exterior:</b>&nbsp; {{ address.exteriorNumber }} </b-card-text>
         </b-col>
         <b-col cols="12" sm="12" lg="4" md="4" xl="4">
-          <b-card-text> <b>Número interior:</b></b-card-text>
+          <b-card-text> <b>Número interior:</b>&nbsp; {{ address.interiorNumber }}</b-card-text>
         </b-col>
         <b-col cols="12" sm="12" lg="4" md="4" xl="4">
-          <b-card-text> <b>Referencia:</b></b-card-text>
-        </b-col>
-        <b-col cols="12" sm="12" lg="12" md="12" xl="12" class="my-3">
-          <h4>Especificación del Hogar</h4>
-        <hr class="my-line" />
+          <b-card-text> <b>Referencia:</b> &nbsp; {{ address.addressReference }}</b-card-text>
         </b-col>
       </b-row>
     </b-card-body>
@@ -43,6 +39,7 @@
 </template>
 
 <script>
+import instance from '../../../../config/axios';
 export default {
   name: "AddressByAdoptant",
   props: {
@@ -55,17 +52,6 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      address: {
-        email: "",
-        phone: "",
-      },
-    };
-  },
-//   mounted() {
-//     this.address = this.address;
-//   },
 };
 </script>
 
