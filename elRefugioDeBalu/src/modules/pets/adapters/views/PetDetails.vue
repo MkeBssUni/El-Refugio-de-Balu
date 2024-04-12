@@ -96,7 +96,7 @@ export default {
         async goAdopt() {
           const userHasProfile = await decrypt(localStorage.getItem('profileCompleted'));                        
             if (userHasProfile == 'true') {
-                this.$router.push({ name: 'petForm' });
+                this.$router.push({ name: 'FormAdoption' });
             } else {                
                 Swal.fire({
                     title: 'Perfil incompleto',
@@ -110,7 +110,7 @@ export default {
                     cancelButtonColor: '#A93D3D'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        this.$router.push({ name: 'FormAdoption' });
+                        this.$router.push({ name: 'profile' });
                     }
                 })
             }

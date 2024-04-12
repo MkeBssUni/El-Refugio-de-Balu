@@ -923,7 +923,7 @@ export default {
     async submitAdoptionForm() {
       const userHasProfile = await decrypt(localStorage.getItem('profileCompleted'));                        
             if (userHasProfile == 'true') {
-                this.$router.push({ name: 'petForm' });
+                this.saveAdoption();
             } else {                
                 swal.fire({
                     title: 'Perfil incompleto',
