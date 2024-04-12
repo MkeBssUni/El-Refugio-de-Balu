@@ -409,7 +409,6 @@ export default {
 </template>
 
 <style scoped>
-
 .img {
     height: 100vh;
     width: 100%;
