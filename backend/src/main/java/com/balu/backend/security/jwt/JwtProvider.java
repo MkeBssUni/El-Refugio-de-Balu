@@ -25,7 +25,7 @@ import java.util.Date;
 public class JwtProvider {
     private final Logger logger =  LoggerFactory.getLogger(JwtProvider.class);
     @Value("${jwt.secret}")
-    private String secret_key;
+    private String secretKey;
     @Value("${jwt.expiration}")
     private long accessTokenValidity;
 
@@ -44,7 +44,7 @@ public class JwtProvider {
                 .compact();
     }
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secret_key);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
