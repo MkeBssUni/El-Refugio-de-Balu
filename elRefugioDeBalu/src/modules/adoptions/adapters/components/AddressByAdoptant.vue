@@ -39,7 +39,6 @@
 </template>
 
 <script>
-import instance from '../../../../config/axios';
 export default {
   name: "AddressByAdoptant",
   props: {
@@ -54,5 +53,3 @@ export default {
   },
 };
 </script>
-
-<style></style>

@@ -69,6 +69,7 @@
               <img
                 :src="getRequestImage(requestAdoption.requestImages, 0)"
                 class="homePhotos"
+                alt="restingPlace"
               />
             </b-card-body>
             <b-card-body>
@@ -78,6 +79,7 @@
               <img
                 :src="getRequestImage(requestAdoption.requestImages, 1)"
                 class="homePhotos"
+                alt="homePlace"
               />
             </b-card-body>
             <b-card-body>
@@ -87,6 +89,7 @@
               <img
                 :src="getRequestImage(requestAdoption.requestImages, 2)"
                 class="homePhotos"
+                alt="playPlace"
               />
             </b-card-body>
           </b-card>
@@ -316,10 +319,10 @@ export default {
   },
   methods: {
     getRequestImage(images, index) {
-      if (images && images[index]) {
+      if (images?.[index]) {
         return images[index].image;
       } else {
-        return ""; // o alguna otra URL de imagen por defecto
+        return ""; 
       }
     },
     goBack() {
@@ -518,8 +521,8 @@ export default {
           text: "Estamos se esta enviando la información",
           imageUrl: gatoWalkingGif,
           timerProgressBar: true,
-          imageWidth: 160, // Ancho de la imagen
-          imageHeight: 160, // Altura de la imagen
+          imageWidth: 160, 
+          imageHeight: 160, 
           showConfirmButton: false,
         });
         await instance.put("/adoption/changeStatus", {
@@ -585,8 +588,8 @@ export default {
           text: "Estamos enviando la notificación de adopción al adoptante",
           imageUrl: gatoWalkingGif,
           timerProgressBar: true,
-          imageWidth: 160, // Ancho de la imagen
-          imageHeight: 160, // Altura de la imagen
+          imageWidth: 160, 
+          imageHeight: 160, 
           showConfirmButton: false,
         });
         await instance.post("/pet/adoption", {
@@ -599,8 +602,8 @@ export default {
           title: "Listo!",
           text: "Permita un momento que se envie la notificación al adoptante",
           imageUrl: gatoWalkingGif,
-          imageWidth: 160, // Ancho de la imagen
-          imageHeight: 160, // Altura de la imagen,
+          imageWidth: 160, 
+          imageHeight: 160, 
           timer: 3000,
           timerProgressBar: true,
           showConfirmButton: false,

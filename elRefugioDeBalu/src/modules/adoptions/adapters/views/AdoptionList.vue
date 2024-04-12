@@ -242,7 +242,6 @@ export default {
         size: "",
         weight: "",
       },
-      total: 0,
       state: [
         { value: null, text: "Por favor selecciona" },
         { value: "CLOSED", text: "Finalizada" },
@@ -276,7 +275,7 @@ export default {
   methods: {
     getAgeUnit(age) {
       if (age === undefined || age === null || age === "") {
-        return ""; // Manejo de casos donde num es undefined, null o una cadena vacía
+        return "";
       }
       const matches = age.match(/^(\d+)\s*(\w+)$/);
       if (matches && matches.length === 3) {
@@ -287,14 +286,14 @@ export default {
     },
     getAgeNumber(num) {
       if (num === undefined || num === null || num === "") {
-        return ""; // Manejo de casos donde num es undefined, null o una cadena vacía
+        return "";
       }
 
       const matches = num.match(/^(\d+)\s*(\w+)$/);
       if (matches && matches.length === 3) {
-        return matches[1]; // Devuelve solo el número
+        return matches[1];
       } else {
-        return ""; // Manejo de casos donde el formato no coincide con el esperado
+        return "";
       }
     },
     goBack() {

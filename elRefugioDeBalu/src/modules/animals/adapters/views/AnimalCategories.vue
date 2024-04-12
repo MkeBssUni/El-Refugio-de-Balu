@@ -358,7 +358,7 @@ export default {
       this.$nextTick(() => {
         const formElement = document.getElementById("saveCategoryForm");
         if (formElement) {
-          const offset = -100; // Puedes ajustar el valor según tus necesidades
+          const offset = -100;
           const targetPosition =
             formElement.getBoundingClientRect().top +
             window.pageYOffset +
@@ -415,11 +415,8 @@ export default {
       this.categoryToModify = category;
       this.updateCategoryForm = !this.updateCategoryForm;
       this.$nextTick(() => {
-        if (
-          this.$refs.updateCategoryForm &&
-          this.$refs.updateCategoryForm.$el
-        ) {
-          const offset = -100; // Puedes ajustar el valor según tus necesidades
+        if (this.$refs.updateCategoryForm?.$el) {
+          const offset = -100;
           const targetPosition =
             this.$refs.updateCategoryForm.$el.getBoundingClientRect().top +
             window.pageYOffset +
@@ -493,13 +490,13 @@ export default {
     },
     FilterCategories() {
     this.loading = true;
-    const originalList = [...this.originalAnimalsList]; // Crear una copia de la lista original
+    const originalList = [...this.originalAnimalsList];
 
     const filteredList = originalList.filter(animal => {
       if (this.selected === null) {
         return true; 
       } else {
-        return animal.categoryStatus === this.selected; // Filtrar según el estado seleccionado
+        return animal.categoryStatus === this.selected;
       }
     });
 

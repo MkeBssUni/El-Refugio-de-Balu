@@ -2,7 +2,7 @@
   <b-container fluid>
     <b-row class="d-flex justify-content-center">
       <b-col cols="12" class="mt-3">
-        <img src="../../../assets/imgs/error/401.svg" class="error">
+        <img src="../../../assets/imgs/error/401.svg" class="error" alt="error-401" />
       </b-col>
       <b-col cols="3" class="mt-4 d-flex justify-content-center">
         <b-button to="/login" variant="outline-orange"

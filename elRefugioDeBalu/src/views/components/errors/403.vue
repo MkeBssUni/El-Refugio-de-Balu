@@ -2,7 +2,7 @@
   <b-container fluid>
     <b-row class="d-flex justify-content-center">
       <b-col cols="12">
-        <img src="../../../assets/imgs/error/403.svg" class="error">
+        <img src="../../../assets/imgs/error/403.svg" class="error" alt="error-403" />
       </b-col>
       <b-col cols="3" class="mt-3 d-flex justify-content-center">
         <b-button @click="goBack" variant="outline-orange"

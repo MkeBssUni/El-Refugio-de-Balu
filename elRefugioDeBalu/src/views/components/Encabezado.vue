@@ -3,7 +3,7 @@
     <b-container class="container">
       <b-row class="align-items-center">
         <b-col>
-          <img :src="imagenUrl" class="tamImg" />
+          <img :src="imagenUrl" class="tamImg" alt="header-image" />
         </b-col>
         <b-col>
           <h1 :style="{ color: textColor }" class="title">{{ titulo }}</h1>

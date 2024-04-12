@@ -197,16 +197,6 @@ export default {
                         Gestión de categorías
                         <i class="material-icons ms-2" style="font-size: larger;">dashboard</i>
                     </b-button>
-                    <!-- <b-button variant="outline-dark-secondary-orange" :to="'/pet-list'"
-                        class="mt-3 d-flex align-items-center justify-content-center">
-                        Gestión de animales
-                        <i class="material-icons ms-2" style="font-size: larger;">pets</i>
-                    </b-button>
-                    <b-button variant="outline-dark-secondary-orange" :to="'/'"
-                        class="mt-3 d-flex align-items-center justify-content-center">
-                        Solicitudes de adopción
-                        <i class="material-icons ms-2" style="font-size: larger;">assignment</i>
-                    </b-button> -->
                 </b-nav>
                 <b-nav v-else vertical class="my-2 px-3 text-center">
                     <b-button variant="outline-dark-secondary-orange" :to="'/pets'"

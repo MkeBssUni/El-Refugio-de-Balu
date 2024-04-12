@@ -135,6 +135,7 @@
               <img
                 :src="getRequestImage(requestAdoption.requestImages, 0)"
                 class="homePhotos"
+                alt="resting place of the pet"
               />
             </b-card-body>
             <b-card-body>
@@ -144,6 +145,7 @@
               <img
                 :src="getRequestImage(requestAdoption.requestImages, 1)"
                 class="homePhotos"
+                alt="place where the pet will live"
               />
             </b-card-body>
             <b-card-body>
@@ -153,6 +155,7 @@
               <img
                 :src="getRequestImage(requestAdoption.requestImages, 2)"
                 class="homePhotos"
+                alt="place where the pet will play"
               />
             </b-card-body>
           </b-card>
@@ -348,15 +351,15 @@ export default {
   },
   methods: {
     getRequestImage(images, index) {
-      if (images && images[index]) {
+      if (images?.[index]) {
         return images[index].image;
       } else {
-        return ""; // o alguna otra URL de imagen por defecto
+        return "";
       }
     },
     getAgeUnit(age) {
       if (age === undefined || age === null || age === "") {
-        return ""; // Manejo de casos donde num es undefined, null o una cadena vacía
+        return "";
       }
       const matches = age.match(/^(\d+)\s*(\w+)$/);
       if (matches && matches.length === 3) {
@@ -367,14 +370,14 @@ export default {
     },
     getAgeNumber(num) {
       if (num === undefined || num === null || num === "") {
-        return ""; // Manejo de casos donde num es undefined, null o una cadena vacía
+        return "";
       }
 
       const matches = num.match(/^(\d+)\s*(\w+)$/);
       if (matches && matches.length === 3) {
-        return matches[1]; // Devuelve solo el número
+        return matches[1];
       } else {
-        return ""; // Manejo de casos donde el formato no coincide con el esperado
+        return "";
       }
     },
     goBack() {
@@ -541,8 +544,8 @@ export default {
             imageUrl: perroChato,
             timer: 2000,
             timerProgressBar: true,
-            imageWidth: 160, // Ancho de la imagen
-            imageHeight: 160, // Altura de la imagen
+            imageWidth: 160,
+            imageHeight: 160,
             showConfirmButton: false,
           }).then(() => {
             let response = instance.put("/adoption/changeStatusClosed", {

@@ -3,7 +3,6 @@
         <b-container fluid>
             <b-row>
                 <b-col cols="12" class="mt-5 px-5">
-                    <!-- md, lg, xl card -->
                     <b-card class="full-height-card p-4 d-none d-md-block card-shadow" bg-variant="gray">
                         <LargeContent :pet="pet" />
                         <hr class="divider my-0">
@@ -31,7 +30,6 @@
                             </b-col>
                         </b-row>
                     </b-card>
-                    <!-- xs, sm card -->
                     <b-card class="full-height-card p-4 d-block d-md-none card-shadow" bg-variant="gray">
                         <SmallContent :pet="pet" />
                         <hr class="divider my-0">
@@ -71,7 +69,6 @@ import instance from "../../../../config/axios";
 
 import SmallContent from "../components/PetSmallCardContent.vue"
 import LargeContent from "../components/PetLargeCardContent.vue"
-import ChangesModal from "../components/ChangesRequest.vue"
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
 import { sizes, lifeStages, weightUnits, ageUnits } from "../../../../kernel/data/mappingDictionaries";
 

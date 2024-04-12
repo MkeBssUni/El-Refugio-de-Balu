@@ -82,7 +82,7 @@
                             </b-form>
                         </b-col>
                         <b-col cols="5" lg="4" xl="3" class="d-none d-md-flex justify-content-center">
-                            <img src="@/assets/imgs/gatito_buscador.png" height="119%" />
+                            <img src="@/assets/imgs/gatito_buscador.png" height="119%" alt="searchCat" />
                         </b-col>
                     </b-row>
                 </b-card>
@@ -133,7 +133,6 @@
 <script>
 import Swal from "sweetalert2";
 import instance from "../../../../config/axios";
-
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
 import states from "../../../../kernel/data/states";
 import sizes from "../../../../kernel/data/sizes";

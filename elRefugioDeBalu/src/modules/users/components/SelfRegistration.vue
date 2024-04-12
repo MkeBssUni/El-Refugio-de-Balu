@@ -375,14 +375,14 @@ export default {
       this.usernameValidation = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(newVal.trim());
     },
     "form.phoneNumber"(newVal) {
-      this.phoneValidation = /^[0-9]{10}$/.test(newVal.trim());
+      this.phoneValidation = /^\d{10}$/.test(newVal.trim());
       if (newVal.length > 10) {
         this.phoneValidationMessage = "El número de teléfono no puede tener más de 10 dígitos";
       }
     },
     "form.password"(newVal) {
       this.passwordValidation =
-        /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,}$/.test(newVal);
+        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,}$/.test(newVal);
       if (!this.passwordValidation) {
         let missingRequirements = [];
         if (!/(?=.*\d)/.test(newVal))
