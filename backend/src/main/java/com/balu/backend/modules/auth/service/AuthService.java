@@ -42,7 +42,9 @@ public class AuthService {
         User user = userOptional.get();
 
         if(user.isBlocked()){
-            if(user.getBlockedAt().isBefore(LocalDateTime.now().minusMinutes(30))) {
+            if(user.getBlockedAt()==null){
+                return new ResponseEntity<>(new ResponseApi<>(HttpStatus.UNAUTHORIZED, true, ErrorMessages.INACTIVE_USER.name()), HttpStatus.UNAUTHORIZED);
+            }else if(user.getBlockedAt().isBefore(LocalDateTime.now().minusMinutes(30))) {
                 user.setAttempts(2);
                 user.setBlocked(false);
                 user.setBlockedAt(null);
