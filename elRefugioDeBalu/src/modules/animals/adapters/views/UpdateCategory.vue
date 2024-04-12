@@ -286,7 +286,6 @@ export default {
       });
     },
     ValidationFormCategoryModify() {
-      console.log(this.UpdateCategoryDto)
       return (
         this.nameValidationState &&
         this.descriptionValidationState &&
