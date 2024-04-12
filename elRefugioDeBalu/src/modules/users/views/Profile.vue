@@ -70,7 +70,7 @@
                                 <span>{{ viewPersonalInfo ? 'Modificar' : 'Guardar modificaciones' }}</span>
                                 <b-icon class="me-2" :icon="viewPersonalInfo ? 'pencil' : 'check-circle'"
                                     font-scale="1.2"></b-icon>
-                            </b-button>                            
+                            </b-button>
                         </b-col>
                         <b-col cols="12" v-if="!viewPersonalInfo">
                             <b-button variant="light-danger"
@@ -269,7 +269,7 @@
                                 <span>{{ viewAddress ? 'Modificar' : 'Guardar modificaciones' }}</span>
                                 <b-icon class="me-2" :icon="viewAddress ? 'pencil' : 'check-circle'"
                                     font-scale="1.2"></b-icon>
-                            </b-button>                                                        
+                            </b-button>
                         </b-col>
                         <b-col cols="5" v-if="!viewAddress">
                             <b-button variant="light-danger"
@@ -378,7 +378,7 @@ export default {
             document.getElementById("lastname").classList.remove("is-invalid", "is-valid");
             document.getElementById("surname").classList.remove("is-invalid", "is-valid");
             document.getElementById("username").classList.remove("is-invalid", "is-valid");
-            document.getElementById("phoneNumber").classList.remove("is-invalid", "is-valid");            
+            document.getElementById("phoneNumber").classList.remove("is-invalid", "is-valid");
         },
         cleanAddressInputs() {
             document.getElementById("country").classList.remove("is-invalid", "is-valid");
@@ -395,12 +395,12 @@ export default {
         },
         cancel(option) {
             if (option === 1) {
-                this.viewPersonalInfo = true; 
+                this.viewPersonalInfo = true;
                 this.cleanPersonalInformationInputs();
-                this.getProfile();               
+                this.getProfile();
             } else {
-                this.viewAddress = true;   
-                this.cleanAddressInputs();             
+                this.viewAddress = true;
+                this.cleanAddressInputs();
                 this.getProfile();
             }
         },
@@ -904,7 +904,7 @@ export default {
                 });
                 Swal.fire({
                     title: '¡Listo!',
-                    text: 'Tus datos se han actualizado correctamente',
+                    text: 'Tus datos personales se han actualizado correctamente',
                     icon: 'success',
                     iconColor: '#4BB543',
                     timer: 3000,
@@ -916,15 +916,29 @@ export default {
                     this.cleanPersonalInformationInputs();
                 })
             } catch (error) {
-                Swal.fire({
+                if (error.response.data.message === "DUPLICATE_RECORD") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡Error!',
+                        text: 'Intenta con otro correo electrónico',
+                        toast: true,
+                        position: 'top-end',
+                        timer: 3000,
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        timerProgressBar: true,
+                    });
+                } else {
+                    Swal.fire({
                     title: 'Error',
-                    text: 'Ocurrió un error al actualizar tus datos',
+                    text: 'Ocurrió un error al actualizar tus datos personales',
                     icon: 'error',
                     iconColor: '#A93D3D',
                     timer: 3000,
                     timerProgressBar: true,
                     showConfirmButton: false
                 })
+                }                
             }
         },
         async updateAddress() {
