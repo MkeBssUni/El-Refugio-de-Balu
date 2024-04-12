@@ -50,7 +50,7 @@ public class AddressService {
         Optional<Address> optionalAddress = addressRepository.findByUserId(Long.valueOf(hashService.decrypt(dto.getUserId())));
         if(optionalAddress.isEmpty()) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.NOT_FOUND.name());
 
-        if(validations.isNotBlankString(dto.getCountry(), dto.getStreet(), dto.getColony(), dto.getCity(), dto.getState(), dto.getPostalCode(), dto.getAddressReference(), dto.getExteriorNumber()
+        if(validations.isNotBlankString(dto.getCountry(), dto.getStreet(), dto.getColony(), dto.getCity(), dto.getState(), dto.getPostalCode(), dto.getExteriorNumber()
         )) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.MISSING_FIELDS.name());
         if(validations.isInvalidMinAndMaxLength(dto.getPostalCode(),5,5)) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_LENGTH.name());
         if(validations.isInvalidMinAndMaxLength(dto.getCountry(),3,50)) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_LENGTH.name());
@@ -58,7 +58,7 @@ public class AddressService {
         if(validations.isInvalidMinAndMaxLength(dto.getColony(),3,50)) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_LENGTH.name());
         if(validations.isInvalidMinAndMaxLength(dto.getCity(),3,50)) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_LENGTH.name());
         if(validations.isInvalidMinAndMaxLength(dto.getState(),3,50)) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_LENGTH.name());
-        if(validations.isInvalidMinAndMaxLength(dto.getAddressReference(),20,200)) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_LENGTH.name());
+        if(dto.getAddressReference() != null && validations.isInvalidMinAndMaxLength(dto.getAddressReference(),20,200)) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_LENGTH.name());
 
         if(validations.isInvalidImage(dto.getHomeSpecification().getHomeImage())) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_IMAGE.name());
         if(dto.getHomeSpecification().getNumberOfResidents()<=0) return new ResponseApi<>(HttpStatus.BAD_REQUEST, true, ErrorMessages.INVALID_FIELD.name());
