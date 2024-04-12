@@ -49,7 +49,7 @@ const routes = [
       {
         path: "/home",
         name: "home",
-        component: () => import("../HomePageComponents/Home.vue"),
+        component: () => import("../HomePageComponents/Home.vue"),        
       },
       {
         path: "/pets",
@@ -177,6 +177,7 @@ const routes = [
           title: "Iniciar sesión",
         },
         component: () => import("../modules/auth/adapters/views/Login.vue"),
+        meta: { hideNavigation: true }
       },
       {
         path: "/petList",
@@ -254,7 +255,8 @@ const routes = [
         path: "/selfRegistration",
         name: "selfRegistration",
         meta:{
-          title: "Crear cuenta"
+          title: "Crear cuenta",
+          hideNavigation: true
         },
         component: () =>
           import("../modules/users/components/SelfRegistration.vue"),
