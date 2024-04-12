@@ -330,7 +330,7 @@ export default {
 </script>
 
 <template>
-    <b-container fluid class="full-height">
+    <b-container fluid>
         <b-row class="py-5 py-md-0 bg-blue">
             <b-col cols="12" md="8" lg="6" class="px-5 align-self-center">
                 <b-card class="shadow bg-orange">
@@ -409,9 +409,6 @@ export default {
 </template>
 
 <style scoped>
-.full-height {
-    height: 100vh;    
-}
 
 .img {
     height: 100vh;
