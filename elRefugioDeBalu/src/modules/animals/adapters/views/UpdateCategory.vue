@@ -28,7 +28,7 @@
                     v-if="!ValidationSpecialCharactersName()"
                   >
                     El nombre de la categoría no puede contener los caracteres
-                    especiales <>$&/(){}[]'"\ ni números
+                    especiales <>$&!¡¿?#@/(){}[]'"\ ni números
                   </b-form-invalid-feedback>
                   <b-form-invalid-feedback v-if="!ValidationNameLength()">
                     El tamaño mínimo de caracteres es 3 y el máximo 100
@@ -51,7 +51,7 @@
                     v-if="!ValidationSpecialCharactersDescription()"
                   >
                     La descripción de la categoría no puede contener los
-                    caracteres especiales <>$&/(){}[]'"\ ni números
+                    especiales <>$&!¡¿?#@/(){}[]'"\ ni números
                   </b-form-invalid-feedback>
                   <b-form-invalid-feedback
                     v-if="!ValidationDescriptionLength()"
@@ -154,8 +154,8 @@ export default {
       },
       size: false,
       imageFile: true,
-      nameValidationState: null,
-      descriptionValidationState: null,
+      nameValidationState: true,
+      descriptionValidationState: true,
       alertSize: null,
     };
   },
@@ -286,6 +286,9 @@ export default {
       });
     },
     ValidationFormCategoryModify() {
+      console.log(this.nameValidationState &&
+        this.descriptionValidationState &&
+        this.imageFile,"AAAAAAAAAAAA")
       return (
         this.nameValidationState &&
         this.descriptionValidationState &&

@@ -19,7 +19,7 @@
                 <b-form-input id="input-1" v-model="SaveCategoryDto.name" trim @input="UpdateStateInputCategoryName()"
                   :state="nameValidationState"></b-form-input>
                 <b-form-invalid-feedback v-if="!ValidationSpecialCharactersName()">
-                  El nombre de la categoría no puede contener los caracteres especiales <>$&/(){}[]'"\ ni numeros
+                  El nombre de la categoría no puede contener los caracteres especiales <>$&!¡¿?#@/(){}[]'"\ ni números
                 </b-form-invalid-feedback>
                 <b-form-invalid-feedback v-if="!ValidationNameLength()">
                   El tamaño mínimo de caracteres es 3 y el máximo 100
@@ -39,7 +39,7 @@
                     @input="UpdateStateInputCategoryDescription()"
                     :state="descriptionValidationState"></b-form-textarea>
                   <b-form-invalid-feedback v-if="!ValidationSpecialCharactersDescription()">
-                    La descripción de la categoría no puede contener los caracteres especiales <>$&/(){}[]'"\ ni numeros
+                    La descripción de la categoría no puede contener los caracteres especiales <>$&!¡¿?#@/(){}[]'"\ ni números
                   </b-form-invalid-feedback>
                   <b-form-invalid-feedback v-if="!ValidationDescriptionLength()">
                     El tamaño mínimo de caracteres es 15 y el máximo 240
