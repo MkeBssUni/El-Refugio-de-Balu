@@ -1,6 +1,6 @@
 <template>
-  <b-container fluid class="bg-blue">
-    <b-row align-v="center">
+  <b-container fluid>
+    <b-row class="bg-blue">
       <b-col cols="6" class="px-5 mr-3 mx-auto">
         <b-card class="shadow bg-orange">
           <img :src="require('@/assets/imgs/logo blanco.png')" class="img-fluid d-block mx-auto" alt="Responsive image"
