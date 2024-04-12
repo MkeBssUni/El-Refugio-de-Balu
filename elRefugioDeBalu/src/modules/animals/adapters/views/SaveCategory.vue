@@ -1,107 +1,87 @@
 <template>
-  <div class="mt-2">
+  <div class="mt-4">
     <div class="card encabezadoColorformCategory">
       <h4 class="mt-2" style="margin-left: 1rem">
-        <i
-          class="material-icons ms-2"
-          style="font-size: larger; vertical-align: middle"
-          >pets</i
-        >
-        Registro de categoria
+        <i class="material-icons ms-2" style="font-size: larger; vertical-align: middle">pets</i>
+        Registro de categoría
       </h4>
     </div>
     <b-card class="contentformCategory">
       <b-row class="mt-4">
-        <b-col>
-          <b-form-group label="Categoria">
-            <b-form-input
-              id="input-1"
-              v-model="SaveCategoryDto.name"
-              trim
-              @input="UpdateStateInputCategoryName()"
-              :state="nameValidationState"
-            ></b-form-input>
-            <b-form-invalid-feedback v-if="!ValidationSpecialCharactersName()">
-              El nombre de la categoría contiene caracteres especiales no
-              permitidos (/[<>{}' || \\ \/]/)
-            </b-form-invalid-feedback>
-          </b-form-group>
+        <b-col class="ms-4">
+          <b-row>
+            <b-col>
+              <b-form-group class="mt-2">
+                <div style="display: flex; align-items: center">
+                  <h5>Categoría</h5>
+                  <h5 class="text-danger">*</h5>
+                </div>
+                <b-form-input id="input-1" v-model="SaveCategoryDto.name" trim @input="UpdateStateInputCategoryName()"
+                  :state="nameValidationState"></b-form-input>
+                <b-form-invalid-feedback v-if="!ValidationSpecialCharactersName()">
+                  El nombre de la categoría no puede contener los caracteres especiales <>$&/(){}[]'"\ ni numeros
+                </b-form-invalid-feedback>
+                <b-form-invalid-feedback v-if="!ValidationNameLength()">
+                  El tamaño mínimo de caracteres es 3 y el máximo 100
+                </b-form-invalid-feedback>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col>
+              <b-col>
+                <b-form-group class="mt-2">
+                  <div style="display: flex; align-items: center">
+                    <h5>Descripción</h5>
+                    <h5 class="text-danger">*</h5>
+                  </div>
+                  <b-form-textarea id="input-1" v-model="SaveCategoryDto.description" trim rows="7"
+                    @input="UpdateStateInputCategoryDescription()"
+                    :state="descriptionValidationState"></b-form-textarea>
+                  <b-form-invalid-feedback v-if="!ValidationSpecialCharactersDescription()">
+                    La descripción de la categoría no puede contener los caracteres especiales <>$&/(){}[]'"\ ni numeros
+                  </b-form-invalid-feedback>
+                  <b-form-invalid-feedback v-if="!ValidationDescriptionLength()">
+                    El tamaño mínimo de caracteres es 15 y el máximo 240
+                  </b-form-invalid-feedback>
+                </b-form-group>
+              </b-col>
+            </b-col>
+          </b-row>
         </b-col>
         <b-col>
-          <b-form-group label="Imagen">
-            <b-form-file
-              class="form-control"
-              v-model="imageFile"
-              plain
-              :state="alertSize == null ? null :!alertSize"
-              @change="ConvertImageToBase64($event)"
-            ></b-form-file>
-             <span class="text-danger mt-2" v-if="alertSize">
-              La imagen es muy pesada, lo maximo soportado es 2mb
-            </span>
-          </b-form-group>
-          
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col>
-          <b-form-group label="Descripción">
-            <b-form-textarea
-              id="input-1"
-              v-model="SaveCategoryDto.description"
-              trim
-              rows="4"
-              @input="UpdateStateInputCategoryDescription()"
-              :state="descriptionValidationState"
-            ></b-form-textarea>
-            <b-form-invalid-feedback
-              v-if="!ValidationSpecialCharactersDescription()"
-            >
-              La descripción de la categoría contiene caracteres especiales no
-              permitidos (/[<>{}' || \\ \/]/)
-            </b-form-invalid-feedback>
-          </b-form-group>
-        </b-col>
-        <b-col class="mt-4">
-          <b-img
-            v-if="SaveCategoryDto.image"
-            :src="SaveCategoryDto.image"
-            class="categoryImage mt-2"
-            fluid
-            thumbnail
-          ></b-img>
-          <b-img
-            v-else
-            src="imagenNull"
-            class="categoryImage mt-2"
-            fluid
-            thumbnail
-          ></b-img>
-        </b-col>
-      </b-row>
-      <b-row class="mt-3">
-        <b-col class="text-right"
-          ><b-button
-            variant="outline-success"
-            v-if="ValidationFormCategoryRegister()"
-            disabled
-            >Registrar</b-button
-          >
-          <b-button
-            variant="outline-success"
-            @click="ViewAlertConfirmationRegistrationCategory"
-            v-else
-            >Registrar</b-button
-          >
-          <b-button
-            class="mx-2"
-            variant="outline-danger"
-            @click="$emit('SavedCategory')"
-            >Cancelar</b-button
-          >
+          <b-row>
+            <b-col>
+              <b-col cols="12" class="position-relative text-center">
+                <div style="display: flex; align-items: center">
+                  <h5>Categoría</h5>
+                  <h5 class="text-danger">*</h5>
+                </div>
+                <b-img :src="showImg()" class="main-img-category" alt="Imagen principal seleccionada" fluid rounded
+                  center></b-img>
+                <input type="file" ref="mainImageSelector" style="display: none" accept="image/jpeg, image/png"
+                  @change="ConvertImageToBase64">
+                <b-button v-if="SaveCategoryDto.image" @click="triggerMainImgSelector()"
+                  class="btn-add center-position d-flex align-items-center justify-content-center p-2">
+                  <b-icon icon="plus" font-scale="5"></b-icon>
+                </b-button>
+                <small class="text-danger">Nota:El tamaño maximo soportado es de 6mb</small>
+              </b-col>
+            </b-col>
+          </b-row>
         </b-col>
       </b-row>
     </b-card>
+    <b-row class="mt-3 d-flex justify-content-end">
+      <b-col cols="12" sm="6" md="5" lg="4" xl="3">
+        <b-button class="w-100" variant="outline-success" v-if="!ValidationFormCategoryRegister()" disabled>Registrar</b-button>
+        <b-button class="w-100" variant="outline-success" @click="ViewAlertConfirmationRegistrationCategory"
+          v-else>Registrar</b-button>
+      </b-col>
+      <b-col cols="12" sm="6" md="5" lg="4" xl="3">
+        <b-button class="mx-2 w-100" variant="outline-danger" @click="$emit('SavedCategory')">Cancelar</b-button>
+      </b-col>
+    </b-row>
   </div>
 </template>
 
@@ -118,7 +98,7 @@ export default {
       SaveCategoryDto: {
         name: "",
         description: "",
-        image:imagenNull,
+        image: imagenNull,
       },
       SaveCategoryDtoEncrypted: {
         name: "",
@@ -133,11 +113,23 @@ export default {
     };
   },
   methods: {
-    ConvertImageToBase64(event) {
-      const maxSize = 2 * 1024 * 1024;
-      const file = event.target.files[0];
+    ConvertImageToBase64($event) {
+      const maxSize = 6 * 1024 * 1024;
+      const file = $event.target.files[0];
       if (file.size > maxSize) {
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: '¡La imagen seleccionada es muy pesada!',
+          toast: true,
+          position: 'top-end',
+          timer: 3000,
+          showCancelButton: false,
+          showConfirmButton: false,
+          timerProgressBar: true,
+        });
         this.alertSize = true;
+        this.imageFile = false
       } else {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -146,6 +138,7 @@ export default {
           this.alertSize = false;
         };
         reader.readAsDataURL(file);
+        this.imageFile = true
       }
     },
     async SaveCategory() {
@@ -243,41 +236,134 @@ export default {
       });
     },
     ValidationFormCategoryRegister() {
-      return !(
-        this.SaveCategoryDto.name &&
-        this.SaveCategoryDto.description &&
-        this.SaveCategoryDto.image &&
-        this.descriptionValidationState &&
-        this.nameValidationState
-      );
+      return this.nameValidationState && this.descriptionValidationState && this.imageFile
     },
     ValidationSpecialCharactersName() {
-      const expresionRegular = /[<>{}'||\\\/]/;
-      return !expresionRegular.test(this.SaveCategoryDto.name);
+      const regex = /^(?!.*[<>$&/(){}[\]'"\\])[^0-9]*$/;
+      return regex.test(this.SaveCategoryDto.name);
     },
     UpdateStateInputCategoryName() {
-      if (this.SaveCategoryDto.name.trim() === "") {
-        this.nameValidationState = null;
-      } else {
-        this.nameValidationState = this.ValidationSpecialCharactersName()
-          ? true
-          : false;
-      }
+      this.nameValidationState =
+        !(this.SaveCategoryDto.name.trim() === "") &&
+        this.ValidationSpecialCharactersName() &&
+        this.ValidationNameLength()
     },
     UpdateStateInputCategoryDescription() {
-      if (this.SaveCategoryDto.description.trim() === "") {
-        // Si el campo está vacío, el estado es null
-        this.descriptionValidationState = null;
-      } else {
-        // Si no está vacío, actualizamos el estado según la validación
-        this.descriptionValidationState =
-          this.ValidationSpecialCharactersDescription() ? true : false;
-      }
+      this.descriptionValidationState =
+        !(this.SaveCategoryDto.description.trim() === "") &&
+        this.ValidationSpecialCharactersDescription() &&
+        this.ValidationDescriptionLength()
     },
     ValidationSpecialCharactersDescription() {
-      const expresionRegular = /[<>{}'||\\\/]/;
-      return !expresionRegular.test(this.SaveCategoryDto.description);
+      const regex = /^(?!.*[<>$&/(){}[\]'"\\])[^0-9]*$/;
+      return regex.test(this.SaveCategoryDto.description);
     },
+    showImg() {
+      if (this.SaveCategoryDto.image) return this.SaveCategoryDto.image;
+      return "../../../../assets/imgs/imageSearch.png";
+    },
+    triggerMainImgSelector() {
+      this.$refs.mainImageSelector.click();
+    },
+    validateImg(file) {
+      if (file.type != "image/jpeg" && file.type != "image/png") {
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Selecciona una imagen en formato JPG o PNG',
+          toast: true,
+          position: 'top-end',
+          timer: 3000,
+          showCancelButton: false,
+          showConfirmButton: false,
+          timerProgressBar: true,
+        });
+        return false;
+      }
+      if (file.size > 4000000) {
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'La imagen no puede pesar más de 4MB',
+          toast: true,
+          position: 'top-end',
+          timer: 3000,
+          showCancelButton: false,
+          showConfirmButton: false,
+          timerProgressBar: true,
+        });
+        return false;
+      }
+      return true;
+    },
+    loadImgError() {
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Ocurrió un error al cargar la imagen, intenta de nuevo con otra',
+        toast: true,
+        position: 'top-end',
+        timer: 3000,
+        showCancelButton: false,
+        showConfirmButton: false,
+        timerProgressBar: true,
+      });
+    },
+    unselectImg() {
+      this.imageFile = false
+      this.SaveCategoryDto.image = null;
+    },
+    ValidationDescriptionLength() {
+      return this.SaveCategoryDto.description.length < 240 && this.SaveCategoryDto.description.length > 15
+    },
+    ValidationNameLength() {
+      return this.SaveCategoryDto.name.length < 100 && this.SaveCategoryDto.name.length > 3
+    }
+
   },
 };
 </script>
+
+<style scoped>
+.main-img-category {
+  width: 450px;
+  height: 255px;
+  object-fit: cover;
+  border: 3px solid rgb(234, 141, 3);
+  background-color: burlywood;
+}
+
+.btn-add {
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  background-color: rgba(83, 169, 61, 0.6);
+  color: #316E21;
+}
+
+.btn-add:hover {
+  background-color: rgba(83, 169, 61, 1);
+}
+
+.btn-add:active {
+  background-color: #347424;
+  color: #1f4915;
+}
+
+.btn-remove {
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  background-color: rgba(169, 61, 61, 0.61);
+  color: #571724;
+}
+
+.btn-remove:hover {
+  background-color: rgba(169, 61, 61, 1);
+}
+
+.btn-remove:active {
+  background-color: #742434;
+  color: #49151f;
+}
+</style>

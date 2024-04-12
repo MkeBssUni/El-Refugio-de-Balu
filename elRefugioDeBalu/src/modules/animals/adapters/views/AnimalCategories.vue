@@ -145,7 +145,7 @@
               :key="animal.id"
             >
               <b-card
-                :title="animal.categoryName"
+                :title="animal.categoryName.length>20 ?animal.categoryName.substring(0,19)+'...' : animal.categoryName"
                 :img-src="animal.categoryImage"
                 img-alt="Image"
                 img-top

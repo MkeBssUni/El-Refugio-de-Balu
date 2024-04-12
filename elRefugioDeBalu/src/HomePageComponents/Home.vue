@@ -91,7 +91,7 @@ export default {
       this.visibility = await decrypt(localStorage.getItem("role"))
       if (this.visibility == "GENERAL") {
         this.completeProfile = await decrypt(localStorage.getItem("profileCompleted"))
-        if (if (this.completeProfile == "false")) {
+        if ((this.completeProfile == "false")) {
           Swal.fire({
             title: "¡Tu perfil no está  completo!",
             text: "Completa tu perfil para seguir buscando en el refugio…",
