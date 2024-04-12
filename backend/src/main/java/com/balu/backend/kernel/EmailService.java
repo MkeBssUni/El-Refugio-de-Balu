@@ -18,7 +18,6 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, Utf8Encoding);
             helper.setTo(email);
             helper.setSubject("Activar cuenta");
-            //Hacer que el código sea bold
             helper.setText(EmailTemplates.mailTemplate("Haz sido registrado correctamente en El Refugio de Balu, usa el siguiente código para activar tu cuenta: <b>"+code+"</b>"),true);
             javaMailSender.send(message);
         } catch (Exception e) {
