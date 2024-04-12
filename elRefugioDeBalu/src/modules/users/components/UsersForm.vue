@@ -18,7 +18,10 @@
                     <b-row>
                       <b-row>
                         <b-col cols="6">
-                          <b-form-group id="name" label="Nombre (s):" label-for="nameInput">
+                          <b-form-group id="name" label-for="nameInput">
+                            <label slot="label">
+                                Nombre(s): <span class="required-asterisk">*</span>
+                            </label>
                             <b-form-input id="nameInput" v-model.trim="formData.name"
                               @input="validateInput('name')"></b-form-input>
                             <b-form-invalid-feedback v-if="showErrors.name">{{ errorsMessages.name
@@ -26,7 +29,10 @@
                           </b-form-group>
                         </b-col>
                         <b-col cols="6">
-                          <b-form-group id="lastName" label="Apellido Paterno:" label-for="lastNameInput">
+                          <b-form-group id="lastName" label-for="lastNameInput">
+                            <label slot="label">
+                                Apellido paterno: <span class="required-asterisk">*</span>
+                            </label>
                             <b-form-input id="lastNameInput" v-model.trim="formData.lastname" @input="validateInput('lastname')" ></b-form-input>
                             <b-form-invalid-feedback v-if="showErrors.lastname">{{ errorsMessages.lastname
                               }}</b-form-invalid-feedback>
@@ -35,14 +41,20 @@
                       </b-row>
                       <b-row>
                         <b-col cols="6">
-                          <b-form-group id="surName" label="Apellido Materno:" label-for="surNameInput">
+                          <b-form-group id="surName" label-for="surNameInput">
+                            <label slot="label">
+                                Apellido materno: <span class="required-asterisk">*</span>
+                            </label>
                             <b-form-input id="surNameInput" v-model.trim="formData.surname" @input="validateInput('surname')" ></b-form-input>
                             <b-form-invalid-feedback v-if="showErrors.surname">{{ errorsMessages.surname
                               }}</b-form-invalid-feedback>
                           </b-form-group>
                         </b-col>
                         <b-col cols="6">
-                          <b-form-group id="phoneNumber" label="Número de Teléfono:" label-for="phoneNumberInput">
+                          <b-form-group id="phoneNumber" label-for="phoneNumberInput">
+                            <label slot="label">
+                                Número de telefono: <span class="required-asterisk">*</span>
+                            </label>
                             <b-form-input id="phoneNumberInput" v-model.trim="formData.phoneNumber"
                               type="number" @input="validateInput('phone')"></b-form-input>
                             <b-form-invalid-feedback v-if="showErrors.phoneNumber">{{ errorsMessages.phoneNumber
@@ -52,16 +64,22 @@
                       </b-row>
                       <b-row>
                         <b-col cols="6">
-                          <b-form-group id="emai" label="Correo Electrónico:" label-for="email">
+                          <b-form-group id="emai" label-for="email">
+                            <label slot="label">
+                                Correo electrónico: <span class="required-asterisk">*</span>
+                            </label>
                             <b-form-input id="email" type="email" v-model.trim="formData.username" @input="validateInput('email')"></b-form-input>
                             <b-form-invalid-feedback v-if="showErrors.username">{{ errorsMessages.username
                               }}</b-form-invalid-feedback>
                           </b-form-group>
                         </b-col>
                         <b-col cols="6">
-                          <b-form-group label="Selecciona un rol" label-for="rol">
+                          <b-form-group label-for="rol">
+                            <label slot="label">
+                                Selecciona un rol: <span class="required-asterisk">*</span>
+                            </label>
                             <b-form-select id="rol" v-model="formData.role.id"
-                            @focus="validateInput('role')"
+                            @change="validateInput('role')"
                             :options="[
                               { value: null, text: 'Selecciona un rol' },
                               { value: 2, text: 'Administrador' },
@@ -73,8 +91,7 @@
                       </b-row>
                     </b-row>
                     <div class="button-container">
-                      <b-button @click="submitForm" :disabled="(showErrors.name && showErrors.lastname && showErrors.surname && showErrors.phoneNumber && showErrors.username)"
-                      variant="outline-success">Registrar</b-button>
+                      <b-button @click="submitForm" :disabled="!isValid" type="submit" variant="outline-success">Registrar</b-button>
                       <b-button type="button" variant="outline-danger" @click="cancelForm">Regresar</b-button>
                     </div>
                   </b-card>
@@ -113,6 +130,7 @@ export default {
           id: null
         }
       },
+      isValid: false,
       encryptedForm: {
         name: "",
         lastname: "",
@@ -188,7 +206,16 @@ export default {
       }
     },
     submitForm() {
-      Swal.fire({
+      this.validateInput('name');
+      this.validateInput('lastname');
+      this.validateInput('surname');
+      this.validateInput('phone');
+      this.validateInput('email');
+      this.validateInput('role');
+
+      console.log("el valor de isValid es: ", this.isValid)
+      if(this.isValid){
+        Swal.fire({
         title: "¿Estás seguro?",
         text: "¿Estás seguro de registrar este usuario?",
         icon: "info",
@@ -215,6 +242,16 @@ export default {
           })
         }
       });
+      }else{
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Por favor verifica los campos e intenta de nuevo',
+          toast: true,
+          position: 'top-end',
+          timer: 3000,
+        });
+      }
     },
     cancelForm() {
       Swal.fire({
@@ -239,6 +276,10 @@ export default {
             input.classList.add('is-invalid');
             this.showErrors.name = true;
             this.errorsMessages.name = 'El nombre no puede contener caracteres especiales o números.';
+          } else if(this.formData.name.length < 3 || this.formData.name.length > 20){
+            input.classList.add('is-invalid');
+            this.showErrors.name = true;
+            this.errorsMessages.name = 'El nombre debe contener al menos 3 caracteres y máximo 20.';
           } else {
             input.classList.remove('is-invalid');
             input.classList.add('is-valid');
@@ -252,7 +293,11 @@ export default {
             input.classList.add('is-invalid');
             this.showErrors.lastname = true;
             this.errorsMessages.lastname = 'El apellido paterno no puede contener caracteres especiales o números.';
-          }else{
+          } else if(this.formData.lastname.length < 3 || this.formData.lastname.length > 20){
+            input.classList.add('is-invalid');
+            this.showErrors.lastname = true;
+            this.errorsMessages.lastname = 'El apellido paterno debe contener al menos 3 caracteres y máximo 20.';
+          } else{
             input.classList.remove('is-invalid');
             input.classList.add('is-valid');
             this.showErrors.lastname = false;
@@ -265,7 +310,11 @@ export default {
             input.classList.add('is-invalid');
             this.showErrors.surname = true;
             this.errorsMessages.surname = 'El apellido materno no puede contener caracteres especiales o números.';
-          }else{
+          } else if(this.formData.surname.length < 3 || this.formData.surname.length > 20){
+            input.classList.add('is-invalid');
+            this.showErrors.surname = true;
+            this.errorsMessages.surname = 'El apellido materno debe contener al menos 3 caracteres y máximo 20.';
+          } else{
             input.classList.remove('is-invalid');
             input.classList.add('is-valid');
             this.showErrors.surname = false;
@@ -277,7 +326,7 @@ export default {
             if(isInvalidPhoneNumber(this.formData.phoneNumber)){
               input.classList.add('is-invalid');
               this.showErrors.phoneNumber = true;
-              this.errorsMessages.phoneNumber = 'El número de teléfono no puede contener letras o caracteres especiales, debe ser 10 dígitos.';
+              this.errorsMessages.phoneNumber = 'El número de teléfono debe ser 10 dígitos y solo números.';
             }else{
               input.classList.remove('is-invalid');
               input.classList.add('is-valid');
@@ -291,7 +340,11 @@ export default {
               input.classList.add('is-invalid');
               this.showErrors.username = true;
               this.errorsMessages.username = 'El correo electrónico no es válido.';
-            }else{
+            }else if(this.formData.username.length < 5 || this.formData.username.length > 50){
+              input.classList.add('is-invalid');
+              this.showErrors.username = true;
+              this.errorsMessages.username = 'El correo electrónico debe contener al menos 5 caracteres y máximo 50.';
+            } else{
               input.classList.remove('is-invalid');
               input.classList.add('is-valid');
               this.showErrors.username = false;
@@ -311,8 +364,7 @@ export default {
               this.errorsMessages.role = '';
             }
             break;
-      }
-
+          }
     }
   },
 };
