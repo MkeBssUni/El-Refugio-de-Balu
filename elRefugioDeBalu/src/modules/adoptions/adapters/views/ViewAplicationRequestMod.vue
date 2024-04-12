@@ -31,50 +31,43 @@
               {{ infoStatus }}
             </b-card-text>
           </b-card>
-        </b-col>
-        <b-col cols="12" sm="12" lg="8" md="8">
-          <b-card class="target">
-            <b-row>
-              <b-col cols="12" sm="12" lg="12" md="12">
-                <b-card
-                  bg-variant="card-content-orange"
-                  class="my-2 information-pet"
-                >
-                  <b-card-body class="text-center">
-                    <b-card-title 
-                      >Informacion del adoptante <br />
-                      {{ information.name }}</b-card-title
-                    >
-                    <hr class="my-line" />
-                    <b-row>
-                      <b-col cols="12" sm="12" lg="6" md="6" xl="6">
-                        <b-card-text>
-                          <b>Correo electrónico:</b> &nbsp; {{ information.email }}
-                        </b-card-text>
-                      </b-col>
-                      <b-col cols="12" sm="12" lg="6" md="6" xl="6">
-                        <b-card-text>
-                          <b>Telefono:</b> <br/> {{ information.phone }}
-                        </b-card-text>
-                      </b-col>
-                    </b-row>
-                  </b-card-body>
-                </b-card>
-              </b-col>
-            </b-row>
-          </b-card>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col cols="12" sm="12" lg="4" md="4">
           <b-card bg-variant="light" class="box-shadow-pretty text-center">
+            <b-card
+              bg-variant="card-header-orange"
+              class="my-2 information-pet"
+            >
+              <b-card-body>
+                <b-card-title>Domicilio Mascota</b-card-title>
+                <hr class="my-line" />
+                <b-row>
+                  <b-col cols="12" sm="12" lg="4" md="4" xl="4">
+                    <b-card-text>
+                      <b>Ciudad:</b> &nbsp; 
+                      {{ addressByPet.country }}
+                    </b-card-text>
+                  </b-col>
+                  <b-col cols="12" sm="12" lg="4" md="4" xl="4">
+                    <b-card-text>
+                      <b>País:</b>&nbsp; 
+                      {{ addressByPet.city }}
+                    </b-card-text>
+                  </b-col>
+                  <b-col cols="12" sm="12" lg="4" md="4" xl="4">
+                    <b-card-text>
+                      <b>Estado:</b>&nbsp; 
+                      {{ addressByPet.state }}
+                    </b-card-text>
+                  </b-col>
+                </b-row>
+              </b-card-body>
+            </b-card>
             <b-card-title>Lugar de residencia</b-card-title>
             <b-card-body>
               <b-card-text
                 >Lugar en la que dormira o descansara la mascota</b-card-text
               >
               <img
-              :src="getRequestImage(requestAdoption.requestImages, 0)"
+                :src="getRequestImage(requestAdoption.requestImages, 0)"
                 class="homePhotos"
               />
             </b-card-body>
@@ -83,7 +76,7 @@
                 >Lugar en el que vivira la mascota (casa)</b-card-text
               >
               <img
-              :src="getRequestImage(requestAdoption.requestImages, 1)"
+                :src="getRequestImage(requestAdoption.requestImages, 1)"
                 class="homePhotos"
               />
             </b-card-body>
@@ -92,14 +85,43 @@
                 >Lugar en el que jugará la mascota (casa)</b-card-text
               >
               <img
-              :src="getRequestImage(requestAdoption.requestImages, 2)"
+                :src="getRequestImage(requestAdoption.requestImages, 2)"
                 class="homePhotos"
               />
             </b-card-body>
           </b-card>
         </b-col>
         <b-col cols="12" sm="12" lg="8" md="8">
-          <b-card bg-variant="light" class=" box-shadow-pretty">
+          <b-card class="target">
+            <b-row>
+              <b-col cols="12" sm="12" lg="12" md="12">
+                <b-card bg-variant="card-content-orange" class="my-2">
+                  <b-card-body class="text-center">
+                    <b-card-title
+                      >Informacion del adoptante <br />
+                      {{ information.name }}</b-card-title
+                    >
+                    <hr class="my-line" />
+                    <b-row>
+                      <b-col cols="12" sm="12" lg="6" md="6" xl="6">
+                        <b-card-text>
+                          <b>Correo electrónico:</b> &nbsp;
+                          {{ information.email }}
+                        </b-card-text>
+                      </b-col>
+                      <b-col cols="12" sm="12" lg="6" md="6" xl="6">
+                        <b-card-text>
+                          <b>Telefono:</b> {{ information.phone }}
+                        </b-card-text>
+                      </b-col>
+                      <AddressByAdoptant :address="address" title="Domicilio" />
+                    </b-row>
+                  </b-card-body>
+                </b-card>
+              </b-col>
+            </b-row>
+          </b-card>
+          <b-card bg-variant="light" class="my-3 box-shadow-pretty">
             <b-card-title class="text-center">Motivos de adopción</b-card-title>
             <b-row>
               <b-col cols="12" sm="12" lg="6" md="6" xl="6">
@@ -253,9 +275,13 @@ import perroChato from "@/assets/imgs/perroChato1.gif";
 import instance from "../../../../config/axios";
 import { decrypt, encrypt } from "../../../../kernel/hashFunctions";
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
+import AddressByAdoptant from "../components/AddressByAdoptant.vue";
 
 export default {
   name: "viewAplicationAdoptionRequestMod",
+  components: {
+    AddressByAdoptant,
+  },
   data() {
     return {
       requestAdoption: {
@@ -280,6 +306,9 @@ export default {
       information: {},
       typeState: "",
       statu: "",
+      address: {},
+      idUser: "",
+      addressByPet: {},
     };
   },
   mounted() {
@@ -387,6 +416,7 @@ export default {
         this.requestAdoption.additionalInformation = await decrypt(
           this.requestAdoption.additionalInformation
         );
+        this.getAddress();
         this.getDetails();
         Swal.close();
       } catch (error) {
@@ -403,6 +433,31 @@ export default {
         });
       }
     },
+    async getAddress() {
+      try {
+        this.idUser = await encrypt(this.requestAdoption.user.id);
+        const responseadress = await instance.post("/address/details", {
+          userId: this.idUser,
+        });
+        this.address = responseadress.data.data;      
+        this.getAdressByPet();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async getAdressByPet() {
+      try {
+        const petId = await encrypt(this.requestAdoption.pet.id);
+        const responseadress = await instance.post("/address/details", {
+          petId: petId,
+        });
+        
+        this.addressByPet = responseadress.data.data;
+        
+      } catch (error) {
+        console.error(error);
+      }
+    },
     adopted() {
       this.typeState = "aprobar al adoptante";
       this.statu = "ADOPTED";
@@ -416,29 +471,24 @@ export default {
     async getDetails() {
       try {
         const idUSer = await encrypt(this.requestAdoption.user.id);
+        this.adress = idUSer;
         const response = await instance.post("/person/find/contactInfo", {
           userId: idUSer,
         });
         this.information = response.data.data;
-        this.information.phone = await decrypt(
-          this.information.phone
-        );
-        this.information.email = await decrypt(
-          this.information.email
-        );
+        this.information.phone = await decrypt(this.information.phone);
+        this.information.email = await decrypt(this.information.email);
         Swal.close();
       } catch (error) {
-        Swal
-          .fire({
-            title: "Error",
-            text: "No se pudieron cargar tus datos",
-            icon: "error",
-            showConfirmButton: false,
-            timer: 1500,
-          })
-          .then(() => {
-            this.$router.go(-1);
-          });
+        Swal.fire({
+          title: "Error",
+          text: "No se pudieron cargar tus datos",
+          icon: "error",
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(() => {
+          this.$router.go(-1);
+        });
       }
     },
     showConfirm() {
