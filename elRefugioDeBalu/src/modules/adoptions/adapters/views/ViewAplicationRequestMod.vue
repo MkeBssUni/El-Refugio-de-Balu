@@ -445,7 +445,6 @@ export default {
         this.address = responseadress.data.data;      
         this.getAdressByPet();
       } catch (error) {
-        console.error(error);
       }
     },
     async getAdressByPet() {
@@ -458,7 +457,6 @@ export default {
         this.addressByPet = responseadress.data.data;
         
       } catch (error) {
-        console.error(error);
       }
     },
     adopted() {
