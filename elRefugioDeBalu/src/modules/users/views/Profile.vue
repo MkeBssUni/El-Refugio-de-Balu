@@ -87,12 +87,33 @@
                     <b-row>
                         <b-col cols="6">
                             <b-row>
-                                <b-col cols="12">
-                                    <b-img id="homeImage" :src="user.addressDto.homeSpecification.homeImage"
-                                        class="home-img"></b-img>
+                                <b-col cols="12" class="d-flex justify-content-center mt-3">
+                                    <b-img id="homeImage" :src="showImg()" class="home-img"></b-img>
                                 </b-col>
-                                <b-col cols="12">
+                            </b-row>
+                            <b-row v-show="viewAddress">
+                                <b-col cols="12" class="text-center mt-2">
                                     <label for="homeImage">Imagen de tu hogar</label>
+                                </b-col>
+                            </b-row>
+                            <b-row v-if="!viewAddress" class="d-flex justify-content-center px-3">
+                                <b-col cols="6">
+                                    <b-button variant="secondary-blue"
+                                        class="mt-3 w-100 d-flex justify-content-between align-items-center"
+                                        @click="triggerMainImgSelector">
+                                        <span>Seleccionar</span>
+                                        <b-icon icon="image" font-scale="1.2"></b-icon>
+                                    </b-button>
+                                    <input type="file" accept="image/jpeg, image/png" id="homeImage"
+                                        ref="homeImageSelector" @change="selectImg" class="d-none">
+                                </b-col>
+                                <b-col cols="6" v-if="user.addressDto.homeSpecification.homeImage">
+                                    <b-button variant="light-danger"
+                                        class="mt-3 w-100 d-flex justify-content-between align-items-center"
+                                        @click="removeImg()">
+                                        <span>Eliminar</span>
+                                        <b-icon icon="x-circle" font-scale="1.2"></b-icon>
+                                    </b-button>
                                 </b-col>
                             </b-row>
                         </b-col>
@@ -118,11 +139,7 @@
                                         </b-form-select>
                                     </b-form-group>
                                 </b-col>
-                            </b-row>
-                        </b-col>
-                        <b-col cols="12">
-                            <b-row>
-                                <b-col cols="4" class="mt-3">
+                                <b-col cols="12" class="mt-3">
                                     <b-form-group>
                                         <label for="city" class="mb-2">Ciudad:</label>
                                         <b-form-input id="city" v-model="user.addressDto.city" :readonly="viewAddress"
@@ -132,7 +149,11 @@
                                         </b-form-invalid-feedback>
                                     </b-form-group>
                                 </b-col>
-                                <b-col cols="4" class="mt-3">
+                            </b-row>
+                        </b-col>
+                        <b-col cols="12">
+                            <b-row>
+                                <b-col cols="6" class="mt-3">
                                     <b-form-group>
                                         <label for="colony" class="mb-2">Colonia:</label>
                                         <b-form-input id="colony" v-model="user.addressDto.colony"
@@ -142,7 +163,7 @@
                                         </b-form-invalid-feedback>
                                     </b-form-group>
                                 </b-col>
-                                <b-col cols="4" class="mt-3">
+                                <b-col cols="6" class="mt-3">
                                     <b-form-group>
                                         <label for="street" class="mb-2">Calle:</label>
                                         <b-form-input id="street" v-model="user.addressDto.street"
@@ -292,7 +313,7 @@ export default {
                         type: "",
                         outdoorArea: false,
                         numberOfResidents: 0,
-                        homeImage: "",
+                        homeImage: null,
                     },
                 },
             },
@@ -314,6 +335,7 @@ export default {
                 homeType: false,
                 numberOfResidents: false,
                 outdoorArea: false,
+                homeImage: false,
             },
             errorMessages: {
                 name: "",
@@ -381,6 +403,97 @@ export default {
                     this.$router.push('/petList')
                 }) */
             }
+        },
+        loadImgError() {
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Ocurrió un error al cargar la imagen, intenta de nuevo con otra',
+                toast: true,
+                position: 'top-end',
+                timer: 3000,
+                showCancelButton: false,
+                showConfirmButton: false,
+                timerProgressBar: true,
+            });
+        },
+        convertToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const fileReader = new FileReader();
+                fileReader.readAsDataURL(file);
+                fileReader.onload = () => resolve(fileReader.result);
+                fileReader.onerror = (error) => reject(error);
+            });
+        },
+        validateNotNullHomeImg() {
+            if (!this.user.addressDto.homeSpecification.homeImage) {
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'Debes seleccionar una imagen de tu hogar',
+                    toast: true,
+                    position: 'top-end',
+                    timer: 3000,
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    timerProgressBar: true,
+                });
+                this.showErrors.homeImage = true;
+                return;
+            }
+            this.showErrors.homeImage = false;
+        },
+        validateImg(file) {
+            if (file.type != "image/jpeg" && file.type != "image/png") {
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'Selecciona una imagen en formato JPG o PNG',
+                    toast: true,
+                    position: 'top-end',
+                    timer: 3000,
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    timerProgressBar: true,
+                });
+                return false;
+            }
+            if (file.size > 4000000) {
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'La imagen no puede pesar más de 4MB',
+                    toast: true,
+                    position: 'top-end',
+                    timer: 3000,
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    timerProgressBar: true,
+                });
+                return false;
+            }
+            return true;
+        },
+        showImg() {
+            if (this.user.addressDto.homeSpecification.homeImage) return this.user.addressDto.homeSpecification.homeImage;
+            return "https://i.pinimg.com/736x/b3/cc/d5/b3ccd57b054a73af1a0d281265b54ec8.jpg";
+        },
+        triggerMainImgSelector() {
+            this.$refs.homeImageSelector.click();
+        },
+        async selectImg() {
+            const file = this.$refs.homeImageSelector.files[0];
+            if (file && this.validateImg(file)) {
+                try {
+                    const base64Image = await this.convertToBase64(file);
+                    this.user.addressDto.homeSpecification.homeImage = base64Image;
+                } catch (error) {
+                    this.loadImgError();
+                }
+            }
+        },
+        removeImg() {
+            this.user.addressDto.homeSpecification.homeImage = null;
         },
         validateField(field) {
             const input = document.getElementById(field);
@@ -669,6 +782,7 @@ export default {
             else this.isValidPersonalInformationForm = false;
         },
         validateAddressForm() {
+            this.validateNotNullHomeImg();
             this.validateField("country");
             this.validateField("state");
             this.validateField("city");
@@ -680,7 +794,7 @@ export default {
             this.validateField("addressReference");
             this.validateField("homeType");
             this.validateField("numberOfResidents");
-            if (!this.showErrors.country && !this.showErrors.state && !this.showErrors.city && !this.showErrors.colony && !this.showErrors.street && !this.showErrors.externalNumber && !this.showErrors.internalNumber && !this.showErrors.postalCode && !this.showErrors.addressReference && !this.showErrors.homeType && !this.showErrors.numberOfResidents) this.isValidAddressForm = true;
+            if (!this.showErrors.country && !this.showErrors.state && !this.showErrors.city && !this.showErrors.colony && !this.showErrors.street && !this.showErrors.externalNumber && !this.showErrors.internalNumber && !this.showErrors.postalCode && !this.showErrors.addressReference && !this.showErrors.homeType && !this.showErrors.numberOfResidents && !this.showErrors.homeImage) this.isValidAddressForm = true;
             else this.isValidAddressForm = false;
         },
         confirmUpdateAddress() {
@@ -753,12 +867,12 @@ export default {
                     showConfirmButton: false
                 }).then(() => {
                     this.getProfile();
-                    this.viewPersonalInfo = !this.viewPersonalInfo;                    
+                    this.viewPersonalInfo = !this.viewPersonalInfo;
                     document.getElementById("name").classList.remove("is-valid");
                     document.getElementById("lastname").classList.remove("is-valid");
                     document.getElementById("surname").classList.remove("is-valid");
                     document.getElementById("username").classList.remove("is-valid");
-                    document.getElementById("phoneNumber").classList.remove("is-valid");                    
+                    document.getElementById("phoneNumber").classList.remove("is-valid");
                 })
             } catch (error) {
                 Swal.fire({
@@ -864,7 +978,7 @@ export default {
 <style scoped>
 .home-img {
     width: 300px;
-    height: auto;
+    height: 200px;
     object-fit: cover;
     border-radius: 10px;
 }
