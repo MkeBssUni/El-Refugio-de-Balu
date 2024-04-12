@@ -582,6 +582,7 @@ import Encabezado from "../../../../views/components/Encabezado.vue";
 import swal from "sweetalert2";
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
 import instance from "../../../../config/axios";
+import { decrypt } from "../../../../kernel/hashFunctions";
 
 const regex = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ',. ()]+$/;
 
@@ -919,9 +920,30 @@ export default {
         this.error.additionalInfo = null;
       }
     },
-    submitAdoptionForm() {
-      swal
-        .fire({
+    async submitAdoptionForm() {
+      const userHasProfile = await decrypt(localStorage.getItem('profileCompleted'));                        
+            if (userHasProfile == 'true') {
+                this.$router.push({ name: 'petForm' });
+            } else {                
+                swal.fire({
+                    title: 'Perfil incompleto',
+                    text: 'Para poder publicar una mascota, necesitas completar tu perfil',
+                    icon: 'warning',
+                    iconColor: '#ff7d4a',
+                    showCancelButton: true,
+                    confirmButtonText: 'Completar perfil',
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonColor: '#ff7d4a',
+                    cancelButtonColor: '#A93D3D'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.$router.push({ name: 'profile' });
+                    }
+                })
+            }
+    },
+    showConfirm(){
+      swal.fire({
           title: "¿Estás seguro de enviar la solicitud de adopción?",
           text: "Una vez enviada no podrá ser modificada",
           icon: "warning",
