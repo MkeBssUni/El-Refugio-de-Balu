@@ -70,6 +70,13 @@
                                 <span>{{ viewPersonalInfo ? 'Modificar' : 'Guardar modificaciones' }}</span>
                                 <b-icon class="me-2" :icon="viewPersonalInfo ? 'pencil' : 'check-circle'"
                                     font-scale="1.2"></b-icon>
+                            </b-button>                            
+                        </b-col>
+                        <b-col cols="12" v-if="!viewPersonalInfo">
+                            <b-button variant="light-danger"
+                                class="mt-3 w-100 d-flex align-items-center justify-content-between" @click="cancel(1)">
+                                <span>Cancelar</span>
+                                <b-icon class="me-2" icon="x-circle" font-scale="1.2"></b-icon>
                             </b-button>
                         </b-col>
                     </b-row>
@@ -262,6 +269,13 @@
                                 <span>{{ viewAddress ? 'Modificar' : 'Guardar modificaciones' }}</span>
                                 <b-icon class="me-2" :icon="viewAddress ? 'pencil' : 'check-circle'"
                                     font-scale="1.2"></b-icon>
+                            </b-button>                                                        
+                        </b-col>
+                        <b-col cols="5" v-if="!viewAddress">
+                            <b-button variant="light-danger"
+                                class="mt-4 w-100 d-flex align-items-center justify-content-between" @click="cancel(2)">
+                                <span>Cancelar</span>
+                                <b-icon class="me-2" icon="x-circle" font-scale="1.2"></b-icon>
                             </b-button>
                         </b-col>
                     </b-row>
@@ -359,6 +373,37 @@ export default {
         }
     },
     methods: {
+        cleanPersonalInformationInputs() {
+            document.getElementById("name").classList.remove("is-invalid", "is-valid");
+            document.getElementById("lastname").classList.remove("is-invalid", "is-valid");
+            document.getElementById("surname").classList.remove("is-invalid", "is-valid");
+            document.getElementById("username").classList.remove("is-invalid", "is-valid");
+            document.getElementById("phoneNumber").classList.remove("is-invalid", "is-valid");            
+        },
+        cleanAddressInputs() {
+            document.getElementById("country").classList.remove("is-invalid", "is-valid");
+            document.getElementById("state").classList.remove("is-invalid", "is-valid");
+            document.getElementById("city").classList.remove("is-invalid", "is-valid");
+            document.getElementById("colony").classList.remove("is-invalid", "is-valid");
+            document.getElementById("street").classList.remove("is-invalid", "is-valid");
+            document.getElementById("externalNumber").classList.remove("is-invalid", "is-valid");
+            document.getElementById("internalNumber").classList.remove("is-invalid", "is-valid");
+            document.getElementById("postalCode").classList.remove("is-invalid", "is-valid");
+            document.getElementById("addressReference").classList.remove("is-invalid", "is-valid");
+            document.getElementById("homeType").classList.remove("is-invalid", "is-valid");
+            document.getElementById("numberOfResidents").classList.remove("is-invalid", "is-valid");
+        },
+        cancel(option) {
+            if (option === 1) {
+                this.viewPersonalInfo = true; 
+                this.cleanPersonalInformationInputs();
+                this.getProfile();               
+            } else {
+                this.viewAddress = true;   
+                this.cleanAddressInputs();             
+                this.getProfile();
+            }
+        },
         goBack() {
             this.$router.go(-1);
         },
@@ -868,11 +913,7 @@ export default {
                 }).then(() => {
                     this.getProfile();
                     this.viewPersonalInfo = !this.viewPersonalInfo;
-                    document.getElementById("name").classList.remove("is-valid");
-                    document.getElementById("lastname").classList.remove("is-valid");
-                    document.getElementById("surname").classList.remove("is-valid");
-                    document.getElementById("username").classList.remove("is-valid");
-                    document.getElementById("phoneNumber").classList.remove("is-valid");
+                    this.cleanPersonalInformationInputs();
                 })
             } catch (error) {
                 Swal.fire({
@@ -925,17 +966,7 @@ export default {
                 }).then(() => {
                     this.getProfile();
                     this.viewAddress = !this.viewAddress;
-                    document.getElementById("country").classList.remove("is-valid");
-                    document.getElementById("state").classList.remove("is-valid");
-                    document.getElementById("city").classList.remove("is-valid");
-                    document.getElementById("colony").classList.remove("is-valid");
-                    document.getElementById("street").classList.remove("is-valid");
-                    document.getElementById("externalNumber").classList.remove("is-valid");
-                    document.getElementById("internalNumber").classList.remove("is-valid");
-                    document.getElementById("postalCode").classList.remove("is-valid");
-                    document.getElementById("addressReference").classList.remove("is-valid");
-                    document.getElementById("homeType").classList.remove("is-valid");
-                    document.getElementById("numberOfResidents").classList.remove("is-valid");
+                    this.cleanAddressInputs();
                 })
             } catch (error) {
                 Swal.fire({
