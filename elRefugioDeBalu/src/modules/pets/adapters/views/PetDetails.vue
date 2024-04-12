@@ -8,7 +8,7 @@
                     <hr class="divider my-0">
                     <b-row class="mt-4 d-flex justify-content-end">
                         <b-col cols="5" lg="4" xl="3">
-                            <b-button variant="outline-dark-secondary-blue" to="/formAdoption"
+                            <b-button variant="outline-dark-secondary-blue" @click="goAdopt"
                                 class="me-3 d-flex align-items-center justify-content-between w-100">
                                 <span class="me-2">Solicitar adoptar</span>
                                 <b-icon icon="heart" font-scale="1.3"></b-icon>
@@ -52,7 +52,7 @@
 <script>
 import Swal from "sweetalert2";
 import instance from "../../../../config/axios";
-
+import { decrypt } from "../../../../kernel/hashFunctions";
 import SmallContent from "../components/PetSmallCardContent.vue"
 import LargeContent from "../components/PetLargeCardContent.vue"
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
@@ -92,6 +92,28 @@ export default {
         goBack() {
             this.$router.go(-1);
             localStorage.removeItem("petId");
+        },
+        async goAdopt() {
+          const userHasProfile = await decrypt(localStorage.getItem('profileCompleted'));                        
+            if (userHasProfile == 'true') {
+                this.$router.push({ name: 'petForm' });
+            } else {                
+                Swal.fire({
+                    title: 'Perfil incompleto',
+                    text: 'Para poder publicar una mascota, necesitas completar tu perfil',
+                    icon: 'warning',
+                    iconColor: '#ff7d4a',
+                    showCancelButton: true,
+                    confirmButtonText: 'Completar perfil',
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonColor: '#ff7d4a',
+                    cancelButtonColor: '#A93D3D'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.$router.push({ name: 'FormAdoption' });
+                    }
+                })
+            }
         },
         async getDetails() {
             try {
