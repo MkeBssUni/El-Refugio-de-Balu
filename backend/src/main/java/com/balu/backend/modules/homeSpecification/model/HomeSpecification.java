@@ -1,7 +1,7 @@
 package com.balu.backend.modules.homeSpecification.model;
 
 
-import com.balu.backend.modules.adresses.model.model.Address;
+import com.balu.backend.modules.adresses.model.Address;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

@@ -1,4 +1,4 @@
-package com.balu.backend.modules.adresses.model.model.dto;
+package com.balu.backend.modules.adresses.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

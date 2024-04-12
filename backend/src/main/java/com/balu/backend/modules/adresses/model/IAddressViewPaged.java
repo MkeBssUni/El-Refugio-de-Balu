@@ -1,4 +1,4 @@
-package com.balu.backend.modules.adresses.model.model;
+package com.balu.backend.modules.adresses.model;
 
 public interface IAddressViewPaged {
     Long getId();
