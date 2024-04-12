@@ -1,21 +1,21 @@
 export function isInvalidEmail(email){
     email = email.trim();
-    return !email.matches("^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$");
+    return !RegExp("^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$").test(email);
 }
 
 export function isInvalidPhoneNumber(phone){
     phone = phone.trim();
-    return !phone.matches("^[0-9]{10}$");
+    return !RegExp("^[0-9]{10}$").test(phone);
 }
 
 export function isInvalidPassword(password){
     password = password.trim();
-    return !password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\S).{8,}$/);
+    return !RegExp("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$").test(password);
 }
 
 export function isInvalidName(name){
     name = name.trim();
-    return !name.matches("^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ' .]+$");
+    return !RegExp("^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ' .]+$").test(name);
 }
 
 export function isInvalidImage(image){;
@@ -27,11 +27,9 @@ export function isNotBlank(string){
 }
 
 export function isInvalidNoSpecialCharactersString(string) {    
-    string = string.trim();
-    return string.matches("^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ' .0-9]+$");
+    return !RegExp("^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ' .0-9]+$").test(string);
 }
 
 export function isInvalidOnlyNumbersString(string) {
-    string = string.trim();
-    return !(/^\d+$/).test(string);
-  }  
+    return !RegExp("^[0-9]+$").test(string);
+}
