@@ -29,3 +29,7 @@ export function isNotBlank(string){
 export function isInvalidNoSpecialCharactersString(string) {    
     return !RegExp("^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ' .0-9]+$").test(string);
 }
+
+export function isInvalidOnlyNumbersString(string) {
+    return !RegExp("^[0-9]+$").test(string);
+}

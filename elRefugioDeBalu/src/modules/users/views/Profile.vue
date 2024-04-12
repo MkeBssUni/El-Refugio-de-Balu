@@ -54,7 +54,8 @@
                             <b-form-group>
                                 <label for="phoneNumber" class="mb-2">Número de teléfono:</label>
                                 <b-form-input id="phoneNumber" v-model.trim="user.phoneNumber"
-                                    :readonly="viewPersonalInfo" @input="validateField('phoneNumber')"></b-form-input>
+                                    :readonly="viewPersonalInfo" @input="validateField('phoneNumber')"
+                                    type="tel"></b-form-input>
                                 <b-form-invalid-feedback v-show="showErrors.phoneNumber">
                                     {{ errorMessages.phoneNumber }}
                                 </b-form-invalid-feedback>
@@ -100,15 +101,21 @@
                                 <b-col cols="12" class="mt-3">
                                     <b-form-group>
                                         <label for="country" class="mb-2">País:</label>
-                                        <b-form-input id="country" v-model="user.addressDto.country"
-                                            :readonly="viewAddress"></b-form-input>
+                                        <b-form-select id="country" v-model="user.addressDto.country"
+                                            :disabled="viewAddress" class="form-select">
+                                            <option v-for="country in countries" :key="country.value"
+                                                :value="country.value">{{ country.value }}</option>
+                                        </b-form-select>
                                     </b-form-group>
                                 </b-col>
                                 <b-col cols="12" class="mt-3">
                                     <b-form-group>
                                         <label for="state" class="mb-2">Estado:</label>
-                                        <b-form-input id="state" v-model="user.addressDto.state"
-                                            :readonly="viewAddress"></b-form-input>
+                                        <b-form-select id="state" v-model="user.addressDto.state"
+                                            :disabled="viewAddress" class="form-select">
+                                            <option v-for="state in states" :key="state.value" :value="state.value">{{
+                                                state.value }}</option>
+                                        </b-form-select>
                                     </b-form-group>
                                 </b-col>
                             </b-row>
@@ -118,43 +125,61 @@
                                 <b-col cols="4" class="mt-3">
                                     <b-form-group>
                                         <label for="city" class="mb-2">Ciudad:</label>
-                                        <b-form-input id="city" v-model="user.addressDto.city"
-                                            :readonly="viewAddress"></b-form-input>
+                                        <b-form-input id="city" v-model="user.addressDto.city" :readonly="viewAddress"
+                                            @input="validateField('city')"></b-form-input>
+                                        <b-form-invalid-feedback v-show="showErrors.city">
+                                            {{ errorMessages.city }}
+                                        </b-form-invalid-feedback>
                                     </b-form-group>
                                 </b-col>
                                 <b-col cols="4" class="mt-3">
                                     <b-form-group>
                                         <label for="colony" class="mb-2">Colonia:</label>
                                         <b-form-input id="colony" v-model="user.addressDto.colony"
-                                            :readonly="viewAddress"></b-form-input>
+                                            :readonly="viewAddress" @input="validateField('colony')"></b-form-input>
+                                        <b-form-invalid-feedback v-show="showErrors.colony">
+                                            {{ errorMessages.colony }}
+                                        </b-form-invalid-feedback>
                                     </b-form-group>
                                 </b-col>
                                 <b-col cols="4" class="mt-3">
                                     <b-form-group>
                                         <label for="street" class="mb-2">Calle:</label>
                                         <b-form-input id="street" v-model="user.addressDto.street"
-                                            :readonly="viewAddress"></b-form-input>
+                                            :readonly="viewAddress" @input="validateField('street')"></b-form-input>
+                                        <b-form-invalid-feedback v-show="showErrors.street">
+                                            {{ errorMessages.street }}
+                                        </b-form-invalid-feedback>
                                     </b-form-group>
                                 </b-col>
                                 <b-col cols="3" class="mt-3">
                                     <b-form-group>
                                         <label for="externalNumber" class="mb-2">Número exterior:</label>
                                         <b-form-input id="externalNumber" v-model="user.addressDto.exteriorNumber"
-                                            :readonly="viewAddress"></b-form-input>
+                                            :readonly="viewAddress" @input="validateField('externalNumber')"></b-form-input>
+                                        <b-form-invalid-feedback v-show="showErrors.externalNumber">
+                                            {{ errorMessages.externalNumber }}
+                                        </b-form-invalid-feedback>
                                     </b-form-group>
                                 </b-col>
                                 <b-col cols="3" class="mt-3">
                                     <b-form-group>
                                         <label for="internalNumber" class="mb-2">Número interior:</label>
                                         <b-form-input id="internalNumber" v-model="user.addressDto.interiorNumber"
-                                            :readonly="viewAddress"></b-form-input>
+                                            :readonly="viewAddress" @input="validateField('internalNumber')"></b-form-input>
+                                        <b-form-invalid-feedback v-show="showErrors.internalNumber">
+                                            {{ errorMessages.internalNumber }}
+                                        </b-form-invalid-feedback>
                                     </b-form-group>
                                 </b-col>
                                 <b-col cols="6" class="mt-3">
                                     <b-form-group>
                                         <label for="postalCode" class="mb-2">Código postal:</label>
                                         <b-form-input id="postalCode" v-model="user.addressDto.postalCode"
-                                            :readonly="viewAddress"></b-form-input>
+                                            :readonly="viewAddress" @input="validateField('postalCode')"></b-form-input>
+                                        <b-form-invalid-feedback v-show="showErrors.postalCode">
+                                            {{ errorMessages.postalCode }}
+                                        </b-form-invalid-feedback>
                                     </b-form-group>
                                 </b-col>
                                 <b-col cols="12" class="mt-3">
@@ -162,24 +187,33 @@
                                         <label for="addressReference" class="mb-2">Referencia de la
                                             dirección:</label>
                                         <b-form-textarea id="addressReference"
-                                            v-model="user.addressDto.addressReference" rows="3"
-                                            :readonly="viewAddress"></b-form-textarea>
+                                            v-model="user.addressDto.addressReference" :readonly="viewAddress"
+                                            @input="validateField('addressReference')" rows="3"></b-form-textarea>
+                                        <b-form-invalid-feedback v-show="showErrors.addressReference">
+                                            {{ errorMessages.addressReference }}
+                                        </b-form-invalid-feedback>                                        
                                     </b-form-group>
                                 </b-col>
                                 <b-col cols="4" class="mt-3">
                                     <b-form-group>
                                         <label for="homeType" class="mb-2">Tipo de hogar:</label>
-                                        <b-form-input id="homeType" v-model="user.addressDto.homeSpecification.type"
-                                            :readonly="viewAddress"></b-form-input>
+                                        <b-form-select id="homeType" class="form-select"
+                                            v-model="user.addressDto.homeSpecification.type" :disabled="viewAddress">
+                                            <b-form-select-option v-for="homeType in homeTypes" :key="homeType.value"
+                                                :value="homeType.value">{{ homeType.text }}</b-form-select-option>                                                
+                                        </b-form-select>
                                     </b-form-group>
                                 </b-col>
                                 <b-col cols="4" class="mt-3">
                                     <b-form-group>
                                         <label for="numberOfResidents" class="mb-2">Número de
                                             residentes:</label>
-                                        <b-form-input id="numberOfResidents"
-                                            v-model="user.addressDto.homeSpecification.numberOfResidents"
-                                            :readonly="viewAddress"></b-form-input>
+                                        <b-form-input id="numberOfResidents" v-model="user.addressDto.homeSpecification.numberOfResidents"
+                                            :readonly="viewAddress" @input="validateField('numberOfResidents')"
+                                            type="number"></b-form-input>
+                                        <b-form-invalid-feedback v-show="showErrors.numberOfResidents">
+                                            {{ errorMessages.numberOfResidents }}
+                                        </b-form-invalid-feedback>
                                     </b-form-group>
                                 </b-col>
                                 <b-col cols="4" class="mt-3">
@@ -218,14 +252,21 @@ import Swal from "sweetalert2";
 import gatoWalkingGif from "@/assets/imgs/gatoWalking.gif";
 import instance from "../../../config/axios";
 import { decrypt } from '../../../kernel/hashFunctions';
-import { isInvalidName, isInvalidNoSpecialCharactersString, isInvalidEmail, isInvalidPhoneNumber } from "../../../kernel/validations";
+import { isInvalidName, isInvalidNoSpecialCharactersString, isInvalidEmail, isInvalidPhoneNumber, isInvalidOnlyNumbersString } from "../../../kernel/validations";
+import countries from "../../../kernel/data/countries";
+import states from "../../../kernel/data/states";
+import homeTypes from "../../../kernel/data/homeTypes";
 
 export default {
     data() {
         return {
+            countries: countries,
+            states: states,
+            homeTypes: homeTypes,
             viewPersonalInfo: true,
             viewAddress: true,
             isValidPersonalInformationForm: false,
+            isValidAddressForm: false,
             user: {
                 userId: "",
                 username: "",
@@ -259,6 +300,18 @@ export default {
                 surname: false,
                 username: false,
                 phoneNumber: false,
+                country: false,
+                state: false,
+                city: false,
+                colony: false,
+                street: false,
+                externalNumber: false,
+                internalNumber: false,
+                postalCode: false,
+                addressReference: false,
+                homeType: false,
+                numberOfResidents: false,
+                outdoorArea: false,
             },
             errorMessages: {
                 name: "",
@@ -267,6 +320,17 @@ export default {
                 username: "",
                 phoneNumber: "",
                 country: "",
+                state: "",
+                city: "",
+                colony: "",
+                street: "",
+                externalNumber: "",
+                internalNumber: "",
+                postalCode: "",
+                addressReference: "",
+                homeType: "",
+                numberOfResidents: "",
+                outdoorArea: "",
             }
         }
     },
@@ -301,8 +365,6 @@ export default {
                 this.user = response.data.data;
                 this.user.username = await decrypt(this.user.username);
                 this.user.phoneNumber = await decrypt(this.user.phoneNumber);
-                if (this.user.addressDto.exteriorNumber == null) this.user.addressDto.exteriorNumber = "S/N";
-                if (this.user.addressDto.interiorNumber == null) this.user.addressDto.interiorNumber = "S/N";
                 Swal.close();
             } catch (error) {
                 /* Swal.fire({
@@ -413,6 +475,186 @@ export default {
                         input.classList.add("is-valid");
                     }
                     break;
+                case "country":
+                    if (!this.user.addressDto.country) {
+                        this.showErrors.country = true;
+                        this.errorMessages.country = "Campo obligatorio";
+                        input.classList.add("is-invalid");
+                    } else {
+                        this.showErrors.country = false;
+                        this.errorMessages.country = "";
+                        input.classList.remove("is-invalid");
+                        input.classList.add("is-valid");
+                    }
+                    break;
+                case "state":
+                    if (!this.user.addressDto.state) {
+                        this.showErrors.state = true;
+                        this.errorMessages.state = "Campo obligatorio";
+                        input.classList.add("is-invalid");
+                    } else {
+                        this.showErrors.state = false;
+                        this.errorMessages.state = "";
+                        input.classList.remove("is-invalid");
+                        input.classList.add("is-valid");
+                    }
+                    break;
+                case "city":
+                    if (!this.user.addressDto.city) {
+                        this.showErrors.city = true;
+                        this.errorMessages.city = "Campo obligatorio";
+                        input.classList.add("is-invalid");
+                    } else if (this.user.addressDto.city.length < 3 || this.user.addressDto.city.length > 50) {
+                        this.showErrors.city = true;
+                        this.errorMessages.city = "La ciudad debe tener entre 3 y 50 caracteres";
+                        input.classList.add("is-invalid");
+                    } else if (isInvalidNoSpecialCharactersString(this.user.addressDto.city)) {
+                        this.showErrors.city = true;
+                        this.errorMessages.city = "La ciudad no puede contener caracteres especiales";
+                        input.classList.add("is-invalid");
+                    } else {
+                        this.showErrors.city = false;
+                        this.errorMessages.city = "";
+                        input.classList.remove("is-invalid");
+                        input.classList.add("is-valid");
+                    }
+                    break;
+                case "colony":
+                    if (!this.user.addressDto.colony) {
+                        this.showErrors.colony = true;
+                        this.errorMessages.colony = "Campo obligatorio";
+                        input.classList.add("is-invalid");
+                    } else if (this.user.addressDto.colony.length < 3 || this.user.addressDto.colony.length > 50) {
+                        this.showErrors.colony = true;
+                        this.errorMessages.colony = "La colonia debe tener entre 3 y 50 caracteres";
+                        input.classList.add("is-invalid");
+                    } else if (isInvalidNoSpecialCharactersString(this.user.addressDto.colony)) {
+                        this.showErrors.colony = true;
+                        this.errorMessages.colony = "La colonia no puede contener caracteres especiales";
+                        input.classList.add("is-invalid");
+                    } else {
+                        this.showErrors.colony = false;
+                        this.errorMessages.colony = "";
+                        input.classList.remove("is-invalid");
+                        input.classList.add("is-valid");
+                    }
+                    break;
+                case "street":
+                    if (!this.user.addressDto.street) {
+                        this.showErrors.street = true;
+                        this.errorMessages.street = "Campo obligatorio";
+                        input.classList.add("is-invalid");
+                    } else if (this.user.addressDto.street.length < 3 || this.user.addressDto.street.length > 50) {
+                        this.showErrors.street = true;
+                        this.errorMessages.street = "La calle debe tener entre 3 y 50 caracteres";
+                        input.classList.add("is-invalid");
+                    } else if (isInvalidNoSpecialCharactersString(this.user.addressDto.street)) {
+                        this.showErrors.street = true;
+                        this.errorMessages.street = "La calle no puede contener caracteres especiales";
+                        input.classList.add("is-invalid");
+                    } else {
+                        this.showErrors.street = false;
+                        this.errorMessages.street = "";
+                        input.classList.remove("is-invalid");
+                        input.classList.add("is-valid");
+                    }
+                    break;
+                case "externalNumber":
+                    if (!this.user.addressDto.exteriorNumber) {
+                        this.showErrors.externalNumber = true;
+                        this.errorMessages.externalNumber = "Campo obligatorio";
+                        input.classList.add("is-invalid");
+                    } else if (this.user.addressDto.exteriorNumber.length < 1 || this.user.addressDto.exteriorNumber.length > 3) {
+                        this.showErrors.externalNumber = true;
+                        this.errorMessages.externalNumber = "El número exterior debe tener entre 1 y 3 caracteres";
+                        input.classList.add("is-invalid");
+                    } else if (isInvalidOnlyNumbersString(this.user.addressDto.exteriorNumber)) {
+                        this.showErrors.externalNumber = true;
+                        this.errorMessages.externalNumber = "El número exterior solo puede contener números";
+                        input.classList.add("is-invalid");
+                    } else {
+                        this.showErrors.externalNumber = false;
+                        this.errorMessages.externalNumber = "";
+                        input.classList.remove("is-invalid");
+                        input.classList.add("is-valid");
+                    }
+                    break;
+                case "internalNumber":
+                    if (this.user.addressDto.interiorNumber && (this.user.addressDto.interiorNumber.length < 1 || this.user.addressDto.interiorNumber.length > 3)) {
+                        this.showErrors.internalNumber = true;
+                        this.errorMessages.internalNumber = "El número interior debe tener entre 1 y 3 caracteres";
+                        input.classList.add("is-invalid");
+                    } else if (this.user.addressDto.interiorNumber && isInvalidOnlyNumbersString(this.user.addressDto.interiorNumber)) {
+                        this.showErrors.internalNumber = true;
+                        this.errorMessages.internalNumber = "El número interior solo puede contener números";
+                        input.classList.add("is-invalid");
+                    } else {
+                        this.showErrors.internalNumber = false;
+                        this.errorMessages.internalNumber = "";
+                        input.classList.remove("is-invalid");  
+                        input.classList.add("is-valid");                      
+                    }
+                    break;
+                case "postalCode":
+                    if (!this.user.addressDto.postalCode) {
+                        this.showErrors.postalCode = true;
+                        this.errorMessages.postalCode = "Campo obligatorio";
+                        input.classList.add("is-invalid");
+                    } else if (this.user.addressDto.postalCode.length < 5 || this.user.addressDto.postalCode.length > 5) {
+                        this.showErrors.postalCode = true;
+                        this.errorMessages.postalCode = "El código postal debe tener 5 caracteres";
+                        input.classList.add("is-invalid");
+                    } else if (isInvalidOnlyNumbersString(this.user.addressDto.postalCode)) {
+                        this.showErrors.postalCode = true;
+                        this.errorMessages.postalCode = "El código postal solo puede contener números";
+                        input.classList.add("is-invalid");
+                    } else {
+                        this.showErrors.postalCode = false;
+                        this.errorMessages.postalCode = "";
+                        input.classList.remove("is-invalid");
+                        input.classList.add("is-valid");
+                    }
+                    break;
+                case "addressReference":                    
+                    if (this.user.addressDto.addressReference && (this.user.addressDto.addressReference.length < 20 || this.user.addressDto.addressReference.length > 200)) {
+                        this.showErrors.addressReference = true;
+                        this.errorMessages.addressReference = "La referencia de la dirección debe tener entre 20 y 200 caracteres";
+                        input.classList.add("is-invalid");
+                    } else {
+                        this.showErrors.addressReference = false;
+                        this.errorMessages.addressReference = "";
+                        input.classList.remove("is-invalid");
+                        input.classList.add("is-valid");
+                    }
+                    break;
+                case "homeType":
+                    if (!this.user.addressDto.homeSpecification.type) {
+                        this.showErrors.homeType = true;
+                        this.errorMessages.homeType = "Campo obligatorio";
+                        input.classList.add("is-invalid");
+                    } else {
+                        this.showErrors.homeType = false;
+                        this.errorMessages.homeType = "";
+                        input.classList.remove("is-invalid");
+                        input.classList.add("is-valid");
+                    }
+                    break;
+                case "numberOfResidents":
+                    if (!this.user.addressDto.homeSpecification.numberOfResidents) {
+                        this.showErrors.numberOfResidents = true;
+                        this.errorMessages.numberOfResidents = "Campo obligatorio";
+                        input.classList.add("is-invalid");
+                    } else if (this.user.addressDto.homeSpecification.numberOfResidents < 1) {
+                        this.showErrors.numberOfResidents = true;
+                        this.errorMessages.numberOfResidents = "El número de residentes debe ser al menos 1";
+                        input.classList.add("is-invalid");
+                    } else {
+                        this.showErrors.numberOfResidents = false;
+                        this.errorMessages.numberOfResidents = "";
+                        input.classList.remove("is-invalid");
+                        input.classList.add("is-valid");
+                    }
+                    break;
             }
         },
         validatePersonalInformationForm() {
@@ -423,6 +665,41 @@ export default {
             this.validateField("phoneNumber");
             if (!this.showErrors.name && !this.showErrors.lastname && !this.showErrors.surname && !this.showErrors.username && !this.showErrors.phoneNumber) this.isValidPersonalInformationForm = true;
             else this.isValidPersonalInformationForm = false;
+        },
+        validateAddressForm() {
+            this.validateField("country");
+            this.validateField("state");
+            this.validateField("city");
+            this.validateField("colony");
+            this.validateField("street");
+            this.validateField("externalNumber");
+            this.validateField("internalNumber");
+            this.validateField("postalCode");
+            this.validateField("addressReference");
+            this.validateField("homeType");
+            this.validateField("numberOfResidents");
+            if (!this.showErrors.country && !this.showErrors.state && !this.showErrors.city && !this.showErrors.colony && !this.showErrors.street && !this.showErrors.externalNumber && !this.showErrors.internalNumber && !this.showErrors.postalCode && !this.showErrors.addressReference && !this.showErrors.homeType && !this.showErrors.numberOfResidents) this.isValidAddressForm = true;
+            else this.isValidAddressForm = false;
+        },
+        confirmUpdateAddress() {
+            this.validateAddressForm();
+            if (this.isValidAddressForm) {
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: 'Estás a punto de actualizar la información de tu hogar, ¿deseas continuar?',
+                    icon: 'warning',
+                    iconColor: '#FFA500',
+                    showCancelButton: true,
+                    confirmButtonColor: '#FFA500',
+                    cancelButtonColor: '#A93D3D',
+                    confirmButtonText: 'Sí, continuar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.updateAddress();
+                    }
+                })
+            }
         },
         confirmUpdatePersonalInfo() {
             this.validatePersonalInformationForm();
@@ -464,11 +741,42 @@ export default {
                     timerProgressBar: true,
                     showConfirmButton: false
                 })
-                this.viewPersonalInfo = !this.viewPersonalInfo;
             } catch (error) {
                 Swal.fire({
                     title: 'Error',
                     text: 'Ocurrió un error al actualizar tus datos',
+                    icon: 'error',
+                    iconColor: '#A93D3D',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                })
+            }
+        },
+        async updateAddress() {
+            try {
+                Swal.fire({
+                    title: 'Actualizando...',
+                    text: 'Estamos actualizando la información de tu hogar, espera un momento',
+                    imageUrl: gatoWalkingGif,
+                    imageWidth: 160,
+                    imageHeight: 160,
+                    showConfirmButton: false
+                })
+                const response = true;
+                Swal.fire({
+                    title: '¡Listo!',
+                    text: 'La información de tu hogar se ha actualizado correctamente',
+                    icon: 'success',
+                    iconColor: '#4BB543',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                })
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error al actualizar la información de tu hogar',
                     icon: 'error',
                     iconColor: '#A93D3D',
                     timer: 3000,
@@ -485,7 +793,11 @@ export default {
                     this.confirmUpdatePersonalInfo();
                 }
             } else {
-                this.viewAddress = !this.viewAddress;
+                if (this.viewAddress) {
+                    this.viewAddress = !this.viewAddress;
+                } else {
+                    this.confirmUpdateAddress();
+                }
             }
         },
     },
