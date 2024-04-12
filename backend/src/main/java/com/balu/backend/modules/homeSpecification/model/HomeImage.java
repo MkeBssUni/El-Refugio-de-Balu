@@ -25,7 +25,7 @@ public class HomeImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(columnDefinition = "text")
+    @Column(columnDefinition = "longtext")
     private String image;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name ="home_specification_id", referencedColumnName = "id")
