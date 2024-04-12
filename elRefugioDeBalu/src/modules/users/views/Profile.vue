@@ -8,8 +8,8 @@
                         <h4 class="mb-0 mt-1">Información personal</h4>
                     </div>
                 </b-card>
-                <b-card bg-variant="gray" class="p-4 form-card-shadow form-card-content">
-                    <b-row>
+                <b-card bg-variant="gray" class="form-card-shadow form-card-content" no-body>
+                    <b-row class="px-4 pt-5">
                         <b-col cols="12">
                             <b-form-group>
                                 <label for="name" class="mb-2">Nombre:</label>
@@ -42,16 +42,6 @@
                         </b-col>
                         <b-col cols="12" class="mt-3">
                             <b-form-group>
-                                <label for="username" class="mb-2">Correo electrónico:</label>
-                                <b-form-input id="username" v-model.trim="user.username" :readonly="viewPersonalInfo"
-                                    @input="validateField('username')"></b-form-input>
-                                <b-form-invalid-feedback v-show="showErrors.username">
-                                    {{ errorMessages.username }}
-                                </b-form-invalid-feedback>
-                            </b-form-group>
-                        </b-col>
-                        <b-col cols="12" class="mt-3">
-                            <b-form-group>
                                 <label for="phoneNumber" class="mb-2">Número de teléfono:</label>
                                 <b-form-input id="phoneNumber" v-model.trim="user.phoneNumber"
                                     :readonly="viewPersonalInfo" @input="validateField('phoneNumber')"
@@ -62,7 +52,7 @@
                             </b-form-group>
                         </b-col>
                     </b-row>
-                    <b-row>
+                    <b-row class="px-4 pb-4">
                         <b-col cols="12">
                             <b-button variant="orange"
                                 class="mt-4 w-100 d-flex align-items-center justify-content-between"
@@ -80,9 +70,40 @@
                             </b-button>
                         </b-col>
                     </b-row>
+                    <hr>
+                    <b-row class="px-4">                        
+                        <b-col cols="12" class="mt-3">
+                            <b-form-group>
+                                <label for="username" class="mb-2">Correo electrónico:</label>
+                                <b-form-input id="username" v-model.trim="user.username" :readonly="viewEmail"
+                                    @input="validateField('username')"></b-form-input>
+                                <b-form-invalid-feedback v-show="showErrors.username">
+                                    {{ errorMessages.username }}
+                                </b-form-invalid-feedback>
+                            </b-form-group>
+                        </b-col>
+                    </b-row>
+                    <b-row class="px-4 pb-4">
+                        <b-col cols="12">
+                            <b-button variant="orange"
+                                class="mt-4 w-100 d-flex align-items-center justify-content-between"
+                                @click="handleUpdateButton(3)">
+                                <span>{{ viewEmail ? 'Modificar email' : 'Guardar email' }}</span>
+                                <b-icon class="me-2" :icon="viewEmail ? 'pencil' : 'check-circle'"
+                                    font-scale="1.2"></b-icon>
+                            </b-button>
+                        </b-col>
+                        <b-col cols="12" v-if="!viewEmail">
+                            <b-button variant="light-danger"
+                                class="mt-3 w-100 d-flex align-items-center justify-content-between" @click="cancel(3)">
+                                <span>Cancelar</span>
+                                <b-icon class="me-2" icon="x-circle" font-scale="1.2"></b-icon>
+                            </b-button>
+                        </b-col>
+                    </b-row>
                 </b-card>
             </b-col>
-            <b-col cols="8">
+            <b-col cols="8" v-if="showAddress">
                 <b-card bg-variant="secondary-blue" class="py-2 form-card-shadow relative-position form-card-title"
                     no-body>
                     <div class="d-flex align-items-center ms-3 ms-md-4">
@@ -298,13 +319,16 @@ import homeTypes from "../../../kernel/data/homeTypes";
 export default {
     data() {
         return {
+            showAddress: false,
             countries: countries,
             states: states,
             homeTypes: homeTypes,
             viewPersonalInfo: true,
             viewAddress: true,
+            viewEmail: true,
             isValidPersonalInformationForm: false,
             isValidAddressForm: false,
+            isValidEmailForm: false,
             user: {
                 username: "",
                 name: "",
@@ -377,7 +401,6 @@ export default {
             document.getElementById("name").classList.remove("is-invalid", "is-valid");
             document.getElementById("lastname").classList.remove("is-invalid", "is-valid");
             document.getElementById("surname").classList.remove("is-invalid", "is-valid");
-            document.getElementById("username").classList.remove("is-invalid", "is-valid");
             document.getElementById("phoneNumber").classList.remove("is-invalid", "is-valid");
         },
         cleanAddressInputs() {
@@ -393,15 +416,26 @@ export default {
             document.getElementById("homeType").classList.remove("is-invalid", "is-valid");
             document.getElementById("numberOfResidents").classList.remove("is-invalid", "is-valid");
         },
+        cleanEmailInput() {
+            document.getElementById("username").classList.remove("is-invalid", "is-valid");
+        },
         cancel(option) {
-            if (option === 1) {
-                this.viewPersonalInfo = true;
-                this.cleanPersonalInformationInputs();
-                this.getProfile();
-            } else {
-                this.viewAddress = true;
-                this.cleanAddressInputs();
-                this.getProfile();
+            switch (option) {
+                case 1:
+                    this.viewPersonalInfo = true;
+                    this.cleanPersonalInformationInputs();
+                    this.getProfile();
+                    break;
+                case 2:
+                    this.viewAddress = true;
+                    this.cleanAddressInputs();
+                    this.getProfile();
+                    break;
+                case 3:
+                    this.viewEmail = true;
+                    this.cleanEmailInput();
+                    this.getProfile();
+                    break;
             }
         },
         goBack() {
@@ -436,17 +470,7 @@ export default {
                 this.user.phoneNumber = await decrypt(this.user.phoneNumber);
                 Swal.close();
             } catch (error) {
-                /* Swal.fire({
-                    title: 'Error',
-                    text: 'Ocurrió un error al cargar los detalles de la mascota',
-                    icon: 'error',
-                    iconColor: '#A93D3D',
-                    timer: 3000,
-                    timerProgressBar: true,
-                    showConfirmButton: false
-                }).then(() => {
-                    this.$router.push('/petList')
-                }) */
+                this.showError();
             }
         },
         loadImgError() {
@@ -821,9 +845,8 @@ export default {
             this.validateField("name");
             this.validateField("lastname");
             this.validateField("surname");
-            this.validateField("username");
             this.validateField("phoneNumber");
-            if (!this.showErrors.name && !this.showErrors.lastname && !this.showErrors.surname && !this.showErrors.username && !this.showErrors.phoneNumber) this.isValidPersonalInformationForm = true;
+            if (!this.showErrors.name && !this.showErrors.lastname && !this.showErrors.surname && !this.showErrors.phoneNumber) this.isValidPersonalInformationForm = true;
             else this.isValidPersonalInformationForm = false;
         },
         validateAddressForm() {
@@ -841,6 +864,11 @@ export default {
             this.validateField("numberOfResidents");
             if (!this.showErrors.country && !this.showErrors.state && !this.showErrors.city && !this.showErrors.colony && !this.showErrors.street && !this.showErrors.externalNumber && !this.showErrors.internalNumber && !this.showErrors.postalCode && !this.showErrors.addressReference && !this.showErrors.homeType && !this.showErrors.numberOfResidents && !this.showErrors.homeImage) this.isValidAddressForm = true;
             else this.isValidAddressForm = false;
+        },
+        validateEmailForm() {
+            this.validateField("username");
+            if (!this.showErrors.username) this.isValidEmailForm = true;
+            else this.isValidEmailForm = false;
         },
         confirmUpdateAddress() {
             this.validateAddressForm();
@@ -882,6 +910,26 @@ export default {
                 })
             }
         },
+        confirmUpdateEmail() {
+            this.validateEmailForm();
+            if (this.isValidEmailForm) {
+                Swal.fire({
+                    title: '¿Estás seguro?',                    
+                    text: 'Estás a punto de actualizar tu correo electrónico, deberás iniciar sesión nuevamente, ¿deseas continuar?',
+                    icon: 'warning',
+                    iconColor: '#FFA500',
+                    showCancelButton: true,
+                    confirmButtonColor: '#FFA500',
+                    cancelButtonColor: '#A93D3D',
+                    confirmButtonText: 'Sí, continuar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.updateEmail();
+                    }
+                })
+            }
+        },
         async updatePersonalInfo() {
             try {
                 Swal.fire({
@@ -916,20 +964,7 @@ export default {
                     this.cleanPersonalInformationInputs();
                 })
             } catch (error) {
-                if (error.response.data.message === "DUPLICATE_RECORD") {
-                    Swal.fire({
-                        icon: 'error',
-                        title: '¡Error!',
-                        text: 'Intenta con otro correo electrónico',
-                        toast: true,
-                        position: 'top-end',
-                        timer: 3000,
-                        showCancelButton: false,
-                        showConfirmButton: false,
-                        timerProgressBar: true,
-                    });
-                } else {
-                    Swal.fire({
+                Swal.fire({
                     title: 'Error',
                     text: 'Ocurrió un error al actualizar tus datos personales',
                     icon: 'error',
@@ -938,7 +973,6 @@ export default {
                     timerProgressBar: true,
                     showConfirmButton: false
                 })
-                }                
             }
         },
         async updateAddress() {
@@ -994,24 +1028,91 @@ export default {
                 })
             }
         },
-        handleUpdateButton(option) {
-            if (option == 1) {
-                if (this.viewPersonalInfo) {
-                    this.viewPersonalInfo = !this.viewPersonalInfo;
+        async updateEmail() {
+            try {
+                Swal.fire({
+                    title: 'Actualizando...',
+                    text: 'Estamos actualizando tu correo electrónico, espera un momento',
+                    imageUrl: gatoWalkingGif,
+                    imageWidth: 160,
+                    imageHeight: 160,
+                    showConfirmButton: false
+                })
+                const email = await encrypt(this.user.username);
+                const phone = await encrypt(this.user.phoneNumber);
+                await instance.put(`/person/update/personalInfo`, {
+                    userId: localStorage.getItem("userId"),
+                    name: this.user.name,
+                    lastname: this.user.lastname,
+                    surname: this.user.surname,
+                    email: email,
+                    phone: phone
+                });
+                Swal.fire({
+                    title: '¡Listo!',
+                    text: 'Tu correo electrónico se ha actualizado correctamente, deberás iniciar sesión nuevamente',
+                    icon: 'success',
+                    iconColor: '#4BB543',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                }).then(() => {
+                    localStorage.clear();
+                    this.$router.push({ name: "login" });
+                })
+            } catch (error) {
+                if (error.response.data.message === "DUPLICATE_RECORD") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡Error!',
+                        text: 'Intenta con otro correo electrónico',
+                        toast: true,
+                        position: 'top-end',
+                        timer: 3000,
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        timerProgressBar: true,
+                    });
                 } else {
-                    this.confirmUpdatePersonalInfo();
-                }
-            } else {
-                if (this.viewAddress) {
-                    this.viewAddress = !this.viewAddress;
-                } else {
-                    this.confirmUpdateAddress();
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡Error!',
+                        text: 'Ocurrió un error al actualizar tu correo electrónico',
+                        toast: true,
+                        position: 'top-end',
+                        timer: 3000,
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        timerProgressBar: true,
+                    });                    
                 }
             }
+        },
+        handleUpdateButton(option) {
+            switch(option) {
+                case 1:
+                    if (this.viewPersonalInfo) this.viewPersonalInfo = !this.viewPersonalInfo;
+                    else this.confirmUpdatePersonalInfo();
+                    break;
+                case 2:
+                    if (this.viewAddress) this.viewAddress = !this.viewAddress;
+                    else this.confirmUpdateAddress();
+                    break;
+                case 3:
+                    if (this.viewEmail) this.viewEmail = !this.viewEmail;
+                    else this.confirmUpdateEmail();
+                    break;
+            }            
+        },
+        async getStorageRole() {
+            return await decrypt(localStorage.getItem("role"));
         },
     },
     mounted() {
         if (localStorage.getItem("userId")) {
+            const role = this.getStorageRole();
+            if (role === "GENERAL") this.showAddress = true;
+            else this.showAddress = false;
             this.getProfile();
         } else {
             this.showError();
