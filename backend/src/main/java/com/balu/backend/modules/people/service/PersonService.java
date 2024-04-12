@@ -1,9 +1,9 @@
 package com.balu.backend.modules.people.service;
 
 import com.balu.backend.kernel.*;
-import com.balu.backend.modules.adresses.model.model.Address;
-import com.balu.backend.modules.adresses.model.model.IAddressRepository;
-import com.balu.backend.modules.adresses.model.model.dto.AddressDto;
+import com.balu.backend.modules.adresses.model.Address;
+import com.balu.backend.modules.adresses.model.IAddressRepository;
+import com.balu.backend.modules.adresses.model.dto.AddressDto;
 import com.balu.backend.modules.hash.service.HashService;
 import com.balu.backend.modules.homeSpecification.model.Dto.HomeSpecificationDto;
 import com.balu.backend.modules.homeSpecification.model.HomeImage;

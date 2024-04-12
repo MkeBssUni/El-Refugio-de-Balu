@@ -1,7 +1,7 @@
-package com.balu.backend.modules.adresses.model.model;
+package com.balu.backend.modules.adresses.model;
 
-import com.balu.backend.modules.adresses.model.model.dto.AddressDto;
-import com.balu.backend.modules.adresses.model.model.dto.SaveAddressDto;
+import com.balu.backend.modules.adresses.model.dto.AddressDto;
+import com.balu.backend.modules.adresses.model.dto.SaveAddressDto;
 import com.balu.backend.modules.homeSpecification.model.HomeSpecification;
 import com.balu.backend.modules.users.model.User;
 import jakarta.persistence.*;

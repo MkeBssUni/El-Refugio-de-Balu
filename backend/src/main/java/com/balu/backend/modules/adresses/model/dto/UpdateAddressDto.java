@@ -1,12 +1,14 @@
-package com.balu.backend.modules.adresses.model.model.dto;
+package com.balu.backend.modules.adresses.model.dto;
 
-import com.balu.backend.modules.users.model.User;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+@AllArgsConstructor
 @Getter
 @Setter
-public class SaveAddressDto {
+public class UpdateAddressDto {
+    private Long id;
     private String country;
     private String street;
     private String colony;
@@ -16,6 +18,7 @@ public class SaveAddressDto {
     private String addressReference;
     private String exteriorNumber;
     private String interiorNumber;
-    private String userId;
-    private User user;
+    private Long userId;
+    private Long homeSpecificationId;
+    private Long addressId;
 }

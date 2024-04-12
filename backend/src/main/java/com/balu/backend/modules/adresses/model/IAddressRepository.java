@@ -1,4 +1,4 @@
-package com.balu.backend.modules.adresses.model.model;
+package com.balu.backend.modules.adresses.model;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

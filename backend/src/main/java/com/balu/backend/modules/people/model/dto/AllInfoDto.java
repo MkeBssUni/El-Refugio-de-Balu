@@ -1,6 +1,6 @@
 package com.balu.backend.modules.people.model.dto;
 
-import com.balu.backend.modules.adresses.model.model.dto.AddressDto;
+import com.balu.backend.modules.adresses.model.dto.AddressDto;
 import lombok.Getter;
 import lombok.Setter;
 

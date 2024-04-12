@@ -3,8 +3,8 @@ package com.balu.backend.modules.homeSpecification.service;
 import com.balu.backend.kernel.ErrorMessages;
 import com.balu.backend.kernel.ResponseApi;
 import com.balu.backend.kernel.Validations;
-import com.balu.backend.modules.adresses.model.model.Address;
-import com.balu.backend.modules.adresses.model.model.IAddressRepository;
+import com.balu.backend.modules.adresses.model.Address;
+import com.balu.backend.modules.adresses.model.IAddressRepository;
 import com.balu.backend.modules.hash.service.HashService;
 import com.balu.backend.modules.homeSpecification.model.*;
 import com.balu.backend.modules.homeSpecification.model.Dto.SaveHomeDetailsDto;
@@ -20,8 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service

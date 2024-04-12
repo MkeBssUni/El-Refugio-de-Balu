@@ -1,9 +1,9 @@
-package com.balu.backend.modules.adresses.model.controller;
+package com.balu.backend.modules.adresses.controller;
 
 import com.balu.backend.kernel.ErrorMessages;
 import com.balu.backend.kernel.ResponseApi;
-import com.balu.backend.modules.adresses.model.model.dto.AddressDto;
-import com.balu.backend.modules.adresses.model.services.AddressService;
+import com.balu.backend.modules.adresses.model.dto.AddressDto;
+import com.balu.backend.modules.adresses.services.AddressService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
