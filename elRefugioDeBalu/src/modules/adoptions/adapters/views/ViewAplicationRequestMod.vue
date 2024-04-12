@@ -530,7 +530,7 @@ export default {
           status: this.statu,
         });
         Swal.fire({
-          title: "Su cambio ha sido aprovada",
+          title: "Su cambio ha sido exitosa",
           text: "Espere un momento mientras se realiza el proceso siguiente",
           icon: "success",
           iconColor: "#53A93D",
