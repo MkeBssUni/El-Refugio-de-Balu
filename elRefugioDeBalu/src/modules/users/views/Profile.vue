@@ -151,7 +151,8 @@
                                     <b-form-group>
                                         <label for="country" class="mb-2">País:</label>
                                         <b-form-select id="country" v-model="user.addressDto.country"
-                                            :disabled="viewAddress" class="form-select">
+                                            :disabled="viewAddress" class="form-select">                                            
+                                            <option value="null" disabled v-if="!user.addressDto.country">Selecciona un país</option>
                                             <option v-for="country in countries" :key="country.value"
                                                 :value="country.value">{{ country.value }}</option>
                                         </b-form-select>
@@ -162,6 +163,7 @@
                                         <label for="state" class="mb-2">Estado:</label>
                                         <b-form-select id="state" v-model="user.addressDto.state"
                                             :disabled="viewAddress" class="form-select">
+                                            <option value="null" disabled v-if="!user.addressDto.state">Selecciona un estado</option>
                                             <option v-for="state in states" :key="state.value" :value="state.value">{{
                                                 state.value }}</option>
                                         </b-form-select>
@@ -250,8 +252,9 @@
                                         <label for="homeType" class="mb-2">Tipo de hogar:</label>
                                         <b-form-select id="homeType" class="form-select"
                                             v-model="user.addressDto.homeSpecification.type" :disabled="viewAddress">
-                                            <b-form-select-option v-for="homeType in homeTypes" :key="homeType.value"
-                                                :value="homeType.value">{{ homeType.text }}</b-form-select-option>
+                                            <option value="null" disabled v-if="!user.addressDto.homeSpecification.type">Selecciona un tipo de hogar</option>                                                        
+                                            <option v-for="homeType in homeTypes" :key="homeType.value"
+                                                :value="homeType.value">{{ homeType.text }}</option>
                                         </b-form-select>
                                     </b-form-group>
                                 </b-col>
@@ -396,7 +399,7 @@ export default {
             }
         }
     },
-    methods: {
+    methods: {        
         cleanPersonalInformationInputs() {
             document.getElementById("name").classList.remove("is-invalid", "is-valid");
             document.getElementById("lastname").classList.remove("is-invalid", "is-valid");
@@ -468,6 +471,7 @@ export default {
                 this.user = response.data.data;
                 this.user.username = await decrypt(this.user.username);
                 this.user.phoneNumber = await decrypt(this.user.phoneNumber);
+
                 Swal.close();
             } catch (error) {
                 this.showError();
@@ -974,7 +978,7 @@ export default {
                     showConfirmButton: false
                 })
             }
-        },
+        },        
         async updateAddress() {
             try {
                 Swal.fire({
@@ -1011,10 +1015,14 @@ export default {
                     timer: 3000,
                     timerProgressBar: true,
                     showConfirmButton: false
-                }).then(() => {
+                }).then(async () => {
                     this.getProfile();
                     this.viewAddress = !this.viewAddress;
                     this.cleanAddressInputs();
+                    const profileCompleted = await decrypt(localStorage.getItem("profileCompleted"));
+                    if (profileCompleted === "false") {
+                        localStorage.setItem("profileCompleted", await encrypt("true"));                        
+                    }
                 })
             } catch (error) {
                 Swal.fire({
@@ -1104,20 +1112,20 @@ export default {
                     break;
             }            
         },
-        async getStorageRole() {
+        async getStorageRole() {            
             return await decrypt(localStorage.getItem("role"));
         },
     },
-    mounted() {
-        if (localStorage.getItem("userId")) {
-            const role = this.getStorageRole();
-            if (role === "GENERAL") this.showAddress = true;
-            else this.showAddress = false;
-            this.getProfile();
-        } else {
-            this.showError();
-        }
+    async mounted() {
+    if (localStorage.getItem("userId")) {
+        const role = await this.getStorageRole();
+        if (role === "GENERAL") this.showAddress = true;
+        else this.showAddress = false;
+        this.getProfile();
+    } else {
+        this.showError();
     }
+}
 }
 </script>
 
