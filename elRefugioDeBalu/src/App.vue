@@ -14,7 +14,7 @@ export default {
   <div id="app">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <header>
-      <dinamic-navigation />
+      <dinamic-navigation v-if="!$route.meta.hideNavigation" />
     </header>
     <main>
       <router-view />
