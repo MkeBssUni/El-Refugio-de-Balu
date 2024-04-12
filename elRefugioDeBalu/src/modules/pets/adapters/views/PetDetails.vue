@@ -100,7 +100,7 @@ export default {
             } else {                
                 Swal.fire({
                     title: 'Perfil incompleto',
-                    text: 'Para poder publicar una mascota, necesitas completar tu perfil',
+                    text: 'Para poder adoptar una mascota, necesitas completar tu perfil',
                     icon: 'warning',
                     iconColor: '#ff7d4a',
                     showCancelButton: true,
