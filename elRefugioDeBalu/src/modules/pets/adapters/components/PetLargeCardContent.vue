@@ -106,29 +106,29 @@
                     </b-col>
                     <b-row>
                         <b-col cols="12" lg="6">
-                            <div class="d-flex justify-content-between pe-xl-5">
-                                <p class="pet-p">Vacunado</p>
+                            <div class="d-flex justify-content-between align-items-center pe-4">
+                                <span class="pet-p mb-2">Vacunado</span>
                                 <b-icon v-if="pet.vaccinated" icon="check-circle" variant="success" font-scale="1.2"
                                     class="me-4 me-xl-5"></b-icon>
                                 <b-icon v-else icon="x-circle" variant="danger" font-scale="1.2"
                                     class="me-4 me-xl-5"></b-icon>
                             </div>
-                            <div class="d-flex justify-content-between pe-xl-5">
-                                <p class="pet-p">Desparasitado</p>
+                            <div class="d-flex justify-content-between align-items-center pe-4">
+                                <span class="pet-p my-2">Desparasitado</span>
                                 <b-icon v-if="pet.dewormed" icon="check-circle" variant="success" font-scale="1.2"
                                     class="me-4 me-xl-5"></b-icon>
                                 <b-icon v-else icon="x-circle" variant="danger" font-scale="1.2"
                                     class="me-4 me-xl-5"></b-icon>
                             </div>
-                            <div class="d-flex justify-content-between pe-xl-5">
-                                <p class="pet-p">Esterilizado</p>
+                            <div class="d-flex justify-content-between align-items-center pe-4">
+                                <span class="pet-p my-2">Esterilizado</span>
                                 <b-icon v-if="pet.sterilised" icon="check-circle" variant="success" font-scale="1.2"
                                     class="me-4 me-xl-5"></b-icon>
                                 <b-icon v-else icon="x-circle" variant="danger" font-scale="1.2"
                                     class="me-4 me-xl-5"></b-icon>
                             </div>
-                            <div class="d-flex justify-content-between pe-xl-5">
-                                <p class="pet-p">Con microchip</p>
+                            <div class="d-flex justify-content-between align-items-center pe-4">
+                                <span class="pet-p mt-2">Microchip</span>
                                 <b-icon v-if="pet.microchip" icon="check-circle" variant="success" font-scale="1.2"
                                     class="me-4 me-xl-5"></b-icon>
                                 <b-icon v-else icon="x-circle" variant="danger" font-scale="1.2"
