@@ -7,7 +7,7 @@
                         <b-img :src="pet.mainImage" class="pet-main-img" alt="Imagen principal de la mascota" fluid
                             center rounded></b-img>
                     </b-col>
-                    <b-col cols="12">
+                    <b-col cols="12" v-if="pet.images.length > 0">
                         <b-row class="mt-4">
                             <b-col v-for="(image, index) in pet.images" :key="index" cols="3"
                                 class="d-flex justify-content-center">
