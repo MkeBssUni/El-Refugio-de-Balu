@@ -3,17 +3,19 @@
         <b-row>
             <b-col cols="6" lg="5" xl="4">
                 <b-row>
-                    <b-col cols="12">
-                        <div @dragover.prevent @drop="dropImage">
-                            <b-img :src="pet.mainImage" class="pet-main-img" alt="Imagen principal de la mascota" fluid
-                                center rounded></b-img>
-                        </div>
+                    <b-col cols="12" @dragover.prevent @drop="dropImage">
+                        <b-img :src="pet.mainImage" class="pet-main-img" alt="Imagen principal de la mascota" fluid
+                            center rounded></b-img>
                     </b-col>
-                    <b-col v-for="(image, index) in pet.images" :key="index" cols="3" class="mt-3">
-                        <div class="pet-additional-img-container">
-                            <b-img :src="image" class="pet-additional-img" alt="Imagen adicional" fluid center
-                                draggable="true" @dragstart="dragStart(image)"></b-img>
-                        </div>
+                    <b-col cols="12">
+                        <b-row class="mt-4">
+                            <b-col v-for="(image, index) in pet.images" :key="index" cols="3" class="d-flex justify-content-center">
+                                <div class="pet-additional-img-container">
+                                    <b-img :src="image" class="pet-additional-img" alt="Imagen adicional" fluid center
+                                        draggable="true" @dragstart="dragStart(image)"></b-img>
+                                </div>
+                            </b-col>
+                        </b-row>
                     </b-col>
                 </b-row>
                 <b-row class="mb-3">
@@ -31,24 +33,9 @@
                         <h4>Descripción</h4>
                         <p class="p-comment text-dark-gray-input">{{ pet.description }}</p>
                     </b-col>
-                </b-row>
-                <hr class="divider my-0 d-block d-lg-none">
-                <b-row class="my-3 d-block d-lg-none">
-                    <b-col cols="12">
-                        <h4>Hábitos y cuidados especiales</h4>
-                    </b-col>
-                    <b-col cols="12" v-if="pet.specialCares">
-                        <ul>
-                            <li class="text-dark-gray-input mt-3" v-for="(care, index) in pet.specialCares"
-                                :key="index">{{ care }}</li>
-                        </ul>
-                    </b-col>
-                    <b-col cols="12" v-else>
-                        <p class="text-dark-gray-input ms-3">Sin especificar</p>
-                    </b-col>
-                </b-row>
+                </b-row>                
             </b-col>
-            <b-col cols="6" lg="7" xl="8" class="ps-3 ps-lg-5">
+            <b-col cols="6" lg="7" xl="8" class="ps-5">
                 <b-row class="my-3">
                     <b-col cols="9" xl="10" class="d-flex align-items-center">
                         <div>
@@ -151,8 +138,8 @@
                         <p class="p-comment text-dark-gray-input">{{ pet.observations }}</p>
                     </b-col>
                 </b-row>
-                <hr class="divider my-0 d-none d-lg-block">
-                <b-row class="my-3 d-none d-lg-block">
+                <hr class="divider my-0">
+                <b-row class="my-3">
                     <b-col cols="12">
                         <h4>Hábitos y cuidados especiales</h4>
                     </b-col>
