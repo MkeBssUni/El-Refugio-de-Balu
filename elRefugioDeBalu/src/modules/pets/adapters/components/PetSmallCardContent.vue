@@ -8,7 +8,7 @@
                             center rounded></b-img>
                     </b-col>
                     <b-col cols="12">
-                        <b-row class="mt-4">
+                        <b-row class="mt-4" v-if="pet.images.length > 0">
                             <b-col v-for="(image, index) in pet.images" :key="index" cols="3" class="d-flex justify-content-center">
                                 <div class="pet-additional-img-container">
                                     <b-img :src="image" class="pet-additional-img" alt="Imagen adicional" fluid center
