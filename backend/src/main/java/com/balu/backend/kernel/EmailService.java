@@ -130,7 +130,7 @@ public class EmailService {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, Utf8Encoding);
             helper.setTo(email);
-            helper.setSubject("Solicitud de cambios");
+            helper.setSubject("Noticias sobre tu mascota");
             helper.setText(EmailTemplates.mailTemplate(message),true);
             javaMailSender.send(mimeMessage);
         }catch (Exception e){
