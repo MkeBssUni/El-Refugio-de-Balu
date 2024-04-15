@@ -69,7 +69,7 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, Utf8Encoding);
             helper.setTo(email);
             helper.setSubject("¡Malas noticias!");
-            helper.setText(EmailTemplates.mailTemplate("Su solicitud de adopción de "+namePet+" ha sido finalizada"+namePet+"."),true);
+            helper.setText(EmailTemplates.mailTemplate("Su solicitud de adopción de <b>"+namePet+"</b> ha sido finalizada."),true);
             javaMailSender.send(message);
         }catch (Exception e){
             e.printStackTrace();
