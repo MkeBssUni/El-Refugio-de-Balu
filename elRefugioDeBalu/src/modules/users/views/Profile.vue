@@ -575,14 +575,15 @@ export default {
             if (file && this.validateImg(file)) {
                 try {
                     const base64Image = await this.convertToBase64(file);
-                    this.user.addressDto.homeSpecification.homeImage = base64Image;
+                    this.user.addressDto.homeSpecification.homeImage = base64Image;                    
                 } catch (error) {
                     this.loadImgError();
                 }
             }
         },
-        removeImg() {
+        removeImg() {            
             this.user.addressDto.homeSpecification.homeImage = null;
+            this.$refs.homeImageSelector.value = null;
         },
         validateField(field) {
             const input = document.getElementById(field);

@@ -578,15 +578,16 @@ export default {
                         this.duplicateImgError();                        
                         return;
                     } else {
-                        this.form.mainImage = base64Image;
+                        this.form.mainImage = base64Image;                        
                     }
                 } catch (error) {
                     this.loadImgError();
-                }
+                }                
             }
         },
-        unselectImg() {
+        unselectImg() {            
             this.form.mainImage = null;
+            this.$refs.mainImageSelector.value = null;
         },
         triggerAdditionalImgSelector() {
             this.$refs.additionalImageSelector.click();
@@ -600,15 +601,16 @@ export default {
                         this.duplicateImgError();
                         return;
                     } else {
-                        this.form.additionalImages.push(base64Image);                        
-                    }                  
+                        this.form.additionalImages.push(base64Image);                                                
+                    }                                   
                 } catch (error) {
                     this.loadImgError();
                 }
             }
         },
-        removeAdditionalImg(index) {
+        removeAdditionalImg(index) {            
             this.form.additionalImages.splice(index, 1);
+            this.$refs.additionalImageSelector.value = null;
         },
         validateForm() {
             this.validateNotNullMainImg();
