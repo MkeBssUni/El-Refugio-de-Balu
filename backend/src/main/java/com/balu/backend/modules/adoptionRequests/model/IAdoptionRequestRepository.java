@@ -56,6 +56,10 @@ public interface IAdoptionRequestRepository  extends JpaRepository<AdoptionReque
     @Query(value = "UPDATE adoption_requests SET  status_id= :status WHERE id = :id", nativeQuery = true)
     Integer changeStatusAdoptionRequest(@Param("id") Long id, @Param("status") Long idStatus);
 
+    @Query(value = "select users.username as username from adoption_requests inner join users on adoption_requests.user_id = users.id \n" +
+            "inner join statusses on statusses.id = adoption_requests.status_id where pet_id = 1 and statusses.name=\"CLOSED\"",nativeQuery = true)
+    Optional<IAdoptionRequestClosed> getClosed ();
+
     Long countAdoptionRequestByPet_Moderator_Id(Long idModerador);
 
 

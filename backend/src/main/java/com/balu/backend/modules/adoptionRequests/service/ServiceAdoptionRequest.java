@@ -3,10 +3,7 @@ package com.balu.backend.modules.adoptionRequests.service;
 import com.balu.backend.kernel.*;
 import com.balu.backend.modules.adoptionRequestImage.model.AdoptionRequestImage;
 import com.balu.backend.modules.adoptionRequestImage.model.AdoptionRequestImagesRepository;
-import com.balu.backend.modules.adoptionRequests.model.AdoptionRequest;
-import com.balu.backend.modules.adoptionRequests.model.IAdoptionRequestModViewPaged;
-import com.balu.backend.modules.adoptionRequests.model.IAdoptionRequestRepository;
-import com.balu.backend.modules.adoptionRequests.model.IAdoptionRequestViewPaged;
+import com.balu.backend.modules.adoptionRequests.model.*;
 import com.balu.backend.modules.adoptionRequests.model.dto.*;
 import com.balu.backend.modules.hash.service.HashService;
 import com.balu.backend.modules.logs.model.LogTypes;
@@ -163,10 +160,11 @@ public class ServiceAdoptionRequest {
                  dto.setAdditionalInformation(hashService.encrypt(dto.getAdditionalInformation()));
              }
 
+             if(dto.getImageAdoption() == null) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.MISSING_FIELDS.name());
+
             AdoptionRequest adoptionRequest = new AdoptionRequest(user,pet,status,parseJson(dto.getReasonsForAdoption()),parseJson(dto.getPreviousExperiencieDto()),dto.getAdditionalInformation());
             AdoptionRequest saveAdoption = iAdoptionRequestRepository.saveAndFlush(adoptionRequest);
             if(saveAdoption == null) return new ResponseApi<>(HttpStatus.INTERNAL_SERVER_ERROR,true,ErrorMessages.ADOPTIONREQUEST_NOT_SAVED.name());
-
 
             if(dto.getImageAdoption() != null){
                 List<AdoptionRequestImage>  adoptionRequestImages = new ArrayList<>();
@@ -239,10 +237,12 @@ public class ServiceAdoptionRequest {
                 if(dto.getStatus() == Statusses.ADOPTED){
                     changeAllAdoption(idAdoption,pet.getId());
                     emailService.sendAdoptionApprovalTemplate(hashService.decrypt(user.getUsername()),pet.getName());
+                    sendEmailclosed(pet.getName());
                 }
                 if(dto.getStatus() == Statusses.CLOSED){
                     emailService.finalizeAdoptionTemplate(hashService.decrypt(user.getUsername()),pet.getName());
                 }
+
             }
             logService.saveLog("Change status request adoption by: "+adoption, LogTypes.CHANGE_STATUS,"ADOPTIONREQUEST");
             return new ResponseApi<>(adoption,HttpStatus.OK,false,"Adoption request change status successfully");
@@ -273,6 +273,31 @@ public class ServiceAdoptionRequest {
             return false;
         }
     }
+
+    public boolean sendEmailclosed(String namePet) {
+
+        try {
+
+            Optional<IAdoptionRequestClosed> closed = iAdoptionRequestRepository.getClosed();
+
+            if (closed.isPresent()) {
+
+                List<String> usernames = new ArrayList<>();
+                usernames.add(closed.get().getUsername());
+
+                for (String username : usernames) {
+                    String decryptedUsername = hashService.decrypt(username);
+                    emailService.finalizeAdoptionTemplate(decryptedUsername, namePet);
+                }
+            } else {
+                return true;
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
 
     public boolean sendEmailModerador(Long idUser,String namePet){

@@ -608,7 +608,7 @@ export default {
         }).finally(() => {
           this.changeStatus();
         });
-      } catch (error) {
+      } catch (error) {        
         Swal.fire({
           title: "Ocurrio un error",
           text: "Cambio el estado no se pudo enviar correctamente",
