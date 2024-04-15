@@ -7,8 +7,7 @@
     />
     <div class="my-3">
       <b-container>
-        <b-row>
-          <form @submit="submitAdoptionForm()">
+        <b-row>          
             <!-- incio de fotos de casa -->
             <b-col cols="12" class="px-2 px-sm-4 px-xl-5 my-4 mb-sm-5">
               <b-row>
@@ -540,8 +539,7 @@
                 <b-col cols="12" sm="6" md="5" lg="4" xl="3">
                   <b-button
                     variant="outline-dark-secondary-blue"
-                    :disabled="disableButton()"
-                    type="submit"
+                    :disabled="disableButton()" @click="submitAdoptionForm()"                    
                     class="d-flex align-items-center justify-content-between w-100"
                   >
                     <span class="me-2">Enviar Solicitud</span>
@@ -570,7 +568,6 @@
                 </b-col>
               </b-row>
             </b-col>
-          </form>
         </b-row>
       </b-container>
     </div>
