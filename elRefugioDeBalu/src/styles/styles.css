@@ -291,9 +291,9 @@ body {
   color: #fff;
   position: relative;
   left: 0px;
-  border-radius: 0.8px;
+  border-radius: 5px;
   overflow: hidden;
-  height: 33rem !important;
+  height: 35.2rem !important;
 }
 
 .carousel-item img {
