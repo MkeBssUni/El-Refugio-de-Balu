@@ -9,7 +9,8 @@
                     </b-col>
                     <b-col cols="12">
                         <b-row class="mt-4">
-                            <b-col v-for="(image, index) in pet.images" :key="index" cols="3" class="d-flex justify-content-center">
+                            <b-col v-for="(image, index) in pet.images" :key="index" cols="3"
+                                class="d-flex justify-content-center">
                                 <div class="pet-additional-img-container">
                                     <b-img :src="image" class="pet-additional-img" alt="Imagen adicional" fluid center
                                         draggable="true" @dragstart="dragStart(image)"></b-img>
@@ -28,12 +29,26 @@
                     </b-col>
                 </b-row>
                 <hr class="divider my-0">
-                <b-row>
+                <b-row class="d-block d-lg-none">
                     <b-col cols="12" class="mt-4 mb-2">
                         <h4>Descripción</h4>
                         <p class="p-comment text-dark-gray-input">{{ pet.description }}</p>
                     </b-col>
-                </b-row>                
+                </b-row>
+                <b-row class="my-3 d-none d-lg-block">
+                    <b-col cols="12">
+                        <h4>Hábitos y cuidados especiales</h4>
+                    </b-col>
+                    <b-col cols="12" v-if="pet.specialCares">
+                        <ul>
+                            <li class="text-dark-gray-input mt-3 p-comment" v-for="(care, index) in pet.specialCares"
+                                :key="index">{{ care }}</li>
+                        </ul>
+                    </b-col>
+                    <b-col cols="12" v-else>
+                        <p class="text-dark-gray-input p-comment">Sin especificar</p>
+                    </b-col>
+                </b-row>
             </b-col>
             <b-col cols="6" lg="7" xl="8" class="ps-5">
                 <b-row class="my-3">
@@ -139,7 +154,13 @@
                     </b-col>
                 </b-row>
                 <hr class="divider my-0">
-                <b-row class="my-3">
+                <b-row class="d-none d-lg-block">
+                    <b-col cols="12" class="mt-4 mb-2">
+                        <h4>Descripción</h4>
+                        <p class="p-comment text-dark-gray-input">{{ pet.description }}</p>
+                    </b-col>
+                </b-row>
+                <b-row class="my-3 d-block d-lg-none">
                     <b-col cols="12">
                         <h4>Hábitos y cuidados especiales</h4>
                     </b-col>
