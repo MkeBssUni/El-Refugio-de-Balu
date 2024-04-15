@@ -15,6 +15,14 @@
                                         draggable="true" @dragstart="dragStart(image)"></b-img>
                                 </div>
                             </b-col>
+                            <b-col cols="12" class="d-flex justify-content-center mt-4">
+                                <div class="d-flex align-items-center">
+                                    <b-icon icon="info-circle" variant="dark" font-scale="1.2" class="me-4"></b-icon>
+                                    <small class="text-dark">
+                                        Arrastra las imágenes para visualizarlas en la parte principal
+                                    </small>
+                                </div>
+                            </b-col>
                         </b-row>
                     </b-col>
                 </b-row>
