@@ -923,7 +923,7 @@ export default {
     async submitAdoptionForm() {
       const userHasProfile = await decrypt(localStorage.getItem('profileCompleted'));                        
             if (userHasProfile == 'true') {
-                this.saveAdoption();
+                this.showConfirm();
             } else {                
                 swal.fire({
                     title: 'Perfil incompleto',
@@ -954,8 +954,8 @@ export default {
           cancelButtonText: "Cancelar",
         })
         .then((result) => {
-          this.imagesToHomePet();
           if (result.isConfirmed) {
+            this.imagesToHomePet();
             this.saveAdoption();
           }
         });
@@ -971,6 +971,7 @@ export default {
           imageHeight: 160, // Altura de la imagen
           showConfirmButton: false,
         });
+
         await instance.post("/adoption/saveRequest", {
           user: localStorage.getItem("userId"),
           pet: localStorage.getItem("petId"),
@@ -1165,6 +1166,7 @@ export default {
       });
     },
     imagesToHomePet() {
+    console.log(this.adoptionInfo)
       this.adoptionRequestSave.imageAdoption.push(
         this.adoptionInfo.placeToSleep
       );
