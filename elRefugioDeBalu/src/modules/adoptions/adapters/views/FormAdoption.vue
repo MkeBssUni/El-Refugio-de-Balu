@@ -1166,7 +1166,6 @@ export default {
       });
     },
     imagesToHomePet() {
-    console.log(this.adoptionInfo)
       this.adoptionRequestSave.imageAdoption.push(
         this.adoptionInfo.placeToSleep
       );
