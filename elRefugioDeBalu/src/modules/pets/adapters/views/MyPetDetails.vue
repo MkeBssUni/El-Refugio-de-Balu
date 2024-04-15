@@ -2,7 +2,7 @@
     <div>
         <b-container fluid>
             <b-row>
-                <b-col cols="12" class="mt-5 px-5">
+                <b-col cols="12" class="mt-5 px-4 px-sm-5">
                     <!-- md, lg, xl card -->
                     <b-card class="full-height-card p-4 d-none d-md-block card-shadow" bg-variant="gray">
                         <LargeContent :pet="pet" />
@@ -32,7 +32,7 @@
                         </b-row>
                     </b-card>
                     <!-- xs, sm card -->
-                    <b-card class="full-height-card p-4 d-block d-md-none card-shadow" bg-variant="gray">
+                    <b-card class="full-height-card p-2 d-block d-md-none card-shadow" bg-variant="gray">
                         <SmallContent :pet="pet" />
                         <hr class="divider my-0">
                         <b-row class="mt-4 d-flex justify-content-end">
