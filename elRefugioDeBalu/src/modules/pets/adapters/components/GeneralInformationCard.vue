@@ -482,14 +482,18 @@ export default {
                         this.errorMessages.age = "Campo obligatorio";
                         this.showErrors.age = true;
                         input.classList.add('is-invalid');
-                    } else if (this.form.age <= 0) {
-                        this.errorMessages.age = "La edad de la mascota debe ser mayor a 0";
-                        this.showErrors.age = true;
-                        input.classList.add('is-invalid');
-                    } else if (this.form.age % 1 != 0) {
+                    } else if (this.form.age < 0) {
                         this.errorMessages.age = "La edad de la mascota debe ser un número entero";
                         this.showErrors.age = true;
                         input.classList.add('is-invalid');
+                    } else if (this.form.age == 0) {
+                        this.errorMessages.age = "La edad de la mascota debe ser mayor a 0";
+                        this.showErrors.age = true;
+                        input.classList.add('is-invalid');                             
+                    } else if (this.form.age.toString().length > 3) {
+                        this.errorMessages.age = "La edad de la mascota no puede tener más de 3 cifras, ingresa una edad válida o selecciona la unidad correspondiente";
+                        this.showErrors.age = true;
+                        input.classList.add('is-invalid');               
                     } else {
                         this.errorMessages.age = "";
                         this.showErrors.age = false;
@@ -526,8 +530,16 @@ export default {
                         this.errorMessages.weight = "Campo obligatorio";
                         this.showErrors.weight = true;
                         input.classList.add('is-invalid');
-                    } else if (this.form.weight <= 0) {
+                    } else if (this.form.weight < 0) {
+                        this.errorMessages.weight = "El peso de la mascota debe ser un número entero";
+                        this.showErrors.weight = true;
+                        input.classList.add('is-invalid');
+                    } else if (this.form.weight == 0) {
                         this.errorMessages.weight = "El peso de la mascota debe ser mayor a 0";
+                        this.showErrors.weight = true;
+                        input.classList.add('is-invalid');
+                    } else if (this.form.weight.toString().length > 4) {
+                        this.errorMessages.weight = "El peso de la mascota no puede tener más de 4 cifras, ingresa un peso válido o selecciona la unidad correspondiente";
                         this.showErrors.weight = true;
                         input.classList.add('is-invalid');
                     } else {
