@@ -1,31 +1,22 @@
 <template>
   <b-container fluid>
     <b-row>
-      <b-col cols="12" class="mt-5 px-5">
+      <b-col cols="12" class="mt-5 px-4 px-sm-5">
         <!-- md, lg, xl card -->
-        <b-card
-          class="full-height-card p-4 d-none d-md-block card-shadow"
-          bg-variant="gray"
-        >
+        <b-card class="full-height-card p-4 d-none d-md-block card-shadow" bg-variant="gray">
           <LargeContent :pet="pet" />
           <hr class="divider my-0" />
           <b-row class="mt-4 d-flex justify-content-end">
             <b-col cols="5" lg="4" xl="3">
-              <b-button
-                variant="outline-dark-secondary-blue"
-                @click="goAdopt"
-                class="me-3 d-flex align-items-center justify-content-between w-100"
-              >
+              <b-button variant="outline-dark-secondary-blue" @click="goAdopt"
+                class="me-3 d-flex align-items-center justify-content-between w-100">
                 <span class="me-2">Solicitar adoptar</span>
                 <b-icon icon="heart" font-scale="1.3"></b-icon>
               </b-button>
             </b-col>
             <b-col cols="5" lg="4" xl="3">
-              <b-button
-                variant="outline-secondary-gray"
-                @click="goBack"
-                class="d-flex align-items-center justify-content-between w-100"
-              >
+              <b-button variant="outline-secondary-gray" @click="goBack"
+                class="d-flex align-items-center justify-content-between w-100">
                 <span class="me-2">Regresar</span>
                 <b-icon icon="arrow-left-circle" font-scale="1.3"></b-icon>
               </b-button>
@@ -33,29 +24,20 @@
           </b-row>
         </b-card>
         <!-- xs, sm card -->
-        <b-card
-          class="full-height-card p-4 d-block d-md-none card-shadow"
-          bg-variant="gray"
-        >
+        <b-card class="full-height-card p-2 d-block d-md-none card-shadow" bg-variant="gray">
           <SmallContent :pet="pet" />
           <hr class="divider my-0" />
           <b-row class="mt-4 d-flex justify-content-end">
             <b-col cols="12" sm="6">
-              <b-button
-                variant="outline-dark-secondary-blue"
-                to="/formAdoption"
-                class="me-3 d-flex align-items-center justify-content-between w-100"
-              >
+              <b-button variant="outline-dark-secondary-blue" to="/formAdoption"
+                class="me-3 d-flex align-items-center justify-content-between w-100">
                 <span class="me-2">Solicitar adoptar</span>
                 <b-icon icon="heart" font-scale="1.3"></b-icon>
               </b-button>
             </b-col>
             <b-col cols="12" sm="6" class="mt-3 mt-sm-0">
-              <b-button
-                variant="outline-danger"
-                @click="goBack"
-                class="d-flex align-items-center justify-content-between w-100"
-              >
+              <b-button variant="outline-danger" @click="goBack"
+                class="d-flex align-items-center justify-content-between w-100">
                 <span class="me-2">Regresar</span>
                 <b-icon icon="arrow-left-circle" font-scale="1.3"></b-icon>
               </b-button>

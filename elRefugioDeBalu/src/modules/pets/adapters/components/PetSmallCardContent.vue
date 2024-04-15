@@ -3,15 +3,19 @@
         <b-row>
             <b-col cols="12">
                 <b-row class="px-sm-5">
-                    <div @dragover.prevent @drop="dropImage">
+                    <b-col cols="12" @dragover.prevent @drop="dropImage">
                         <b-img :src="pet.mainImage" class="pet-main-img" alt="Imagen principal de la mascota" fluid
                             center rounded></b-img>
-                    </div>
-                    <b-col v-for="(image, index) in pet.images" :key="index" cols="3" class="mt-3">
-                        <div class="pet-additional-img-container">
-                            <b-img :src="image" class="pet-additional-img" alt="Imagen adicional" fluid center
-                                draggable="true" @dragstart="dragStart(image)"></b-img>
-                        </div>
+                    </b-col>
+                    <b-col cols="12">
+                        <b-row class="mt-4">
+                            <b-col v-for="(image, index) in pet.images" :key="index" cols="3" class="d-flex justify-content-center">
+                                <div class="pet-additional-img-container">
+                                    <b-img :src="image" class="pet-additional-img" alt="Imagen adicional" fluid center
+                                        draggable="true" @dragstart="dragStart(image)"></b-img>
+                                </div>
+                            </b-col>
+                        </b-row>
                     </b-col>
                 </b-row>
                 <b-row class="mt-4 mb-3">
@@ -49,17 +53,17 @@
                     <b-col cols="12" sm="6" class="d-flex">
                         <p class="me-2 pet-p">Etapa:</p>
                         <p class="text-dark-gray-input pet-p">{{
-                        mapLifeStage((pet.lifeStage)) }}</p>
+                            mapLifeStage((pet.lifeStage)) }}</p>
                     </b-col>
                     <b-col cols="12" sm="6" class="d-flex">
                         <p class="me-2 pet-p">Edad</p>
                         <p class="text-dark-gray-input pet-p">{{ pet.age }} {{
-                        mapAgeUnit((pet.ageUnit)) }}</p>
+                            mapAgeUnit((pet.ageUnit)) }}</p>
                     </b-col>
                     <b-col cols="12" sm="6" class="d-flex">
                         <p class="me-2 pet-p">Peso</p>
                         <p class="text-dark-gray-input pet-p">{{ pet.weight }} {{
-                        mapWeightUnit((pet.weightUnit)) }}</p>
+                            mapWeightUnit((pet.weightUnit)) }}</p>
                     </b-col>
                 </b-row>
                 <hr class="divider my-0">
@@ -69,33 +73,29 @@
                     </b-col>
                     <b-row>
                         <b-col cols="12" sm="6">
-                            <div class="d-flex justify-content-between">
-                                <p class="pet-p">Vacunado</p>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="pet-p">Vacunado</span>
                                 <b-icon v-if="pet.vaccinated" icon="check-circle" variant="success" font-scale="1.2"
-                                    class="me-4 me-xl-5"></b-icon>
-                                <b-icon v-else icon="x-circle" variant="danger" font-scale="1.2"
-                                    class="me-4 me-xl-5"></b-icon>
+                                    class=""></b-icon>
+                                <b-icon v-else icon="x-circle" variant="danger" font-scale="1.2" class=""></b-icon>
                             </div>
-                            <div class="d-flex justify-content-between pe-xl-5">
-                                <p class="pet-p">Desparasitado</p>
+                            <div class="d-flex justify-content-between align-items-center my-2">
+                                <span class="pet-p">Desparasitado</span>
                                 <b-icon v-if="pet.dewormed" icon="check-circle" variant="success" font-scale="1.2"
-                                    class="me-4 me-xl-5"></b-icon>
-                                <b-icon v-else icon="x-circle" variant="danger" font-scale="1.2"
-                                    class="me-4 me-xl-5"></b-icon>
+                                    class=""></b-icon>
+                                <b-icon v-else icon="x-circle" variant="danger" font-scale="1.2" class=""></b-icon>
                             </div>
-                            <div class="d-flex justify-content-between pe-xl-5">
-                                <p class="pet-p">Esterilizado</p>
+                            <div class="d-flex justify-content-between align-items-center my-2">
+                                <span class="pet-p">Esterilizado</span>
                                 <b-icon v-if="pet.sterilised" icon="check-circle" variant="success" font-scale="1.2"
-                                    class="me-4 me-xl-5"></b-icon>
-                                <b-icon v-else icon="x-circle" variant="danger" font-scale="1.2"
-                                    class="me-4 me-xl-5"></b-icon>
+                                    class=""></b-icon>
+                                <b-icon v-else icon="x-circle" variant="danger" font-scale="1.2" class=""></b-icon>
                             </div>
-                            <div class="d-flex justify-content-between pe-xl-5">
-                                <p class="pet-p">Con microchip</p>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <span class="pet-p">Con microchip</span>
                                 <b-icon v-if="pet.microchip" icon="check-circle" variant="success" font-scale="1.2"
-                                    class="me-4 me-xl-5"></b-icon>
-                                <b-icon v-else icon="x-circle" variant="danger" font-scale="1.2"
-                                    class="me-4 me-xl-5"></b-icon>
+                                    class=""></b-icon>
+                                <b-icon v-else icon="x-circle" variant="danger" font-scale="1.2" class=""></b-icon>
                             </div>
                         </b-col>
                         <b-col cols="12" sm="6">
@@ -179,15 +179,19 @@ export default {
             }
         },
         mapSize(size) {
+            size = String(size).toLowerCase();
             return sizes[size] || size;
         },
         mapLifeStage(lifeStage) {
+            lifeStage = String(lifeStage).toLowerCase();
             return lifeStages[lifeStage] || lifeStage;
         },
         mapAgeUnit(unit) {
+            unit = String(unit).toLowerCase();
             return ageUnits[unit] || unit;
         },
         mapWeightUnit(unit) {
+            unit = String(unit).toLowerCase();
             return weightUnits[unit] || unit;
         },
         swapImage(selectedImage) {
