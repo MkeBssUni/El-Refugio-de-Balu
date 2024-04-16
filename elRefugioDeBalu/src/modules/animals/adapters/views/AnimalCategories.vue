@@ -1,119 +1,50 @@
 <template>
   <div>
     <div class="AnimalHeader" id="categorias">
-      <Encabezado
-        color="#E84E0F"
-        :imagenUrl="require('../../../../assets/imgs/especies.png')"
-        titulo="Categorías de animales"
-      />
+      <Encabezado color="#E84E0F" :imagenUrl="require('../../../../assets/imgs/especies.png')"
+        titulo="Categorías de animales" />
     </div>
     <b-container fluid>
       <Overlay v-if="loading" />
       <div class="mt-3">
-        <b-row
-          class="justify-content-end"
-          v-if="saveCategoryForm && updateCategoryForm"
-        >
-          <b-col
-            cols="12"
-            sm="12"
-            md="3"
-            lg="2"
-            xl="2"
-            class="d-flex justify-content-end my-2"
-          >
-            <b-button
-              as="col"
-              cols="12"
-              sm="12"
-              md="1"
-              class="py-1 w-100 d-flex align-items-center justify-content-center"
-              variant="outline-danger"
-              @click="ViewCategoryRegistrationForm()"
-            >
+        <b-row class="justify-content-end" v-if="saveCategoryForm && updateCategoryForm">
+          <b-col cols="12" sm="12" md="3" lg="2" xl="2" class="d-flex justify-content-end my-2">
+            <b-button as="col" cols="12" sm="12" md="1"
+              class="py-1 w-100 d-flex align-items-center justify-content-center" variant="outline-danger"
+              @click="ViewCategoryRegistrationForm()">
               Registrar <i class="material-icons ms-3">add_circle</i>
             </b-button>
           </b-col>
           <b-col cols="12" sm="12" md="4 " lg="3" xl="3" class="my-2">
-            <b-form-select
-              v-model="selected"
-              as="col"
-              cols="12"
-              sm="12"
-              md="2"
-              lg="2"
-              xl="2"
-              class="form-control selectCategories"
-              :options="options"
-              @change="FilterCategories()"
-            ></b-form-select>
+            <b-form-select v-model="selected" as="col" cols="12" sm="12" md="2" lg="2" xl="2"
+              class="form-control selectCategories" :options="options" @change="FilterCategories()"></b-form-select>
           </b-col>
           <b-col cols="12" sm="12" md="4 " lg="3" xl="3" class="my-2">
             <b-input-group>
-              <b-form-input
-                as
-                id="searchInput"
-                type="search"
-                placeholder="Buscar..."
-                class="searchInput"
-                v-model="searchCategoryValueDto"
-                @input="GetAllCategories()"
-              ></b-form-input>
+              <b-form-input as id="searchInput" type="search" placeholder="Buscar..." class="searchInput"
+                v-model="searchCategoryValueDto" @input="GetAllCategories()"></b-form-input>
               <b-input-group-append>
-                <b-button class="button-search"
-                @click="GetAllCategories()"
-                  ><b-icon icon="search" aria-hidden="true"></b-icon
-                ></b-button>
+                <b-button class="button-search" @click="GetAllCategories()"><b-icon icon="search"
+                    aria-hidden="true"></b-icon></b-button>
               </b-input-group-append>
             </b-input-group>
           </b-col>
         </b-row>
         <b-row class="justify-content-end" v-else>
-          <b-col
-            cols="12"
-            sm="12"
-            md="3"
-            lg="2"
-            xl="2"
-            class="d-flex justify-content-end my-2"
-          >
-            <b-button
-              as="col"
-              cols="12"
-              sm="12"
-              md="1"
-              class="py-1 w-100 d-flex align-items-center justify-content-center"
-              disabled
-              variant="outline-danger"
-            >
+          <b-col cols="12" sm="12" md="3" lg="2" xl="2" class="d-flex justify-content-end my-2">
+            <b-button as="col" cols="12" sm="12" md="1"
+              class="py-1 w-100 d-flex align-items-center justify-content-center" disabled variant="outline-danger">
               Registrar <i class="material-icons ms-3">add_circle</i>
             </b-button>
           </b-col>
           <b-col cols="12" sm="12" md="4 " lg="3" xl="3" class="my-2">
-            <b-form-select
-              v-model="selected"
-              as="col"
-              cols="12"
-              sm="12"
-              md="2"
-              lg="2"
-              xl="2"
-              class="form-control selectCategories"
-              disabled
-            ></b-form-select>
+            <b-form-select v-model="selected" as="col" cols="12" sm="12" md="2" lg="2" xl="2"
+              class="form-control selectCategories" disabled></b-form-select>
           </b-col>
           <b-col cols="12" sm="12" md="4 " lg="3" xl="3" class="my-2">
             <b-input-group>
-              <b-form-input
-                as
-                id="searchInput"
-                type="search"
-                disabled
-                placeholder="Buscar..."
-                class="searchInput"
-                v-model="searchCategoryValueDto"
-                @input="GetAllCategories()"
-              ></b-form-input>
+              <b-form-input as id="searchInput" type="search" disabled placeholder="Buscar..." class="searchInput"
+                v-model="searchCategoryValueDto" @input="GetAllCategories()"></b-form-input>
             </b-input-group>
           </b-col>
         </b-row>
@@ -124,155 +55,61 @@
         </b-row>
         <b-row class="mt-2" v-if="!updateCategoryForm">
           <b-col>
-            <updateCategory
-              ref="updateCategoryForm"
-              :categoryToModify="categoryToModify"
-              @UpdateCategory="HideCategoryModifyForm()"
-            />
+            <updateCategory ref="updateCategoryForm" :categoryToModify="categoryToModify"
+              @UpdateCategory="HideCategoryModifyForm()" />
           </b-col>
         </b-row>
       </div>
       <div v-if="empty" class="animalCategories mt-3">
-        <b-row class="">
+        <b-row class="d-flex justify-content-center">
           <TransitionGroup name="roll" tag="div" class="row mx-3 mt-3">
-            <b-col
-              cols="12"
-              sm="12"
-              md="4 "
-              lg="3"
-              xl="3"
-              v-for="animal in animalsList"
-              :key="animal.id"
-            >
+            <b-col cols="12" sm="12" md="4 " lg="3" xl="3" v-for="animal in animalsList" :key="animal.id">
               <b-card
-                :title="animal.categoryName.length>20 ?animal.categoryName.substring(0,19)+'...' : animal.categoryName"
-                :img-src="animal.categoryImage"
-                img-alt="Image"
-                img-top
-                tag="article"
-                class="mb-2 card-img-top-animals"
-              >
+                :title="animal.categoryName.length > 20 ? animal.categoryName.substring(0, 19) + '...' : animal.categoryName"
+                :img-src="animal.categoryImage" img-alt="Image" img-top tag="article" class="mb-2 card-img-top-animals">
                 <b-card-body class="py-0 justify-content-center">
                   <b-row v-if="saveCategoryForm && updateCategoryForm">
-                    <b-col
-                      class="my-2 mx-2 justify-content-center px-1"
-                      cols="12"
-                      sm="12"
-                      md="12"
-                      lg="12"
-                      xl="5"
-                    >
-                      <b-button
-                        pill
+                    <b-col class="my-2 mx-2 justify-content-center px-1" cols="12" sm="12" md="12" lg="12" xl="5">
+                      <b-button pill
                         class="d-flex align-items-center justify-content-center btn-outline-dark-orange-secondary w-100 px-0"
-                        style="font-size: 0.8rem"
-                        @click="ViewCategoryModifyForm(animal)"
-                      >
+                        style="font-size: 0.8rem" @click="ViewCategoryModifyForm(animal)">
                         Modificar
-                        <i class="material-icons ms-2" style="font-size: 0.8rem"
-                          >border_color</i
-                        >
+                        <i class="material-icons ms-2" style="font-size: 0.8rem">border_color</i>
                       </b-button>
                     </b-col>
-                    <b-col
-                      class="my-2 mx-2 justify-content-center px-0"
-                      cols="12"
-                      sm="12"
-                      md="12"
-                      lg="12"
-                      xl="5"
-                    >
-                      <b-button
-                        v-if="animal.categoryStatus"
-                        pill
-                        variant="outline-success"
-                        class="d-flex align-items-center justify-content-center w-100 px-0"
-                        v-b-tooltip.hover
-                        title="Esta categoria es visible para los usuarios"
-                        style="font-size: 0.8rem"
-                        @click="
+                    <b-col class="my-2 mx-2 justify-content-center px-0" cols="12" sm="12" md="12" lg="12" xl="5">
+                      <b-button v-if="animal.categoryStatus" pill variant="outline-success"
+                        class="d-flex align-items-center justify-content-center w-100 px-0" v-b-tooltip.hover
+                        title="Esta categoria es visible para los usuarios" style="font-size: 0.8rem" @click="
                           ViewAlertConfirmationChangeCategoryStatus(animal)
-                        "
-                        >Habilitada
-                        <i class="material-icons ms-2" style="font-size: 1rem"
-                          >done</i
-                        ></b-button
-                      >
-                      <b-button
-                        v-else
-                        pill
-                        variant="outline-danger"
-                        style="font-size: 0.8rem"
-                        class="d-flex align-items-center justify-content-center w-100 px-0"
-                        v-b-tooltip.hover
-                        title="Esta categoria no es visible para los usuarios"
-                        @click="
+                          ">Habilitada
+                        <i class="material-icons ms-2" style="font-size: 1rem">done</i></b-button>
+                      <b-button v-else pill variant="outline-danger" style="font-size: 0.8rem"
+                        class="d-flex align-items-center justify-content-center w-100 px-0" v-b-tooltip.hover
+                        title="Esta categoria no es visible para los usuarios" @click="
                           ViewAlertConfirmationChangeCategoryStatus(animal)
-                        "
-                        >Deshabilitada
-                        <i class="material-icons ms-2" style="font-size: 1rem"
-                          >close</i
-                        ></b-button
-                      >
+                          ">Deshabilitada
+                        <i class="material-icons ms-2" style="font-size: 1rem">close</i></b-button>
                     </b-col>
                   </b-row>
                   <b-row v-else>
-                    <b-col
-                      class="my-2 mx-2 justify-content-center px-1"
-                      cols="12"
-                      sm="12"
-                      md="12"
-                      lg="12"
-                      xl="5"
-                    >
-                      <b-button
-                        pill
+                    <b-col class="my-2 mx-2 justify-content-center px-1" cols="12" sm="12" md="12" lg="12" xl="5">
+                      <b-button pill
                         class="d-flex align-items-center justify-content-center btn-outline-dark-orange-secondary w-100 px-0"
-                        style="font-size: 0.8rem"
-                        disabled
-                      >
+                        style="font-size: 0.8rem" disabled>
                         Modificar
-                        <i class="material-icons ms-2" style="font-size: 0.8rem"
-                          >border_color</i
-                        >
+                        <i class="material-icons ms-2" style="font-size: 0.8rem">border_color</i>
                       </b-button>
                     </b-col>
-                    <b-col
-                      class="my-2 mx-2 justify-content-center px-0"
-                      cols="12"
-                      sm="12"
-                      md="12"
-                      lg="12"
-                      xl="5"
-                    >
-                      <b-button
-                        v-if="animal.status"
-                        disabled
-                        pill
-                        variant="outline-success"
-                        class="d-flex align-items-center justify-content-center w-100 px-0"
-                        v-b-tooltip.hover
-                        title="Esta categoria es visible para los usuarios"
-                        style="font-size: 0.8rem"
-                        >Habilitada
-                        <i class="material-icons ms-2" style="font-size: 1rem"
-                          >done</i
-                        ></b-button
-                      >
-                      <b-button
-                        v-else
-                        disabled
-                        pill
-                        variant="outline-danger"
-                        style="font-size: 0.8rem"
-                        class="d-flex align-items-center justify-content-center w-100 px-0"
-                        v-b-tooltip.hover
-                        title="Esta categoria no es visible para los usuarios"
-                        >Deshabilitada
-                        <i class="material-icons ms-2" style="font-size: 1rem"
-                          >close</i
-                        ></b-button
-                      >
+                    <b-col class="my-2 mx-2 justify-content-center px-0" cols="12" sm="12" md="12" lg="12" xl="5">
+                      <b-button v-if="animal.status" disabled pill variant="outline-success"
+                        class="d-flex align-items-center justify-content-center w-100 px-0" v-b-tooltip.hover
+                        title="Esta categoria es visible para los usuarios" style="font-size: 0.8rem">Habilitada
+                        <i class="material-icons ms-2" style="font-size: 1rem">done</i></b-button>
+                      <b-button v-else disabled pill variant="outline-danger" style="font-size: 0.8rem"
+                        class="d-flex align-items-center justify-content-center w-100 px-0" v-b-tooltip.hover
+                        title="Esta categoria no es visible para los usuarios">Deshabilitada
+                        <i class="material-icons ms-2" style="font-size: 1rem">close</i></b-button>
                     </b-col>
                   </b-row>
                 </b-card-body>
@@ -282,23 +119,14 @@
         </b-row>
         <b-row class="pt-2">
           <b-col cols="12">
-            <b-pagination
-              pills
-              v-model="page"
-              :total-rows="total"
-              :per-page="size"
-              align="center"
-            >
+            <b-pagination pills v-model="page" :total-rows="total" :per-page="size" align="center">
             </b-pagination>
           </b-col>
         </b-row>
       </div>
       <div v-else class="animalCategories my-3">
         <div class="content py">
-          <img
-            src="../../../../assets/imgs/perroSinRegistros.png"
-            alt="Cargando..."
-          />
+          <img src="../../../../assets/imgs/perroSinRegistros.png" alt="Cargando..." />
           <h4 class="mt-3 pb-3">Parece que no hay registros de categorías</h4>
         </div>
       </div>
@@ -489,21 +317,21 @@ export default {
       }
     },
     FilterCategories() {
-    this.loading = true;
-    const originalList = [...this.originalAnimalsList];
+      this.loading = true;
+      const originalList = [...this.originalAnimalsList];
 
-    const filteredList = originalList.filter(animal => {
-      if (this.selected === null) {
-        return true; 
-      } else {
-        return animal.categoryStatus === this.selected;
-      }
-    });
+      const filteredList = originalList.filter(animal => {
+        if (this.selected === null) {
+          return true;
+        } else {
+          return animal.categoryStatus === this.selected;
+        }
+      });
 
-    this.animalsList = filteredList;
+      this.animalsList = filteredList;
 
-    this.loading = false;
-  }
+      this.loading = false;
+    }
   },
   mounted() {
     this.GetAllCategories();
@@ -517,4 +345,3 @@ export default {
   },
 };
 </script>
-

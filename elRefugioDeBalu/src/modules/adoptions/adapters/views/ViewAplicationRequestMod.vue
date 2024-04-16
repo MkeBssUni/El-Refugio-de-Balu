@@ -95,7 +95,7 @@
           </b-card>
         </b-col>
         <b-col cols="12" sm="12" lg="8" md="8">
-          <b-card class="target">
+          <b-card class="target-mod">
             <b-row>
               <b-col cols="12" sm="12" lg="12" md="12">
                 <b-card bg-variant="card-content-orange" class="my-2">

@@ -33,6 +33,39 @@
               {{ infoStatus }}
             </b-card-text>
           </b-card>
+          <b-card bg-variant="light" class="box-shadow-pretty text-center">
+            <b-card-title>Lugar de residencia</b-card-title>
+            <b-card-body>
+              <b-card-text
+                >Lugar en la que dormira o descansara la mascota</b-card-text
+              >
+              <img
+                :src="getRequestImage(requestAdoption.requestImages, 0)"
+                class="homePhotos"
+                alt="resting place of the pet"
+              />
+            </b-card-body>
+            <b-card-body>
+              <b-card-text
+                >Lugar en el que vivira la mascota (casa)</b-card-text
+              >
+              <img
+                :src="getRequestImage(requestAdoption.requestImages, 1)"
+                class="homePhotos"
+                alt="place where the pet will live"
+              />
+            </b-card-body>
+            <b-card-body>
+              <b-card-text
+                >Lugar en el que jugará la mascota (casa)</b-card-text
+              >
+              <img
+                :src="getRequestImage(requestAdoption.requestImages, 2)"
+                class="homePhotos"
+                alt="place where the pet will play"
+              />
+            </b-card-body>
+          </b-card>
         </b-col>
         <b-col cols="12" sm="12" lg="8" md="8">
           <b-card class="target">
@@ -122,45 +155,6 @@
               </b-col>
             </b-row>
           </b-card>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col cols="12" sm="12" lg="4" md="4">
-          <b-card bg-variant="light" class="box-shadow-pretty text-center">
-            <b-card-title>Lugar de residencia</b-card-title>
-            <b-card-body>
-              <b-card-text
-                >Lugar en la que dormira o descansara la mascota</b-card-text
-              >
-              <img
-                :src="getRequestImage(requestAdoption.requestImages, 0)"
-                class="homePhotos"
-                alt="resting place of the pet"
-              />
-            </b-card-body>
-            <b-card-body>
-              <b-card-text
-                >Lugar en el que vivira la mascota (casa)</b-card-text
-              >
-              <img
-                :src="getRequestImage(requestAdoption.requestImages, 1)"
-                class="homePhotos"
-                alt="place where the pet will live"
-              />
-            </b-card-body>
-            <b-card-body>
-              <b-card-text
-                >Lugar en el que jugará la mascota (casa)</b-card-text
-              >
-              <img
-                :src="getRequestImage(requestAdoption.requestImages, 2)"
-                class="homePhotos"
-                alt="place where the pet will play"
-              />
-            </b-card-body>
-          </b-card>
-        </b-col>
-        <b-col cols="12" sm="12" lg="8" md="8">
           <b-card bg-variant="light" class="my-3 box-shadow-pretty">
             <b-card-title class="text-center">Motivos de adopción</b-card-title>
             <b-row>

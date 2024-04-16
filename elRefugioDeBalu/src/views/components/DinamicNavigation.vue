@@ -91,7 +91,7 @@ export default {
         <b-navbar class="bg-blue d-flex align-items-center justify-content-between">
             <b-navbar-nav class="ms-4">
                 <b-navbar-brand>
-                    <img src="../../assets/imgs/logoSinLBlanco.png" alt="logo" width="40" height="40">
+                    <img src="../../assets/imgs/logoSinLBlanco.png" alt="logo" width="40" height="40"/>
                 </b-navbar-brand>
             </b-navbar-nav>
             <b-navbar-nav class="me-2 d-flex align-items-center">
